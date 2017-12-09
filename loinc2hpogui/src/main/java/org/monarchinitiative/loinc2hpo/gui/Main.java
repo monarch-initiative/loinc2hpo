@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.gui;
 import com.genestalker.springscreen.core.DialogController;
 import com.genestalker.springscreen.core.FXMLDialog;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -76,6 +77,8 @@ public class Main extends Application {
     public void start(Stage window) throws Exception {
         window.setScene(new Scene(rootNode));
         window.show();
+        window.setOnCloseRequest(e -> Platform.exit());
+
     }
 
     /**

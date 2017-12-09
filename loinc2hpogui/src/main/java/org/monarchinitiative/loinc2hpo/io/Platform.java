@@ -50,6 +50,12 @@ public class Platform {
         return new String(dir + File.separator + basename + ".ser");
     }
 
+
+    public static String getLocalHPOPath() {
+        File dir = getLOINC2HPODir();
+        return new String(dir + File.separator + "hp.obo");
+    }
+
     /**
      * Get the absolute path to the log file.
      * @return the absolute path,e.g., /home/user/.vpvgui/vpvgui.log
@@ -57,6 +63,15 @@ public class Platform {
     public static String getAbsoluteLogPath() {
         File dir = getLOINC2HPODir();
         return new String(dir + File.separator +  "loinc2hpo.log");
+    }
+
+    /** Return the absolute path to the settings file, which is kept in the .loinc2hpo directory in the
+     * user's home directory. For simplicity assume one user per account etc. The file is a simple key:value file.
+     * @return
+     */
+    public static String getPathToSettingsFile() {
+        File dir = getLOINC2HPODir();
+        return new String(dir + File.separator + "loinc2hpo.settings");
     }
 
     /* Based on this post: http://www.mkyong.com/java/how-to-detect-os-in-java-systemgetpropertyosname/ */

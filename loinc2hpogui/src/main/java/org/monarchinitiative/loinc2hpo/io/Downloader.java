@@ -45,7 +45,6 @@ public class Downloader extends Task<Void> {
         this.localDir = directoryPath;
         this.urlstring=url;
         setLocalFilePath(basename);
-        makeDirectoryIfNotExist();
     }
 
     public Downloader(String path, String url, String basename) {
@@ -149,21 +148,5 @@ public class Downloader extends Task<Void> {
         });
     }
 
-    /**
-     * This function creates a new directory to store the downloaded file. If the directory already exists, it
-     *  does nothing.
-     */
-    protected void makeDirectoryIfNotExist() {
-        if (localDir==null) {
-            logger.error("Null pointer passed, unable to make directory.");
-            return;
-        }
-        if (this.localDir.getParentFile().exists()) {
-           return;
-        } else {
-            logger.info("Creating directory: "+ localDir);
-            this.localDir.mkdir();
-        }
-    }
 
 }
