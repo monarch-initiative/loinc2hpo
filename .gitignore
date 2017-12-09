@@ -62,3 +62,4 @@ loinc2hpogui/target/archive-tmp/
 loinc2hpogui/target/generated-sources/
 loinc2hpogui/target/maven-archiver/
 loinc2hpogui/target/maven-status/
+!/loinc2hpogui/src/main/resources/log4j2.xml

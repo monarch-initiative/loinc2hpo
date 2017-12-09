@@ -15,7 +15,7 @@
          <top>
             <HBox maxWidth="1.7976931348623157E308" prefHeight="29.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <MenuBar>
+                  <MenuBar  HBox.hgrow="NEVER">
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>

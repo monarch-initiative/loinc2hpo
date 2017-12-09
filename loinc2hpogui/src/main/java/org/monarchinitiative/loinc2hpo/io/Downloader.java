@@ -62,6 +62,10 @@ public class Downloader extends Task<Void> {
         this.progress = pi;
     }
 
+    public Downloader(File path, String url){
+        this(path,url,"");
+    }
+
 
     protected File getLocalFilePath() { return  this.localFilePath; }
 

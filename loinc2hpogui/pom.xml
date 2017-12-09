@@ -19,52 +19,53 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>4.3.8.RELEASE</spring.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.monarchinitiative</groupId>
             <artifactId>loinc2hpo-core</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-csv</artifactId>
-            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.18</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.12</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.fasterxml.version}</version>
+        </dependency>
+-->
+
+        <!-- https://mvnrepository.com/artifact/com.github.monarch-initiative/hpotextmining-core -->
+        <dependency>
+            <groupId>com.github.monarch-initiative</groupId>
+            <artifactId>hpotextmining-core</artifactId>
+            <version>0.2.0</version>
         </dependency>
     </dependencies>
 
@@ -92,7 +93,7 @@
                             <!-- set useUniqueVersions=false in order that the classpath has the
                                SNAPSHOT instead of the build number prefixed to the dependency -->
                             <useUniqueVersions>false</useUniqueVersions>
-                            <mainClass>org.monarchinitiative.loinc2hpo.Loinc2HpoFX</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
                         </manifest>
                     </archive>
                     <!--   <compilerArgument>-Xlint:all</compilerArgument>
@@ -115,7 +116,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.monarchinitiative.loinc2hpo.Loinc2HpoFX</mainClass>
+                                    <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

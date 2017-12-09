@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,13 +60,14 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
  * @author adam-bien.com
  */
 public abstract class FXMLView extends StackPane {
+    private static final Logger logger = LogManager.getLogger();
 
     public final static String DEFAULT_ENDING = "View";
     protected ObjectProperty<Object> presenterProperty;
     protected FXMLLoader fxmlLoader;
     protected String bundleName;
     protected ResourceBundle bundle;
-    protected final Function<String, Object> injectionContext;
+    protected  Function<String, Object> injectionContext;
     protected URL resource;
     protected static Executor FX_PLATFORM_EXECUTOR = Platform::runLater;
 
@@ -78,6 +81,14 @@ public abstract class FXMLView extends StackPane {
         this(f -> null);
     }
 
+    public FXMLView(String path) {
+        logger.error("In FXMLVIEW CTOR 3 path="+path);
+        this.injectionContext = injectionContext;
+        this.init(path);
+    }
+
+
+
     /**
      *
      * @param injectionContext the function is used as a injection source.
@@ -85,11 +96,13 @@ public abstract class FXMLView extends StackPane {
      * corresponding presenter.
      */
     public FXMLView(Function<String, Object> injectionContext) {
+        logger.trace("In FXMLVIEW CTOR 2");
         this.injectionContext = injectionContext;
         this.init(getFXMLName());
     }
 
     private void init(final String conventionalName) {
+        logger.trace("In FXMLVIEW INIT");
         this.presenterProperty = new SimpleObjectProperty<>();
         this.resource = getClass().getResource(conventionalName);
         this.bundleName = getBundleName();
@@ -97,6 +110,7 @@ public abstract class FXMLView extends StackPane {
     }
 
     FXMLLoader loadSynchronously(final URL resource, ResourceBundle bundle, final String conventionalName) throws IllegalStateException {
+        logger.trace("In FXMLVIEW loadSyncrho ");
         final FXMLLoader loader = new FXMLLoader(resource, bundle);
         PresenterFactory factory = discover();
         Callback<Class<?>, Object> controllerFactory = (Class<?> p) -> factory.instantiatePresenter(p, this.injectionContext);
@@ -213,7 +227,9 @@ public abstract class FXMLView extends StackPane {
 
     String getResourceCamelOrLowerCase(boolean mandatory, String ending) {
         String name = getConventionalName(true, ending);
-        URL found = getClass().getResource(name);
+        logger.trace("getResourceCamelOrLowerCase -- name="+name );
+        logger.trace(String.format("class is %s",getClass().toString()));
+        URL found = getClass().getResource("/Users/peterrobinson/IdeaProjects/loinc2hpo/loinc2hpogui/src/main/java/org/monarchinitiative/loinc2hpo/gui/loinc2hpomain"+"/"+name);
         if (found != null) {
             return name;
         }
