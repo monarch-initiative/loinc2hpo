@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
-import org.monarchinitiative.loinc2hpo.gui.popup.PopupFactory;
+
 
 import java.io.File;
 
@@ -25,7 +25,7 @@ public class GetPathToLoincFileCommand {
         File file = chooser.showOpenDialog(this.window);
         DirectoryChooser dirChooser = new DirectoryChooser();
         if (file==null || file.getAbsolutePath().isEmpty()) {
-            PopupFactory.displayError("Error","Could not get path to LOINC Core Table file.");
+            System.err.println("Error Could not get path to LOINC Core Table file.");
             return null;
         }
         return file.getAbsolutePath();

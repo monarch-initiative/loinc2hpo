@@ -3,20 +3,23 @@ package org.monarchinitiative.loinc2hpo.gui;
 import com.genestalker.springscreen.core.DialogController;
 import com.genestalker.springscreen.core.FXMLDialog;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.controller.InitializeResourcesController;
-import org.monarchinitiative.loinc2hpo.gui.application.ApplicationConfig;
-import org.monarchinitiative.loinc2hpo.gui.application.HRMDResourceManager;
-import org.monarchinitiative.loinc2hpo.gui.application.ScreensConfig;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -29,11 +32,34 @@ import java.util.stream.Collectors;
 /**
  * The driver class of the HRMD gui app.
  */
+
 public class Main extends Application {
 
     private static final String WINDOW_TITLE = "Human Regulatory Mutation Database GUI";
 
     private static final Logger logger = LogManager.getLogger();
+
+
+    private Parent rootNode;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void init() throws IOException {
+//
+//        ClassLoader classLoader = Main.class.getClassLoader();
+//        String fxmlpath = classLoader.getResource("fxml/main.fxml").getFile();
+//        logger.trace(String.format("Path %s",fxmlpath));
+//       // logger.trace(String.format("Getting resource %s",getClass().getResource("fxml/main.fxml").getPath()));
+//       FXMLLoader fxmlLoader = new FXMLLoader(classLoader.getResource("fxml/main.fxml"));
+//
+//        rootNode = fxmlLoader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        rootNode = fxmlLoader.load();
+    }
+
 
     /**
      * Properties file containing configurable environment variables. Read once during app startup (creation of
@@ -43,30 +69,13 @@ public class Main extends Application {
 
     public static final String HRMD_RESOURCES = "hrmd-resources.json";
 
-    private ConfigurableApplicationContext ctx;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+
 
     @Override
     public void start(Stage window) throws Exception {
-        System.setProperty("propertiesPath", getPropertiesFilePath().toString());
-
-        window.getIcons().add(new Image(getClass().getResourceAsStream("/img/app-icon.png")));
-        initialize(window);
-        ctx = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-        ctx.getBeanFactory().registerSingleton("hostServices", getHostServices());
-        ctx.registerShutdownHook();
-        HRMDResourceManager resourceManager = ctx.getBean(HRMDResourceManager.class);
-        ScreensConfig screensConfig = ctx.getBean(ScreensConfig.class);
-        if (!resourceManager.isInitialized()) {
-            screensConfig.setResourcesDialog().showAndWait();
-        }
-        screensConfig.setWindow(window);
-        screensConfig.mainDialog().setTitle(WINDOW_TITLE);
-        screensConfig.mainDialog().show();
-
+        window.setScene(new Scene(rootNode));
+        window.show();
     }
 
     /**
@@ -74,44 +83,10 @@ public class Main extends Application {
      */
     @Override
     public void stop() throws Exception {
-        if (ctx != null) {
-            ctx.close();
-        }
-    }
 
-    /**
-     * Checks before ApplicationContext initialization. Ensure that the resources have been initialized, otherwise the
-     * GUI shuts down.
-     *
-     * @param stage primary Stage created by JavaFX application loader.
-     */
-    private static void initialize(Stage stage) throws Exception {
-        File resources = new File(getJarFilePath().toFile(), HRMD_RESOURCES);
-        HRMDResourceManager manager = new HRMDResourceManager(resources);
-        if (manager.isInitialized()) {
-            return;
-        }
-        URL entrez = new URL("ftp://ftp.ncbi.nih.gov/gene/DATA/GENE_INFO/Mammalia/Homo_sapiens.gene_info.gz");
-        URL hpo = new URL("https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo");
-        InitializeResourcesController controller = new InitializeResourcesController(manager, entrez, hpo);
-        setResourcesDialog(stage, controller).showAndWait();
     }
 
 
-    /**
-     * Get dialog window for setting resources and settings.
-     *
-     * @return {@link FXMLDialog} for setting resources and settings.
-     */
-    private static FXMLDialog setResourcesDialog(Stage stage, DialogController controller) {
-        return new FXMLDialog.FXMLDialogBuilder()
-                .setDialogController(controller)
-                .setFXML(Main.class.getResource("/fxml/SetResourcesView.fxml"))
-                .setOwner(stage)
-                .setModality(Modality.WINDOW_MODAL)
-                .setStageStyle(StageStyle.UNDECORATED)
-                .build();
-    }
 
     private static Path getPropertiesFilePath() {
         // We'll search for properties file on these paths to allow to run the app from terminal, distribution or IDE.
