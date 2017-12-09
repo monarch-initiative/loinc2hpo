@@ -15,13 +15,15 @@ public class Model {
     private String pathToSettingsFile=null;
 
 
-
+    private String pathToAnnotationFile=null;
 
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
     }
 
     public void setPathToSettingsFile(String p) { this.pathToSettingsFile=p;}
+
+    public void setPathToAnnotationFile(String p) {pathToAnnotationFile=p;}
 
 
     public String getPathToLoincCoreTableFile() {

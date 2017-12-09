@@ -1,11 +1,14 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
@@ -14,14 +17,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 
-
+@Singleton
 public class MainController {
     private static final Logger logger = LogManager.getLogger();
     private final static String HP_OBO="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
@@ -29,8 +27,8 @@ public class MainController {
 
 
 
-    @FXML private  SetupTabController setupTabController;
-    @FXML private  AnnotateTabController annotateTabController;
+    @Inject private SetupTabController setupTabController;
+    @Inject  private AnnotateTabController annotateTabController;
 
 
     @FXML
@@ -40,21 +38,27 @@ public class MainController {
 
     public void init() {
         this.model = new Model();
-
     }
 
     @FXML private void initialize() {
-//        consoleTabController.injectMainController(this);
+       //setupTabController.injectMainController(this);
         this.model = new Model();
         File settings = getPathToSettingsFileAndEnsurePathExists();
         model.setPathToSettingsFile(settings.getAbsolutePath());
         if (settings.exists()) {
             model.setSettings(settings.getAbsolutePath());
         }
+        if (setupTabController==null) {
+            logger.error("setupTabController is null");
+            return;
+        }
+       setupTabController.setModel(model);
     }
 
 
     public void setModel(Model m) {this.model=m;}
+
+    public Model getModel() { return  this.model;}
 
 
     @FXML public void downloadHPO(ActionEvent e) {

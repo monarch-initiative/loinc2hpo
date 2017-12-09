@@ -1,23 +1,20 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
-import com.genestalker.springscreen.core.DialogController;
-import com.genestalker.springscreen.core.FXMLDialog;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,16 +46,27 @@ public class Main extends Application {
 
     @Override
     public void init() throws IOException {
-//
-//        ClassLoader classLoader = Main.class.getClassLoader();
-//        String fxmlpath = classLoader.getResource("fxml/main.fxml").getFile();
-//        logger.trace(String.format("Path %s",fxmlpath));
-//       // logger.trace(String.format("Getting resource %s",getClass().getResource("fxml/main.fxml").getPath()));
-//       FXMLLoader fxmlLoader = new FXMLLoader(classLoader.getResource("fxml/main.fxml"));
-//
-//        rootNode = fxmlLoader.load();
+        // Creation of the dependencies injector
+        final Injector injector = Guice.createInjector(new DepInjectionModule());
+        final Callback<Class<?>, Object> guiceFactory = clazz -> injector.getInstance(clazz);
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-        rootNode = fxmlLoader.load();
+        rootNode = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"),
+        null, //  The resource bundle, useful to internationalised apps. Null here.
+                new JavaFXBuilderFactory(),
+        guiceFactory);
+        /*
+                        // Loading the view
+                getClass().getResource("/torgen/ui/UI.fxml"),
+                //
+                null,
+                // The JavaFX builder used to instantiate the view
+                new JavaFXBuilderFactory(),
+                // The controller factory that will be a Guice factory:
+                // this Guice factory will manage the instantiation of the controllers and their dependency injections.
+                guiceFactory);
+
+         */
     }
 
 
@@ -67,8 +75,6 @@ public class Main extends Application {
      * ApplicationContext)
      */
     private static final String PROP_FILE_NAME = "hrmd-gui.properties";
-
-    public static final String HRMD_RESOURCES = "hrmd-resources.json";
 
 
 
