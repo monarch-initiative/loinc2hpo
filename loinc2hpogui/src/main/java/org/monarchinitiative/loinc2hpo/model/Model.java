@@ -46,11 +46,12 @@ public class Model {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(pathToSettingsFile));
             if (biocuratorname!=null) {
-                bw.write(String.format("biocuratorname:%s",biocuratorname));
+                bw.write(String.format("biocuratorname:%s\n",biocuratorname));
             }
             if (pathToLoincCoreTableFile!=null) {
-                bw.write(String.format("loincTablePath:%s",pathToLoincCoreTableFile));
+                bw.write(String.format("loincTablePath:%s\n",pathToLoincCoreTableFile));
             }
+
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
