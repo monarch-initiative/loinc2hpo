@@ -40,6 +40,7 @@ hs_err_pid*
 .idea/modules.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.idea/libraries/*.xml
 data/
 logs/2017-12/
 loinc2hpogui/src/main/java/org/monarchinitiative/loinc2hpo/gui/loinc2hpomain/org/
@@ -63,4 +64,5 @@ loinc2hpogui/target/generated-sources/
 loinc2hpogui/target/maven-archiver/
 loinc2hpogui/target/maven-status/
 loinc2hpo-gui.iml
+loinc2hpogui/target/
 !/loinc2hpogui/src/main/resources/log4j2.xml

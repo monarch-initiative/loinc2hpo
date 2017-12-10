@@ -7,9 +7,11 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
+import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -29,6 +31,8 @@ public class Model {
     private String pathToAnnotationFile=null;
 
     private  Ontology<HpoTerm, HpoTermRelation> ontology=null;
+
+    public Map<String,AnnotatedLoincRangeTest> testmap=new HashMap<>();
 
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
@@ -53,6 +57,12 @@ public class Model {
         init();
     }
 
+    public void addLoincTest(AnnotatedLoincRangeTest test) {
+        // todo warn if term already in map
+        testmap.put(test.getLoincNumber(),test);
+    }
+
+    public Map<String,AnnotatedLoincRangeTest> getTestmap(){ return testmap; }
 
 
     private void init() {

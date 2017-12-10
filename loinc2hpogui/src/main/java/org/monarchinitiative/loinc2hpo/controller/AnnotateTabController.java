@@ -2,8 +2,8 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -16,7 +16,7 @@ import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
-import java.io.IOException;
+
 import java.util.List;
 
 
@@ -26,6 +26,8 @@ public class AnnotateTabController {
     private static final Logger logger = LogManager.getLogger();
 
     private Model model=null;
+    /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
+    @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     private ImmutableMap<String,LoincEntry> loincmap=null;
 
     private ImmutableMap<String,HpoTerm> termmap;
@@ -148,6 +150,7 @@ public class AnnotateTabController {
         Integer ageLoY, ageLoM,ageLoD,ageHiY,ageHiM,ageHiD;
         String rangeLo, rangeHi, rangeUnit;
 
+        String loincCode=this.loincSearchTextField.getText();
         hpoLo=hpoLowAbnormalTextField.getText();
         hpoNormal=hpoNotAbnormalTextField.getText();
         hpoHi=hpoHighAbnormalTextField.getText();
@@ -186,9 +189,9 @@ public class AnnotateTabController {
         rangeUnit=unitTextField.getText();
 
         AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(low,normal,high,ageLoY,ageLoM,ageLoD,ageHiY,ageHiM,ageHiD,rangeLo,rangeHi,rangeUnit);
-
-
+                new AnnotatedLoincRangeTest(loincCode,low,normal,high,ageLoY,ageLoM,ageLoD,ageHiY,ageHiM,ageHiD,rangeLo,rangeHi,rangeUnit);
+        this.model.addLoincTest(test);
+        loinc2HpoAnnotationsTabController.refreshTable();
     }
 
 

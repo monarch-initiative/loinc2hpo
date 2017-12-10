@@ -11,6 +11,20 @@ import org.apache.logging.log4j.Logger;
  */
 public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     private static final Logger logger = LogManager.getLogger();
+
+    private final String loincNumber;
+    private final Age lowAge;
+    private final Age highAge;
+    private final NormalRange range;
+    private final HpoTerm belowNormalTerm;
+    private final HpoTerm notAbnormalTerm;
+    private final HpoTerm aboveNormalTerm;
+
+
+
+
+
+
     /**
      * ToDo implement me.
      * @param loincCode
@@ -25,11 +39,16 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
 
 
 
-    public AnnotatedLoincRangeTest(HpoTerm low, HpoTerm normal, HpoTerm hi, Integer ageLoY, Integer ageLoM, Integer ageLoD,
+    public AnnotatedLoincRangeTest(String loinc,HpoTerm low, HpoTerm normal, HpoTerm hi, Integer ageLoY, Integer ageLoM, Integer ageLoD,
                                    Integer ageHiY, Integer ageHiM, Integer ageHiD, String rangeLo, String rangeHi, String unit) {
-        Age lowAge=new Age(ageLoY,  ageLoM,  ageLoD);
-        Age highAge=new Age(ageHiY,  ageHiM,  ageHiD);
-        NormalRange range = new NormalRange(rangeLo,rangeHi,unit);
+        this.lowAge=new Age(ageLoY,  ageLoM,  ageLoD);
+        this.highAge=new Age(ageHiY,  ageHiM,  ageHiD);
+        this.range = new NormalRange(rangeLo,rangeHi,unit);
+        this.loincNumber=loinc;
+        this.belowNormalTerm=low;
+        this.notAbnormalTerm=normal;
+        this.aboveNormalTerm=hi;
+
         logger.trace(String.format("low: %s; normal: %s, high: %s; age-lo:%s, age-hi:%s, range:%s",
                 low.getName(),
                 normal.getName(),
@@ -40,4 +59,14 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
         // todo more validation.
 
     }
+
+    public String getLoincNumber(){ return loincNumber; }
+    public String getBelowNormalHpoTermName() { return belowNormalTerm.getName(); }
+    public String getNotAbnormalHpoTermName() { return notAbnormalTerm.getName(); }
+    public String getAboveNormalHpoTermName() { return aboveNormalTerm.getName(); }
+    public String getLowAgeBoundry() { return lowAge.toString(); }
+    public String getHighAgeBoundry() { return highAge.toString();}
+    public String getRangeAsString(){ return range.toString();}
+
+
 }

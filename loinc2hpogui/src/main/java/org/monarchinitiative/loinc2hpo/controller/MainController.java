@@ -59,6 +59,11 @@ public class MainController {
             return;
         }
         annotateTabController.setModel(model);
+        if (loinc2HpoAnnotationsTabController==null) {
+            logger.error("loinc2HpoAnnotationsTabController is null");
+            return;
+        }
+        loinc2HpoAnnotationsTabController.setModel(model);
     }
 
 
