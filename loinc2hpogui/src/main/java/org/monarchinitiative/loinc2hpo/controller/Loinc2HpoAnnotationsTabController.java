@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -84,8 +85,11 @@ public class Loinc2HpoAnnotationsTabController {
 
     public void refreshTable() {
         Map<String,AnnotatedLoincRangeTest> testmap = model.getTestmap();
-        loincTableView.getItems().clear();
-        loincTableView.getItems().addAll(testmap.values());
+        Platform.runLater(() -> {
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(testmap.values());
+        });
+
 
     }
 

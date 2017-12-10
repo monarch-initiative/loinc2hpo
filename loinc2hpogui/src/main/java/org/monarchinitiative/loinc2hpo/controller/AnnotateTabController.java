@@ -73,8 +73,6 @@ public class AnnotateTabController {
             WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
             WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
             logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
-        } else {
-            logger.warn("Calling initialize but model or path to hp.obo file was null");
         }
 
     }

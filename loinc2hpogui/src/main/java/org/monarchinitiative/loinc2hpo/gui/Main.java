@@ -46,32 +46,22 @@ public class Main extends Application {
 
     @Override
     public void init() throws IOException {
-        // Creation of the dependencies injector
         final Injector injector = Guice.createInjector(new DepInjectionModule());
         final Callback<Class<?>, Object> guiceFactory = clazz -> injector.getInstance(clazz);
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        logger.trace("loading FXML");
         rootNode = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"),
                 null, //  The resource bundle, useful to internationalised apps. Null here.
                 new JavaFXBuilderFactory(),
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
-
     }
-
-
-    /**
-     * Properties file containing configurable environment variables. Read once during app startup (creation of
-     * ApplicationContext)
-     */
-//    private static final String PROP_FILE_NAME = "hrmd-gui.properties";
-
 
 
 
     @Override
     public void start(Stage window) throws Exception {
+        logger.trace("starting App");
         window.setScene(new Scene(rootNode));
         window.show();
         window.setOnCloseRequest(e -> Platform.exit());

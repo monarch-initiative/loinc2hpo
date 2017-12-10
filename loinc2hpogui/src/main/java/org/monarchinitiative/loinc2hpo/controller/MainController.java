@@ -37,11 +37,8 @@ public class MainController {
 
 
 
-    public void init() {
-        this.model = new Model();
-    }
-
     @FXML private void initialize() {
+        logger.trace("INIT");
        //setupTabController.injectMainController(this);
         this.model = new Model();
         File settings = getPathToSettingsFileAndEnsurePathExists();
