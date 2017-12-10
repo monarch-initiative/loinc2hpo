@@ -22,7 +22,15 @@ public class LoincEntry {
 
     private String timeAspect=null;
 
-    private static final int MIN_FIELDS_LOINC=4;
+    private String system=null;
+
+    private String scale=null;
+
+    private String method=null;
+
+    private String longName=null;
+
+    private static final int MIN_FIELDS_LOINC=10;
 
 
 
@@ -35,6 +43,10 @@ public class LoincEntry {
         component=F.get(1);
         property=F.get(2);
         timeAspect=F.get(3);
+        system=F.get(4);
+        scale=F.get(5);
+        method=F.get(6);
+        longName=F.get(9);
 //        for (int i=0;i<F.size();i++) {
 //            System.out.println(i + ") "+ F.get(i));
 //        }
@@ -45,6 +57,12 @@ public class LoincEntry {
     public String getComponent() { return component; }
     public String getProperty() { return property; }
     public String getTimeAspect() { return timeAspect; }
+    public String getMethod() { return method; }
+    public String getScale() { return scale; }
+    public String getSystem() { return system; }
+    public String getLongName() { return longName; }
+
+
 
     public static ImmutableMap<String,LoincEntry> getLoincEntryList(String pathToLoincCoreTable) {
         ImmutableMap.Builder<String,LoincEntry> builder = new ImmutableMap.Builder();

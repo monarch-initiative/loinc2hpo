@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 public class Main extends Application {
 
-    private static final String WINDOW_TITLE = "Human Regulatory Mutation Database GUI";
+    private static final String WINDOW_TITLE = "LOINC 2 HPO Biocuration App";
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -52,21 +52,12 @@ public class Main extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
         rootNode = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"),
-        null, //  The resource bundle, useful to internationalised apps. Null here.
-                new JavaFXBuilderFactory(),
-        guiceFactory);
-        /*
-                        // Loading the view
-                getClass().getResource("/torgen/ui/UI.fxml"),
-                //
-                null,
-                // The JavaFX builder used to instantiate the view
+                null, //  The resource bundle, useful to internationalised apps. Null here.
                 new JavaFXBuilderFactory(),
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
 
-         */
     }
 
 
@@ -74,7 +65,7 @@ public class Main extends Application {
      * Properties file containing configurable environment variables. Read once during app startup (creation of
      * ApplicationContext)
      */
-    private static final String PROP_FILE_NAME = "hrmd-gui.properties";
+//    private static final String PROP_FILE_NAME = "hrmd-gui.properties";
 
 
 
@@ -97,32 +88,32 @@ public class Main extends Application {
 
 
 
-    private static Path getPropertiesFilePath() {
-        // We'll search for properties file on these paths to allow to run the app from terminal, distribution or IDE.
-        String[] possiblePaths = {getJarFilePath().toString() + File.separator + "classes" + File.separator +
-                PROP_FILE_NAME,
-                getJarFilePath().toString() + File.separator + PROP_FILE_NAME};
+//    private static Path getPropertiesFilePath() {
+//        // We'll search for properties file on these paths to allow to run the app from terminal, distribution or IDE.
+//        String[] possiblePaths = {getJarFilePath().toString() + File.separator + "classes" + File.separator +
+//                PROP_FILE_NAME,
+//                getJarFilePath().toString() + File.separator + PROP_FILE_NAME};
+//
+//        for (String possiblePath : possiblePaths) {
+//            Path p = Paths.get(possiblePath);
+//            if (Files.exists(p) && Files.isRegularFile(p)) {
+//                logger.info(String.format("Using properties file %s", p.toString()));
+//                return p;
+//            }
+//        }
+//        String joined = Arrays.stream(possiblePaths).collect(Collectors.joining(", "));
+//        logger.error(String.format("Unable to find properties file on these paths %s", joined));
+//        throw new RuntimeException(String.format("Unable to find properties file on these paths %s", joined));
+//    }
 
-        for (String possiblePath : possiblePaths) {
-            Path p = Paths.get(possiblePath);
-            if (Files.exists(p) && Files.isRegularFile(p)) {
-                logger.info(String.format("Using properties file %s", p.toString()));
-                return p;
-            }
-        }
-        String joined = Arrays.stream(possiblePaths).collect(Collectors.joining(", "));
-        logger.error(String.format("Unable to find properties file on these paths %s", joined));
-        throw new RuntimeException(String.format("Unable to find properties file on these paths %s", joined));
-    }
-
-    private static Path getJarFilePath() {
-        CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
-        try {
-            return Paths.get(codeSource.getLocation().toURI()).getParent();
-        } catch (URISyntaxException ex) {
-            logger.error("Unable to find jar file", ex);
-            throw new RuntimeException("Unable to find jar file", ex);
-        }
-    }
+//    private static Path getJarFilePath() {
+//        CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
+//        try {
+//            return Paths.get(codeSource.getLocation().toURI()).getParent();
+//        } catch (URISyntaxException ex) {
+//            logger.error("Unable to find jar file", ex);
+//            throw new RuntimeException("Unable to find jar file", ex);
+//        }
+//    }
 
 }

@@ -34,9 +34,6 @@ public class PopUps {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private static String getHpoTermsFromUser = "/fxml/HPOWindow.fxml";
-
-    private static String showValidationResults = "/fxml/ValidationResults.fxml";
 
 
     /**

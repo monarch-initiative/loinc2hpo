@@ -28,7 +28,8 @@ public class MainController {
 
 
     @Inject private SetupTabController setupTabController;
-    @Inject  private AnnotateTabController annotateTabController;
+    @Inject private AnnotateTabController annotateTabController;
+    @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
 
 
     @FXML
@@ -97,6 +98,9 @@ public class MainController {
         hpodownload.setOnSucceeded(event -> {
             window.close();
             logger.trace(String.format("Successfully downloaded hpo to %s",dirpath));
+            String fullpath=String.format("%s%shp.obo",dirpath,File.separator);
+            model.setPathToHpOboFile(fullpath);
+            model.writeSettings();
         });
         hpodownload.setOnFailed(event -> {
             window.close();
