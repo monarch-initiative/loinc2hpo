@@ -53,6 +53,11 @@ public class MainController {
             return;
         }
        setupTabController.setModel(model);
+        if (annotateTabController==null) {
+            logger.error("annotate Controller is null");
+            return;
+        }
+        annotateTabController.setModel(model);
     }
 
 
