@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="loinc2HpoAnnotationsTab" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0">
+        <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Todo--add content to upper pane" />
+               </children>
+            </VBox>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="600.0">
+               <children>
+                  <TableView fx:id="loincTableView" prefHeight="200.0" prefWidth="598.0">
+                    <columns>
+                      <TableColumn fx:id="loincNumberColumn" prefWidth="75.0" text="LOINC Num" />
+                      <TableColumn fx:id="belowNormalHpoColumn" prefWidth="75.0" text="Below normal" />
+                        <TableColumn fx:id="notAbnormalHpoColumn" prefWidth="75.0" text="Normal" />
+                        <TableColumn fx:id="aboveNormalHpoColumn" prefWidth="75.0" text="Above normal" />
+                        <TableColumn fx:id="lowAgeBoundaryColumn" prefWidth="75.0" text="Age (lo)" />
+                        <TableColumn fx:id="highAgeBoundaryColumn" prefWidth="75.0" text="Age (hi)" />
+                        <TableColumn fx:id="rangeColumn" prefWidth="75.0" text="Range" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
