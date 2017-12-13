@@ -66,23 +66,29 @@ public class AnnotateTabController {
 
 
     @FXML private void initialize() {
-
-        if (model != null && model.getPathToHpoOboFile()!=null) {
-            model.parseOntology();
-            termmap = model.getTermMap();
-            logger.trace(String.format("Initialized term map with %d terms",termmap.size()));
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
-            WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
-            logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
+        if (model != null) {
+            setModel(model);
+        } else {
+            logger.error("Model was null, could not get HPO file path");
         }
-
     }
 
 
-
+    /** Initialize the Model reference and set up the HPO autocomplete if possible. */
     public void setModel(Model m) {
+        logger.trace("Setting model in AnnotateTabeController");
         model=m;
+        if (model.getPathToHpoOboFile()==null) {
+            logger.error("Path to hp.obo file is null. Cannot initialize autocomplete");
+            return;
+        }
+        model.parseOntology();
+        termmap = model.getTermMap();
+        logger.trace(String.format("Initialized term map with %d terms",termmap.size()));
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
+        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
+        logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
     }
 
 
@@ -168,7 +174,7 @@ public class AnnotateTabController {
         }
         HpoTerm high = termmap.get(hpoHi);
         if (high==null) {
-            logger.error(String.format("Could not retrive HPO Term for %s",hpoHi));
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoHi));
             return;
         }
 

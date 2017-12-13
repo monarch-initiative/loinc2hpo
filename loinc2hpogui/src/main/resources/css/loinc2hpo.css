@@ -14,8 +14,8 @@
     -fx-faint-focus-color: #d3524422;
     -fx-highlight-fill: -fx-accent;
     -fx-highlight-text-fill: white;
-     -fx-focus-color: linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
-     -fx-prompt-text-fill: transparent;
+    -fx-focus-color: linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-prompt-text-fill: transparent;
     -fx-padding: 10px;
 }
 
