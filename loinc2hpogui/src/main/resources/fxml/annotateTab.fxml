@@ -204,7 +204,7 @@
                      </children>
                   </HBox>
                </children></VBox>
-            <TableView fx:id="loincTableView" prefHeight="91.0" prefWidth="1198.0">
+            <TableView fx:id="loincTableView">
               <columns>
                 <TableColumn fx:id="loincIdTableColumn" prefWidth="75.0" text="LOINC" />
                   <TableColumn fx:id="nameTableColumn" prefWidth="140.0" text="Name" />

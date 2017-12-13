@@ -10,9 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<AnchorPane fx:id="pane" prefHeight="800.0" prefWidth="1200.0"
-            xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
+<AnchorPane fx:id="pane" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
    <children>
       <BorderPane prefHeight="800.0" prefWidth="1200.0">
          <top>
@@ -27,8 +25,9 @@
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC file" />
+                          <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
                               <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
+                              <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
                         </items>
                       </Menu>
                     </menus>
@@ -47,7 +46,7 @@
             </HBox>
          </top>
          <center>
-            <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
                   <Tab text="Setup">
                       <content>

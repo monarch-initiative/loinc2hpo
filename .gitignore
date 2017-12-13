@@ -47,7 +47,6 @@ loinc2hpogui/src/main/java/org/monarchinitiative/loinc2hpo/gui/loinc2hpomain/org
 OLD/src/main/resources/
 OLD/src/test/
 OLD/target/generated-sources/
-loinc2hpo-core/src/test/
 loinc2hpo-core/target/
 target/classes/
 target/distribution-resources/
@@ -57,12 +56,10 @@ target/maven-status/
 /loinc2hpogui/dependency-reduced-pom.xml
 OLD/src/main/java/
 loinc2hpogui/dependency-reduced-pom.xml
-loinc2hpogui/src/main/resources/
-loinc2hpogui/src/test/
 loinc2hpogui/target/archive-tmp/
 loinc2hpogui/target/generated-sources/
 loinc2hpogui/target/maven-archiver/
 loinc2hpogui/target/maven-status/
 loinc2hpo-gui.iml
 loinc2hpogui/target/
-!/loinc2hpogui/src/main/resources/log4j2.xml
+/loinc2hpogui/loinc2hpo-gui.iml

@@ -5,12 +5,14 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.WidthAwareTextFields;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -131,6 +133,7 @@ public class AnnotateTabController {
         LoincEntry entry = this.loincmap.get(s);
         if (entry==null) {
             logger.error(String.format("Could not identify LOINC entry for \"%s\"",s));
+            PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",s));
             return;
         } else {
             logger.trace(String.format("Searching table for term %s",entry.getLongName()));

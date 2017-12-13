@@ -7,18 +7,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="loinc2HpoAnnotationsTab" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
+<AnchorPane fx:id="loinc2HpoAnnotationsTab" xmlns="http://javafx.com/javafx/8.0.111"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
    <children>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0">
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL">
         <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="200.0" prefWidth="1198.0">
                <children>
                   <Label text="Todo--add content to upper pane" />
                </children>
             </VBox>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="600.0">
-               <children>
-                  <TableView fx:id="loincTableView" prefHeight="200.0" prefWidth="598.0">
+                  <TableView fx:id="loincTableView">
                     <columns>
                       <TableColumn fx:id="loincNumberColumn" prefWidth="75.0" text="LOINC Num" />
                       <TableColumn fx:id="belowNormalHpoColumn" prefWidth="75.0" text="Below normal" />
@@ -32,8 +33,6 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-               </children>
-            </AnchorPane>
         </items>
       </SplitPane>
    </children>

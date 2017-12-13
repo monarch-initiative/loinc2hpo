@@ -19,6 +19,8 @@ import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import java.io.File;
 
+import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
+
 @Singleton
 public class MainController {
     private static final Logger logger = LogManager.getLogger();
@@ -38,13 +40,11 @@ public class MainController {
 
 
     @FXML private void initialize() {
-        logger.trace("INIT");
-       //setupTabController.injectMainController(this);
         this.model = new Model();
         File settings = getPathToSettingsFileAndEnsurePathExists();
         model.setPathToSettingsFile(settings.getAbsolutePath());
         if (settings.exists()) {
-            model.setSettings(settings.getAbsolutePath());
+            model.inputSettings(settings.getAbsolutePath());
         }
         if (setupTabController==null) {
             logger.error("setupTabController is null");
@@ -154,6 +154,18 @@ public class MainController {
         String defaultSettingsPath = org.monarchinitiative.loinc2hpo.io.Platform.getPathToSettingsFile();
         File settingsFile=new File(defaultSettingsPath);
        return settingsFile;
+    }
+
+    @FXML private void setBiocuratorID(ActionEvent e) {
+        String bcid=getStringFromUser("Biocurator ID", "e.g., MGM:rrabbit", "Enter biocurator ID");
+        if (bcid!=null && bcid.indexOf(":")>0) {
+            model.setBiocuratorID(bcid);
+            model.writeSettings();
+        } else {
+            logger.error(String.format("Invalid biocurator ID; must be of the form MGM:rrabbit; you tried: \"%s\"",
+                    bcid!=null?bcid:""));
+        }
+        e.consume();
     }
 
 }

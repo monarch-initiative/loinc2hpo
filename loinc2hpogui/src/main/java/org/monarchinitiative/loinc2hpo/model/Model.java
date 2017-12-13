@@ -10,40 +10,42 @@ import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Prototype model for LOINC to HPO Biocuration process.
+ * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
+ * @version 0.1.2 (2017-12-12)
+ */
 public class Model {
     private static final Logger logger = LogManager.getLogger();
 
     private String pathToLoincCoreTableFile=null;
-
-    private String biocuratorname=null;
-
+    /** We save a few settings in a file that we store in ~/.loinc2hpo/loinc2hpo.settings. This variable should
+     * be initialized to the absolute path of the file. */
     private String pathToSettingsFile=null;
-
+    /** Path to {@code hp.obo}. */
     private String pathToHpoOboFile=null;
-
+    /** Path to the file we are creating with LOINC code to HPO annotations. */
     private String pathToAnnotationFile=null;
-
+    /** A String such as MGM:rrabbit .*/
+    private String biocuratorID=null;
+    /** The complete HPO ontology. */
     private  Ontology<HpoTerm, HpoTermRelation> ontology=null;
-
+    /** Key: a loinc code such as 10076-3; value: the corresponding {@link AnnotatedLoincRangeTest} object .*/
     public Map<String,AnnotatedLoincRangeTest> testmap=new HashMap<>();
 
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
     }
-
     public void setPathToSettingsFile(String p) { this.pathToSettingsFile=p;}
-
     public void setPathToAnnotationFile(String p) {pathToAnnotationFile=p;}
-
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
-
+    public void setBiocuratorID(String id){biocuratorID=id;}
 
     public String getPathToLoincCoreTableFile() {
         return pathToLoincCoreTableFile;
@@ -51,6 +53,7 @@ public class Model {
     public String getPathToHpoOboFile() {
         return pathToHpoOboFile;
     }
+    public String getBiocuratorID() {return biocuratorID;}
 
 
     public Model() {
@@ -68,10 +71,10 @@ public class Model {
     private void init() {
     }
 
-
+    /** Parse the {@code hp.obo} file. This will initialize {@link #ontology}. */
     public void parseOntology() {
         if (this.pathToHpoOboFile==null) {
-            logger.error("Attempt to parse hpobo file with null path to file");
+            logger.error("Attempt to parse hp.obo file with null path to file");
             return;
         }
         HpoOntologyParser parser = new HpoOntologyParser(pathToHpoOboFile);
@@ -103,12 +106,12 @@ public class Model {
         return termmap.build();
     }
 
-
+    /** Write a few settings to a file in the user's .loinc2hpo directory. */
     public void writeSettings() {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(pathToSettingsFile));
-            if (biocuratorname!=null) {
-                bw.write(String.format("biocuratorname:%s\n",biocuratorname));
+            if (biocuratorID!=null) {
+                bw.write(String.format("biocuratorid:%s\n",biocuratorID));
             }
             if (pathToLoincCoreTableFile!=null) {
                 bw.write(String.format("loincTablePath:%s\n",pathToLoincCoreTableFile));
@@ -126,14 +129,15 @@ public class Model {
         }
     }
 
-    public void setSettings(final String path) {
+    /** Read the loinc2hpo settings file from the user's .loinc2hpo directory. */
+    public void inputSettings(final String path) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line = null;
             while ((line = br.readLine()) != null) {
                logger.trace(line);
                 String A[] = line.split(":");
-                if (A[0].equals("biocuratorname")) this.biocuratorname = A[1].trim();
+                if (A[0].equals("biocuratorid")) this.biocuratorID = A[1].trim();
                 else if (A[0].equals("loincTablePath")) this.pathToLoincCoreTableFile = A[1].trim();
                 else if (A[0].equals("annotationFile")) this.pathToAnnotationFile = A[1].trim();
                 else if (A[0].equals("hp-obo")) this.pathToHpoOboFile = A[1].trim();

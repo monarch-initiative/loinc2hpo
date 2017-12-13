@@ -1,9 +1,7 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -26,12 +24,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * A few convenience dialogs. TODO make nicer
+ */
 public class PopUps {
-
-    /**
-     * See this http://code.makery.ch/blog/javafx-dialogs-official/ to get a bit of inspiration
-     */
-
     private static final Logger logger = LogManager.getLogger();
 
 
@@ -208,31 +204,6 @@ public class PopUps {
         a.showAndWait();
     }
 
-    /*@Deprecated
-    public static void showValidationResults(String windowTitle, List<ValidationLine> valList, Stage ownerWindow) {
-        Stage window = getPopUpStage(windowTitle);
-        window.initStyle(StageStyle.DECORATED);
-        Stage adjWindow = adjustStagePosition(window, ownerWindow);
-
-        Parent parent = null;
-        ValidationResultsController controller = null;
-        try {
-            FXMLLoader loader = new FXMLLoader(PopUps.class.getResource(showValidationResults));
-            parent = (Parent) loader.load();
-            controller = (ValidationResultsController) loader.getController();
-
-        } catch (IOException ioe) {
-            System.err.println("Fatal error - unaccessible resource " + showValidationResults);
-            System.err.println(ioe.getMessage());
-            System.exit(1);
-        }
-
-        controller.setWindow(adjWindow);
-        controller.addValidationResults(valList);
-        adjWindow.setScene(new Scene(parent));
-        adjWindow.showAndWait();
-
-    }*/
 
     public static void showHtmlContent(String windowTitle, String resourcePath, Stage ownerWindow) {
         Stage window = getPopUpStage(windowTitle);
