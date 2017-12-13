@@ -54,7 +54,6 @@ public class AnnotateTabController {
 
 
     @FXML private TableView<LoincEntry> loincTableView;
-
     @FXML private TableColumn<LoincEntry, String> loincIdTableColumn;
     @FXML private TableColumn<LoincEntry, String> componentTableColumn;
     @FXML private TableColumn<LoincEntry, String> propertyTableColumn;

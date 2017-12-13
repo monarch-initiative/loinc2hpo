@@ -43,6 +43,7 @@
     </dependencies>
 
     <build>
+        <finalName>Loinc2HpoLib</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -104,6 +105,26 @@
                     </execution>
                 </executions>
             </plugin>
+
+        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% JAR %%%%%%%%%%%%%%%%%%%%% JAR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.6</version>
+            <configuration>
+                <archive>
+                    <!--<index>true</index>-->
+                    <manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <!-- set useUniqueVersions=false in order that the classpath has the
+                            SNAPSHOT instead of the build number prefixed to the dependency -->
+                        <!--<useUniqueVersions>false</useUniqueVersions>-->
+                        <mainClass>org.monarchinitiative.loinc2hpo.Loinc2Hpo</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
         </plugins>
     </build>
 </project>

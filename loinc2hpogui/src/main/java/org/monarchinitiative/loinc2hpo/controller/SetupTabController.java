@@ -59,7 +59,9 @@ public class SetupTabController {
 
     @FXML private void setLocationLoincHpoFile(ActionEvent e) {
         FileChooser chooser = new FileChooser();
-        chooser.setTitle("Choose loinc2hpo.tab annotation file");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TSV file (*.tsv)", "*.tsv");
+        chooser.getExtensionFilters().add(extFilter);
+        chooser.setTitle("Choose loinc2hpo.tsv annotation file");
         File f = chooser.showOpenDialog(null);
         if (model==null) {
             logger.error("model is null");
@@ -68,9 +70,9 @@ public class SetupTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             model.setPathToAnnotationFile(path);
-            logger.trace(String.format("Setting path to loinc2hpo.tab annotation file to %s",path));
+            logger.trace(String.format("Setting path to loinc2hpo.tsv annotation file to %s",path));
         } else {
-            logger.error("Unable to set path to loinc2hpo.tab annotation file");
+            logger.error("Unable to set path to loinc2hpo.tsv annotation file");
             return;
         }
         model.writeSettings();
