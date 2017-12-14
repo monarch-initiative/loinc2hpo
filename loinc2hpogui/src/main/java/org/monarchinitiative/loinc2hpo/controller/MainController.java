@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.FlowPane;
@@ -166,6 +167,22 @@ public class MainController {
                     bcid!=null?bcid:""));
         }
         e.consume();
+    }
+
+    /** Show the about message */
+    @FXML private void aboutWindow(ActionEvent e) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("LOINC2HPO Biocuration tool");
+        alert.setHeaderText("Loinc2Hpo");
+        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.";
+        alert.setContentText(s);
+        alert.showAndWait();
+        e.consume();
+    }
+
+    /** Open a help dialog */
+    @FXML private void openHelpDialog() {
+
     }
 
 }

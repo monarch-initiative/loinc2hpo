@@ -89,6 +89,12 @@ public class Platform {
         }
     }
 
+    public static boolean isMacintosh() {
+        return figureOutPlatform().equals(CurrentPlatform.OSX);
+    }
+
+
+
 
     private enum CurrentPlatform {
         LINUX("Linux"),

@@ -16,18 +16,18 @@
 
 <AnchorPane fx:id="annotateTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
    <children>
-      <SplitPane dividerPositions="0.45112781954887216" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
+      <SplitPane dividerPositions="0.3583959899749373" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
         <items>
             <VBox prefHeight="96.0" prefWidth="1198.0">
                <children>
-                  <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtableButton" text="Inititialize LOINC Table">
+                  <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtableButton" stylesheets="@../css/loinc2hpo.css" text="Inititialize LOINC Table">
                      <VBox.margin>
                         <Insets left="20.0" top="10.0" />
                      </VBox.margin>
                   </Button>
                   <HBox prefHeight="48.0" prefWidth="1198.0">
                      <children>
-                        <Button fx:id="searchForLOINCIdButton" mnemonicParsing="false" onAction="#searchForSpecificLoincEntry" text="Search for specific LOINC id">
+                        <Button fx:id="searchForLOINCIdButton" mnemonicParsing="false" onAction="#searchForSpecificLoincEntry" stylesheets="@../css/loinc2hpo.css" text="Search for specific LOINC id">
                            <HBox.margin>
                               <Insets left="20.0" top="10.0" />
                            </HBox.margin>
@@ -41,59 +41,30 @@
                   </HBox>
                   <HBox prefHeight="53.0" prefWidth="1198.0">
                      <children>
-                        <Button fx:id="createAnnotationButton" mnemonicParsing="false" onAction="#createLoinc2HpoAnnotation" text="Create annotation">
+                        <Button fx:id="createAnnotationButton" mnemonicParsing="false" onAction="#createLoinc2HpoAnnotation" stylesheets="@../css/loinc2hpo.css" text="Create annotation">
                            <HBox.margin>
                               <Insets left="20.0" top="10.0" />
                            </HBox.margin>
                         </Button>
                      </children>
                   </HBox>
-                  <GridPane hgap="5.0" styleClass="label" vgap="10.0">
+                  <GridPane hgap="5.0" prefHeight="110.0" prefWidth="782.0" styleClass="label" vgap="10.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="225.0" minWidth="10.0" prefWidth="129.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="116.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="395.0" minWidth="10.0" prefWidth="220.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="87.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="349.0" minWidth="10.0" prefWidth="226.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="245.0" minWidth="10.0" prefWidth="72.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="284.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="32.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Age (high)" GridPane.rowIndex="4" />
-                        <Label text="Years" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField fx:id="ageHighYearsTextField" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <Label text="Months" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <TextField fx:id="ageHighMonthsTextField" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                        <Label text="Days" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                        <TextField fx:id="ageHighDaysTextField" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                        <Label text="Age (low)" GridPane.rowIndex="3" />
-                        <Label text="Years" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="ageLowYearsTextField" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Label text="Months" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <TextField fx:id="ageLowMonthsTextField" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                        <Label text="Days" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                        <TextField fx:id="ageLowDaysTextField" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                        <Label text="Range" GridPane.rowIndex="2" />
-                        <Label text="Low" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="lowRangeTextField" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Label text="High" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <TextField fx:id="highRangeTextField" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <Label text="Unit" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <TextField fx:id="unitTextField" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                        <Label text="HPO Terms" GridPane.rowIndex="1" />
-                        <Label alignment="TOP_LEFT" contentDisplay="CENTER" text="Low" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="hpoLowAbnormalTextField" prefWidth="240.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label text="WNL" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <TextField fx:id="hpoNotAbnormalTextField" prefWidth="240.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <Label text="High" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <TextField fx:id="hpoHighAbnormalTextField" prefHeight="43.0" prefWidth="240.0" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Label text="HPO Term: Low Result" />
+                        <TextField fx:id="hpoLowAbnormalTextField" prefWidth="300.0" GridPane.columnIndex="1" />
+                        <Label text="HPO: Normal result" GridPane.rowIndex="1" />
+                        <TextField fx:id="hpoNotAbnormalTextField" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="HPO: High result" GridPane.rowIndex="2" />
+                        <TextField fx:id="hpoHighAbnormalTextField" prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                      </children>
                      <VBox.margin>
                         <Insets left="10.0" />
@@ -101,7 +72,7 @@
                   </GridPane>
                </children>
             </VBox>
-            <TableView fx:id="loincTableView">
+            <TableView fx:id="loincTableView" prefHeight="501.0" prefWidth="1198.0">
               <columns>
                 <TableColumn fx:id="loincIdTableColumn" prefWidth="75.0" text="LOINC" />
                   <TableColumn fx:id="nameTableColumn" prefWidth="140.0" text="Name" />

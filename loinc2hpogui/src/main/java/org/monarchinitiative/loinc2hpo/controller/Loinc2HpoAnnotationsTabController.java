@@ -41,9 +41,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> lowAgeBoundaryColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> highAgeBoundaryColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> rangeColumn;
+
     @FXML private WebView webview;
 
     public void setModel(Model m) {
@@ -62,12 +60,7 @@ public class Loinc2HpoAnnotationsTabController {
         notAbnormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
         aboveNormalHpoColumn.setSortable(true);
         aboveNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
-        lowAgeBoundaryColumn.setSortable(false);
-        lowAgeBoundaryColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLowAgeBoundry()));
-        highAgeBoundaryColumn.setSortable(true);
-        highAgeBoundaryColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getHighAgeBoundry()));
-        rangeColumn.setSortable(true);
-        rangeColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getRangeAsString()));
+
 
 //        this.contentWebEngine = webview.getEngine();
 //        this.contentWebEngine.loadContent(INITIAL_HTML_CONTENT);

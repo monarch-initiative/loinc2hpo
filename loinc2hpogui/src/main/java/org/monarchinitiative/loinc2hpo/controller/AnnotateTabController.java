@@ -42,15 +42,7 @@ public class AnnotateTabController {
     @FXML private TextField hpoLowAbnormalTextField;
     @FXML private TextField hpoNotAbnormalTextField;
     @FXML private TextField hpoHighAbnormalTextField;
-    @FXML private TextField lowRangeTextField;
-    @FXML private TextField highRangeTextField;
-    @FXML private TextField ageLowYearsTextField;
-    @FXML private TextField ageLowMonthsTextField;
-    @FXML private TextField ageLowDaysTextField;
-    @FXML private TextField ageHighYearsTextField;
-    @FXML private TextField ageHighMonthsTextField;
-    @FXML private TextField ageHighDaysTextField;
-    @FXML private TextField unitTextField;
+
 
 
     @FXML private TableView<LoincEntry> loincTableView;
@@ -153,9 +145,6 @@ public class AnnotateTabController {
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
         e.consume();
         String hpoLo,hpoNormal,hpoHi;
-        Integer ageLoY, ageLoM,ageLoD,ageHiY,ageHiM,ageHiD;
-        String rangeLo, rangeHi, rangeUnit;
-
         String loincCode=this.loincSearchTextField.getText();
         hpoLo=hpoLowAbnormalTextField.getText();
         hpoNormal=hpoNotAbnormalTextField.getText();
@@ -177,25 +166,8 @@ public class AnnotateTabController {
             return;
         }
 
-
-
-        try {
-            ageLoY = Integer.parseInt(ageLowYearsTextField.getText());
-            ageLoM = Integer.parseInt(ageLowMonthsTextField.getText());
-            ageLoD = Integer.parseInt(ageLowDaysTextField.getText());
-            ageHiY = Integer.parseInt(ageHighYearsTextField.getText());
-            ageHiM = Integer.parseInt(ageHighMonthsTextField.getText());
-            ageHiD = Integer.parseInt(ageHighDaysTextField.getText());
-        } catch (NumberFormatException nfe) {
-            logger.error(String.format("Could not parse LOINC entry, number format exception %s",nfe.toString()));
-            return;
-        }
-        rangeLo=lowRangeTextField.getText();
-        rangeHi=highRangeTextField.getText();
-        rangeUnit=unitTextField.getText();
-
         AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,low,normal,high,ageLoY,ageLoM,ageLoD,ageHiY,ageHiM,ageHiD,rangeLo,rangeHi,rangeUnit);
+                new AnnotatedLoincRangeTest(loincCode,low,normal,high);
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
     }

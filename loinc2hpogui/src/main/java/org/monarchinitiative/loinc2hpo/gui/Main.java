@@ -10,25 +10,21 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import javax.swing.*;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.CodeSource;
-import java.util.Arrays;
-import java.util.stream.Collectors;
+
 
 /**
- * The driver class of the HRMD gui app.
+ * The driver class of the LOINC2HPO biocuration app, which is intended to help annotate LOINC codes to the
+ * relevantHPO Terms.
+ * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
+ * @version 0.1.2
  */
 
 public class Main extends Application {
@@ -63,6 +59,19 @@ public class Main extends Application {
     public void start(Stage window) throws Exception {
         logger.trace("starting App");
         window.setScene(new Scene(rootNode));
+        Image image = new Image(Main.class.getResourceAsStream("/img/icon.jpg"));
+        window.getIcons().add(image);
+        window.setTitle("LOINC2HPO Biocuration Tool");
+        if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
+            try {
+                URL iconURL = Main.class.getResource("/img/icon.jpg");
+                java.awt.Image macimage = new ImageIcon(iconURL).getImage();
+                com.apple.eawt.Application.getApplication().setDockIconImage(macimage);
+            } catch (Exception e) {
+                // Won't work on Windows or Linux. Just skip it!
+            }
+        }
+
         window.show();
         window.setOnCloseRequest(e -> Platform.exit());
 
@@ -76,34 +85,5 @@ public class Main extends Application {
 
     }
 
-
-
-//    private static Path getPropertiesFilePath() {
-//        // We'll search for properties file on these paths to allow to run the app from terminal, distribution or IDE.
-//        String[] possiblePaths = {getJarFilePath().toString() + File.separator + "classes" + File.separator +
-//                PROP_FILE_NAME,
-//                getJarFilePath().toString() + File.separator + PROP_FILE_NAME};
-//
-//        for (String possiblePath : possiblePaths) {
-//            Path p = Paths.get(possiblePath);
-//            if (Files.exists(p) && Files.isRegularFile(p)) {
-//                logger.info(String.format("Using properties file %s", p.toString()));
-//                return p;
-//            }
-//        }
-//        String joined = Arrays.stream(possiblePaths).collect(Collectors.joining(", "));
-//        logger.error(String.format("Unable to find properties file on these paths %s", joined));
-//        throw new RuntimeException(String.format("Unable to find properties file on these paths %s", joined));
-//    }
-
-//    private static Path getJarFilePath() {
-//        CodeSource codeSource = Main.class.getProtectionDomain().getCodeSource();
-//        try {
-//            return Paths.get(codeSource.getLocation().toURI()).getParent();
-//        } catch (URISyntaxException ex) {
-//            logger.error("Unable to find jar file", ex);
-//            throw new RuntimeException("Unable to find jar file", ex);
-//        }
-//    }
 
 }
