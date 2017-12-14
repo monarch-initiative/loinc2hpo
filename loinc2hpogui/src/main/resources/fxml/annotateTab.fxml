@@ -37,6 +37,16 @@
                               <Insets left="20.0" top="10.0" />
                            </HBox.margin>
                         </TextField>
+                        <Button mnemonicParsing="false" onAction="#searchLoincByString" stylesheets="@../css/loinc2hpo.css" text="Search by string">
+                           <HBox.margin>
+                              <Insets left="20.0" top="10.0" />
+                           </HBox.margin>
+                        </Button>
+                        <TextField fx:id="loincStringSearchTextField">
+                           <HBox.margin>
+                              <Insets left="20.0" top="10.0" />
+                           </HBox.margin>
+                        </TextField>
                      </children>
                   </HBox>
                   <HBox prefHeight="53.0" prefWidth="1198.0">
@@ -74,14 +84,14 @@
             </VBox>
             <TableView fx:id="loincTableView" prefHeight="501.0" prefWidth="1198.0">
               <columns>
-                <TableColumn fx:id="loincIdTableColumn" prefWidth="75.0" text="LOINC" />
+                <TableColumn fx:id="loincIdTableColumn" maxWidth="100.0" minWidth="60.0" prefWidth="60.0" text="LOINC" />
                   <TableColumn fx:id="nameTableColumn" prefWidth="140.0" text="Name" />
-                <TableColumn fx:id="componentTableColumn" prefWidth="96.0" text="Component" />
-                  <TableColumn fx:id="propertyTableColumn" prefWidth="75.0" text="Property" />
-                  <TableColumn fx:id="timeAspectTableColumn" prefWidth="40.0" text="Time" />
-                  <TableColumn prefWidth="50.0" text="Aspect" />
-                  <TableColumn fx:id="systemTableColumn" prefWidth="75.0" text="System" />
-                  <TableColumn fx:id="scaleTableColumn" prefWidth="75.0" text="Scale" />
+                <TableColumn fx:id="componentTableColumn" maxWidth="250.0" minWidth="120.0" prefWidth="120.0" text="Component" />
+                  <TableColumn fx:id="propertyTableColumn" maxWidth="80.0" minWidth="60.0" prefWidth="60.0" text="Property" />
+                  <TableColumn fx:id="timeAspectTableColumn" maxWidth="50.0" minWidth="40.0" prefWidth="40.0" text="Time" />
+                  <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="Aspect" />
+                  <TableColumn fx:id="systemTableColumn" maxWidth="200.0" minWidth="100.0" prefWidth="100.0" text="System" />
+                  <TableColumn fx:id="scaleTableColumn" maxWidth="80.0" minWidth="70.0" prefWidth="75.0" text="Scale" />
                   <TableColumn fx:id="methodTableColumn" prefWidth="75.0" text="Method" />
               </columns>
                <columnResizePolicy>

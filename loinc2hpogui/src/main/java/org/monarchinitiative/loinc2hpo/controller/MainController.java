@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import java.io.File;
@@ -182,7 +183,7 @@ public class MainController {
 
     /** Open a help dialog */
     @FXML private void openHelpDialog() {
-
+        HelpViewFactory.openHelpDialog();
     }
 
 }

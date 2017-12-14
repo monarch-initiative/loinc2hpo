@@ -5,7 +5,6 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,8 +18,9 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.regex.Pattern;
 
 
 @Singleton
@@ -34,10 +34,11 @@ public class AnnotateTabController {
 
     private ImmutableMap<String,HpoTerm> termmap;
 
-    @FXML Button initLOINCtableButton;
-    @FXML Button searchForLOINCIdButton;
-    @FXML Button createAnnotationButton;
-    @FXML TextField loincSearchTextField;
+    @FXML private Button initLOINCtableButton;
+    @FXML private Button searchForLOINCIdButton;
+    @FXML private Button createAnnotationButton;
+    @FXML private TextField loincSearchTextField;
+    @FXML private TextField loincStringSearchTextField;
 
     @FXML private TextField hpoLowAbnormalTextField;
     @FXML private TextField hpoNotAbnormalTextField;
@@ -138,6 +139,27 @@ public class AnnotateTabController {
         if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
         loincTableView.getItems().clear();
         loincTableView.getItems().add(entry);
+    }
+
+    @FXML private void searchLoincByString(ActionEvent e) {
+        final String query = this.loincStringSearchTextField.getText().trim();
+        if (query==null){
+            logger.error("Null query string. Cowardly refusing to search LOINC entries");
+            return;
+        }
+        logger.trace(String.format("Filter LOINC catalog by \"%s\"",query));
+        List<LoincEntry> entrylist=new ArrayList<>();
+        //The following implements "contains" in a case-insensitive fashion
+        loincmap.values().stream().forEach( loincEntry -> {
+           // if (Pattern.compile(Pattern.quote(loincEntry.getLongName()),Pattern.CASE_INSENSITIVE).matcher(query).find()){
+            if (loincEntry.getLongName().contains(query)) {
+                entrylist.add(loincEntry);
+            }
+        });
+
+        loincTableView.getItems().clear();
+        loincTableView.getItems().addAll(entrylist);
+        e.consume();
     }
 
 
