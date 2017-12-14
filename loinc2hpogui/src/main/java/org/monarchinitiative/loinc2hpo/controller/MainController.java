@@ -28,7 +28,8 @@ import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
 @Singleton
 public class MainController {
     private static final Logger logger = LogManager.getLogger();
-    private final static String HP_OBO="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
+    /** Download address for {@code hp.obo}. */
+    private final static String HP_OBO_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
     private Model model=null;
 
 
@@ -38,8 +39,7 @@ public class MainController {
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
 
     @FXML private MenuBar loincmenubar;
-    @FXML
-    MenuItem closeMenuItem;
+    @FXML private MenuItem closeMenuItem;
 
 
 
@@ -66,16 +66,9 @@ public class MainController {
         }
         loinc2HpoAnnotationsTabController.setModel(model);
         if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
-            loincmenubar.useSystemMenuBarProperty ().set (true);
-
+            loincmenubar.useSystemMenuBarProperty().set(true);
         }
     }
-
-
-    public void setModel(Model m) {this.model=m;}
-
-    public Model getModel() { return  this.model;}
-
 
     @FXML public void downloadHPO(ActionEvent e) {
         String dirpath=org.monarchinitiative.loinc2hpo.io.Platform.getLOINC2HPODir().getAbsolutePath();
@@ -85,7 +78,6 @@ public class MainController {
             return;
         }
         String BASENAME="hp.obo";
-
 
         ProgressIndicator pb = new ProgressIndicator();
         javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo...");
@@ -98,12 +90,8 @@ public class MainController {
         window.setTitle("HPO download");
         window.setScene(scene);
 
-        Task hpodownload = new Downloader(dirpath,HP_OBO,BASENAME,pb);
-
-
+        Task hpodownload = new Downloader(dirpath, HP_OBO_URL,BASENAME,pb);
         new Thread(hpodownload).start();
-
-
         window.show();
         hpodownload.setOnSucceeded(event -> {
             window.close();
@@ -120,7 +108,6 @@ public class MainController {
         thread.start();
 
         e.consume();
-
     }
 
     @FXML public  void setPathToLoincCoreTableFile(ActionEvent e) {
@@ -139,7 +126,6 @@ public class MainController {
     }
 
     @FXML public void close(ActionEvent e) {
-
         Platform.exit();
         System.exit(0);
     }

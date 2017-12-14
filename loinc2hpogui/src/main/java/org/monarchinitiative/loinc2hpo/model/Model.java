@@ -54,6 +54,7 @@ public class Model {
         return pathToHpoOboFile;
     }
     public String getBiocuratorID() {return biocuratorID;}
+    public String getPathToAnnotationFile(){return pathToAnnotationFile;}
 
 
     public Model() {
@@ -117,7 +118,7 @@ public class Model {
                 bw.write(String.format("loincTablePath:%s\n",pathToLoincCoreTableFile));
             }
             if (pathToAnnotationFile!=null) {
-                bw.write(String.format("annotationFile:%s\n"+pathToAnnotationFile));
+                bw.write(String.format("annotationFile:%s\n",pathToAnnotationFile));
             }
             if (pathToHpoOboFile!=null) {
                 bw.write(String.format("hp-obo:%s\n",pathToHpoOboFile));
@@ -135,7 +136,6 @@ public class Model {
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line = null;
             while ((line = br.readLine()) != null) {
-               logger.trace(line);
                int idx=line.indexOf(":");
                if (idx<0) {
                    logger.error("Malformed settings line (no semicolon): "+line);

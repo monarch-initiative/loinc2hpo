@@ -12,6 +12,7 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.command.LoincUtil;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.File;
@@ -61,14 +62,18 @@ public class SetupTabController {
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TSV file (*.tsv)", "*.tsv");
         chooser.getExtensionFilters().add(extFilter);
+        chooser.setInitialFileName("loinc2hpo.tsv");
         chooser.setTitle("Choose loinc2hpo.tsv annotation file");
-        File f = chooser.showOpenDialog(null);
+        File f = chooser.showSaveDialog(null);
         if (model==null) {
             logger.error("model is null");
             return;
         }
         if (f != null) {
             String path = f.getAbsolutePath();
+            if (!f.exists()) {
+                LoincUtil.initLoincAnnotationFile(f);
+            }
             model.setPathToAnnotationFile(path);
             logger.trace(String.format("Setting path to loinc2hpo.tsv annotation file to %s",path));
         } else {

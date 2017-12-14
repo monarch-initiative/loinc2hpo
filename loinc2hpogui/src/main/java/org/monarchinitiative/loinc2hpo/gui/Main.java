@@ -44,7 +44,6 @@ public class Main extends Application {
     public void init() throws IOException {
         final Injector injector = Guice.createInjector(new DepInjectionModule());
         final Callback<Class<?>, Object> guiceFactory = clazz -> injector.getInstance(clazz);
-        logger.trace("loading FXML");
         rootNode = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"),
                 null, //  The resource bundle, useful to internationalised apps. Null here.
                 new JavaFXBuilderFactory(),
@@ -57,7 +56,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception {
-        logger.trace("starting App");
         window.setScene(new Scene(rootNode));
         Image image = new Image(Main.class.getResourceAsStream("/img/icon.jpg"));
         window.getIcons().add(image);

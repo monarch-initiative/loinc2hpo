@@ -60,8 +60,6 @@ public class AnnotateTabController {
     @FXML private void initialize() {
         if (model != null) {
             setModel(model);
-        } else {
-            logger.error("Model was null, could not get HPO file path");
         }
     }
 
@@ -76,7 +74,6 @@ public class AnnotateTabController {
         }
         model.parseOntology();
         termmap = model.getTermMap();
-        logger.trace(String.format("Initialized term map with %d terms",termmap.size()));
         WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
         WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
         WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
