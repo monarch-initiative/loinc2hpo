@@ -136,11 +136,21 @@ public class Model {
             String line = null;
             while ((line = br.readLine()) != null) {
                logger.trace(line);
-                String A[] = line.split(":");
-                if (A[0].equals("biocuratorid")) this.biocuratorID = A[1].trim();
-                else if (A[0].equals("loincTablePath")) this.pathToLoincCoreTableFile = A[1].trim();
-                else if (A[0].equals("annotationFile")) this.pathToAnnotationFile = A[1].trim();
-                else if (A[0].equals("hp-obo")) this.pathToHpoOboFile = A[1].trim();
+               int idx=line.indexOf(":");
+               if (idx<0) {
+                   logger.error("Malformed settings line (no semicolon): "+line);
+               }
+               if (line.length()<idx+2) {
+                   logger.error("Malformed settings line (value too short): "+line);
+               }
+               String key,value;
+               key=line.substring(0,idx).trim();
+               value=line.substring(idx+1).trim();
+
+                if (key.equals("biocuratorid")) this.biocuratorID = value;
+                else if (key.equals("loincTablePath")) this.pathToLoincCoreTableFile = value;
+                else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
+                else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
             }
             br.close();
         } catch (IOException e) {

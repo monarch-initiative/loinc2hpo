@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.FlowPane;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
+import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import java.io.File;
@@ -35,7 +37,7 @@ public class MainController {
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
 
-
+    @FXML private MenuBar loincmenubar;
     @FXML
     MenuItem closeMenuItem;
 
@@ -63,6 +65,10 @@ public class MainController {
             return;
         }
         loinc2HpoAnnotationsTabController.setModel(model);
+        if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
+            loincmenubar.useSystemMenuBarProperty ().set (true);
+
+        }
     }
 
 
@@ -184,6 +190,11 @@ public class MainController {
     /** Open a help dialog */
     @FXML private void openHelpDialog() {
         HelpViewFactory.openHelpDialog();
+    }
+
+    /** Open a help dialog */
+    @FXML private void openSettingsDialog() {
+        SettingsViewFactory.openSettingsDialog(this.model);
     }
 
 }

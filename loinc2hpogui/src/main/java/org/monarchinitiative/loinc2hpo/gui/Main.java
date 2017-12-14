@@ -67,8 +67,10 @@ public class Main extends Application {
                 URL iconURL = Main.class.getResource("/img/icon.jpg");
                 java.awt.Image macimage = new ImageIcon(iconURL).getImage();
                 com.apple.eawt.Application.getApplication().setDockIconImage(macimage);
+
+                //stem.setProperty("org.monarchinitiative.loinc2hpo.gui.Main", "Loinc2Hpo");
             } catch (Exception e) {
-                // Won't work on Windows or Linux. Just skip it!
+                // Not for Windows or Linux. Just skip it!
             }
         }
 

@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * A helper class that displays the Read-the-docs documentation for VPV in a JavaFX webview browser
+ * A helper class that displays the Help in a JavaFX webview browser
  * @author Peter Robinson
  * @version 0.1.3 (2017-11-12)
  */

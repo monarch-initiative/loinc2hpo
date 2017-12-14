@@ -16,7 +16,7 @@
          <top>
             <HBox maxWidth="1.7976931348623157E308" prefHeight="29.0" prefWidth="722.0" BorderPane.alignment="CENTER">
                <children>
-                  <MenuBar HBox.hgrow="NEVER">
+                  <MenuBar fx:id="loincmenubar" HBox.hgrow="NEVER">
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
@@ -28,6 +28,7 @@
                           <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
                               <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
                               <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
+                              <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
                         </items>
                       </Menu>
                     </menus>
