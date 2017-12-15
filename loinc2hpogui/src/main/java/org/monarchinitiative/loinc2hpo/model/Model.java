@@ -57,6 +57,10 @@ public class Model {
     public String getPathToAnnotationFile(){return pathToAnnotationFile;}
 
 
+    public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
+    public int getLoincAnnotationCount() { return testmap!=null?this.testmap.size():0;}
+
+
     public Model() {
         init();
     }

@@ -171,12 +171,12 @@ public class AnnotateTabController {
 
         HpoTerm low = termmap.get(hpoLo);
         if (low==null) {
-            logger.error(String.format("Could not retrive HPO Term for %s",hpoLo));
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoLo));
             return;
         }
         HpoTerm normal = termmap.get(hpoNormal);
         if (normal==null) {
-            logger.error(String.format("Could not retrive HPO Term for %s",hpoNormal));
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoNormal));
             return;
         }
         HpoTerm high = termmap.get(hpoHi);
