@@ -38,7 +38,7 @@
             <artifactId>log4j-core</artifactId>
         </dependency>
 
-       <dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
         </dependency>
@@ -49,6 +49,7 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
 
         <dependency>
             <groupId>commons-cli</groupId>
@@ -82,6 +83,11 @@
             <version>${ontolib.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <version>3.1.0</version>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -178,26 +184,26 @@
                 </configuration>
             </plugin>
 
-         <!--
-          todo figure this out. We are using multiple versions of guava etc.
-          <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <executions>
-                    <execution>
-                        <id>enforce</id>
-                        <configuration>
-                            <rules>
-                                <DependencyConvergence />
-                            </rules>
-                        </configuration>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin> -->
+            <!--
+             todo figure this out. We are using multiple versions of guava etc.
+             <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-enforcer-plugin</artifactId>
+                   <version>1.4.1</version>
+                   <executions>
+                       <execution>
+                           <id>enforce</id>
+                           <configuration>
+                               <rules>
+                                   <DependencyConvergence />
+                               </rules>
+                           </configuration>
+                           <goals>
+                               <goal>enforce</goal>
+                           </goals>
+                       </execution>
+                   </executions>
+               </plugin> -->
 
             <!-- Javadoc generation. -->
             <plugin>
@@ -319,26 +325,26 @@
 
     <!-- Sphinx Manual, build with "mvn site". -->
     <reporting>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.4</version>
-            <reportSets>
-                <reportSet>
-                    <reports />
-                </reportSet>
-            </reportSets>
-        </plugin>
-        <plugin>
-            <groupId>org.tomdz.maven</groupId>
-            <artifactId>sphinx-maven-plugin</artifactId>
-            <version>1.0.2</version>
-            <configuration>
-                <sourceDirectory>${basedir}/manual</sourceDirectory>
-            </configuration>
-        </plugin>
-    </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.4</version>
+                <reportSets>
+                    <reportSet>
+                        <reports />
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.tomdz.maven</groupId>
+                <artifactId>sphinx-maven-plugin</artifactId>
+                <version>1.0.2</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/manual</sourceDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
 
     </reporting>
 
