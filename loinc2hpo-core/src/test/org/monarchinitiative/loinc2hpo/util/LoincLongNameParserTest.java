@@ -14,15 +14,16 @@ public class LoincLongNameParserTest {
     @Test
     public void testString1() {
         String name = "Potassium [Moles/volume] in Serum or Plasma";
-        LoincLongNameParser parser = new LoincLongNameParser(name);
-        assertEquals("Potassium", parser.getLoincParameter());
-        assertEquals("Serum or Plasma", parser.getLoincTissue());
-        assertEquals("Moles/volume", parser.getLoincType());
-        assertEquals("", parser.getLoincMethod());
+        LoincCodeClass loinc = LoincLongNameParser.parse(name);
+        assertEquals("Potassium", loinc.getLoincParameter());
+        assertEquals("Serum or Plasma", loinc.getLoincTissue());
+        assertEquals("Moles/volume", loinc.getLoincType());
+        assertEquals("", loinc.getLoincMethod());
 
 
     }
 
+    /**
     @Test
     public void testString2() {
         String name = "Erythrocyte distribution width [Ratio] by Automated count";
@@ -143,5 +144,17 @@ public class LoincLongNameParserTest {
         assertEquals("", parser.getLoincType());
         assertEquals("Test strip", parser.getLoincMethod());
     }
+
+    @Test
+    public void testString14() {
+        String name = "Appearance of Cerebral spinal fluid";
+        LoincLongNameParser parser = new LoincLongNameParser(name);
+        assertEquals("Appearance", parser.getLoincParameter());
+        assertEquals("Cerebral spinal fluid", parser.getLoincTissue());
+        assertEquals("", parser.getLoincType());
+        assertEquals("", parser.getLoincMethod());
+
+    }
+    **/
 
 }

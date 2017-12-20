@@ -1,3 +1,7 @@
+loinc2hpo-core/logs/
+loinc-hpo-mapping.tsv
+loinc2hpo-core/src/main/resources
+loinc2hpo-core/src/resource/
 .idea/.name
 
 # .iml files
