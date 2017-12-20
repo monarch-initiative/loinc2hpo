@@ -59,13 +59,12 @@ public class Main extends Application {
         window.setScene(new Scene(rootNode));
         Image image = new Image(Main.class.getResourceAsStream("/img/icon.jpg"));
         window.getIcons().add(image);
-        window.setTitle("LOINC2HPO Biocuration Tool");
+        window.setTitle(WINDOW_TITLE);
         if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
             try {
                 URL iconURL = Main.class.getResource("/img/icon.jpg");
                 java.awt.Image macimage = new ImageIcon(iconURL).getImage();
                 com.apple.eawt.Application.getApplication().setDockIconImage(macimage);
-
                 //stem.setProperty("org.monarchinitiative.loinc2hpo.gui.Main", "Loinc2Hpo");
             } catch (Exception e) {
                 // Not for Windows or Linux. Just skip it!

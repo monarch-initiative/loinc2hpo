@@ -126,7 +126,7 @@
 
 
     <build>
-        <!--  <sourceDirectory>src</sourceDirectory> -->
+        <!--  <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -157,7 +157,7 @@
         </resources>
         <finalName>org.monarchinitiative.loinc2hpo-${project.version}</finalName>
 
-
+-->
 
 
         <plugins>

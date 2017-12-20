@@ -29,12 +29,7 @@ public class SetupTabController {
 
     @Inject MainController mainController;//@Inject PickerController picker;
 
-    public void injectMainController(MainController mainController){
-        this.mainController = mainController;
-    }
-
     @FXML private void initialize() {
-//        consoleTabController.injectMainController(this);
         initTextFlow();
     }
 
@@ -69,14 +64,14 @@ public class SetupTabController {
             logger.error("model is null");
             return;
         }
-        if (f != null) {
+        if (f != null && f.getName().endsWith(".tsv")) {
             String path = f.getAbsolutePath();
             if (!f.exists()) {
                 LoincUtil.initLoincAnnotationFile(f);
             }
             model.setPathToAnnotationFile(path);
             logger.trace(String.format("Setting path to loinc2hpo.tsv annotation file to %s",path));
-        } else {
+        }  else {
             logger.error("Unable to set path to loinc2hpo.tsv annotation file");
             return;
         }

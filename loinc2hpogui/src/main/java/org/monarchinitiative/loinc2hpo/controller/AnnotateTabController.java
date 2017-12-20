@@ -6,8 +6,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,9 +43,11 @@ public class AnnotateTabController {
     @FXML private TextField loincSearchTextField;
     @FXML private TextField loincStringSearchTextField;
 
-    @FXML private TextField hpoLowAbnormalTextField;
-    @FXML private TextField hpoNotAbnormalTextField;
-    @FXML private TextField hpoHighAbnormalTextField;
+//    @FXML private TextField hpoLowAbnormalTextField;
+//    @FXML private TextField hpoNotAbnormalTextField;
+//    @FXML private TextField hpoHighAbnormalTextField;
+
+    @FXML private ListView hpoListView;
 
 
 
@@ -74,9 +79,9 @@ public class AnnotateTabController {
         }
         model.parseOntology();
         termmap = model.getTermMap();
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
-        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
         logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
     }
 
@@ -100,7 +105,31 @@ public class AnnotateTabController {
         systemTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getSystem()));
         nameTableColumn.setSortable(true);
         nameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLongName()));
+        hpoListView.setOrientation(Orientation.HORIZONTAL);
+
+        loincTableView.setRowFactory( tv -> {
+            TableRow<LoincEntry> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    LoincEntry rowData = row.getItem();
+                    initHpoTermListView(rowData);
+                }
+            });
+            return row ;
+        });
     }
+
+
+
+    private void initHpoTermListView(LoincEntry entry) {
+        String name = entry.getLongName();
+        ObservableList<String> items = FXCollections.observableArrayList (
+                "A", "B", "C", "D",name);
+        this.hpoListView.setItems(items);
+    }
+
+
+
 
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -165,9 +194,9 @@ public class AnnotateTabController {
         e.consume();
         String hpoLo,hpoNormal,hpoHi;
         String loincCode=this.loincSearchTextField.getText();
-        hpoLo=hpoLowAbnormalTextField.getText();
-        hpoNormal=hpoNotAbnormalTextField.getText();
-        hpoHi=hpoHighAbnormalTextField.getText();
+        hpoLo="?"; //hpoLowAbnormalTextField.getText();
+        hpoNormal="?";//hpoNotAbnormalTextField.getText();
+        hpoHi="?";//hpoHighAbnormalTextField.getText();
 
         HpoTerm low = termmap.get(hpoLo);
         if (low==null) {
