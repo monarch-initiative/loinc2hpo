@@ -32,7 +32,7 @@ public class HpoOntologyParser {
     Ontology<HpoTerm, HpoTermRelation> inheritanceSubontology=null;
     Ontology<HpoTerm, HpoTermRelation> abnormalPhenoSubOntology=null;
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
-    private Map<TermId,HpoTerm> termmap=null;
+
 
     public HpoOntologyParser(String path){
         hpoOntologyPath=path;
