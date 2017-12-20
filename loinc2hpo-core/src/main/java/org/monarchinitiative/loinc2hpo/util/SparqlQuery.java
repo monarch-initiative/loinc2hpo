@@ -22,7 +22,9 @@ import static java.nio.file.StandardOpenOption.CREATE;
 
 public class SparqlQuery {
 
-    private final String HPO = this.getClass().getResource("hp.owl").getFile();
+    private static final String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
+    private static boolean modelCreated = false;
+    private static Model model;
     private static final String HPO_PREFIX = "PREFIX xmlns: <http://purl.obolibrary.org/obo/hp.owl#> "+
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
             "PREFIX owl:<http://www.w3.org/2002/07/owl#> " +
@@ -53,6 +55,11 @@ public class SparqlQuery {
             System.out.println("cannot open hpo.owl");
         }
         return model;
+    }
+
+    private static void createHPOModel() {
+        model = getOntologyModel(hpo);
+        modelCreated = true;
     }
 
     //check classes that contain the parameter and has modifier in label / definition
@@ -100,6 +107,9 @@ public class SparqlQuery {
 
     public static List<HPO_Class_Found> query(String loincLongCommonName, Model hpomodel) {
 
+        if(!modelCreated) {
+            createHPOModel();
+        }
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         //first parse the loinc long common name
         LoincCodeClass loincClass = LoincLongNameParser.parse(loincLongCommonName);
@@ -142,6 +152,59 @@ public class SparqlQuery {
         }
         return HPO_classes_found;
 
+    }
+
+    public static List<HPO_Class_Found> query_with_multiple_keywords(String[] keys) {
+        if(!modelCreated) {
+            createHPOModel();
+        }
+
+        return null;
+    }
+
+
+    public static List<HPO_Class_Found> getChildren(String HPO_class_URL) {
+        if(!modelCreated) {
+            createHPOModel();
+        }
+        StringBuilder childrenQuery = new StringBuilder();
+        childrenQuery.append(HPO_PREFIX);
+        childrenQuery.append(DISPLAY);
+        String condition = String.format(" WHERE {" +
+                "?phenotype rdfs:subClassOf <%s> . " +
+                "?phenotype rdfs:label ?label . " +
+                "OPTIONAL {?phenotype obo:IAO_0000115 ?definition} .} ", HPO_class_URL);
+        childrenQuery.append(condition);
+        Query query = QueryFactory.create(childrenQuery.toString());
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        Iterator<QuerySolution> results = qexec.execSelect();
+        List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
+        int count = 0;
+        count = addFoundClasses(HPO_classes_found, results, null);
+        System.out.println(count + " results are found!");
+        return HPO_classes_found;
+    }
+
+    public static List<HPO_Class_Found> getParents(String HPO_class_URL) {
+        if(!modelCreated) {
+            createHPOModel();
+        }
+        StringBuilder parentQuery = new StringBuilder();
+        parentQuery.append(HPO_PREFIX);
+        parentQuery.append(DISPLAY);
+        String condition = String.format(" WHERE {" +
+                "<%s> rdfs:subClassOf ?phenotype . " +
+                "?phenotype rdfs:label ?label . " +
+                "OPTIONAL {?phenotype obo:IAO_0000115 ?definition} .} ", HPO_class_URL);
+        parentQuery.append(condition);
+        Query query = QueryFactory.create(parentQuery.toString());
+        QueryExecution qexec = QueryExecutionFactory.create(query, model);
+        Iterator<QuerySolution> results = qexec.execSelect();
+        List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
+        int count = 0;
+        count = addFoundClasses(HPO_classes_found, results, null);
+        System.out.println(count + " results are found!");
+        return HPO_classes_found;
     }
 
 
@@ -200,19 +263,8 @@ public class SparqlQuery {
         }
         return newString;
     }
-/**
-    public static ResultSet query(Model model, String queryString) {
-        Query query = QueryFactory.create(queryString);
-        try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
-            return qexec.execSelect();
-        } catch (Exception e) {
-            //nothing to do
-            return null;
-        }
-    }
- **/
 
-    //public static
+
 
 
     public static void main(String[] args) {
