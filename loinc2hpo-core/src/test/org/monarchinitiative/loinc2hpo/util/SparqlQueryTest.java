@@ -4,6 +4,10 @@ import org.apache.jena.rdf.model.Model;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class SparqlQueryTest {
@@ -61,7 +65,7 @@ public class SparqlQueryTest {
         test_words = SparqlQuery.parameters(test);
         assertEquals(4, test_words.length);
     }
-
+/**
     @Test
     public void testTrimS() {
         String s = "Zinc";
@@ -72,5 +76,106 @@ public class SparqlQueryTest {
 
         s = "exocytosis";
         assertEquals("exocytosi", SparqlQuery.trimS(s));
+    }
+**/
+    @Test
+    public void testGetChildren() {
+        String current = "http://purl.obolibrary.org/obo/HP_0012598";
+        List<HPO_Class_Found> results = SparqlQuery.getChildren(current);
+        assertEquals(3, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0012100";
+        results = SparqlQuery.getChildren(current);
+        assertEquals(2, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0012101";
+        results = SparqlQuery.getChildren(current);
+        assertEquals(0, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0004364";
+        results = SparqlQuery.getChildren(current);
+        assertEquals(8, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+    }
+
+    @Test
+    public void testGetParents(){
+        String current = "http://purl.obolibrary.org/obo/HP_0012598";
+        List<HPO_Class_Found> results = SparqlQuery.getParents(current);
+        //assertEquals(1, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0012100";
+        results = SparqlQuery.getParents(current);
+        //assertEquals(1, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0012101";
+        results = SparqlQuery.getParents(current);
+        //assertEquals(1, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+
+        current = "http://purl.obolibrary.org/obo/HP_0004364";
+        results = SparqlQuery.getParents(current);
+        //assertEquals(1, results.size());
+        for (HPO_Class_Found hpo_term : results) {
+            System.out.println(hpo_term.getId());
+            System.out.println(hpo_term.getLabel());
+            if(hpo_term.getDefinition() != null) {
+                System.out.println(hpo_term.getDefinition());
+            }
+        }
+    }
+
+    @Test
+    public void testBuildQueryWithMultiKeys() {
+        String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
+        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+
     }
 }

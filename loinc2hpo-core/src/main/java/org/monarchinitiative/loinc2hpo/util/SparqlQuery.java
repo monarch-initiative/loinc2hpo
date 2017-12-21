@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
@@ -23,8 +25,8 @@ import static java.nio.file.StandardOpenOption.CREATE;
 public class SparqlQuery {
 
     private static final String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
-    private static boolean modelCreated = false;
-    private static Model model;
+    private static boolean modelCreated = false; //check whether the model for hpo has been created
+    private static Model model; //model of hp.owl for Sparql query
     private static final String HPO_PREFIX = "PREFIX xmlns: <http://purl.obolibrary.org/obo/hp.owl#> "+
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
             "PREFIX owl:<http://www.w3.org/2002/07/owl#> " +
@@ -36,15 +38,20 @@ public class SparqlQuery {
             "PREFIX hp2: <http://purl.obolibrary.org/obo/hp.owl#> " +
             "PREFIX obo: <http://purl.obolibrary.org/obo/> " +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
-    private static String DISPLAY = "SELECT DISTINCT ?phenotype ?label ?definition ";
-    private static String[] invalid_words = new String[]
-            {"mean", "in", "of", "identified", "cell", "conjugated", "other", "virus", "normal"};
-    //private static HashSet<String> invalid_words= new HashSet<>();
+    private static final String DISPLAY = "SELECT DISTINCT ?phenotype ?label ?definition ";
 
-    public static Model getOntologyModel(String ontologyFile) {
+    private static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
+    private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * Create an ontology model from its owl file
+     * @param path_to_ontology
+     * @return the ontology model for query
+     */
+    public static Model getOntologyModel(String path_to_ontology) {
         Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
         try {
-            InputStream in = FileManager.get().open(ontologyFile);
+            InputStream in = FileManager.get().open(path_to_ontology);
             try {
                 model.read(in, null);
                 System.out.println("model created");
@@ -57,13 +64,22 @@ public class SparqlQuery {
         return model;
     }
 
+    /**
+     * Create the HPO model
+     */
     private static void createHPOModel() {
         model = getOntologyModel(hpo);
         modelCreated = true;
     }
 
     //check classes that contain the parameter and has modifier in label / definition
-    public static String buildStandardQuery(String parameter_single_word) {
+
+    /**
+     * Build a standard sparql query from a single key
+     * @param single_word_key
+     * @return a sparql query string to select HPO classes that
+     */
+    public static String buildStandardQuery(String single_word_key) {
 
         StringBuilder standardQuery = new StringBuilder();
         standardQuery.append(HPO_PREFIX);
@@ -72,19 +88,19 @@ public class SparqlQuery {
                 "{?phenotype obo:IAO_0000115 ?definition . " +
                 " ?phenotype rdfs:label ?label . " +
                 " FILTER (regex(?definition, \"%s\", \"i\")) " +
-                " FILTER (regex(?definition, \"increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*\", \"i\"))} " +
+                " FILTER (regex(?definition, \"%s\", \"i\"))} " +
                 "UNION" +
                 " {?phenotype rdfs:label ?label . " +
                 " OPTIONAL {?phenotype obo:IAO_0000115 ?definition .} " +
                 " FILTER (regex(?label, \"%s\", \"i\")) " +
-                " FILTER (regex(?label, \"increase*|decrease*|elevate*|reduc*|high*|low*|above|below|hyper*|hypo*|abnormal*\", \"i\"))}" +
-                "}", parameter_single_word, parameter_single_word);
+                " FILTER (regex(?label, \"%s\", \"i\"))}" +
+                "}", single_word_key, modifier, single_word_key, modifier);
         standardQuery.append(condition);
         return standardQuery.toString();
     }
 
     //check classes containing the parameter
-    public static String buildLooseQuery(String parameter_single_word) {
+    public static String buildLooseQuery(String single_word_key) {
 
         StringBuilder looseQuery = new StringBuilder();
         looseQuery.append(HPO_PREFIX);
@@ -99,10 +115,75 @@ public class SparqlQuery {
                 " OPTIONAL {?phenotype obo:IAO_0000115 ?definition .} " +
                 " FILTER (regex(?label, \"%s\", \"i\")) " +
                 " }" +
-                "}", parameter_single_word, parameter_single_word);
+                "}", single_word_key, single_word_key);
         looseQuery.append(condition);
         return looseQuery.toString();
 
+    }
+
+    public static String buildStandardQueryWithMultiKeys(List<String> keys) { //provide multiple keywords for query
+        if (keys == null) {
+            throw new IllegalArgumentException("Key list is empty");
+        }
+        StringBuilder multiKeyQuery = new StringBuilder();
+        multiKeyQuery.append(HPO_PREFIX);
+        multiKeyQuery.append(DISPLAY);
+        StringBuilder labelfilters = new StringBuilder();
+        StringBuilder definitionfilters = new StringBuilder();
+        for (String key : keys) {
+            labelfilters.append(String.format("FILTER (regex(?label, \"%s\", \"i\")) ", key));
+            definitionfilters.append(String.format("FILTER (regex(?definition, \"%s\", \"i\")) ", key));
+        }
+        String condition = String.format(" WHERE " +
+                "{" +
+                " {?phenotype obo:IAO_0000115 ?definition . " +
+                " ?phenotype rdfs:label ?label . " +
+                " FILTER (regex(?definition, \"%s\", \"i\"))} " +
+                " %s } " +
+                "UNION" +
+                " {?phenotype rdfs:label ?label . " +
+                " OPTIONAL {?phenotype obo:IAO_0000115 ?definition .} " +
+                " FILTER (regex(?label, \"%s\", \"i\"))}" +
+                " %s }" +
+                "}", modifier, definitionfilters.toString(), modifier, labelfilters.toString());
+        multiKeyQuery.append(condition);
+        return multiKeyQuery.toString();
+    }
+
+    public static String buildLooseQueryWithMultiKeys(List<String> keys) { //provide multiple keywords for query
+        if (keys == null) {
+            throw new IllegalArgumentException("Key list is empty");
+        }
+        StringBuilder multiKeyQuery = new StringBuilder();
+        multiKeyQuery.append(HPO_PREFIX);
+        multiKeyQuery.append(DISPLAY);
+        StringBuilder labelfilters = new StringBuilder();
+        StringBuilder definitionfilters = new StringBuilder();
+        for (String key : keys) {
+            labelfilters.append(String.format("FILTER (regex(?label, \"%s\", \"i\")) ", key));
+            definitionfilters.append(String.format("FILTER (regex(?definition, \"%s\", \"i\")) ", key));
+        }
+        String condition = String.format(" WHERE " +
+                "{" +
+                " {?phenotype obo:IAO_0000115 ?definition . " +
+                " ?phenotype rdfs:label ?label . " +
+                " %s } " +
+                "UNION" +
+                " {?phenotype rdfs:label ?label . " +
+                " OPTIONAL {?phenotype obo:IAO_0000115 ?definition .} " +
+                " %s }" +
+                "}", definitionfilters.toString(), labelfilters.toString());
+        multiKeyQuery.append(condition);
+        return multiKeyQuery.toString();
+    }
+
+    public static Iterator<QuerySolution> query(Query query, Model hpomodel) {
+        if(!modelCreated) {
+            createHPOModel();
+        }
+        QueryExecution qexec = QueryExecutionFactory.create(query, hpomodel);
+        Iterator<QuerySolution> results = qexec.execSelect();
+        return results;
     }
 
     public static List<HPO_Class_Found> query(String loincLongCommonName, Model hpomodel) {
@@ -231,38 +312,15 @@ public class SparqlQuery {
     public static String[] parameters(String loincparameter) {
         //split the loinc parameter into individual words
         String[] words = loincparameter.split("\\W");
+
+
+
         return words;
     }
 
-    public static boolean valid(String word) { //test whether a word should be used in building a query
 
-        if (word == null) {
-            return false;
-        }
-        if (word.length() == 1) {
-            return false;
-        }
 
-        try {
-            int value = Integer.parseInt(word);
-            return false;
-        } catch (Exception e) {
-            HashSet<String> invalid = new HashSet<>();
-            invalid.addAll(Arrays.asList(invalid_words));
-            return !invalid.contains(word);
-        }
 
-    }
-
-    public static String trimS(String s) {
-        String newString;
-        if (s.endsWith("s") && s.length() > 2) {
-            newString = s.substring(0, s.length() - 1);
-        } else {
-            newString = s;
-        }
-        return newString;
-    }
 
 
 
