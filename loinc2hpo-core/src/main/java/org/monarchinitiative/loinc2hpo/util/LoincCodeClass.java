@@ -81,7 +81,9 @@ public class LoincCodeClass {
         Queue<String> keys = new LinkedList<>();
         String[] words = this.tissue.split(" or ");
         for (String word : words) {
-            keys.add(trimS(word));
+            if(validKey(word.toLowerCase())) {
+                keys.add(trimS(word));
+            }
         }
         return keys;
     }
@@ -101,7 +103,7 @@ public class LoincCodeClass {
 
     private static boolean validKey(String word) { //test whether a word should be used in building a query
 
-        if (word == null) {
+        if (word == null || word == "") {
             return false;
         }
         if (word.length() == 1) {

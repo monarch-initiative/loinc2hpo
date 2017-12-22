@@ -1,11 +1,16 @@
 package org.monarchinitiative.loinc2hpo.util;
 
+import org.apache.jena.atlas.iterator.Iter;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -14,7 +19,8 @@ public class SparqlQueryTest {
 
     static Model model;
 
-    //@BeforeClass
+
+   @BeforeClass
     public static void initializeModel() {
         String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
         System.out.println("hpo path: " + hpo);
@@ -22,21 +28,87 @@ public class SparqlQueryTest {
     }
 
     @Test
-    public void testbuildStandardQuery() {
+    public void testbuildStandardQueryWithSingleKey() {
         String test1 = "Testosterone";
-        System.out.print(SparqlQuery.buildStandardQuery(test1));
+        System.out.print(SparqlQuery.buildStandardQueryWithSingleKey(test1));
     }
 
     @Test
-    public void testBuildLooseQuery() {
+    public void testBuildLooseQueryWithSingleKey() {
         String test = "Testosterone";
-        System.out.println(SparqlQuery.buildLooseQuery(test));
+        System.out.println(SparqlQuery.buildLooseQueryWithSingleKey(test));
     }
 
     @Test
-    public void testQuery1() {
-        String loinc_name = "Testosterone Free [Mass/volume] in Serum or Plasma";
-        SparqlQuery.query(loinc_name, model);
+    public void testBuildLooseQueryWithMultiKeys() {
+        String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
+        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+        keys = new String[]{"chronic", "kidney", "disease"};
+        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+    }
+
+    @Test
+    public void testBuildStandardQueryWithMultiKeys() {
+        String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
+        System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+        keys = new String[]{"chronic", "kidney", "disease"};
+        System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+    }
+
+    @Test
+    public void testQueryWithOneKey() {
+        String key = "Testosterone";
+        String looseQueryString = SparqlQuery.buildLooseQueryWithSingleKey(key);
+        String standardQueryString = SparqlQuery.buildStandardQueryWithSingleKey(key);
+        System.out.println("loose query:\n" + looseQueryString);
+        System.out.println("\n\nstandard query:\n" + standardQueryString);
+        Query looseQuery = QueryFactory.create(looseQueryString);
+        Query standardQuery = QueryFactory.create(standardQueryString);
+        List<HPO_Class_Found> results_loose = SparqlQuery.query(looseQuery, model, null);
+        List<HPO_Class_Found> results_standard = SparqlQuery.query(standardQuery, model, null);
+        System.out.println(results_loose.size() + " HPO terms are found!");
+        for(HPO_Class_Found hpo : results_loose) {
+            System.out.println(hpo.getLabel() + "\t" + hpo.getId() + "\n" + hpo.getDefinition());
+        }
+        assertEquals(16, results_loose.size()); //interesting that this program identifies 16 classes;
+                                                            // while the same query finds 14 in command line
+                                                            //reason: command line uses hp.owl; this program builds a model from hp.owl(?)
+        System.out.println(results_standard.size()+ " HPO terms are found!");
+        assertEquals(13, results_standard.size());
+    }
+
+    @Test
+    public void testQueryWithMultiKeys() {
+
+        String[] keys = new String[]{"chronic", "kidney", "disease"};
+        String looseQueryString = SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys));
+        String standardQueryString = SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys));
+        Query looseQuery = QueryFactory.create(looseQueryString);
+        Query standardQuery = QueryFactory.create(standardQueryString);
+        List<HPO_Class_Found> itr_loose = SparqlQuery.query(looseQuery, model, null);
+        List<HPO_Class_Found> itr_standard = SparqlQuery.query(standardQuery, model, null);
+
+        System.out.println(itr_loose.size() + " HPO terms are found!");
+        //assertEquals(7, itr_loose.size());
+
+        System.out.println(itr_standard.size() + " HPO terms are found!");
+        //assertEquals(5, itr_standard.size());
+
+    }
+
+    @Test
+    public void tests(){
+        testQueryWithOneKey();
+        testQueryWithMultiKeys();
+    }
+
+    @Test
+    public void testQuery_auto() {
+        //String loinc_name = "Testosterone Free [Mass/volume] in Serum or Plasma";
+        //SparqlQuery.query_auto(loinc_name);
+
+        String loinc_name = "Erythrocyte distribution width [Ratio] in blood or serum by Automated count";
+        SparqlQuery.query_auto(loinc_name);
     }
 
     @Test
@@ -172,10 +244,5 @@ public class SparqlQueryTest {
         }
     }
 
-    @Test
-    public void testBuildQueryWithMultiKeys() {
-        String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
-        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
 
-    }
 }

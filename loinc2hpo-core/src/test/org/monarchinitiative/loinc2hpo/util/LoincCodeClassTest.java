@@ -51,5 +51,17 @@ public class LoincCodeClassTest {
         assertEquals("serum", results.remove());
     }
 
+    @Test
+    public void testALoinc() {
+        String aLoinc = "Erythrocyte distribution width [Ratio] by Automated count";
+        assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
+        assertEquals("", LoincLongNameParser.parse(aLoinc).getLoincTissue());
+        System.out.println(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().size());
+        for (String tissue : LoincLongNameParser.parse(aLoinc).keysInLoincTissue()) {
+            System.out.println(tissue);
+        }
+        assertEquals(true, LoincLongNameParser.parse(aLoinc).keysInLoincTissue().isEmpty());
+    }
+
 
 }
