@@ -9,7 +9,8 @@ public class LoincCodeClass {
     private String assayMethod;
     private String assayType;
     private static final String[] invalid_words = new String[] //use lowercase letters
-            {"mean", "in", "of", "identified", "cell", "conjugated", "other", "virus", "normal", "on", "total"};
+            {"mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
+                    "normal", "on", "total", "identified"};
 
     public LoincCodeClass(String parameter, String tissue, String method, String type) {
         this.parameter = parameter;

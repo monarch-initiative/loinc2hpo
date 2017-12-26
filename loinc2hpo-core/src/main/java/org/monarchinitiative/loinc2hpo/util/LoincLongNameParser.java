@@ -27,6 +27,9 @@ public class LoincLongNameParser {
         if(elems2.length == 1) {//if no "in", then it might be "of". example: Hematocrit [Volume Fraction] of Blood
             elems2 = elems2[0].split(" of ");
         }
+        if(elems2.length == 1) {//if not "in", then try "on". example: little i Ag [Presence] on Red Blood Cells from donor
+            elems2 = elems2[0].split(" on ");
+        }
         if(elems2.length == 1) {
             String[] elems3 = elems2[0].split(" \\[");
             if (elems3.length == 1) {
@@ -41,7 +44,14 @@ public class LoincLongNameParser {
             elems2 = new String[]{elems2[0] + " in " + elems2[1], elems2[2]};
         }
         if(elems2.length == 2) { //"Platelets [#/volume]", "Blood"
-            tissue = elems2[1];
+            if (elems2[1].split(" from ").length == 2) {
+                tissue = elems2[1].split(" from ")[0];
+            } else if (elems2[1].split(" --").length == 2) {
+                tissue = elems2[1].split(" --")[0];
+            } else {
+                tissue = elems2[1];
+            }
+
             String[] elems3 = elems2[0].split(" \\[");
             if (elems3.length == 1) {
                 parameter = elems3[0];

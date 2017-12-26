@@ -107,8 +107,15 @@ public class SparqlQueryTest {
         //String loinc_name = "Testosterone Free [Mass/volume] in Serum or Plasma";
         //SparqlQuery.query_auto(loinc_name);
 
-        String loinc_name = "Erythrocyte distribution width [Ratio] in blood or serum by Automated count";
-        SparqlQuery.query_auto(loinc_name);
+        //String loinc_name = "Erythrocyte distribution width [Ratio] in blood or serum by Automated count";
+        //String loinc_name = "Carbon dioxide, total [Moles/volume] in Serum or Plasma";
+        System.out.println("Find Carbon dioxide, total [Moles/volume] in Serum or Plasma: ");
+        SparqlQuery.query_auto("Carbon dioxide, total [Moles/volume] in Serum or Plasma");
+        System.out.println("Find Anion gap 3 in Serum or Plasma: ");
+        SparqlQuery.query_auto("Anion gap 3 in Serum or Plasma");
+        System.out.println("Find Protein [Presence] in Urine by Test strip: ");
+        SparqlQuery.query_auto("Protein [Presence] in Urine by Test strip");
+
     }
 
     @Test

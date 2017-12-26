@@ -1,0 +1,62 @@
+package org.monarchinitiative.loinc2hpo.util;
+
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+public class SynsetTest {
+
+    @Test
+    public void testGetRow(){
+        assertEquals(-1, new Synset().getRow("brain"));
+        assertEquals(0, new Synset().getRow("blood"));
+        assertEquals(0, new Synset().getRow("serum"));
+        assertEquals(4, new Synset().getRow("heart"));
+    }
+
+    @Test
+    public void testAddSynset(){
+        assertEquals("brain", new Synset().getSynset("brain").getSynset().remove());
+    }
+    @Test
+    public void test1(){
+        String key = "brain";
+        assertEquals("brain", new Synset().getSynset(key).convertToRe());
+    }
+
+    @Test
+    public void test2(){
+        assertEquals("blood|plasma|serum", new Synset().getSynset("serum").convertToRe());
+    }
+
+    @Test
+    public void test3(){
+        assertEquals("blood|plasma|serum", new Synset().getSynset("blood", "serum").convertToRe());
+    }
+
+    @Test
+    public void test4(){
+        assertEquals("RBC|red blood cell|erythrocyte|blood|plasma|serum", new Synset().getSynset("RBC", "blood").convertToRe());
+    }
+
+    @Test
+    public void test5(){
+        assertEquals("blood|plasma|serum|brain", new Synset().getSynset("brain", "blood").convertToRe());
+    }
+
+    @Test
+    public void test6(){
+        assertEquals("spleen|skin", new Synset().getSynset("spleen", "skin").convertToRe());
+    }
+
+    @Test
+    public void test7(){
+        List<String> testlist = new LinkedList<>();
+        testlist.addAll(Arrays.asList(new String[] {"blood", "heart", "brain"}));
+        System.out.println(new Synset().getSynset(testlist).convertToRe());
+    }
+}
