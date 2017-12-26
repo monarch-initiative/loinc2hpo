@@ -36,7 +36,7 @@ public class SparqlQuery {
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
     private static final String DISPLAY = "SELECT DISTINCT ?phenotype ?label ?definition ";
 
-    private static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
+    public static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -208,6 +208,9 @@ public class SparqlQuery {
         Iterator<QuerySolution> results = qexec.execSelect();
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         addFoundClasses(HPO_classes_found, results, loincCodeClass);
+        if(HPO_classes_found.size() > 1)
+            Collections.sort(HPO_classes_found);
+            Collections.reverse(HPO_classes_found);
         return HPO_classes_found;
     }
 
@@ -354,6 +357,7 @@ public class SparqlQuery {
             System.out.println("NO HPO terms are found. Try some synonymes.");
         }
         System.out.println(HPO_classes_found.size() + " HPO classes are found!");
+
         return HPO_classes_found;
     }
 

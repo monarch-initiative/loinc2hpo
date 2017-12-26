@@ -8,10 +8,8 @@ import org.apache.jena.rdf.model.Model;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +18,7 @@ public class SparqlQueryTest {
     static Model model;
 
 
-   @BeforeClass
+    @BeforeClass
     public static void initializeModel() {
         String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
         System.out.println("hpo path: " + hpo);
@@ -109,13 +107,28 @@ public class SparqlQueryTest {
 
         //String loinc_name = "Erythrocyte distribution width [Ratio] in blood or serum by Automated count";
         //String loinc_name = "Carbon dioxide, total [Moles/volume] in Serum or Plasma";
+        //List<HPO_Class_Found> hpo_clsses_found = new ArrayList<>();
+        /**
         System.out.println("Find Carbon dioxide, total [Moles/volume] in Serum or Plasma: ");
         SparqlQuery.query_auto("Carbon dioxide, total [Moles/volume] in Serum or Plasma");
         System.out.println("Find Anion gap 3 in Serum or Plasma: ");
         SparqlQuery.query_auto("Anion gap 3 in Serum or Plasma");
-        System.out.println("Find Protein [Presence] in Urine by Test strip: ");
-        SparqlQuery.query_auto("Protein [Presence] in Urine by Test strip");
-
+         **/
+        System.out.println("Find \"Potassium [Moles/volume] in Serum or Plasma\": ");
+        List<HPO_Class_Found> hpo_clsses_found = SparqlQuery.query_auto("Potassium [Moles/volume] in Serum or Plasma");
+        for (HPO_Class_Found HPO_class : hpo_clsses_found) {
+            StringBuilder outContent = new StringBuilder();
+            //outContent.append(newline);
+            //outContent.append("\t");
+            outContent.append(HPO_class.getScore() + "\t");
+            outContent.append(HPO_class.getId() + "\t");
+            outContent.append(HPO_class.getLabel() + "\t");
+            if (HPO_class.getDefinition() != null)  {
+                outContent.append(HPO_class.getDefinition());
+            }
+            outContent.append("\n");
+            System.out.println(outContent.toString());
+        }
     }
 
     @Test
@@ -251,5 +264,20 @@ public class SparqlQueryTest {
         }
     }
 
+    @Test
+    public void testRe() {
 
+        String label = "Increased urinary potassium" ;
+        String definition = "An increased concentration of potassium(1+) in the urine.";
+        String loincname = "Potassium [Moles/volume] in Serum or Plasma";
+        String total = label + " " + definition;
+
+        String test = "Cardiac*";
+        //assertEquals("cardiac*", test.toLowerCase());
+
+        test = "potassium:chloride symporter activity";
+        //assertEquals(false, test.matches(".*((increase*)|(decrease*)|(elevate*)|(reduc*)|(high*)|(low*)|(above)|(below)|(abnormal*)).*"));
+
+        assertEquals(false, test.matches(".*(increase*|decrease*|elevate*|reduc*|high*|\"low*\").*"));
+    }
 }

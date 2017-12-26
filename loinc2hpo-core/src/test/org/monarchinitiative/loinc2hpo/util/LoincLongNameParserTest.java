@@ -19,6 +19,7 @@ public class LoincLongNameParserTest {
         assertEquals("Serum or Plasma", loinc.getLoincTissue());
         assertEquals("Moles/volume", loinc.getLoincType());
         assertEquals("", loinc.getLoincMethod());
+        System.out.println(loinc.keysInLoinParameter().peek());
 
 
     }
