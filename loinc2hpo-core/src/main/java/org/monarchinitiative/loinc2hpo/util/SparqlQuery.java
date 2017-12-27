@@ -513,7 +513,7 @@ public class SparqlQuery {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
             PrintWriter writer = new PrintWriter("loinc-hpo-mapping.tsv");
             reader.readLine();
-            writer.write("Loinc Long Common Name\tCandidate HPO Class URI\tCandidate HPO Class Label\tCandidate HPO Class Definition\n");
+            writer.write("Loinc Long Common Name\tScore\tCandidate HPO Class URI\tCandidate HPO Class Label\tCandidate HPO Class Definition\n");
             while ((newline = reader.readLine()) != null) {
                 //List<HPO_Class_Found> hpo_clsses_found = SparqlQuery.query(newline, model);
                 List<HPO_Class_Found> hpo_clsses_found = query_auto(newline);
@@ -522,6 +522,7 @@ public class SparqlQuery {
                         StringBuilder outContent = new StringBuilder();
                         outContent.append(newline);
                         outContent.append("\t");
+                        outContent.append(HPO_class.getScore() + "\t");
                         outContent.append(HPO_class.getId() + "\t");
                         outContent.append(HPO_class.getLabel() + "\t");
                         if (HPO_class.getDefinition() != null)  {
@@ -533,7 +534,23 @@ public class SparqlQuery {
                 } else if (hpo_clsses_found.size() == 0) {
                     writer.write(newline + "\tNo HPO classes are found\n ");
                 } else {
-                    writer.write(newline + "\tToo many (" + hpo_clsses_found.size() + ") classes are found\n");
+                    writer.write(newline + "\tToo many (" + hpo_clsses_found.size() + ") classes are found. List top 15 only\n");
+                    int count = 0;
+                    for (HPO_Class_Found HPO_class : hpo_clsses_found) {
+                        count++;
+                        if(count > 15) break;
+                        StringBuilder outContent = new StringBuilder();
+                        outContent.append(newline);
+                        outContent.append("\t");
+                        outContent.append(HPO_class.getScore() + "\t");
+                        outContent.append(HPO_class.getId() + "\t");
+                        outContent.append(HPO_class.getLabel() + "\t");
+                        if (HPO_class.getDefinition() != null)  {
+                            outContent.append(HPO_class.getDefinition());
+                        }
+                        outContent.append("\n");
+                        writer.write(outContent.toString());
+                    }
                 }
 
 

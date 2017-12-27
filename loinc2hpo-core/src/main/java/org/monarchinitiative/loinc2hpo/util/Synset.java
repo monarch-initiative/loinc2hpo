@@ -17,7 +17,8 @@ public class Synset {
             {"urine", "urinary"},
             {"kidney", "renal"},
             {"RBC", "red blood cell", "erythrocyte"},
-            {"heart", "cardia*"}
+            {"heart", "cardia.*"},
+            {"pH", "acid", "alkaline", "base", "acidity", "basic"}
     };
     //TODO: more
 
