@@ -1,18 +1,24 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.apache.commons.collections4.trie.PatriciaTrie;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class represents an HPO class returned by a Sparql query. The class
+ * keeps a selected information of those HPO classes, id/uri, label and
+ * definition. It also keeps record of what loinc code is used for finding
+ * the HPO class. The class is comparable by the scores it receives from
+ * keyword matching (from the loinc code used for query and the HPO class).
+ */
 public class HPO_Class_Found implements Comparable {
 
-    private String id;
-    private String label;
-    private String definition;
+    private String id; //uri of HPO class
+    private String label; //all classes should have a non-null label
+    private String definition; //some classes do not have a definition
     private LoincCodeClass loinc; //We found this HPO class with this loinc query
-    private int score;
+    private int score; //how well the HPO class matches the loinc code (long
+                        // common name)
 
     public HPO_Class_Found(String id, String label, String definition, LoincCodeClass loinc) {
         this.id = id;
@@ -22,6 +28,18 @@ public class HPO_Class_Found implements Comparable {
         this.score = calculatePriority();
     }
 
+    /**
+     * A helper method to calculate the score. It does so by three steps:
+     * 1. if the class have a modifier (increase/decrease...), it receives 50
+     * points.
+     * 2. it examines the keys in loinc "parameter". A complete match
+     * receives 30 points. A partial match receives points based on how many
+     * keys are matched.
+     * 3. it examines the keys in loinc "tissue". A complete match receives
+     * 20 points. A partial match receives points based on how many keys are
+     * matched.
+     * @return score
+     */
     private int calculatePriority() {
         int matchScore = 0;
         String total = this.label;
@@ -62,9 +80,11 @@ public class HPO_Class_Found implements Comparable {
         }
         return matchScore;
     }
+
     public String toPattern(String key) {
         return ".*(" + key.toLowerCase() + ").*";
     }
+
     public void setID(String id) {
         this.id = id;
     }
