@@ -35,12 +35,14 @@ public class SynsetTest {
 
     @Test
     public void test3(){
-        assertEquals("blood|plasma|serum", new Synset().getSynset("blood", "serum").convertToRe());
+        String[] keys = new String[]{"serum", "plasma"};
+        assertEquals("plasma|serum|blood", new Synset().getSynset(Arrays.asList(keys)).convertToRe());
     }
 
     @Test
     public void test4(){
-        assertEquals("RBC|red blood cell|erythrocyte|blood|plasma|serum", new Synset().getSynset("RBC", "blood").convertToRe());
+        String[] keys = new String[]{"RBC", "blood"};
+        assertEquals("RBC|plasma|serum|blood|red blood cell|erythrocyte", new Synset().getSynset(Arrays.asList(keys)).convertToRe());
     }
 
     @Test

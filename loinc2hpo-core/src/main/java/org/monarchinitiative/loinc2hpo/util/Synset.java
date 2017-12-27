@@ -25,7 +25,7 @@ public class Synset {
     public int getRow(String key) {
         for (int i = 0; i < synonyms.length; i++){
             for (int j = 0; j < synonyms[i].length; j++) {
-                if (key.equals(synonyms[i][j])) {
+                if (key.toLowerCase().equals(synonyms[i][j].toLowerCase())) {
                     return i;
                 }
             }

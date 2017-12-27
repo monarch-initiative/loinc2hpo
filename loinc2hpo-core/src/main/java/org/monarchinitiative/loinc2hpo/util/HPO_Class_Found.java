@@ -2,8 +2,9 @@ package org.monarchinitiative.loinc2hpo.util;
 
 import org.apache.commons.collections4.trie.PatriciaTrie;
 
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HPO_Class_Found implements Comparable {
 
@@ -12,8 +13,6 @@ public class HPO_Class_Found implements Comparable {
     private String definition;
     private LoincCodeClass loinc; //We found this HPO class with this loinc query
     private int score;
-    static String modifier = "\"increase*\"|\"decrease*\"|\"elevate*\"|" +
-            "\"reduc*\"|\"high*\"|\"low*\"|\"above\"|\"below\"|\"abnormal*\"";
 
     public HPO_Class_Found(String id, String label, String definition, LoincCodeClass loinc) {
         this.id = id;
@@ -22,35 +21,49 @@ public class HPO_Class_Found implements Comparable {
         this.loinc = loinc;
         this.score = calculatePriority();
     }
+
     private int calculatePriority() {
         int matchScore = 0;
         String total = this.label;
         if (this.definition != null)
             total += (" " + this.definition);
 
-        if (total.toLowerCase().matches(modifier)) { //test whether the class has modifier
+        Pattern pattern = Pattern.compile(toPattern(SparqlQuery.modifier));
+        Matcher matcher = pattern.matcher(total.toLowerCase());
+        if (matcher.matches()) { //test whether the class has modifier
             matchScore += 50;
         }
 
         //test key matches
         Queue<String> keysInParameter = this.loinc.keysInLoinParameter();
         for (String key : keysInParameter) {
-            if(total.toLowerCase().matches(toPattern(key)) && keysInParameter.size() != 0) {
+            pattern = Pattern.compile(toPattern(key));
+            matcher = pattern.matcher(total.toLowerCase());
+            if(matcher.matches() && keysInParameter.size() != 0) {
                 matchScore += 30 / keysInParameter.size();
             }
         }
 
         //test tissue matches
         if (this.loinc.keysInLoincTissue().size() != 0) {
-            String keysInTissue = new Synset().getSynset((List<String>)this.loinc.keysInLoincTissue()).convertToRe();
-            if (total.toLowerCase().matches(toPattern(keysInTissue))) {
+            String keysInTissue = new Synset().getSynset(new LinkedList<>(this.loinc.keysInLoincTissue())).convertToRe();
+            //String keysInTissue = new Synset().getSynset(new ArrayList<>(this.loinc.keysInLoincTissue())).convertToRe();
+            pattern = Pattern.compile(toPattern(keysInTissue));
+            matcher = pattern.matcher(total.toLowerCase());
+            /**
+            System.out.println("how many keys in the loinc class: " + this.loinc.keysInLoincTissue().size());
+            System.out.println("\nString for pattern: " + keysInTissue);
+            System.out.println(total);
+            System.out.println("match? " + matcher.matches());
+             **/
+            if (matcher.matches()) {
                 matchScore += 20;
             }
         }
         return matchScore;
     }
     public String toPattern(String key) {
-        return ".*\"" + key.toLowerCase() + "\".*";
+        return ".*(" + key.toLowerCase() + ").*";
     }
     public void setID(String id) {
         this.id = id;

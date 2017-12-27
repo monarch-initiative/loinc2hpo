@@ -36,7 +36,8 @@ public class SparqlQuery {
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
     private static final String DISPLAY = "SELECT DISTINCT ?phenotype ?label ?definition ";
 
-    public static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
+    //public static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
+    public static final String modifier = "increase.*|decrease.*|elevat.*|reduc.*|high.*|low.*|above|below|abnormal.*";
     private static final Logger logger = LogManager.getLogger();
 
     /**
