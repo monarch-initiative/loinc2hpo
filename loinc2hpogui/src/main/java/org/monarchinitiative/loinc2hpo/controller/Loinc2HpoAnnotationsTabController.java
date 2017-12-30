@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
 import java.util.Map;
 
@@ -43,6 +44,8 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
+
+
 
     //@FXML private WebView wview;
 

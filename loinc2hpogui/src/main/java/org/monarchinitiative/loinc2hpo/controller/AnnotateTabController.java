@@ -19,6 +19,7 @@ import org.monarchinitiative.loinc2hpo.gui.WidthAwareTextFields;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
 
 import java.util.ArrayList;
@@ -42,6 +43,8 @@ public class AnnotateTabController {
     @FXML private Button createAnnotationButton;
     @FXML private TextField loincSearchTextField;
     @FXML private TextField loincStringSearchTextField;
+    @FXML private Button filterLoincTableByList;
+    @FXML private TextField LoincFilterField;
 
 //    @FXML private TextField hpoLowAbnormalTextField;
 //    @FXML private TextField hpoNotAbnormalTextField;
@@ -61,6 +64,12 @@ public class AnnotateTabController {
     @FXML private TableColumn<LoincEntry, String> systemTableColumn;
     @FXML private TableColumn<LoincEntry, String> nameTableColumn;
 
+    //candidate HPO classes found by Sparql query
+    @FXML private TableView<HPO_Class_Found> candidateHPOList;
+    @FXML private TableColumn<HPO_Class_Found, Integer> score;
+    @FXML private TableColumn<HPO_Class_Found, String> id;
+    @FXML private TableColumn<HPO_Class_Found, String> label;
+    @FXML private TableColumn<HPO_Class_Found, String> definition;
 
     @FXML private void initialize() {
         if (model != null) {
