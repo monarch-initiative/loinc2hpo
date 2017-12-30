@@ -2,28 +2,47 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="annotateTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+<AnchorPane fx:id="annotateTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
    <children>
-      <SplitPane dividerPositions="0.3583959899749373" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
+      <SplitPane dividerPositions="0.6265664160401002" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
         <items>
             <SplitPane dividerPositions="0.6185308848080133">
                <items>
                   <VBox prefHeight="96.0" prefWidth="1198.0">
                      <children>
-                        <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtableButton" stylesheets="@../css/loinc2hpo.css" text="Inititialize LOINC Table">
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtableButton" stylesheets="@../css/loinc2hpo.css" text="Inititialize LOINC Table" />
+                              <Button mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <TextField>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="10.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
                            <VBox.margin>
-                              <Insets left="20.0" top="10.0" />
+                              <Insets left="20.0" top="20.0" />
                            </VBox.margin>
-                        </Button>
+                        </HBox>
                         <HBox prefHeight="48.0" prefWidth="1198.0">
                            <children>
                               <Button fx:id="searchForLOINCIdButton" mnemonicParsing="false" onAction="#searchForSpecificLoincEntry" stylesheets="@../css/loinc2hpo.css" text="Search for specific LOINC id">
@@ -48,13 +67,80 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <HBox prefHeight="53.0" prefWidth="1198.0" />
-                        <ListView fx:id="hpoListView" orientation="HORIZONTAL" prefHeight="174.0" prefWidth="874.0" />
+                        <HBox prefHeight="53.0" prefWidth="1198.0">
+                           <children>
+                              <Label stylesheets="@../css/loinc2hpo.css" text="Candidate HPO classes">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="20.0" top="30.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <GridPane alignment="TOP_RIGHT" hgap="10.0" prefWidth="450.0" vgap="2.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="&lt;Low threshold" textFill="#0e1ccf" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Within Range" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+                                    <Label text="&gt;High threshold" textFill="#c71010" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                                       <font>
+                                          <Font name="System Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField GridPane.rowIndex="1" />
+                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                              </GridPane>
+                           </children></HBox>
+                        <ListView fx:id="hpoListView" orientation="HORIZONTAL" prefHeight="340.0" prefWidth="737.0">
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" top="10.0" />
+                           </VBox.margin></ListView>
+                        <HBox prefHeight="80.0" prefWidth="737.0">
+                           <children>
+                              <Button mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="20.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Manual Query">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="20.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <TextField prefHeight="36.0" prefWidth="466.0" stylesheets="@../css/loinc2hpo.css">
+                                 <HBox.margin>
+                                    <Insets bottom="10.0" left="20.0" top="10.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <Button fx:id="createAnnotationButton" mnemonicParsing="false" onAction="#createLoinc2HpoAnnotation" stylesheets="@../css/loinc2hpo.css" text="Create annotation" />
+                        <Button fx:id="createAnnotationButton" mnemonicParsing="false" onAction="#createLoinc2HpoAnnotation" stylesheets="@../css/loinc2hpo.css" text="Create annotation">
+                           <VBox.margin>
+                              <Insets left="20.0" top="20.0" />
+                           </VBox.margin></Button>
+                        <TreeView prefHeight="420.0" prefWidth="300.0">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </VBox.margin>
+                        </TreeView>
                      </children>
                   </VBox>
                </items>
