@@ -30,6 +30,8 @@ public class Model {
     private String pathToSettingsFile=null;
     /** Path to {@code hp.obo}. */
     private String pathToHpoOboFile=null;
+    /** PATH to {@code hp.owl}. */
+    private String pathToHpoOwlFile = null;
     /** Path to the file we are creating with LOINC code to HPO annotations. */
     private String pathToAnnotationFile=null;
     /** A String such as MGM:rrabbit .*/
@@ -45,6 +47,8 @@ public class Model {
     public void setPathToSettingsFile(String p) { this.pathToSettingsFile=p;}
     public void setPathToAnnotationFile(String p) {pathToAnnotationFile=p;}
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
+    public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
+    }
     public void setBiocuratorID(String id){biocuratorID=id;}
 
     public String getPathToLoincCoreTableFile() {
@@ -55,7 +59,7 @@ public class Model {
     }
     public String getBiocuratorID() {return biocuratorID;}
     public String getPathToAnnotationFile(){return pathToAnnotationFile;}
-
+    public String getPathToHpoOwlFile(){ return pathToHpoOwlFile;}
 
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
     public int getLoincAnnotationCount() { return testmap!=null?this.testmap.size():0;}
@@ -127,6 +131,9 @@ public class Model {
             if (pathToHpoOboFile!=null) {
                 bw.write(String.format("hp-obo:%s\n",pathToHpoOboFile));
             }
+            if (pathToHpoOwlFile!= null) {
+                bw.write(String.format("hp-owl:%s\n", pathToHpoOwlFile));
+            }
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -155,6 +162,7 @@ public class Model {
                 else if (key.equals("loincTablePath")) this.pathToLoincCoreTableFile = value;
                 else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
                 else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
+                else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
             }
             br.close();
         } catch (IOException e) {

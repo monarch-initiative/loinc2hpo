@@ -20,8 +20,10 @@ import org.apache.logging.log4j.Logger;
 
 public class SparqlQuery {
 
-    private static final String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
-    private static boolean modelCreated = false; //check whether the model for hpo has been created
+    //private static final String hpo = SparqlQuery.class.getResource("/hp" +
+    //        ".owl").getPath(); //need '/' to get a resource file
+    public static boolean modelCreated = false; //check whether the model for
+    // hpo has been created
     public static Model model; //model of hp.owl for Sparql query
     private static final String HPO_PREFIX = "PREFIX xmlns: <http://purl.obolibrary.org/obo/hp.owl#> "+
             "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> " +
@@ -46,7 +48,7 @@ public class SparqlQuery {
      * @return the ontology model for query
      */
     public static Model getOntologyModel(String path_to_ontology) {
-        Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
+        model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
         try {
             InputStream in = FileManager.get().open(path_to_ontology);
             try {
@@ -65,6 +67,8 @@ public class SparqlQuery {
      * Create the HPO model
      */
     private static void createHPOModel() {
+        String hpo = SparqlQuery.class.getResource("/hp" +
+                       ".owl").getPath();
         model = getOntologyModel(hpo);
         modelCreated = true;
     }
@@ -213,6 +217,20 @@ public class SparqlQuery {
             Collections.sort(HPO_classes_found);
             Collections.reverse(HPO_classes_found);
         return HPO_classes_found;
+    }
+
+    /**
+     * A method to do manual query with provided keys (literally)
+     */
+    public static List<HPO_Class_Found> query_manual(List<String> keys,
+                                                     LoincCodeClass loincCodeClass) {
+        if (keys == null || keys.isEmpty()) {
+            throw new IllegalArgumentException();
+        } else {
+            String looseQueryString = buildLooseQueryWithMultiKeys(keys);
+            Query query = QueryFactory.create(looseQueryString);
+            return query(query, model, loincCodeClass);
+        }
     }
 
     /**

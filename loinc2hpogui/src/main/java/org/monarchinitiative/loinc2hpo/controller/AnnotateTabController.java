@@ -12,6 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
@@ -20,10 +22,13 @@ import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
+import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -46,6 +51,7 @@ public class AnnotateTabController {
     @FXML private TextField loincStringSearchTextField;
     @FXML private Button filterLoincTableByList;
     @FXML private TextField LoincFilterField;
+    @FXML private TextField userInputForManualQuery;
 
     //drag and drop to the following fields
     @FXML private TextField hpoLowAbnormalTextField;
@@ -79,6 +85,17 @@ public class AnnotateTabController {
         if (model != null) {
             setModel(model);
         }
+    }
+
+
+    private void noLoincEntryAlert(){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Selection ERROR");
+            alert.setHeaderText("Select a row in Loinc table");
+            alert.setContentText("A loinc code is required for ranking " +
+                    "candidate HPO terms. Select one row in the loinc " +
+                    "table and query again.");
+            alert.showAndWait();
     }
 
 
@@ -135,15 +152,110 @@ public class AnnotateTabController {
 
 
     private void initHpoTermListView(LoincEntry entry) {
+        if(SparqlQuery.model == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("HPO Model Undefined");
+            alert.setHeaderText("Create HPO model first before querying");
+            alert.setContentText("Click \"Initialize HPO model\" to create an" +
+                    " HPO model for Sparql query. Click and query again.");
+            alert.showAndWait();
+            return;
+        }
         String name = entry.getLongName();
-        ObservableList<String> items = FXCollections.observableArrayList (
-                "A", "B", "C", "D",name);
-        this.hpoListView.setItems(items);
+        List<HPO_Class_Found> queryResults = SparqlQuery.query_auto(name);
+        if (queryResults.size() != 0) {
+            ObservableList<HPO_Class_Found> items = FXCollections.observableArrayList();
+            for (HPO_Class_Found candidate: queryResults) {
+                items.add(candidate);
+            }
+            this.hpoListView.setItems(items);
+            //items.add("0 result is found. Try manual search with synonyms.");
+        } else {
+            ObservableList<String> items = FXCollections.observableArrayList();
+            items.add("0 HPO class is found. Try manual search with " +
+                    "alternative keys (synonyms)");
+            this.hpoListView.setItems(items);
+        }
     }
 
+    @FXML private void handleAutoQueryButton(ActionEvent e){
+        e.consume();
+        LoincEntry entry = loincTableView.getSelectionModel()
+                .getSelectedItem();
+        if (entry == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Selection ERROR");
+            alert.setHeaderText("Select a row in Loinc table");
+            alert.setContentText("A loinc code is required for ranking " +
+                    "candidate HPO terms. Select one row in the loinc " +
+                    "table and query again.");
+            alert.showAndWait();
+            return;
+        }
+        logger.info("Start auto query by pressing button");
+        initHpoTermListView(entry);
+    }
 
+    @FXML private void handleManualQueryButton(ActionEvent e) {
 
+        e.consume();
+        if(SparqlQuery.model == null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("HPO Model Undefined");
+            alert.setHeaderText("Create HPO model first before querying");
+            alert.setContentText("Click \"Initialize HPO model\" to create an" +
+                    " HPO model for Sparql query. Click and query again.");
+            alert.showAndWait();
+            return;
+        }
 
+        //for now, force user choose a loinc entry. TODO: user may or may not
+        // choose a loinc term.
+        LoincEntry entry = loincTableView.getSelectionModel().getSelectedItem();
+        if (entry == null) {
+            noLoincEntryAlert();
+            return;
+        }
+        String userInput = userInputForManualQuery.getText();
+        if (userInput == null || userInput.trim().length() < 2) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Input Error");
+            alert.setHeaderText("Type in keys for manual query");
+            alert.setContentText("Provide comma seperated keys for query. Do " +
+                    "not use quotes(\"\"). Avoid non-specific words " +
+                    "or numbers. Synonyms are strongly recommended if " +
+                    "auto-query is not working.");
+            alert.showAndWait();
+            return;
+        }
+        String[] keys = userInput.split(",");
+        List<String> keysInList = new ArrayList<>();
+        for (String key: keys) {
+            if (key.length() > 0) {
+                keysInList.add(key);
+            }
+        }
+
+        String name = entry.getLongName();
+        LoincCodeClass loincCodeClass = LoincLongNameParser.parse(name);
+        List<HPO_Class_Found> queryResults = SparqlQuery.query_manual
+                (keysInList, loincCodeClass);
+        if (queryResults.size() != 0) {
+            ObservableList<HPO_Class_Found> items = FXCollections.observableArrayList();
+            for (HPO_Class_Found candidate: queryResults) {
+                items.add(candidate);
+            }
+            this.hpoListView.setItems(items);
+            userInputForManualQuery.clear();
+            //items.add("0 result is found. Try manual search with synonyms.");
+        } else {
+            ObservableList<String> items = FXCollections.observableArrayList();
+            items.add("0 HPO class is found. Try manual search with " +
+                    "alternative keys (synonyms)");
+            this.hpoListView.setItems(items);
+        }
+
+    }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
         logger.trace("init LOINC table");
@@ -161,6 +273,14 @@ public class AnnotateTabController {
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         e.consume();
+    }
+
+    @FXML private void initHPOmodelButton(ActionEvent e){
+
+        String pathToHPO = this.model.getPathToHpoOwlFile();
+        logger.info("pathToHPO: " + pathToHPO);
+        SparqlQuery.getOntologyModel(pathToHPO);
+
     }
 
 
@@ -237,25 +357,10 @@ public class AnnotateTabController {
 
     }
 
-    @FXML private void handleAutoQueryButton(ActionEvent e){
-        e.consume();
-        String longCommonName = loincTableView.getSelectionModel()
-                .getSelectedItem().getLongName();
-        System.out.println(longCommonName);
-        /**
-        List<HPO_Class_Found> queryResults = SparqlQuery.query_auto
-                (longCommonName);
-        displayQueryResults(queryResults);
-         **/
-    }
 
-    private void displayQueryResults(List<HPO_Class_Found> results){
 
-    }
 
-    @FXML private void handleManualQueryButton(ActionEvent e) {
 
-    }
 
     @FXML private void handleHPOLowAbnormality(ActionEvent e){
 

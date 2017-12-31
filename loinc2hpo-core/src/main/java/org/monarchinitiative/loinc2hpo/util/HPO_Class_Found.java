@@ -25,7 +25,11 @@ public class HPO_Class_Found implements Comparable {
         this.label = label;
         this.definition = definition;
         this.loinc = loinc;
-        this.score = calculatePriority();
+        if (loinc != null) {
+            this.score = calculatePriority();
+        } else {
+            this.score = -999;
+        }
     }
 
     /**
@@ -123,5 +127,25 @@ public class HPO_Class_Found implements Comparable {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.score);
+        String[] id_string = this.id.split("/");
+        builder.append("\t\t" + id_string[id_string.length - 1]);
+        builder.append("\t\t" + this.label);
+        int count_label_lengh = this.label.length();
+        while (count_label_lengh < 80) {
+            builder.append(" ");
+            count_label_lengh++;
+        }
+        if(this.definition != null){
+            builder.append(this.definition);
+        } else {
+            builder.append("\t\t");
+        }
+        return builder.toString();
     }
 }

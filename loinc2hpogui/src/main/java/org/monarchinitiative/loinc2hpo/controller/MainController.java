@@ -30,6 +30,8 @@ public class MainController {
     private static final Logger logger = LogManager.getLogger();
     /** Download address for {@code hp.obo}. */
     private final static String HP_OBO_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
+    //It appears Jena Sparql API does not like obo, so also download hp.owl
+    private final static String HP_OWL_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.owl";
     private Model model=null;
 
 
@@ -78,6 +80,7 @@ public class MainController {
             return;
         }
         String BASENAME="hp.obo";
+        String BASENAME_OWL = "hp.owl";
 
         ProgressIndicator pb = new ProgressIndicator();
         javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo...");
@@ -92,20 +95,25 @@ public class MainController {
 
         Task hpodownload = new Downloader(dirpath, HP_OBO_URL,BASENAME,pb);
         new Thread(hpodownload).start();
+        hpodownload = new Downloader(dirpath, HP_OWL_URL, BASENAME_OWL, pb);
+        new Thread(hpodownload).start();
         window.show();
         hpodownload.setOnSucceeded(event -> {
             window.close();
             logger.trace(String.format("Successfully downloaded hpo to %s",dirpath));
             String fullpath=String.format("%s%shp.obo",dirpath,File.separator);
+            String fullpath_owl = String.format("%s%shp.owl", dirpath, File
+                    .separator);
             model.setPathToHpOboFile(fullpath);
+            model.setPathToHpOwlFile(fullpath_owl);
             model.writeSettings();
         });
         hpodownload.setOnFailed(event -> {
             window.close();
             logger.error("Unable to download HPO obo file");
         });
-        Thread thread = new Thread(hpodownload);
-        thread.start();
+       // Thread thread = new Thread(hpodownload);
+        //thread.start();
 
         e.consume();
     }

@@ -29,7 +29,7 @@ public class Synset {
      * @param key
      * @return row number of the synset for key; -1 if the key does not have a synset
      */
-    private int getRow(String key) {
+    public int getRow(String key) {
         for (int i = 0; i < synonyms.length; i++){
             for (int j = 0; j < synonyms[i].length; j++) {
                 if (key.toLowerCase().equals(synonyms[i][j].toLowerCase())) {

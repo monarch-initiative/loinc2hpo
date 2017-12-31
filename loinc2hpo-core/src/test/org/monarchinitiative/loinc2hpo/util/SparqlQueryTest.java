@@ -18,13 +18,23 @@ public class SparqlQueryTest {
     static Model model;
 
 
-    @BeforeClass
+    //@BeforeClass
     public static void initializeModel() {
-        String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
+        //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
+        String hpo = SparqlQuery.class.getResource("/hp.obo").getPath();
+        //need '/' to get a resource file
         System.out.println("hpo path: " + hpo);
         model = SparqlQuery.getOntologyModel(hpo);
     }
 
+    @Test
+    public void testinitializeModel() {
+        //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
+        String hpo = SparqlQuery.class.getResource("/hp.obo").getPath();
+        //need '/' to get a resource file
+        System.out.println("hpo path: " + hpo);
+        model = SparqlQuery.getOntologyModel(hpo);
+    }
     @Test
     public void testbuildStandardQueryWithSingleKey() {
         String test1 = "Testosterone";

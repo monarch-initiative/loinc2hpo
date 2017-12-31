@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -30,12 +31,17 @@
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></Button>
-                              <Button fx:id="handleLoincFilteringhandleLoincFiltering" mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
+                              <Button mnemonicParsing="false" onAction="#initHPOmodelButton" stylesheets="@../css/loinc2hpo.css" text="Initialize HPO model">
                                  <HBox.margin>
                                     <Insets left="30.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <TextField fx:id="LoincFilterFieldLoincFilterField" promptText="one loinc code per line">
+                              <Button fx:id="handleLoincFiltering" mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
+                                 <HBox.margin>
+                                    <Insets left="30.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <TextField fx:id="LoincFilterField" promptText="one loinc code per line">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="10.0" top="10.0" />
                                  </HBox.margin>
@@ -107,6 +113,44 @@
                                  </HBox.margin>
                               </GridPane>
                            </children></HBox>
+                        <HBox prefWidth="200.0">
+                           <children>
+                              <GridPane prefHeight="30.0" prefWidth="735.0">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="104.0" minWidth="10.0" prefWidth="67.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="104.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="302.0" minWidth="10.0" prefWidth="130.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="390.0" minWidth="10.0" prefWidth="390.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Score">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label text="ID" GridPane.columnIndex="1">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label text="label" GridPane.columnIndex="2">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                    <Label text="definition" GridPane.columnIndex="3">
+                                       <GridPane.margin>
+                                          <Insets left="5.0" />
+                                       </GridPane.margin>
+                                    </Label>
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </HBox>
+                        <ListView fx:id="hpoListView" prefHeight="268.0" prefWidth="737.0" />
                         <HBox prefHeight="0.0" prefWidth="737.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
@@ -119,7 +163,7 @@
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <TextField prefHeight="36.0" prefWidth="466.0" promptText="comma seperated keys" stylesheets="@../css/loinc2hpo.css" HBox.hgrow="ALWAYS">
+                              <TextField fx:id="userInputForManualQuery" prefHeight="36.0" prefWidth="466.0" promptText="comma seperated keys" stylesheets="@../css/loinc2hpo.css" HBox.hgrow="ALWAYS">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
@@ -129,14 +173,6 @@
                               <Insets />
                            </VBox.margin>
                         </HBox>
-                        <TableView fx:id="candidateHPOList" prefHeight="260.0" prefWidth="200.0">
-                          <columns>
-                            <TableColumn fx:id="score" prefWidth="91.0" text="Score" />
-                            <TableColumn fx:id="id" prefWidth="86.00003051757812" text="ID" />
-                              <TableColumn fx:id="label" prefWidth="227.0" text="Label" />
-                              <TableColumn fx:id="definition" prefWidth="335.0" text="Definition" />
-                          </columns>
-                        </TableView>
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0">
