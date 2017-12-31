@@ -20,6 +20,7 @@ import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
+import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
 import java.util.ArrayList;
@@ -46,9 +47,10 @@ public class AnnotateTabController {
     @FXML private Button filterLoincTableByList;
     @FXML private TextField LoincFilterField;
 
-//    @FXML private TextField hpoLowAbnormalTextField;
-//    @FXML private TextField hpoNotAbnormalTextField;
-//    @FXML private TextField hpoHighAbnormalTextField;
+    //drag and drop to the following fields
+    @FXML private TextField hpoLowAbnormalTextField;
+    @FXML private TextField hpoNotAbnormalTextField;
+    @FXML private TextField hpoHighAbnormalTextField;
 
     @FXML private ListView hpoListView;
 
@@ -70,6 +72,8 @@ public class AnnotateTabController {
     @FXML private TableColumn<HPO_Class_Found, String> id;
     @FXML private TableColumn<HPO_Class_Found, String> label;
     @FXML private TableColumn<HPO_Class_Found, String> definition;
+
+    @FXML private TreeView<HPO_Class_Found> treeView;
 
     @FXML private void initialize() {
         if (model != null) {
@@ -114,7 +118,7 @@ public class AnnotateTabController {
         systemTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getSystem()));
         nameTableColumn.setSortable(true);
         nameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLongName()));
-        hpoListView.setOrientation(Orientation.HORIZONTAL);
+        //hpoListView.setOrientation(Orientation.HORIZONTAL);
 
         loincTableView.setRowFactory( tv -> {
             TableRow<LoincEntry> row = new TableRow<>();
@@ -228,6 +232,51 @@ public class AnnotateTabController {
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
     }
+
+    @FXML private void handleLoincFiltering(ActionEvent e){
+
+    }
+
+    @FXML private void handleAutoQueryButton(ActionEvent e){
+        e.consume();
+        String longCommonName = loincTableView.getSelectionModel()
+                .getSelectedItem().getLongName();
+        System.out.println(longCommonName);
+        /**
+        List<HPO_Class_Found> queryResults = SparqlQuery.query_auto
+                (longCommonName);
+        displayQueryResults(queryResults);
+         **/
+    }
+
+    private void displayQueryResults(List<HPO_Class_Found> results){
+
+    }
+
+    @FXML private void handleManualQueryButton(ActionEvent e) {
+
+    }
+
+    @FXML private void handleHPOLowAbnormality(ActionEvent e){
+
+    }
+
+    @FXML private void handleHPOHighAbnormality(ActionEvent e){
+
+    }
+
+    @FXML private void handleParentAbnormality(ActionEvent e){
+
+    }
+
+    @FXML private void handleLoincTableDoubleClick(ActionEvent e){
+
+    }
+
+    @FXML private void handleCandidateHPODoubleClick(ActionEvent e){
+
+    }
+
 
 
 

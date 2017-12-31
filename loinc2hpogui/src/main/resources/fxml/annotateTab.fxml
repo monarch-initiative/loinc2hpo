@@ -30,12 +30,12 @@
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></Button>
-                              <Button fx:id="filterLoincTableByListfilterLoincTableByList" mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
+                              <Button fx:id="handleLoincFilteringhandleLoincFiltering" mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
                                  <HBox.margin>
                                     <Insets left="30.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <TextField promptText="one loinc code per line">
+                              <TextField fx:id="LoincFilterFieldLoincFilterField" promptText="one loinc code per line">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="10.0" top="10.0" />
                                  </HBox.margin>
@@ -98,31 +98,23 @@
                                           <Font name="System Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField promptText="phenotype for too low" GridPane.rowIndex="1" />
-                                    <TextField promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoLowAbnormalTextField" onMouseDragReleased="#handleHPOLowAbnormality" promptText="phenotype for too low" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoNotAbnormalTextField" onMouseDragReleased="#handleParentAbnormality" promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoHighAbnormalTextField" onMouseDragReleased="#handleHPOHighAbnormality" promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                  </children>
                                  <HBox.margin>
                                     <Insets left="40.0" />
                                  </HBox.margin>
                               </GridPane>
                            </children></HBox>
-                        <TableView prefHeight="260.0" prefWidth="200.0">
-                          <columns>
-                            <TableColumn prefWidth="91.0" text="Score" />
-                            <TableColumn prefWidth="86.00003051757812" text="ID" />
-                              <TableColumn prefWidth="227.0" text="Label" />
-                              <TableColumn prefWidth="335.0" text="Definition" />
-                          </columns>
-                        </TableView>
                         <HBox prefHeight="0.0" prefWidth="737.0">
                            <children>
-                              <Button mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
+                              <Button mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Manual Query">
+                              <Button mnemonicParsing="false" onAction="#handleManualQueryButton" stylesheets="@../css/loinc2hpo.css" text="Manual Query">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
@@ -137,6 +129,14 @@
                               <Insets />
                            </VBox.margin>
                         </HBox>
+                        <TableView fx:id="candidateHPOList" prefHeight="260.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn fx:id="score" prefWidth="91.0" text="Score" />
+                            <TableColumn fx:id="id" prefWidth="86.00003051757812" text="ID" />
+                              <TableColumn fx:id="label" prefWidth="227.0" text="Label" />
+                              <TableColumn fx:id="definition" prefWidth="335.0" text="Definition" />
+                          </columns>
+                        </TableView>
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0">
@@ -145,7 +145,7 @@
                            <VBox.margin>
                               <Insets left="20.0" top="20.0" />
                            </VBox.margin></Button>
-                        <TreeView prefHeight="420.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                        <TreeView fx:id="treeView" prefHeight="420.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
                            </VBox.margin>
