@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
 
+import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -12,12 +13,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.WidthAwareTextFields;
+import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -27,8 +31,11 @@ import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -73,13 +80,13 @@ public class AnnotateTabController {
     @FXML private TableColumn<LoincEntry, String> nameTableColumn;
 
     //candidate HPO classes found by Sparql query
-    @FXML private TableView<HPO_Class_Found> candidateHPOList;
-    @FXML private TableColumn<HPO_Class_Found, Integer> score;
-    @FXML private TableColumn<HPO_Class_Found, String> id;
-    @FXML private TableColumn<HPO_Class_Found, String> label;
-    @FXML private TableColumn<HPO_Class_Found, String> definition;
+    //@FXML private TableView<HPO_Class_Found> candidateHPOList;
+    //@FXML private TableColumn<HPO_Class_Found, Integer> score;
+    //@FXML private TableColumn<HPO_Class_Found, String> id;
+    //@FXML private TableColumn<HPO_Class_Found, String> label;
+    //@FXML private TableColumn<HPO_Class_Found, String> definition;
 
-    @FXML private TreeView<HPO_Class_Found> treeView;
+    @FXML private TreeView<HPO_TreeView> treeView;
 
     @FXML private void initialize() {
         if (model != null) {
@@ -284,6 +291,8 @@ public class AnnotateTabController {
     }
 
 
+
+
     @FXML private void searchForSpecificLoincEntry(ActionEvent e) {
         e.consume();
         String s = this.loincSearchTextField.getText().trim();
@@ -321,6 +330,36 @@ public class AnnotateTabController {
         e.consume();
     }
 
+    @FXML private void handleLoincFiltering(ActionEvent e){
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose File containing a list of interested Loinc " +
+                "codes");
+        File f = chooser.showOpenDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            try {
+                HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
+                List<LoincEntry> entryOfInterest = new ArrayList<>();
+                List<String> notFound = new ArrayList<>();
+                for (String loinc : loincOfInterest) {
+                    if (this.loincmap.containsKey(loinc)) {
+                        entryOfInterest.add(this.loincmap.get(loinc));
+                    } else {
+                        notFound.add(loinc);
+                    }
+                }
+                loincTableView.getItems().clear();
+                loincTableView.getItems().addAll(entryOfInterest);
+
+            } catch (FileNotFoundException excpt) {
+                logger.error("unable to find the file for loinc of interest");
+            }
+        } else {
+            logger.error("Unable to obtain path to LOINC of interest file");
+        }
+        e.consume();
+    }
 
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
@@ -353,8 +392,69 @@ public class AnnotateTabController {
         loinc2HpoAnnotationsTabController.refreshTable();
     }
 
-    @FXML private void handleLoincFiltering(ActionEvent e){
+    /**
+     * private class for showing HPO class in treeview.
+     * Another reason to have this is to facilitate drag and draw from treeview.
+     */
+    private class HPO_TreeView{
+        private HPO_Class_Found hpo_class_found;
+        private HPO_TreeView() {
+            this.hpo_class_found = null;
+        }
+        private HPO_TreeView(HPO_Class_Found hpo_class_found) {
+            this.hpo_class_found = hpo_class_found;
+        }
+        @Override
+        public String toString() {
+            if (this.hpo_class_found == null) {
+                return "root";
+            }
+            String stringRepretation = "";
+            String[] id_words = this.hpo_class_found.getId().split("/");
+            stringRepretation += id_words[id_words.length - 1];
+            stringRepretation += "\n";
+            stringRepretation += this.hpo_class_found.getLabel();
+            return stringRepretation;
+        }
+    }
 
+    @FXML private void handleCandidateHPODoubleClick(MouseEvent e){
+
+        if (e.getClickCount() == 2 && hpoListView.getSelectionModel()
+                .getSelectedItem() != null && hpoListView.getSelectionModel()
+                .getSelectedItem() instanceof HPO_Class_Found) {
+            HPO_Class_Found hpo_class_found = (HPO_Class_Found) hpoListView
+                    .getSelectionModel().getSelectedItem();
+            List<HPO_Class_Found> parents = SparqlQuery.getParents
+                    (hpo_class_found.getId());
+            List<HPO_Class_Found> children = SparqlQuery.getChildren
+                    (hpo_class_found.getId());
+
+            TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView());
+            rootItem.setExpanded(true);
+
+            if (parents.size() > 0) {
+                for (HPO_Class_Found parent : parents) {
+                    TreeItem<HPO_TreeView> parentItem = new TreeItem<>(new
+                            HPO_TreeView(parent));
+                    rootItem.getChildren().add(parentItem);
+                    TreeItem<HPO_TreeView> current = new TreeItem<>
+                            (new HPO_TreeView(hpo_class_found));
+                    parentItem.getChildren().add(current);
+                    parentItem.setExpanded(true);
+                    current.setExpanded(true);
+                    if (children.size() > 0) {
+                        for (HPO_Class_Found child : children) {
+                            TreeItem<HPO_TreeView> childItem = new TreeItem<>
+                                    (new HPO_TreeView(child));
+                            current.getChildren().add(childItem);
+                        }
+                    }
+                }
+            }
+            this.treeView.setRoot(rootItem);
+        }
+        e.consume();
     }
 
 
@@ -374,13 +474,8 @@ public class AnnotateTabController {
 
     }
 
-    @FXML private void handleLoincTableDoubleClick(ActionEvent e){
 
-    }
 
-    @FXML private void handleCandidateHPODoubleClick(ActionEvent e){
-
-    }
 
 
 

@@ -1,3 +1,4 @@
+logs/
 .idea/codeStyleSettings.xml
 loinc2hpo-core/logs/
 loinc-hpo-mapping.tsv

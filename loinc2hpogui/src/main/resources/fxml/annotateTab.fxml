@@ -36,16 +36,11 @@
                                     <Insets left="30.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="handleLoincFiltering" mnemonicParsing="false" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
+                              <Button fx:id="handleLoincFiltering" mnemonicParsing="false" onAction="#handleLoincFiltering" stylesheets="@../css/loinc2hpo.css" text="Filter by a Loinc id list">
                                  <HBox.margin>
                                     <Insets left="30.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <TextField fx:id="LoincFilterField" promptText="one loinc code per line">
-                                 <HBox.margin>
-                                    <Insets bottom="5.0" left="10.0" top="10.0" />
-                                 </HBox.margin>
-                              </TextField>
                            </children>
                            <VBox.margin>
                               <Insets left="20.0" top="20.0" />
@@ -150,7 +145,7 @@
                               </GridPane>
                            </children>
                         </HBox>
-                        <ListView fx:id="hpoListView" prefHeight="268.0" prefWidth="737.0" />
+                        <ListView fx:id="hpoListView" onMouseClicked="#handleCandidateHPODoubleClick" prefHeight="268.0" prefWidth="737.0" />
                         <HBox prefHeight="0.0" prefWidth="737.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
