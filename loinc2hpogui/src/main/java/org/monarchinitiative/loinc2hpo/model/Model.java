@@ -106,11 +106,13 @@ public class Model {
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                     .entrySet()
                     .stream()
-                    .filter(e -> e.getValue() == 1)
+                    .filter(e -> e.getValue() == 1)      //this might cause
+                    // some classes to be ignored(? e.g. hypoglycemia)
                     .map(e -> e.getKey())
                     .collect(Collectors.toList());
 
             res.forEach( term -> termmap.put(term.getName(),term));
+            res.forEach( term -> System.out.println(term.getName()));
         }
         return termmap.build();
     }

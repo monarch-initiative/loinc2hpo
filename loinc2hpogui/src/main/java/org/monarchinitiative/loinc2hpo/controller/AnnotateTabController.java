@@ -13,8 +13,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +32,8 @@ import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
+import javax.annotation.Nullable;
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ public class AnnotateTabController {
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     private ImmutableMap<String,LoincEntry> loincmap=null;
 
-    private ImmutableMap<String,HpoTerm> termmap;
+
 
     @FXML private Button initLOINCtableButton;
     @FXML private Button searchForLOINCIdButton;
@@ -64,6 +67,10 @@ public class AnnotateTabController {
     @FXML private TextField hpoLowAbnormalTextField;
     @FXML private TextField hpoNotAbnormalTextField;
     @FXML private TextField hpoHighAbnormalTextField;
+    private HPO_Class_Found hpo_drag_and_drop;
+    //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
+
+    private ImmutableMap<String,HpoTerm> termmap;
 
     @FXML private ListView hpoListView;
 
@@ -103,6 +110,12 @@ public class AnnotateTabController {
                     "candidate HPO terms. Select one row in the loinc " +
                     "table and query again.");
             alert.showAndWait();
+    }
+
+    private void clearAbnormalityTextField(){
+        hpoLowAbnormalTextField.setText("");
+        hpoHighAbnormalTextField.setText("");
+        hpoNotAbnormalTextField.setText("");
     }
 
 
@@ -150,6 +163,8 @@ public class AnnotateTabController {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     LoincEntry rowData = row.getItem();
                     initHpoTermListView(rowData);
+                    //clear text in abnormality text fields
+                    clearAbnormalityTextField();
                 }
             });
             return row ;
@@ -201,6 +216,8 @@ public class AnnotateTabController {
         }
         logger.info("Start auto query by pressing button");
         initHpoTermListView(entry);
+        //clear text in abnormality text fields
+        clearAbnormalityTextField();
     }
 
     @FXML private void handleManualQueryButton(ActionEvent e) {
@@ -261,7 +278,8 @@ public class AnnotateTabController {
                     "alternative keys (synonyms)");
             this.hpoListView.setItems(items);
         }
-
+        //clear text in abnormality text fields
+        clearAbnormalityTextField();
     }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -283,6 +301,14 @@ public class AnnotateTabController {
     }
 
     @FXML private void initHPOmodelButton(ActionEvent e){
+
+        //Remind user that this is a time consuming process
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Time Consuming step");
+        alert.setHeaderText("Wait for the process to complete");
+        alert.setContentText("This step will take about 2 minutes. It needs " +
+                        "to be executed once for every session");
+        alert.showAndWait();
 
         String pathToHPO = this.model.getPathToHpoOwlFile();
         logger.info("pathToHPO: " + pathToHPO);
@@ -362,35 +388,7 @@ public class AnnotateTabController {
     }
 
 
-    @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
-        e.consume();
-        String hpoLo,hpoNormal,hpoHi;
-        String loincCode=this.loincSearchTextField.getText();
-        hpoLo="?"; //hpoLowAbnormalTextField.getText();
-        hpoNormal="?";//hpoNotAbnormalTextField.getText();
-        hpoHi="?";//hpoHighAbnormalTextField.getText();
 
-        HpoTerm low = termmap.get(hpoLo);
-        if (low==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoLo));
-            return;
-        }
-        HpoTerm normal = termmap.get(hpoNormal);
-        if (normal==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoNormal));
-            return;
-        }
-        HpoTerm high = termmap.get(hpoHi);
-        if (high==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoHi));
-            return;
-        }
-
-        AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,low,normal,high);
-        this.model.addLoincTest(test);
-        loinc2HpoAnnotationsTabController.refreshTable();
-    }
 
     /**
      * private class for showing HPO class in treeview.
@@ -404,6 +402,11 @@ public class AnnotateTabController {
         private HPO_TreeView(HPO_Class_Found hpo_class_found) {
             this.hpo_class_found = hpo_class_found;
         }
+
+        public HPO_Class_Found getHpo_class_found() {
+             return this.hpo_class_found;
+        }
+
         @Override
         public String toString() {
             if (this.hpo_class_found == null) {
@@ -457,29 +460,114 @@ public class AnnotateTabController {
         e.consume();
     }
 
+    @FXML private void handleCandidateHPODragged(MouseEvent e) {
 
+        System.out.println("Drag event detected");
+        Dragboard db = hpoListView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent content = new ClipboardContent();
+        Object selectedCell = hpoListView.getSelectionModel().getSelectedItem();
+        if (selectedCell instanceof HPO_Class_Found) {
+            content.putString(((HPO_Class_Found) selectedCell).getLabel());
+            db.setContent(content);
+        } else {
+            logger.info("Dragging something that is not a HPO term");
+        }
 
+        e.consume();
+    }
 
+    @FXML private void handleHPOLowAbnormality(DragEvent e){
 
+        if (e.getDragboard().hasString()) {
+            hpoLowAbnormalTextField.setText(e.getDragboard().getString());
+        }
+        e.consume();
+    }
 
-    @FXML private void handleHPOLowAbnormality(ActionEvent e){
+    @FXML private void handleHPOHighAbnormality(DragEvent e){
+
+        if (e.getDragboard().hasString()) {
+            hpoHighAbnormalTextField.setText(e.getDragboard().getString());
+        }
+        e.consume();
 
     }
 
-    @FXML private void handleHPOHighAbnormality(ActionEvent e){
+    @FXML private void handleParentAbnormality(DragEvent e){
+        if (e.getDragboard().hasString()) {
+            hpoNotAbnormalTextField.setText(e.getDragboard().getString());
+        }
+        e.consume();
+    }
+
+
+    @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
+        e.consume();
+        String hpoLo,hpoNormal,hpoHi;
+        //String loincCode=this.loincSearchTextField.getText();
+        String loincCode = loincTableView.getSelectionModel().getSelectedItem
+                ().getLOINC_Number();
+        hpoLo = hpoLowAbnormalTextField.getText();
+        hpoNormal = hpoNotAbnormalTextField.getText();
+        hpoHi= hpoHighAbnormalTextField.getText();
+
+
+        //TODO: We don't have to force every loinc code to have three phenotypes
+        HpoTerm low = termmap.get(hpoLo);
+        if (low==null) {
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoLo));
+            return;
+        }
+        HpoTerm normal = termmap.get(hpoNormal);
+        if (normal==null) {
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoNormal));
+            return;
+        }
+        HpoTerm high = termmap.get(hpoHi);
+        if (high==null) {
+            logger.error(String.format("Could not retrieve HPO Term for %s",hpoHi));
+            return;
+        }
+
+        AnnotatedLoincRangeTest test =
+                new AnnotatedLoincRangeTest(loincCode,low,normal,high);
+        this.model.addLoincTest(test);
+        loinc2HpoAnnotationsTabController.refreshTable();
+    }
+
+    @FXML
+    private void handleDragOver(DragEvent e){
+        Dragboard db = e.getDragboard();
+        if (db.hasString()) {
+            e.acceptTransferModes(TransferMode.MOVE);
+        }
+
+        logger.info("Drag over. Nothing specific todo");
+        e.consume();
 
     }
 
-    @FXML private void handleParentAbnormality(ActionEvent e){
+    @FXML
+    private void handleDragDone(DragEvent e) {
+
+        logger.info("Drag done. Nothing specific todo");
 
     }
 
-
-
-
-
-
-
-
+    @FXML
+    private void handleDragInTreeView(MouseEvent e) {
+        System.out.println("Drag event detected");
+        Dragboard db = treeView.startDragAndDrop(TransferMode.ANY);
+        ClipboardContent content = new ClipboardContent();
+        Object selectedItem = treeView.getSelectionModel().getSelectedItem().getValue();
+        if (selectedItem instanceof HPO_TreeView) {
+            content.putString(((HPO_TreeView) selectedItem)
+                    .getHpo_class_found().getLabel());
+            db.setContent(content);
+        } else {
+            logger.info("Dragging something that is not a HPO term");
+        }
+        e.consume();
+    }
 
 }

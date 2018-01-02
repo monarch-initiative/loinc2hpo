@@ -19,7 +19,7 @@
 
 <AnchorPane fx:id="annotateTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
    <children>
-      <SplitPane dividerPositions="0.6265664160401002" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
+      <SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
         <items>
             <SplitPane dividerPositions="0.6185308848080133">
                <items>
@@ -99,9 +99,9 @@
                                           <Font name="System Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="hpoLowAbnormalTextField" onMouseDragReleased="#handleHPOLowAbnormality" promptText="phenotype for too low" GridPane.rowIndex="1" />
-                                    <TextField fx:id="hpoNotAbnormalTextField" onMouseDragReleased="#handleParentAbnormality" promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="hpoHighAbnormalTextField" onMouseDragReleased="#handleHPOHighAbnormality" promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoLowAbnormalTextField" onDragDropped="#handleHPOLowAbnormality" promptText="phenotype for too low" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoNotAbnormalTextField" onDragDropped="#handleParentAbnormality" promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoHighAbnormalTextField" onDragDropped="#handleHPOHighAbnormality" promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                  </children>
                                  <HBox.margin>
                                     <Insets left="40.0" />
@@ -145,7 +145,7 @@
                               </GridPane>
                            </children>
                         </HBox>
-                        <ListView fx:id="hpoListView" onMouseClicked="#handleCandidateHPODoubleClick" prefHeight="268.0" prefWidth="737.0" />
+                        <ListView fx:id="hpoListView" onDragDetected="#handleCandidateHPODragged" onMouseClicked="#handleCandidateHPODoubleClick" prefHeight="268.0" prefWidth="737.0" />
                         <HBox prefHeight="0.0" prefWidth="737.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
@@ -176,7 +176,7 @@
                            <VBox.margin>
                               <Insets left="20.0" top="20.0" />
                            </VBox.margin></Button>
-                        <TreeView fx:id="treeView" prefHeight="420.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
+                        <TreeView fx:id="treeView" onDragDetected="#handleDragInTreeView" prefHeight="420.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
                            </VBox.margin>
