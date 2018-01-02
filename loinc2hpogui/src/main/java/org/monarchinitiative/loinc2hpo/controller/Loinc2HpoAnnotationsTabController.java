@@ -66,11 +66,14 @@ public class Loinc2HpoAnnotationsTabController {
         loincScaleColumn.setSortable(true);
         loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale()));
         belowNormalHpoColumn.setSortable(true);
-        belowNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
+        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue()==null ? new ReadOnlyStringWrapper("\" \"") :
+        new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
         notAbnormalHpoColumn.setSortable(true);
-        notAbnormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
+        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
+                : new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
         aboveNormalHpoColumn.setSortable(true);
-        aboveNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
+        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
+        : new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
         updateSummary();
 
     }
@@ -160,8 +163,4 @@ public class Loinc2HpoAnnotationsTabController {
         }
         WriteToFile.appendToFile(builder.toString(), path);
     }
-
-
-
-
 }

@@ -68,6 +68,7 @@ public class HpoOntologyParser {
                     .collect(Collectors.toList());
 
             res.forEach( term -> termmap.put(term.getName(),term));
+            //res.forEach( term -> logger.info(term.getName()));
         }
         return termmap.build();
     }

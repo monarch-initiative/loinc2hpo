@@ -99,9 +99,9 @@
                                           <Font name="System Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="hpoLowAbnormalTextField" onDragDropped="#handleHPOLowAbnormality" promptText="phenotype for too low" GridPane.rowIndex="1" />
-                                    <TextField fx:id="hpoNotAbnormalTextField" onDragDropped="#handleParentAbnormality" promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="hpoHighAbnormalTextField" onDragDropped="#handleHPOHighAbnormality" promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoLowAbnormalTextField" onDragDropped="#handleHPOLowAbnormality" onDragEntered="#handleDragEnterLowAbnorm" onDragExited="#handleDragExitLowAbnorm" promptText="phenotype for too low" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoNotAbnormalTextField" onDragDropped="#handleParentAbnormality" onDragEntered="#handleDragEnterParentAbnorm" onDragExited="#handleDragExitParentAbnorm" promptText="parent phenotype" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="hpoHighAbnormalTextField" onDragDropped="#handleHPOHighAbnormality" onDragEntered="#handleDragEnterHighAbnorm" onDragExited="#handleDragExitHighAbnorm" promptText="phenotype for too high" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                  </children>
                                  <HBox.margin>
                                     <Insets left="40.0" />

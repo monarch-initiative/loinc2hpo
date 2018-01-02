@@ -36,10 +36,8 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.Timer;
 import java.util.regex.Pattern;
 
 
@@ -481,6 +479,7 @@ public class AnnotateTabController {
         if (e.getDragboard().hasString()) {
             hpoLowAbnormalTextField.setText(e.getDragboard().getString());
         }
+        hpoLowAbnormalTextField.setStyle("-fx-background-color: WHITE;");
         e.consume();
     }
 
@@ -489,6 +488,7 @@ public class AnnotateTabController {
         if (e.getDragboard().hasString()) {
             hpoHighAbnormalTextField.setText(e.getDragboard().getString());
         }
+        hpoHighAbnormalTextField.setStyle("-fx-background-color: WHITE;");
         e.consume();
 
     }
@@ -497,6 +497,7 @@ public class AnnotateTabController {
         if (e.getDragboard().hasString()) {
             hpoNotAbnormalTextField.setText(e.getDragboard().getString());
         }
+        hpoNotAbnormalTextField.setStyle("-fx-background-color: WHITE;");
         e.consume();
     }
 
@@ -513,20 +514,28 @@ public class AnnotateTabController {
         hpoHi= hpoHighAbnormalTextField.getText();
 
 
-        //TODO: We don't have to force every loinc code to have three phenotypes
+        //We don't have to force every loinc code to have three phenotypes
         HpoTerm low = termmap.get(hpoLo);
-        if (low==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoLo));
-            return;
-        }
         HpoTerm normal = termmap.get(hpoNormal);
-        if (normal==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoNormal));
+        HpoTerm high = termmap.get(hpoHi);
+
+        //Warning user that there is something wrong
+        //it happens when something is wrong with hpo termmap (a name could not be mapped)
+        if (!hpoLo.trim().isEmpty() && low==null) {
+            logger.error(hpoLo + "cannot be mapped to a term");
+            showErrorOfMapping(hpoLo);
             return;
         }
-        HpoTerm high = termmap.get(hpoHi);
-        if (high==null) {
-            logger.error(String.format("Could not retrieve HPO Term for %s",hpoHi));
+
+        if (!hpoHi.trim().isEmpty() && high==null) {
+            logger.error(hpoHi + "cannot be mapped to a term");
+            showErrorOfMapping(hpoHi);
+            return;
+        }
+
+        if (!hpoNormal.trim().isEmpty() && normal==null) {
+            logger.error(hpoNormal + "cannot be mapped to a term");
+            showErrorOfMapping(hpoNormal);
             return;
         }
 
@@ -534,6 +543,27 @@ public class AnnotateTabController {
                 new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high);
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
+        //showSuccessOfMapping("Go to next loinc code!");
+
+    }
+    private void showErrorOfMapping(String message) {
+        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+        errorAlert.setTitle("Failure");
+        errorAlert.setContentText(message + "could not be mapped. There is nothing to do from user. Contact developer.");
+        errorAlert.showAndWait();
+    }
+
+    private void showSuccessOfMapping(String message) {
+        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+        infoAlert.setTitle("Success");
+        infoAlert.setContentText(message);
+        infoAlert.showAndWait();
+        long currentTime = System.currentTimeMillis();
+        long delay = currentTime + 1000;
+        while (currentTime < delay) {
+            currentTime = System.currentTimeMillis();
+        }
+        infoAlert.close();
     }
 
     @FXML
@@ -569,6 +599,48 @@ public class AnnotateTabController {
             logger.info("Dragging something that is not a HPO term");
         }
         e.consume();
+    }
+
+    @FXML
+    void handleDragEnterHighAbnorm(DragEvent event) {
+
+        hpoHighAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        event.consume();
+
+    }
+
+    @FXML
+    void handleDragEnterLowAbnorm(DragEvent event) {
+        hpoLowAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        event.consume();
+
+    }
+
+    @FXML
+    void handleDragEnterParentAbnorm(DragEvent event) {
+        hpoNotAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        event.consume();
+
+    }
+
+    @FXML
+    void handleDragExitHighAbnorm(DragEvent event) {
+
+        hpoHighAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        event.consume();
+
+    }
+
+    @FXML
+    void handleDragExitLowAbnorm(DragEvent event) {
+        hpoLowAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        event.consume();
+    }
+
+    @FXML
+    void handleDragExitParentAbnorm(DragEvent event) {
+        hpoNotAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        event.consume();
     }
 
 }

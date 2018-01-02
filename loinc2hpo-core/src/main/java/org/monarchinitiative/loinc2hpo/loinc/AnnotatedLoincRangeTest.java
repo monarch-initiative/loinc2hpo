@@ -38,24 +38,27 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
 
 
     public AnnotatedLoincRangeTest(String loinc, String loincScale, HpoTerm low, HpoTerm normal, HpoTerm hi){
+        //allow low, normal, hi to be null
         this.loincNumber=loinc;
         this.loincScale = loincScale;
         this.belowNormalTerm=low;
         this.notAbnormalTerm=normal;
         this.aboveNormalTerm=hi;
 
+        /**
         logger.trace(String.format("low: %s; normal: %s, high: %s",
                 low.getName(),
                 normal.getName(),
                 hi.getName()));
+         **/
         // todo more validation.
 
     }
 
     public String getLoincNumber(){ return loincNumber; }
-    public String getBelowNormalHpoTermName() { return belowNormalTerm.getName(); }
-    public String getNotAbnormalHpoTermName() { return notAbnormalTerm.getName(); }
-    public String getAboveNormalHpoTermName() { return aboveNormalTerm.getName(); }
+    public String getBelowNormalHpoTermName() { return this.belowNormalTerm==null ? null : belowNormalTerm.getName(); }
+    public String getNotAbnormalHpoTermName() { return this.notAbnormalTerm==null ? null : notAbnormalTerm.getName(); }
+    public String getAboveNormalHpoTermName() { return this.aboveNormalTerm==null ? null : aboveNormalTerm.getName(); }
     public String getLoincScale() { return loincScale;}
 
 
