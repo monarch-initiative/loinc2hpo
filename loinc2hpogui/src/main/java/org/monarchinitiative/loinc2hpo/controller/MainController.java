@@ -191,5 +191,12 @@ public class MainController {
         SettingsViewFactory.openSettingsDialog(this.model);
     }
 
+    @FXML private void handleSave(ActionEvent e) {
+
+        e.consume();
+        System.out.println("usr wants to save file");
+        loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+
+    }
 }
 

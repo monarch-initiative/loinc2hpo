@@ -112,7 +112,7 @@ public class Model {
                     .collect(Collectors.toList());
 
             res.forEach( term -> termmap.put(term.getName(),term));
-            res.forEach( term -> System.out.println(term.getName()));
+            //res.forEach( term -> System.out.println(term.getName()));
         }
         return termmap.build();
     }
@@ -172,5 +172,6 @@ public class Model {
             logger.error("Could not open settings at " + path);
         }
     }
+
 
 }
