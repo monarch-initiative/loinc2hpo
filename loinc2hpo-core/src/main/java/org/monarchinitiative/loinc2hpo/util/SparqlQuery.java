@@ -58,6 +58,7 @@ public class SparqlQuery {
             try {
                 model.read(in, null);
                 System.out.println("model created");
+                modelCreated = true;
             } catch (Exception e) {
                 System.out.println("cannot read in data to model");
             }
@@ -70,15 +71,15 @@ public class SparqlQuery {
     /**
      * Create the HPO model
      */
-    private static void createHPOModel(String pathToHpoOwl) {
-        if (pathToHpoOwl==null) {
-            logger.error("Could not retrieve hp.owl file -- did you download it from the Edit menu?");
+    private static void createHPOModel() {
+        if (model==null) {
+            logger.error("this should never happen");
             return;
         } else {
-            logger.error("GOT HPO file at "+ pathToHpoOwl);
+            logger.error("this should never happen");
         }
-        model = getOntologyModel(pathToHpoOwl);
-        modelCreated = true;
+        //model = getOntologyModel(pathToHpoOwl);
+        //modelCreated = true;
     }
 
 
