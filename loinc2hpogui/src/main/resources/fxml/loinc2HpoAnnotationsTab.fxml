@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="loinc2HpoAnnotationsTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
+<AnchorPane fx:id="loinc2HpoAnnotationsTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
     <children>
         <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="800.0" prefWidth="1200.0">
             <items>
@@ -14,6 +14,7 @@
                 <TableView fx:id="loincTableView" prefWidth="1200.0">
                     <columns>
                         <TableColumn fx:id="loincNumberColumn" prefWidth="75.0" text="LOINC Num" />
+                  <TableColumn fx:id="loincScaleColumn" prefWidth="75.0" text="Scale" />
                         <TableColumn fx:id="belowNormalHpoColumn" prefWidth="75.0" text="Below normal" />
                         <TableColumn fx:id="notAbnormalHpoColumn" prefWidth="75.0" text="Normal" />
                         <TableColumn fx:id="aboveNormalHpoColumn" prefWidth="75.0" text="Above normal" />

@@ -17,7 +17,7 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     private final HpoTerm belowNormalTerm;
     private final HpoTerm notAbnormalTerm;
     private final HpoTerm aboveNormalTerm;
-
+    private final String loincScale;
 
 
 
@@ -37,8 +37,9 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
 
 
 
-    public AnnotatedLoincRangeTest(String loinc,HpoTerm low, HpoTerm normal, HpoTerm hi){
+    public AnnotatedLoincRangeTest(String loinc, String loincScale, HpoTerm low, HpoTerm normal, HpoTerm hi){
         this.loincNumber=loinc;
+        this.loincScale = loincScale;
         this.belowNormalTerm=low;
         this.notAbnormalTerm=normal;
         this.aboveNormalTerm=hi;
@@ -55,6 +56,7 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     public String getBelowNormalHpoTermName() { return belowNormalTerm.getName(); }
     public String getNotAbnormalHpoTermName() { return notAbnormalTerm.getName(); }
     public String getAboveNormalHpoTermName() { return aboveNormalTerm.getName(); }
+    public String getLoincScale() { return loincScale;}
 
 
 }

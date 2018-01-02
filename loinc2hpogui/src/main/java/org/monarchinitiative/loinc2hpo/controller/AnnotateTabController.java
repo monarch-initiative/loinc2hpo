@@ -507,6 +507,7 @@ public class AnnotateTabController {
         //String loincCode=this.loincSearchTextField.getText();
         String loincCode = loincTableView.getSelectionModel().getSelectedItem
                 ().getLOINC_Number();
+        String loincScale = loincTableView.getSelectionModel().getSelectedItem().getScale();
         hpoLo = hpoLowAbnormalTextField.getText();
         hpoNormal = hpoNotAbnormalTextField.getText();
         hpoHi= hpoHighAbnormalTextField.getText();
@@ -530,7 +531,7 @@ public class AnnotateTabController {
         }
 
         AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,low,normal,high);
+                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high);
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
     }

@@ -32,7 +32,7 @@ public class LoincEntry {
 
     private static final int MIN_FIELDS_LOINC=10;
 
-    private static final String HEADER_LINE="#LOINC.id\tHPO.low\tHPO.wnl\tHPO.high";
+    private static final String HEADER_LINE="#LOINC.id\tLOINC.scale\tHPO.low\tHPO.wnl\tHPO.high";
 
 
 

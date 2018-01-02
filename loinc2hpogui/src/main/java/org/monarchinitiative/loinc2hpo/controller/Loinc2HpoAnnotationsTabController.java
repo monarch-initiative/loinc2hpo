@@ -47,6 +47,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
 
 
 
@@ -62,6 +63,8 @@ public class Loinc2HpoAnnotationsTabController {
         loincTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
         loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber()));
+        loincScaleColumn.setSortable(true);
+        loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale()));
         belowNormalHpoColumn.setSortable(true);
         belowNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
         notAbnormalHpoColumn.setSortable(true);
@@ -149,6 +152,7 @@ public class Loinc2HpoAnnotationsTabController {
             for (AnnotatedLoincRangeTest annotation : annotations) {
                 builder.append("\n");
                 builder.append(annotation.getLoincNumber() + "\t");
+                builder.append(annotation.getLoincScale() + "\t");
                 builder.append(annotation.getBelowNormalHpoTermName() + "\t");
                 builder.append(annotation.getNotAbnormalHpoTermName() + "\t");
                 builder.append(annotation.getAboveNormalHpoTermName());
