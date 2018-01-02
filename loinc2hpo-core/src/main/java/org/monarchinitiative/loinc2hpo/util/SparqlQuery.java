@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.util;
 
+
+
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.query.QueryFactory;
@@ -17,6 +19,8 @@ import java.nio.file.Paths;
 import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+
 
 public class SparqlQuery {
 
@@ -66,10 +70,14 @@ public class SparqlQuery {
     /**
      * Create the HPO model
      */
-    private static void createHPOModel() {
-        String hpo = SparqlQuery.class.getResource("/hp" +
-                       ".owl").getPath();
-        model = getOntologyModel(hpo);
+    private static void createHPOModel(String pathToHpoOwl) {
+        if (pathToHpoOwl==null) {
+            logger.error("Could not retrieve hp.owl file -- did you download it from the Edit menu?");
+            return;
+        } else {
+            logger.error("GOT HPO file at "+ pathToHpoOwl);
+        }
+        model = getOntologyModel(pathToHpoOwl);
         modelCreated = true;
     }
 

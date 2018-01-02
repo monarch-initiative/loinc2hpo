@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
 
-import apple.laf.JRSUIUtils;
+//import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -214,7 +214,7 @@ public class AnnotateTabController {
             alert.showAndWait();
             return;
         }
-        logger.info("Start auto query by pressing button");
+        logger.info(String.format("Start auto query for \"%s\"by pressing button",entry));
         initHpoTermListView(entry);
         //clear text in abnormality text fields
         clearAbnormalityTextField();

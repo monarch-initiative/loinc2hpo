@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
+import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import java.io.File;
 
@@ -67,13 +68,13 @@ public class MainController {
             return;
         }
         loinc2HpoAnnotationsTabController.setModel(model);
-        if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
+        if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
-        String dirpath=org.monarchinitiative.loinc2hpo.io.Platform.getLOINC2HPODir().getAbsolutePath();
+        String dirpath= Loinc2HpoPlatform.getLOINC2HPODir().getAbsolutePath();
         File f = new File(dirpath);
         if (f==null || ! (f.exists() && f.isDirectory())) {
             logger.trace("Cannot download hp.obo, because directory not existing at " + f.getAbsolutePath());
@@ -144,7 +145,7 @@ public class MainController {
      * @return
      */
     private File getPathToSettingsFileAndEnsurePathExists() {
-        File loinc2HpoUserDir = org.monarchinitiative.loinc2hpo.io.Platform.getLOINC2HPODir();
+        File loinc2HpoUserDir = Loinc2HpoPlatform.getLOINC2HPODir();
         if (!loinc2HpoUserDir.exists()) {
             File fck = new File(loinc2HpoUserDir.getAbsolutePath());
             if (!fck.mkdir()) { // make sure config directory is created, exit if not
@@ -153,7 +154,7 @@ public class MainController {
                 System.exit(1);
             }
         }
-        String defaultSettingsPath = org.monarchinitiative.loinc2hpo.io.Platform.getPathToSettingsFile();
+        String defaultSettingsPath = Loinc2HpoPlatform.getPathToSettingsFile();
         File settingsFile=new File(defaultSettingsPath);
        return settingsFile;
     }

@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.model;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.formats.hpo.HpoTermRelation;
 import com.github.phenomics.ontolib.ontology.data.Ontology;
@@ -40,6 +41,8 @@ public class Model {
     private  Ontology<HpoTerm, HpoTermRelation> ontology=null;
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link AnnotatedLoincRangeTest} object .*/
     public Map<String,AnnotatedLoincRangeTest> testmap=new HashMap<>();
+
+    private ImmutableMap<String,HpoTerm> termmap=null;
 
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
@@ -93,29 +96,11 @@ public class Model {
         } catch (IOException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
         }
+        termmap=parser.getTermMap();
     }
-    /** @return a map will all terms of the Hpo Phenotype subontology. */
-    public ImmutableMap<String,HpoTerm> getTermMap() {
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        if (ontology !=null) {
 
-           // ontology.getTermMap().values().  forEach(term -> termmap.put(term.getName(), term));
-            // for some reason there is a bug here...issue #34 on ontolib tracker
-            // here is a workaround to remove duplicate entries
-            List<HpoTerm> res = ontology.getTermMap().values().stream()
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                    .entrySet()
-                    .stream()
-                    .filter(e -> e.getValue() == 1)      //this might cause
-                    // some classes to be ignored(? e.g. hypoglycemia)
-                    .map(e -> e.getKey())
-                    .collect(Collectors.toList());
+    public ImmutableMap<String,HpoTerm> getTermMap() { return termmap;}
 
-            res.forEach( term -> termmap.put(term.getName(),term));
-            //res.forEach( term -> System.out.println(term.getName()));
-        }
-        return termmap.build();
-    }
 
     /** Write a few settings to a file in the user's .loinc2hpo directory. */
     public void writeSettings() {

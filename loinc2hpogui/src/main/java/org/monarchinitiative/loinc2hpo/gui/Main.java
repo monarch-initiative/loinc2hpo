@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class Main extends Application {
         Image image = new Image(Main.class.getResourceAsStream("/img/icon.jpg"));
         window.getIcons().add(image);
         window.setTitle(WINDOW_TITLE);
-        if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
+        if (Loinc2HpoPlatform.isMacintosh()) {
             try {
                 URL iconURL = Main.class.getResource("/img/icon.jpg");
                 java.awt.Image macimage = new ImageIcon(iconURL).getImage();
