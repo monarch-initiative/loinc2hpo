@@ -2,8 +2,10 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.xml.internal.security.c14n.implementations.Canonicalizer11_OmitComments;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -12,9 +14,12 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -43,6 +48,10 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincFlagColumn;
+
+
 
     //@FXML private WebView wview;
 
@@ -56,12 +65,20 @@ public class Loinc2HpoAnnotationsTabController {
         loincTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
         loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber()));
+        loincScaleColumn.setSortable(true);
+        loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale()));
         belowNormalHpoColumn.setSortable(true);
-        belowNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
+        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue()==null ? new ReadOnlyStringWrapper("\" \"") :
+        new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
         notAbnormalHpoColumn.setSortable(true);
-        notAbnormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
+        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
+                : new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
         aboveNormalHpoColumn.setSortable(true);
-        aboveNormalHpoColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
+        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
+        : new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
+        loincFlagColumn.setSortable(true);
+        loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
+                new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
         updateSummary();
 
     }
@@ -131,8 +148,40 @@ public class Loinc2HpoAnnotationsTabController {
             loincTableView.getItems().addAll(testmap.values());
         });
 
-
     }
 
+    public void saveLoincAnnotation() {
+        String path = model.getPathToAnnotationFile();
+        StringBuilder builder = new StringBuilder();
+        if (loincTableView.getItems().size() > 0) {
+
+            List<AnnotatedLoincRangeTest> annotations = loincTableView
+                    .getItems();
+            for (AnnotatedLoincRangeTest annotation : annotations) {
+                builder.append("\n");
+                boolean flag = annotation.getFlag();
+                char flagString = flag ? 'Y' : 'N';
+                builder.append(flagString + "\t");
+                builder.append(annotation.getLoincNumber() + "\t");
+                builder.append(annotation.getLoincScale() + "\t");
+                builder.append(annotation.getBelowNormalHpoTermName() + "\t");
+                builder.append(annotation.getNotAbnormalHpoTermName() + "\t");
+                builder.append(annotation.getAboveNormalHpoTermName());
+            }
+        }
+        WriteToFile.appendToFile(builder.toString(), path);
+    }
+
+    @FXML
+    private void deleteLoincAnnotation(ActionEvent event){
+        AnnotatedLoincRangeTest toDelete = loincTableView.getSelectionModel()
+                .getSelectedItem();
+        if (toDelete != null) {
+            loincTableView.getItems().remove(toDelete);
+            model.removeLoincTest(toDelete.getLoincNumber());
+        }
+        event.consume();
+
+    }
 
 }

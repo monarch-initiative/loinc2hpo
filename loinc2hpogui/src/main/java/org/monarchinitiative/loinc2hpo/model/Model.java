@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.model;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.formats.hpo.HpoTermRelation;
 import com.github.phenomics.ontolib.ontology.data.Ontology;
@@ -30,6 +31,8 @@ public class Model {
     private String pathToSettingsFile=null;
     /** Path to {@code hp.obo}. */
     private String pathToHpoOboFile=null;
+    /** PATH to {@code hp.owl}. */
+    private String pathToHpoOwlFile = null;
     /** Path to the file we are creating with LOINC code to HPO annotations. */
     private String pathToAnnotationFile=null;
     /** A String such as MGM:rrabbit .*/
@@ -39,12 +42,16 @@ public class Model {
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link AnnotatedLoincRangeTest} object .*/
     public Map<String,AnnotatedLoincRangeTest> testmap=new HashMap<>();
 
+    private ImmutableMap<String,HpoTerm> termmap=null;
+
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
     }
     public void setPathToSettingsFile(String p) { this.pathToSettingsFile=p;}
     public void setPathToAnnotationFile(String p) {pathToAnnotationFile=p;}
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
+    public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
+    }
     public void setBiocuratorID(String id){biocuratorID=id;}
 
     public String getPathToLoincCoreTableFile() {
@@ -55,7 +62,7 @@ public class Model {
     }
     public String getBiocuratorID() {return biocuratorID;}
     public String getPathToAnnotationFile(){return pathToAnnotationFile;}
-
+    public String getPathToHpoOwlFile(){ return pathToHpoOwlFile;}
 
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
     public int getLoincAnnotationCount() { return testmap!=null?this.testmap.size():0;}
@@ -68,6 +75,15 @@ public class Model {
     public void addLoincTest(AnnotatedLoincRangeTest test) {
         // todo warn if term already in map
         testmap.put(test.getLoincNumber(),test);
+    }
+
+    public void removeLoincTest(String loincNum) {
+        if (this.testmap.containsKey(loincNum)) {
+            this.testmap.remove(loincNum);
+        } else {
+            logger.error("removing a Loinc annotation record that does not " +
+                    "exist");
+        }
     }
 
     public Map<String,AnnotatedLoincRangeTest> getTestmap(){ return testmap; }
@@ -89,27 +105,11 @@ public class Model {
         } catch (IOException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
         }
+        termmap=parser.getTermMap();
     }
-    /** @return a map will all terms of the Hpo Phenotype subontology. */
-    public ImmutableMap<String,HpoTerm> getTermMap() {
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        if (ontology !=null) {
 
-           // ontology.getTermMap().values().  forEach(term -> termmap.put(term.getName(), term));
-            // for some reason there is a bug here...issue #34 on ontolib tracker
-            // here is a workaround to remove duplicate entries
-            List<HpoTerm> res = ontology.getTermMap().values().stream()
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                    .entrySet()
-                    .stream()
-                    .filter(e -> e.getValue() == 1)
-                    .map(e -> e.getKey())
-                    .collect(Collectors.toList());
+    public ImmutableMap<String,HpoTerm> getTermMap() { return termmap;}
 
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        return termmap.build();
-    }
 
     /** Write a few settings to a file in the user's .loinc2hpo directory. */
     public void writeSettings() {
@@ -126,6 +126,9 @@ public class Model {
             }
             if (pathToHpoOboFile!=null) {
                 bw.write(String.format("hp-obo:%s\n",pathToHpoOboFile));
+            }
+            if (pathToHpoOwlFile!= null) {
+                bw.write(String.format("hp-owl:%s\n", pathToHpoOwlFile));
             }
             bw.close();
         } catch (IOException e) {
@@ -155,6 +158,7 @@ public class Model {
                 else if (key.equals("loincTablePath")) this.pathToLoincCoreTableFile = value;
                 else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
                 else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
+                else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
             }
             br.close();
         } catch (IOException e) {
@@ -162,5 +166,6 @@ public class Model {
             logger.error("Could not open settings at " + path);
         }
     }
+
 
 }

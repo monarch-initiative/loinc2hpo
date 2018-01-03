@@ -2,6 +2,23 @@ package org.monarchinitiative.loinc2hpo.util;
 
 import java.util.*;
 
+/**
+ * A class to represent a loinc code. The class is created by
+ * LoincLongNameParser. It has fields for parameter, tissue, assay method and
+ * assayType.
+ * e.g. "Erythrocytes [#/volume] in Blood by Automated Count" is the long
+ * common name for a loinc assay. We represent this loinc assay with this
+ * class.
+ * parameter:   Erythrocytes
+ * tissue:      Blood
+ * assayMethod: Automated Count
+ * assayType:   #/volume
+ * Note: do not take "tissue" too literal. For some loinc names, what binds
+ * to "tissue" might not be a biological tissue.
+ * The class also has two public methods keysInLoincParameter() and
+ * keysInLoincTissue() besides standard getters. Those methods will return
+ * valid keys in loinc parameter and tissue for Sparql query
+ */
 public class LoincCodeClass {
 
     private String parameter;
@@ -67,6 +84,13 @@ public class LoincCodeClass {
 
     }
 
+    /**
+     * Check words in "parameter" and return a list of valid words as keys
+     * for Sparql query. Non-valid words include stop words in English (e.g.
+     * "in", "on", "of") and words that are too general (e.g. "cell", "mean")
+     * or integers.
+     * @return a list of valid words
+     */
     public Queue<String> keysInLoinParameter() {
         Queue<String> keys = new LinkedList<>();
         String[] words = this.parameter.split("\\W");
@@ -78,6 +102,14 @@ public class LoincCodeClass {
         return keys;
     }
 
+
+    /**
+     * Check words in "tissue" and return a list of valid words as keys
+     * for Sparql query. Non-valid words include stop words in English (e.g.
+     * "in", "on", "of") and words that are too general (e.g. "cell", "mean")
+     * or integers.
+     * @return a list of valid words
+     */
     public Queue<String> keysInLoincTissue() {
         Queue<String> keys = new LinkedList<>();
         String[] words = this.tissue.split(" or ");
@@ -102,6 +134,11 @@ public class LoincCodeClass {
         return newString;
     }
 
+    /**
+     * A helper method to check whether a word is valid or not.
+     * @param word
+     * @return
+     */
     private static boolean validKey(String word) { //test whether a word should be used in building a query
 
         if (word == null || word == "") {

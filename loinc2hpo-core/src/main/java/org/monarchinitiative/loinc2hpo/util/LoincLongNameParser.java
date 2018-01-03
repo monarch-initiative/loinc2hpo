@@ -1,10 +1,18 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-//import java.text.ParseException;
+/**
+ * The class parses a loinc long common name and return a LoincCodeClass
+ */
 
 public class LoincLongNameParser {
 
 
+    /**
+     * A static method to parse a loinc long common name and return a
+     * LoincCodeClass
+     * @param loincLongName
+     * @return a LoincCodeClass
+     */
     public static LoincCodeClass parse(String loincLongName) {
 
         String parameter = "";
@@ -67,21 +75,4 @@ public class LoincLongNameParser {
 
         return new LoincCodeClass(parameter, tissue, assayMethod, assayType);
     }
-
-
-
-    /**
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.loincLongName + ": \n");
-        builder.append("parameter: " + this.parameter + "\n");
-        builder.append("tissue: " + this.tissue + "\n");
-        builder.append("assay method: " + this.assayMethod + "\n");
-        builder.append("assay type: " + this.assayType + "\n");
-        return builder.toString();
-    }
-    **/
-
 }
