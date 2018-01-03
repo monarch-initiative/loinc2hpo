@@ -9,11 +9,14 @@ import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import org.apache.jena.query.Query;
@@ -23,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.WidthAwareTextFields;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
+import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -92,6 +96,9 @@ public class AnnotateTabController {
     //@FXML private TableColumn<HPO_Class_Found, String> definition;
 
     @FXML private TreeView<HPO_TreeView> treeView;
+
+    @FXML private CheckBox flagForAnnotation;
+    @FXML private Circle createAnnotationSuccess;
 
     @FXML private void initialize() {
         if (model != null) {
@@ -163,6 +170,10 @@ public class AnnotateTabController {
                     initHpoTermListView(rowData);
                     //clear text in abnormality text fields
                     clearAbnormalityTextField();
+                    //inialize the flag field
+                    flagForAnnotation.setIndeterminate(false);
+                    flagForAnnotation.setSelected(false);
+                    createAnnotationSuccess.setFill(Color.WHITE);
                 }
             });
             return row ;
@@ -216,6 +227,10 @@ public class AnnotateTabController {
         initHpoTermListView(entry);
         //clear text in abnormality text fields
         clearAbnormalityTextField();
+        //inialize the flag field
+        flagForAnnotation.setIndeterminate(false);
+        flagForAnnotation.setSelected(false);
+        createAnnotationSuccess.setFill(Color.WHITE);
     }
 
     @FXML private void handleManualQueryButton(ActionEvent e) {
@@ -278,6 +293,10 @@ public class AnnotateTabController {
         }
         //clear text in abnormality text fields
         clearAbnormalityTextField();
+        //inialize the flag field
+        flagForAnnotation.setIndeterminate(false);
+        flagForAnnotation.setSelected(false);
+        createAnnotationSuccess.setFill(Color.WHITE);
     }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -297,7 +316,7 @@ public class AnnotateTabController {
 
         e.consume();
     }
-
+/**
     @FXML private void initHPOmodelButton(ActionEvent e){
 
         //Remind user that this is a time consuming process
@@ -313,6 +332,26 @@ public class AnnotateTabController {
         SparqlQuery.getOntologyModel(pathToHPO);
 
     }
+**/
+    @FXML private void initHPOmodelButton(ActionEvent e){
+
+        String pathToHPO = this.model.getPathToHpoOwlFile();
+        logger.info("pathToHPO: " + pathToHPO);
+        //create a task to create HPO model
+        Task<org.apache.jena.rdf.model.Model> task = new OntologyModelBuilderForJena(pathToHPO);
+        new Thread(task).start();
+        task.setOnSucceeded(x -> SparqlQuery.setHPOmodel(task.getValue()));
+        task.setOnFailed(x -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Failured to create HPO model");
+            alert.setContentText("Check whether hpo.owl is downloaded.");
+            alert.showAndWait();
+        });
+        e.consume();
+
+    }
+
+
 
 
 
@@ -523,26 +562,31 @@ public class AnnotateTabController {
         //it happens when something is wrong with hpo termmap (a name could not be mapped)
         if (!hpoLo.trim().isEmpty() && low==null) {
             logger.error(hpoLo + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
             showErrorOfMapping(hpoLo);
             return;
         }
 
         if (!hpoHi.trim().isEmpty() && high==null) {
             logger.error(hpoHi + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
             showErrorOfMapping(hpoHi);
             return;
         }
 
         if (!hpoNormal.trim().isEmpty() && normal==null) {
             logger.error(hpoNormal + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
             showErrorOfMapping(hpoNormal);
             return;
         }
 
         AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high);
+                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high, flagForAnnotation.isSelected());
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
+        createAnnotationSuccess.setFill(Color.GREEN);
+
         //showSuccessOfMapping("Go to next loinc code!");
 
     }
@@ -641,6 +685,10 @@ public class AnnotateTabController {
     void handleDragExitParentAbnorm(DragEvent event) {
         hpoNotAbnormalTextField.setStyle("-fx-background-color: WHITE;");
         event.consume();
+    }
+    @FXML
+    void handleFlagForAnnotation(ActionEvent event) {
+
     }
 
 }

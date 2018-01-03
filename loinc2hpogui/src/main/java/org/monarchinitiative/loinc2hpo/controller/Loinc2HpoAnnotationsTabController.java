@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.xml.internal.security.c14n.implementations.Canonicalizer11_OmitComments;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -48,6 +49,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincFlagColumn;
 
 
 
@@ -74,6 +76,9 @@ public class Loinc2HpoAnnotationsTabController {
         aboveNormalHpoColumn.setSortable(true);
         aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
         : new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
+        loincFlagColumn.setSortable(true);
+        loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
+                new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
         updateSummary();
 
     }
@@ -154,6 +159,7 @@ public class Loinc2HpoAnnotationsTabController {
                     .getItems();
             for (AnnotatedLoincRangeTest annotation : annotations) {
                 builder.append("\n");
+                builder.append(annotation.getFlag() + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
                 builder.append(annotation.getLoincScale() + "\t");
                 builder.append(annotation.getBelowNormalHpoTermName() + "\t");

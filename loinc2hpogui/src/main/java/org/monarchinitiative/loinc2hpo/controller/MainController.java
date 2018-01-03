@@ -84,7 +84,7 @@ public class MainController {
         String BASENAME_OWL = "hp.owl";
 
         ProgressIndicator pb = new ProgressIndicator();
-        javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo...");
+        javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo/.owl...");
         FlowPane root = new FlowPane();
         root.setPadding(new Insets(10));
         root.setHgap(10);

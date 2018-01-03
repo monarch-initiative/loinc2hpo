@@ -84,6 +84,15 @@ public class SparqlQuery {
         }
     }
 
+    /**
+     * Create an HPO model externally and then pass it to this class
+     * @param externallyCreated
+     */
+    public static void setHPOmodel(Model externallyCreated) {
+        model = externallyCreated;
+        modelCreated = true;
+        logger.info("An externally created HPO model is passed to SparqlQuery class");
+    }
 
     /**
      * Build a standard sparql query from a single key. It searches for HPO classes that
