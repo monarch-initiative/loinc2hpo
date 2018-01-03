@@ -159,7 +159,9 @@ public class Loinc2HpoAnnotationsTabController {
                     .getItems();
             for (AnnotatedLoincRangeTest annotation : annotations) {
                 builder.append("\n");
-                builder.append(annotation.getFlag() + "\t");
+                boolean flag = annotation.getFlag();
+                char flagString = flag ? 'Y' : 'N';
+                builder.append(flagString + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
                 builder.append(annotation.getLoincScale() + "\t");
                 builder.append(annotation.getBelowNormalHpoTermName() + "\t");

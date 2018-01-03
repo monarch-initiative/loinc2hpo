@@ -55,7 +55,7 @@ public class AnnotateTabController {
     private ImmutableMap<String,LoincEntry> loincmap=null;
 
 
-
+    @FXML private Button IntializeHPOmodelbutton;
     @FXML private Button initLOINCtableButton;
     @FXML private Button searchForLOINCIdButton;
     @FXML private Button createAnnotationButton;
@@ -340,7 +340,10 @@ public class AnnotateTabController {
         //create a task to create HPO model
         Task<org.apache.jena.rdf.model.Model> task = new OntologyModelBuilderForJena(pathToHPO);
         new Thread(task).start();
-        task.setOnSucceeded(x -> SparqlQuery.setHPOmodel(task.getValue()));
+        task.setOnSucceeded(x -> {
+            SparqlQuery.setHPOmodel(task.getValue());
+            IntializeHPOmodelbutton.setStyle("-fx-background-color: #00ff00");
+        });
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Failured to create HPO model");

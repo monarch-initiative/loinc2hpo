@@ -33,7 +33,7 @@
                                  <HBox.margin>
                                     <Insets top="10.0" />
                                  </HBox.margin></Button>
-                              <Button mnemonicParsing="false" onAction="#initHPOmodelButton" stylesheets="@../css/loinc2hpo.css" text="Initialize HPO model">
+                              <Button fx:id="IntializeHPOmodelbutton" mnemonicParsing="false" onAction="#initHPOmodelButton" stylesheets="@../css/loinc2hpo.css" text="Initialize HPO model">
                                  <HBox.margin>
                                     <Insets left="30.0" top="10.0" />
                                  </HBox.margin>
