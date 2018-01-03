@@ -77,6 +77,15 @@ public class Model {
         testmap.put(test.getLoincNumber(),test);
     }
 
+    public void removeLoincTest(String loincNum) {
+        if (this.testmap.containsKey(loincNum)) {
+            this.testmap.remove(loincNum);
+        } else {
+            logger.error("removing a Loinc annotation record that does not " +
+                    "exist");
+        }
+    }
+
     public Map<String,AnnotatedLoincRangeTest> getTestmap(){ return testmap; }
 
 

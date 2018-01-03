@@ -60,6 +60,8 @@ public class SetupTabController {
         chooser.setInitialFileName("loinc2hpo.tsv");
         chooser.setTitle("Choose loinc2hpo.tsv annotation file");
         File f = chooser.showSaveDialog(null);
+        //File f = chooser.showOpenDialog(null);
+
         if (model==null) {
             logger.error("model is null");
             return;

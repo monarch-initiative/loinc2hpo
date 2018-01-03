@@ -163,4 +163,17 @@ public class Loinc2HpoAnnotationsTabController {
         }
         WriteToFile.appendToFile(builder.toString(), path);
     }
+
+    @FXML
+    private void deleteLoincAnnotation(ActionEvent event){
+        AnnotatedLoincRangeTest toDelete = loincTableView.getSelectionModel()
+                .getSelectedItem();
+        if (toDelete != null) {
+            loincTableView.getItems().remove(toDelete);
+            model.removeLoincTest(toDelete.getLoincNumber());
+        }
+        event.consume();
+
+    }
+
 }
