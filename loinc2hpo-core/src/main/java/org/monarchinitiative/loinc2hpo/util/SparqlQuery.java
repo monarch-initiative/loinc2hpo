@@ -24,8 +24,8 @@ import org.apache.logging.log4j.Logger;
 
 public class SparqlQuery {
 
-    private static final String hpo = SparqlQuery.class.getResource("/hp" +
-            ".owl").getPath(); //need '/' to get a resource file
+//    private static final String hpo = SparqlQuery.class.getResource("/hp" +
+//            ".owl").getPath(); //need '/' to get a resource file
     public static boolean modelCreated = false; //check whether the model for
     // hpo has been created
     public static Model model; //model of hp.owl for Sparql query
@@ -75,8 +75,8 @@ public class SparqlQuery {
         if (model==null) {
             logger.error("this should never happen if initiated from UI");
             //add the following line for test class only
-            String pathToHpoOwl = hpo;
-            model = getOntologyModel(pathToHpoOwl);
+//            String pathToHpoOwl = hpo;
+//            model = getOntologyModel(pathToHpoOwl);
             modelCreated = true;
             return;
         } else {
