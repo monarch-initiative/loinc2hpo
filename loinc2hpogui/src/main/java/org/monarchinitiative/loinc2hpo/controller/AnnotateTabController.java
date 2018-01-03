@@ -99,6 +99,7 @@ public class AnnotateTabController {
 
     @FXML private CheckBox flagForAnnotation;
     @FXML private Circle createAnnotationSuccess;
+    @FXML private TextField annotationNoteField;
 
     @FXML private void initialize() {
         if (model != null) {
@@ -174,6 +175,7 @@ public class AnnotateTabController {
                     flagForAnnotation.setIndeterminate(false);
                     flagForAnnotation.setSelected(false);
                     createAnnotationSuccess.setFill(Color.WHITE);
+                    annotationNoteField.setText("");
                 }
             });
             return row ;
@@ -231,6 +233,7 @@ public class AnnotateTabController {
         flagForAnnotation.setIndeterminate(false);
         flagForAnnotation.setSelected(false);
         createAnnotationSuccess.setFill(Color.WHITE);
+        annotationNoteField.setText("");
     }
 
     @FXML private void handleManualQueryButton(ActionEvent e) {
@@ -297,6 +300,7 @@ public class AnnotateTabController {
         flagForAnnotation.setIndeterminate(false);
         flagForAnnotation.setSelected(false);
         createAnnotationSuccess.setFill(Color.WHITE);
+        annotationNoteField.setText("");
     }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -343,8 +347,12 @@ public class AnnotateTabController {
         task.setOnSucceeded(x -> {
             SparqlQuery.setHPOmodel(task.getValue());
             IntializeHPOmodelbutton.setStyle("-fx-background-color: #00ff00");
+            IntializeHPOmodelbutton.setText("HPO initialized");
         });
-        task.setOnRunning(x -> IntializeHPOmodelbutton.setStyle("-fx-background-color: #ffc0cb"));
+        task.setOnRunning(x -> {
+            IntializeHPOmodelbutton.setStyle("-fx-background-color: #ffc0cb");
+            IntializeHPOmodelbutton.setText("HPO initializing...");
+        });
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Failured to create HPO model");
@@ -586,7 +594,8 @@ public class AnnotateTabController {
         }
 
         AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high, flagForAnnotation.isSelected());
+                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
+                        flagForAnnotation.isSelected(), annotationNoteField.getText());
         this.model.addLoincTest(test);
         loinc2HpoAnnotationsTabController.refreshTable();
         createAnnotationSuccess.setFill(Color.GREEN);
@@ -594,6 +603,41 @@ public class AnnotateTabController {
         //showSuccessOfMapping("Go to next loinc code!");
 
     }
+
+    //TODO: implement
+    private void qcAnnotation(String HpoLow, String HpoNorm, String HpoHigh){
+
+        if (HpoLow == null || HpoLow.trim().isEmpty() &&
+                HpoNorm == null || HpoNorm.trim().isEmpty() &&
+                HpoHigh == null || HpoHigh.trim().isEmpty()) {
+            //popup an alert
+        }
+
+        if (HpoLow != null && HpoNorm != null && stringEquals(HpoLow, HpoNorm)) {
+            //alert: low and norm are same!
+        }
+
+        if (HpoLow != null && HpoHigh != null && stringEquals(HpoLow, HpoHigh)) {
+            //alert: low and high are same!
+        }
+
+        if (HpoNorm != null && HpoHigh != null && stringEquals(HpoNorm, HpoHigh)) {
+            //alert: norm and high are the same!
+        }
+
+    }
+
+    /**
+     * Determine whether two strings are identical (case insensitive, no space before and after string)
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean stringEquals(String x, String y) {
+        return x.trim().toLowerCase().equals(y.trim().toLowerCase());
+    }
+
+    
     private void showErrorOfMapping(String message) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setTitle("Failure");

@@ -50,6 +50,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincFlagColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> noteColumn;
 
 
 
@@ -79,6 +80,9 @@ public class Loinc2HpoAnnotationsTabController {
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
+        noteColumn.setSortable(true);
+        noteColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("") :
+                new ReadOnlyStringWrapper(cdf.getValue().getNote()));
         updateSummary();
 
     }
@@ -166,7 +170,8 @@ public class Loinc2HpoAnnotationsTabController {
                 builder.append(annotation.getLoincScale() + "\t");
                 builder.append(annotation.getBelowNormalHpoTermName() + "\t");
                 builder.append(annotation.getNotAbnormalHpoTermName() + "\t");
-                builder.append(annotation.getAboveNormalHpoTermName());
+                builder.append(annotation.getAboveNormalHpoTermName() + "\t");
+                builder.append(annotation.getNote());
             }
         }
         WriteToFile.appendToFile(builder.toString(), path);

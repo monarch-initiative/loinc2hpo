@@ -22,6 +22,8 @@
                         <items>
                               <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
                           <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                              <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
+                              <MenuItem fx:id="newAnnotationFileButton" mnemonicParsing="false" onAction="#handleCreateNewAnnotation" text="New Annotation File" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">

@@ -43,6 +43,8 @@ public class MainController {
 
     @FXML private MenuBar loincmenubar;
     @FXML private MenuItem closeMenuItem;
+    @FXML private MenuItem importAnnotationButton;
+    @FXML private MenuItem newAnnotationFileButton;
 
 
 
@@ -197,6 +199,12 @@ public class MainController {
         e.consume();
         logger.info("usr wants to save file");
         loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+
+    }
+    @FXML private void handleImportAnnotationFile(ActionEvent event) {
+
+    }
+    @FXML private void handleCreateNewAnnotation(ActionEvent event) {
 
     }
 }
