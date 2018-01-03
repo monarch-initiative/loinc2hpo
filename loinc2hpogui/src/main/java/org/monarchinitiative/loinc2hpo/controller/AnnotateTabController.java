@@ -344,6 +344,7 @@ public class AnnotateTabController {
             SparqlQuery.setHPOmodel(task.getValue());
             IntializeHPOmodelbutton.setStyle("-fx-background-color: #00ff00");
         });
+        task.setOnRunning(x -> IntializeHPOmodelbutton.setStyle("-fx-background-color: #ffc0cb"));
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Failured to create HPO model");
