@@ -136,13 +136,15 @@ public class HPO_Class_Found implements Comparable {
         String[] id_string = this.id.split("/");
         builder.append("\t\t" + id_string[id_string.length - 1]);
         builder.append("\t\t" + this.label);
+        /**
         int count_label_lengh = this.label.length();
         while (count_label_lengh < 80) {
             builder.append(" ");
             count_label_lengh++;
         }
+         **/
         if(this.definition != null){
-            builder.append(this.definition);
+            builder.append("\t\t" + this.definition);
         } else {
             builder.append("\t\t");
         }
