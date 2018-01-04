@@ -1,3 +1,10 @@
+loinc2hpogui/src/test/resources/split.sh
+loinc2hpogui/src/test/resources/UNC-loinc*
+loinc2hpogui/src/test/resources/UNC-data_loinc.txt
+loinc2hpo-core/src/test/org/monarchinitiative/loinc2hpo/util/TSTTest.java
+loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/util/TST.java
+logs/
+.idea/codeStyleSettings.xml
 loinc2hpo-core/logs/
 loinc-hpo-mapping.tsv
 loinc2hpo-core/src/main/resources

@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
+import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import java.io.File;
 
@@ -30,6 +31,8 @@ public class MainController {
     private static final Logger logger = LogManager.getLogger();
     /** Download address for {@code hp.obo}. */
     private final static String HP_OBO_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
+    //It appears Jena Sparql API does not like obo, so also download hp.owl
+    private final static String HP_OWL_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.owl";
     private Model model=null;
 
 
@@ -65,22 +68,23 @@ public class MainController {
             return;
         }
         loinc2HpoAnnotationsTabController.setModel(model);
-        if (org.monarchinitiative.loinc2hpo.io.Platform.isMacintosh()) {
+        if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
-        String dirpath=org.monarchinitiative.loinc2hpo.io.Platform.getLOINC2HPODir().getAbsolutePath();
+        String dirpath= Loinc2HpoPlatform.getLOINC2HPODir().getAbsolutePath();
         File f = new File(dirpath);
         if (f==null || ! (f.exists() && f.isDirectory())) {
             logger.trace("Cannot download hp.obo, because directory not existing at " + f.getAbsolutePath());
             return;
         }
         String BASENAME="hp.obo";
+        String BASENAME_OWL = "hp.owl";
 
         ProgressIndicator pb = new ProgressIndicator();
-        javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo...");
+        javafx.scene.control.Label label=new javafx.scene.control.Label("downloading hp.obo/.owl...");
         FlowPane root = new FlowPane();
         root.setPadding(new Insets(10));
         root.setHgap(10);
@@ -92,20 +96,25 @@ public class MainController {
 
         Task hpodownload = new Downloader(dirpath, HP_OBO_URL,BASENAME,pb);
         new Thread(hpodownload).start();
+        hpodownload = new Downloader(dirpath, HP_OWL_URL, BASENAME_OWL, pb);
+        new Thread(hpodownload).start();
         window.show();
         hpodownload.setOnSucceeded(event -> {
             window.close();
             logger.trace(String.format("Successfully downloaded hpo to %s",dirpath));
             String fullpath=String.format("%s%shp.obo",dirpath,File.separator);
+            String fullpath_owl = String.format("%s%shp.owl", dirpath, File
+                    .separator);
             model.setPathToHpOboFile(fullpath);
+            model.setPathToHpOwlFile(fullpath_owl);
             model.writeSettings();
         });
         hpodownload.setOnFailed(event -> {
             window.close();
             logger.error("Unable to download HPO obo file");
         });
-        Thread thread = new Thread(hpodownload);
-        thread.start();
+       // Thread thread = new Thread(hpodownload);
+        //thread.start();
 
         e.consume();
     }
@@ -136,7 +145,7 @@ public class MainController {
      * @return
      */
     private File getPathToSettingsFileAndEnsurePathExists() {
-        File loinc2HpoUserDir = org.monarchinitiative.loinc2hpo.io.Platform.getLOINC2HPODir();
+        File loinc2HpoUserDir = Loinc2HpoPlatform.getLOINC2HPODir();
         if (!loinc2HpoUserDir.exists()) {
             File fck = new File(loinc2HpoUserDir.getAbsolutePath());
             if (!fck.mkdir()) { // make sure config directory is created, exit if not
@@ -145,7 +154,7 @@ public class MainController {
                 System.exit(1);
             }
         }
-        String defaultSettingsPath = org.monarchinitiative.loinc2hpo.io.Platform.getPathToSettingsFile();
+        String defaultSettingsPath = Loinc2HpoPlatform.getPathToSettingsFile();
         File settingsFile=new File(defaultSettingsPath);
        return settingsFile;
     }
@@ -183,5 +192,12 @@ public class MainController {
         SettingsViewFactory.openSettingsDialog(this.model);
     }
 
+    @FXML private void handleSave(ActionEvent e) {
+
+        e.consume();
+        logger.info("usr wants to save file");
+        loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+
+    }
 }
 

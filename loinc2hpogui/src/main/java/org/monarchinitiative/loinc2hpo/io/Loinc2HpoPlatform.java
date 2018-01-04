@@ -10,7 +10,7 @@ import java.io.File;
  * This is used to figure out where VPVGui will store the viewpoint files. For instance, with linux
  * this would be /home/username/.loinc2hpo/...
  */
-public class Platform {
+public class Loinc2HpoPlatform {
 
     /**
      * Get path to directory where HRMD-gui stores global settings.
@@ -51,9 +51,14 @@ public class Platform {
     }
 
 
-    public static String getLocalHPOPath() {
+    public static String getLocalHpoOboPath() {
         File dir = getLOINC2HPODir();
         return new String(dir + File.separator + "hp.obo");
+    }
+
+    public static String getLocalHpoOwlPath() {
+        File dir = getLOINC2HPODir();
+        return new String(dir + File.separator + "hp.owl");
     }
 
     /**
