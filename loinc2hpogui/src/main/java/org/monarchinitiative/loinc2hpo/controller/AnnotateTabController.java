@@ -619,6 +619,7 @@ public class AnnotateTabController {
             this.model.addLoincTest(test);
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);
+            changeColorLoincTableView();
         }
 
         //showSuccessOfMapping("Go to next loinc code!");
@@ -792,5 +793,56 @@ public class AnnotateTabController {
     void handleFlagForAnnotation(ActionEvent event) {
 
     }
+
+    //change the color of rows to green after the loinc code has been annotated
+    protected void changeColorLoincTableView(){
+/**
+        loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty){
+                super.updateItem(item, empty);
+                if(item != null && !empty) {
+                    setText(item);
+                    if(model.getTestmap().containsKey(item)) {
+                        logger.info("model contains " + item);
+                        logger.info("num of items in model " + model.getTestmap().size());
+                        //TableRow<LoincEntry> currentRow = getTableRow();
+                        //currentRow.setStyle("-fx-background-color: lightblue");
+                        setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
+                    }
+                }
+            }
+
+        });
+ **/
+    }
+
+/**
+ * The program never go to setRowFactory. WHy?
+    //change the color of rows to green after the loinc code has been annotated
+    protected void changeColorLoincTableView(){
+        logger.debug("enter changeColorLoincTableView");
+        logger.info("model size: " + model.getTestmap().size());
+
+        loincTableView.setRowFactory(x -> new TableRow<LoincEntry>() {
+            @Override
+            protected void updateItem(LoincEntry item, boolean empty){
+                super.updateItem(item, empty);
+                logger.info("row loinc num: " + item.getLOINC_Number());
+
+                //if(item != null && !empty && model.getTestmap().containsKey(item.getLOINC_Number())) {
+                if(item != null && !empty) {
+                        logger.info("model contains " + item);
+                        logger.info("num of items in model " + model.getTestmap().size());
+                        //TableRow<LoincEntry> currentRow = getTableRow();
+                        setStyle("-fx-background-color: lightblue");
+
+                }
+            }
+
+        });
+        logger.debug("exit changeColorLoincTableView");
+    }
+**/
 
 }

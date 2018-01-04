@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.org.apache.xml.internal.security.c14n.implementations.Canonicalizer11_OmitComments;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +41,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<AnnotatedLoincRangeTest> loincTableView;
+    private TableView<AnnotatedLoincRangeTest> loincAnnotationTableView;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> loincNumberColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
@@ -63,7 +61,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML
     private void initialize() {
         logger.trace("Calling initialize");
-        loincTableView.setEditable(false);
+        loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
         loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber()));
         loincScaleColumn.setSortable(true);
@@ -148,18 +146,20 @@ public class Loinc2HpoAnnotationsTabController {
     public void refreshTable() {
         Map<String,AnnotatedLoincRangeTest> testmap = model.getTestmap();
         Platform.runLater(() -> {
-            loincTableView.getItems().clear();
-            loincTableView.getItems().addAll(testmap.values());
+            loincAnnotationTableView.getItems().clear();
+            loincAnnotationTableView.getItems().addAll(testmap.values());
         });
 
     }
 
+
+
     public void saveLoincAnnotation() {
         String path = model.getPathToAnnotationFile();
         StringBuilder builder = new StringBuilder();
-        if (loincTableView.getItems().size() > 0) {
+        if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<AnnotatedLoincRangeTest> annotations = loincTableView
+            List<AnnotatedLoincRangeTest> annotations = loincAnnotationTableView
                     .getItems();
             for (AnnotatedLoincRangeTest annotation : annotations) {
                 builder.append("\n");
@@ -179,10 +179,10 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        AnnotatedLoincRangeTest toDelete = loincTableView.getSelectionModel()
+        AnnotatedLoincRangeTest toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
-            loincTableView.getItems().remove(toDelete);
+            loincAnnotationTableView.getItems().remove(toDelete);
             model.removeLoincTest(toDelete.getLoincNumber());
         }
         event.consume();

@@ -15,7 +15,7 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#deleteLoincAnnotation" stylesheets="@../css/loinc2hpo.css" text="Delete Item" AnchorPane.topAnchor="2.0" />
-                      <TableView fx:id="loincTableView" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="30.0">
+                      <TableView fx:id="loincAnnotationTableView" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="30.0">
                           <columns>
                         <TableColumn fx:id="loincFlagColumn" prefWidth="50.0" resizable="false" text="Flag" />
                               <TableColumn fx:id="loincNumberColumn" prefWidth="150.0" resizable="false" text="LOINC Num" />

@@ -207,5 +207,7 @@ public class MainController {
     @FXML private void handleCreateNewAnnotation(ActionEvent event) {
 
     }
+
+
 }
 
