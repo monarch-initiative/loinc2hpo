@@ -6,6 +6,8 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.bcel.internal.generic.POP;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -560,9 +562,22 @@ public class AnnotateTabController {
         String loincCode = loincTableView.getSelectionModel().getSelectedItem
                 ().getLOINC_Number();
         String loincScale = loincTableView.getSelectionModel().getSelectedItem().getScale();
+
+        //TODO: check whether this loincCode has already been annotated. If so, ask user to confirm overwrite
+        if (model.getTestmap().containsKey(loincCode)) {
+            boolean overwrite = PopUps.getBooleanFromUser(loincCode + " has already been annotated. Overwrite?",
+                    "Annotation already exist", "Overwrite Warning");
+            if (!overwrite) return;
+        }
+
         hpoLo = hpoLowAbnormalTextField.getText();
         hpoNormal = hpoNotAbnormalTextField.getText();
         hpoHi= hpoHighAbnormalTextField.getText();
+
+        //strip "@en" from all of them, if they have it
+        hpoLo = stripEN(hpoLo);
+        hpoNormal = stripEN(hpoNormal);
+        hpoHi = stripEN(hpoHi);
 
 
         //We don't have to force every loinc code to have three phenotypes
@@ -593,38 +608,77 @@ public class AnnotateTabController {
             return;
         }
 
-        AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
-                        flagForAnnotation.isSelected(), annotationNoteField.getText());
-        this.model.addLoincTest(test);
-        loinc2HpoAnnotationsTabController.refreshTable();
-        createAnnotationSuccess.setFill(Color.GREEN);
+        Map<String, Boolean> qcresult = qcAnnotation(hpoLo, hpoNormal, hpoHi);
+        if (qcresult.get("issueDetected") && !qcresult.get("userconfirmed")) {
+            createAnnotationSuccess.setFill(Color.RED);
+            return;
+        } else {
+            AnnotatedLoincRangeTest test =
+                    new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
+                            flagForAnnotation.isSelected(), annotationNoteField.getText());
+            this.model.addLoincTest(test);
+            loinc2HpoAnnotationsTabController.refreshTable();
+            createAnnotationSuccess.setFill(Color.GREEN);
+        }
 
         //showSuccessOfMapping("Go to next loinc code!");
 
     }
 
-    //TODO: implement
-    private void qcAnnotation(String HpoLow, String HpoNorm, String HpoHigh){
+    /**
+     * Do a qc of annotation, and ask user questions if there are potential issues
+     * @param HpoLow
+     * @param HpoNorm
+     * @param HpoHigh
+     * @return
+     */
+    private Map<String, Boolean> qcAnnotation(String HpoLow, String HpoNorm, String HpoHigh){
 
-        if (HpoLow == null || HpoLow.trim().isEmpty() &&
-                HpoNorm == null || HpoNorm.trim().isEmpty() &&
-                HpoHigh == null || HpoHigh.trim().isEmpty()) {
+        boolean issueDetected = false;
+        boolean userConfirmed = false;
+
+        if ((HpoLow == null || HpoLow.trim().isEmpty()) &&
+                (HpoNorm == null || HpoNorm.trim().isEmpty()) &&
+                (HpoHigh == null || HpoHigh.trim().isEmpty())) {
             //popup an alert
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure you want to create an annotation without any HPO terms?",
+                    "Annotation without HPO terms", "No HPO Alert");
         }
 
-        if (HpoLow != null && HpoNorm != null && stringEquals(HpoLow, HpoNorm)) {
+        if (HpoLow != null && HpoNorm != null && !HpoLow.trim().isEmpty() && stringEquals(HpoLow, HpoNorm)) {
             //alert: low and norm are same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure low and parent are the same HPO term?",
+                    "Same HPO term for low and parent", "Duplicate HPO alert");
         }
 
-        if (HpoLow != null && HpoHigh != null && stringEquals(HpoLow, HpoHigh)) {
+        if (HpoLow != null && HpoHigh != null && !HpoLow.trim().isEmpty() && stringEquals(HpoLow, HpoHigh)) {
             //alert: low and high are same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure low and high are the same HPO term?",
+                    "Same HPO term for low and high", "Duplicate HPO alert");
         }
 
-        if (HpoNorm != null && HpoHigh != null && stringEquals(HpoNorm, HpoHigh)) {
+        if (HpoNorm != null && HpoHigh != null && !HpoNorm.trim().isEmpty() && stringEquals(HpoNorm, HpoHigh)) {
             //alert: norm and high are the same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure parent and high are the same HPO term?",
+                    "Same HPO term for parent and high", "Duplicate HPO alert");
         }
+        HashMap<String, Boolean> results = new HashMap<>();
+        results.put("issueDetected", issueDetected);
+        results.put("userconfirmed", userConfirmed);
+        return results;
 
+    }
+
+    private String stripEN(String hpoTerm) {
+        if (hpoTerm.trim().toLowerCase().endsWith("@en")) {
+            return hpoTerm.trim().substring(0, hpoTerm.length() - 3);
+        } else {
+            return hpoTerm.trim();
+        }
     }
 
     /**

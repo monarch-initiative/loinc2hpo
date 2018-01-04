@@ -192,7 +192,7 @@
                               <Insets left="20.0" top="20.0" />
                            </VBox.margin>
                         </HBox>
-                        <TextField fx:id="annotationNoteField" alignment="TOP_LEFT" prefHeight="160.0" promptText="Optional note" stylesheets="@../css/loinc2hpo.css">
+                        <TextField fx:id="annotationNoteField" alignment="TOP_LEFT" prefHeight="160.0" promptText="Optional: note for annotation">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" top="20.0" />
                            </VBox.margin>
