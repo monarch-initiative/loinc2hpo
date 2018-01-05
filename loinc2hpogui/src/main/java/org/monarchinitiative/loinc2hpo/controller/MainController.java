@@ -195,6 +195,7 @@ public class MainController {
         SettingsViewFactory.openSettingsDialog(this.model);
     }
 
+    //TODO: change this to handleSaveToNewFile
     @FXML private void handleSave(ActionEvent e) {
 
         e.consume();
@@ -202,6 +203,11 @@ public class MainController {
         loinc2HpoAnnotationsTabController.saveLoincAnnotation();
 
     }
+    //TODO: implement handleSaveToExistingFile
+    private void handleSaveToExistingFile(ActionEvent e){
+        
+    }
+
     @FXML private void handleImportAnnotationFile(ActionEvent event) {
 
         loinc2HpoAnnotationsTabController.importLoincAnnotation();

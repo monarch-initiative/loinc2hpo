@@ -221,6 +221,9 @@
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
+               <padding>
+                  <Insets bottom="80.0" />
+               </padding>
             </TableView>
         </items>
       </SplitPane>
