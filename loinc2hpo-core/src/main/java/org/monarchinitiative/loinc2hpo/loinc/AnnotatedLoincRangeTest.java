@@ -18,7 +18,8 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     private final HpoTerm notAbnormalTerm;
     private final HpoTerm aboveNormalTerm;
     private final String loincScale;
-    private boolean flag;
+    private boolean flag; //indicates that something needs to be done later, e.g. double check later
+    private String note; //what user wants to say about an annotation, e.g. "the hpo term is the best fit because ..."
 
 
 
@@ -38,7 +39,8 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
 
 
 
-    public AnnotatedLoincRangeTest(String loinc, String loincScale, HpoTerm low, HpoTerm normal, HpoTerm hi, boolean flag){
+    public AnnotatedLoincRangeTest(String loinc, String loincScale, HpoTerm low, HpoTerm normal, HpoTerm hi,
+                                   boolean flag, String note){
         //allow low, normal, hi to be null
         this.loincNumber=loinc;
         this.loincScale = loincScale;
@@ -46,6 +48,7 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
         this.notAbnormalTerm=normal;
         this.aboveNormalTerm=hi;
         this.flag = flag;
+        this.note = note;
 
         /**
         logger.trace(String.format("low: %s; normal: %s, high: %s",
@@ -58,6 +61,7 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     }
 
     public void setFlag(boolean newflag){ this.flag = newflag;}
+    public void setNote(String note) {this.note = note;}
 
     public String getLoincNumber(){ return loincNumber; }
     public String getBelowNormalHpoTermName() { return this.belowNormalTerm==null ? null : belowNormalTerm.getName(); }
@@ -65,6 +69,7 @@ public class AnnotatedLoincRangeTest implements  AnnotatedLoincTestI {
     public String getAboveNormalHpoTermName() { return this.aboveNormalTerm==null ? null : aboveNormalTerm.getName(); }
     public String getLoincScale() { return loincScale;}
     public boolean getFlag(){ return flag;}
+    public String getNote() { return note;}
 
 
 }

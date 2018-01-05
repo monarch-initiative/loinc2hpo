@@ -40,6 +40,17 @@ public class LoincOfInterestTest {
         }
     }
 
+    @Test
+    public void testStripEN(){
+        String a = "exocytosis@en";
+        if (a.endsWith("@en")) {
+            System.out.println(a.substring(0, a.length() - 3));
+        }
+        else {
+            return;
+        }
+    }
+
 
 
 

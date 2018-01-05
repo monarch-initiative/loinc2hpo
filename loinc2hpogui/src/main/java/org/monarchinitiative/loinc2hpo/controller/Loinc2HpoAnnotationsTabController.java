@@ -1,8 +1,8 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.org.apache.xml.internal.security.c14n.implementations.Canonicalizer11_OmitComments;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -12,13 +12,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -43,13 +45,14 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<AnnotatedLoincRangeTest> loincTableView;
+    private TableView<AnnotatedLoincRangeTest> loincAnnotationTableView;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> loincNumberColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
     @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincFlagColumn;
+    @FXML private TableColumn<AnnotatedLoincRangeTest, String> noteColumn;
 
 
 
@@ -62,7 +65,7 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML
     private void initialize() {
         logger.trace("Calling initialize");
-        loincTableView.setEditable(false);
+        loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
         loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber()));
         loincScaleColumn.setSortable(true);
@@ -79,6 +82,9 @@ public class Loinc2HpoAnnotationsTabController {
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
+        noteColumn.setSortable(true);
+        noteColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("") :
+                new ReadOnlyStringWrapper(cdf.getValue().getNote()));
         updateSummary();
 
     }
@@ -144,40 +150,96 @@ public class Loinc2HpoAnnotationsTabController {
     public void refreshTable() {
         Map<String,AnnotatedLoincRangeTest> testmap = model.getTestmap();
         Platform.runLater(() -> {
-            loincTableView.getItems().clear();
-            loincTableView.getItems().addAll(testmap.values());
+            loincAnnotationTableView.getItems().clear();
+            loincAnnotationTableView.getItems().addAll(testmap.values());
         });
 
     }
 
+
+    public void importLoincAnnotation() {
+        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose annotation file");
+        File f = chooser.showOpenDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+                String newline = reader.readLine();//first line is header
+                final int N = newline.split("\\t").length; //num of elements
+                logger.debug("first line is: " + newline + "\nNum of columns: " + N);
+                int lineCount = 0;
+                while(newline != null) {
+                    lineCount++;
+                    logger.debug("new line: " + newline + "\nNum of elements: " + newline.split("\\t").length);
+                    if (!newline.contains("#LOINC.id")){//this is header
+                        String[] annotation = newline.split("\\t");
+                        if (annotation.length != N) {
+                            String contentText = String.format("Expecting %d elements per line. Line %d has %d elements. Omit the line and continue?",
+                                    N, lineCount, annotation.length);
+                            boolean omitAndContinue = PopUps.getBooleanFromUser(contentText, "Line missing value", "Bad File");
+                            if (!omitAndContinue) return;
+                        } else {
+                            boolean flag = annotation[0].equals("Y") ? true : false;
+                            String loincNum = annotation[1];
+                            String loincScale = annotation[2];
+                            HpoTerm hpoL = model.getTermMap().get(annotation[3]);
+                            HpoTerm hpoN = model.getTermMap().get(annotation[4]);
+                            HpoTerm hpoH = model.getTermMap().get(annotation[5]);
+                            String note = annotation[6].equals("NA") ? "" : annotation[6];
+                            AnnotatedLoincRangeTest test = new AnnotatedLoincRangeTest(loincNum, loincScale, hpoL, hpoN, hpoH, flag, note);
+                            model.addLoincTest(test);
+                            logger.debug("A new annotation is added to model.");
+                        }
+                    }
+                    newline = reader.readLine();
+                }
+            } catch (FileNotFoundException e){
+                logger.error("annotation file is not found");
+            } catch (IOException e) {
+                logger.error("something is wrong during reading data");
+            }
+        }
+        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        refreshTable();
+    }
+
+
     public void saveLoincAnnotation() {
         String path = model.getPathToAnnotationFile();
         StringBuilder builder = new StringBuilder();
-        if (loincTableView.getItems().size() > 0) {
+        if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<AnnotatedLoincRangeTest> annotations = loincTableView
+            List<AnnotatedLoincRangeTest> annotations = loincAnnotationTableView
                     .getItems();
             for (AnnotatedLoincRangeTest annotation : annotations) {
-                builder.append("\n");
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
-                builder.append(annotation.getLoincScale() + "\t");
-                builder.append(annotation.getBelowNormalHpoTermName() + "\t");
-                builder.append(annotation.getNotAbnormalHpoTermName() + "\t");
-                builder.append(annotation.getAboveNormalHpoTermName());
+                String scale = annotation.getLoincScale() == null || annotation.getLoincScale().isEmpty() ? "NA" : annotation.getLoincScale();
+                builder.append(scale + "\t");
+                String hpoL = annotation.getBelowNormalHpoTermName() == null ? "NA" : annotation.getBelowNormalHpoTermName();
+                builder.append(hpoL + "\t");
+                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" : annotation.getNotAbnormalHpoTermName();
+                builder.append(hpoN + "\t");
+                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : annotation.getAboveNormalHpoTermName();
+                builder.append(hpoH + "\t");
+                String note = annotation.getNote().isEmpty() ? "NA" : annotation.getNote();
+                builder.append(note);
+                builder.append("\n");
             }
+
         }
         WriteToFile.appendToFile(builder.toString(), path);
     }
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        AnnotatedLoincRangeTest toDelete = loincTableView.getSelectionModel()
+        AnnotatedLoincRangeTest toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
-            loincTableView.getItems().remove(toDelete);
+            loincAnnotationTableView.getItems().remove(toDelete);
             model.removeLoincTest(toDelete.getLoincNumber());
         }
         event.consume();
