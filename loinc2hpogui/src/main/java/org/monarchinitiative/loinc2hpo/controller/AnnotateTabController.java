@@ -613,6 +613,7 @@ public class AnnotateTabController {
             createAnnotationSuccess.setFill(Color.RED);
             return;
         } else {
+            //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
             AnnotatedLoincRangeTest test =
                     new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
                             flagForAnnotation.isSelected(), annotationNoteField.getText());

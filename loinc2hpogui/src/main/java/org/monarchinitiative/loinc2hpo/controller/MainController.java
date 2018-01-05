@@ -22,7 +22,8 @@ import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import java.io.File;
+
+import java.io.*;
 
 import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
 
@@ -202,6 +203,10 @@ public class MainController {
 
     }
     @FXML private void handleImportAnnotationFile(ActionEvent event) {
+
+        loinc2HpoAnnotationsTabController.importLoincAnnotation();
+        logger.info("usr wants to import an annotation file");
+        event.consume();
 
     }
     @FXML private void handleCreateNewAnnotation(ActionEvent event) {

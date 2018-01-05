@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
@@ -11,12 +12,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 
@@ -153,6 +157,53 @@ public class Loinc2HpoAnnotationsTabController {
     }
 
 
+    public void importLoincAnnotation() {
+        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose annotation file");
+        File f = chooser.showOpenDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+                String newline = reader.readLine();//first line is header
+                final int N = newline.split("\\t").length; //num of elements
+                logger.debug("first line is: " + newline + "\nNum of columns: " + N);
+                int lineCount = 0;
+                while(newline != null) {
+                    lineCount++;
+                    logger.debug("new line: " + newline + "\nNum of elements: " + newline.split("\\t").length);
+                    if (!newline.contains("#LOINC.id")){//this is header
+                        String[] annotation = newline.split("\\t");
+                        if (annotation.length != N) {
+                            String contentText = String.format("Expecting %d elements per line. Line %d has %d elements. Omit the line and continue?",
+                                    N, lineCount, annotation.length);
+                            boolean omitAndContinue = PopUps.getBooleanFromUser(contentText, "Line missing value", "Bad File");
+                            if (!omitAndContinue) return;
+                        } else {
+                            boolean flag = annotation[0].equals("Y") ? true : false;
+                            String loincNum = annotation[1];
+                            String loincScale = annotation[2];
+                            HpoTerm hpoL = model.getTermMap().get(annotation[3]);
+                            HpoTerm hpoN = model.getTermMap().get(annotation[4]);
+                            HpoTerm hpoH = model.getTermMap().get(annotation[5]);
+                            String note = annotation[6].equals("NA") ? "" : annotation[6];
+                            AnnotatedLoincRangeTest test = new AnnotatedLoincRangeTest(loincNum, loincScale, hpoL, hpoN, hpoH, flag, note);
+                            model.addLoincTest(test);
+                            logger.debug("A new annotation is added to model.");
+                        }
+                    }
+                    newline = reader.readLine();
+                }
+            } catch (FileNotFoundException e){
+                logger.error("annotation file is not found");
+            } catch (IOException e) {
+                logger.error("something is wrong during reading data");
+            }
+        }
+        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        refreshTable();
+    }
+
 
     public void saveLoincAnnotation() {
         String path = model.getPathToAnnotationFile();
@@ -162,17 +213,23 @@ public class Loinc2HpoAnnotationsTabController {
             List<AnnotatedLoincRangeTest> annotations = loincAnnotationTableView
                     .getItems();
             for (AnnotatedLoincRangeTest annotation : annotations) {
-                builder.append("\n");
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
-                builder.append(annotation.getLoincScale() + "\t");
-                builder.append(annotation.getBelowNormalHpoTermName() + "\t");
-                builder.append(annotation.getNotAbnormalHpoTermName() + "\t");
-                builder.append(annotation.getAboveNormalHpoTermName() + "\t");
-                builder.append(annotation.getNote());
+                String scale = annotation.getLoincScale() == null || annotation.getLoincScale().isEmpty() ? "NA" : annotation.getLoincScale();
+                builder.append(scale + "\t");
+                String hpoL = annotation.getBelowNormalHpoTermName() == null ? "NA" : annotation.getBelowNormalHpoTermName();
+                builder.append(hpoL + "\t");
+                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" : annotation.getNotAbnormalHpoTermName();
+                builder.append(hpoN + "\t");
+                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : annotation.getAboveNormalHpoTermName();
+                builder.append(hpoH + "\t");
+                String note = annotation.getNote().isEmpty() ? "NA" : annotation.getNote();
+                builder.append(note);
+                builder.append("\n");
             }
+
         }
         WriteToFile.appendToFile(builder.toString(), path);
     }
