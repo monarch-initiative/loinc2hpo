@@ -41,6 +41,7 @@ public class MainController {
     @Inject private SetupTabController setupTabController;
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
+    @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
 
     @FXML private MenuBar loincmenubar;
     @FXML private MenuItem closeMenuItem;
@@ -70,7 +71,12 @@ public class MainController {
             logger.error("loinc2HpoAnnotationsTabController is null");
             return;
         }
+        if (loinc2HPOConversionTabController == null) {
+            logger.error("loinc2HPOConversionTabController is null");
+            return;
+        }
         loinc2HpoAnnotationsTabController.setModel(model);
+        loinc2HPOConversionTabController.setModel(model);
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
@@ -205,7 +211,7 @@ public class MainController {
     }
     //TODO: implement handleSaveToExistingFile
     private void handleSaveToExistingFile(ActionEvent e){
-        
+
     }
 
     @FXML private void handleImportAnnotationFile(ActionEvent event) {
