@@ -25,7 +25,7 @@ public class SetupTabController {
 
     @FXML private TextFlow textflow;
 
-    @FXML private Button locationLoincHpoFileButton;
+    //@FXML private Button locationLoincHpoFileButton;
 
     @Inject MainController mainController;//@Inject PickerController picker;
 
@@ -52,6 +52,7 @@ public class SetupTabController {
     }
 
     //deprecate the method
+    /**
     @FXML private void setLocationLoincHpoFile(ActionEvent e) {
         FileChooser chooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TSV file (*.tsv)", "*.tsv");
@@ -79,7 +80,7 @@ public class SetupTabController {
         model.writeSettings();
         e.consume();
     }
-
+**/
 
 }
 
