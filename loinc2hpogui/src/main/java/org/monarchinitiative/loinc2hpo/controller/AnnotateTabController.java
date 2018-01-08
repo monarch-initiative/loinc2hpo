@@ -6,6 +6,8 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.bcel.internal.generic.POP;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -99,6 +101,7 @@ public class AnnotateTabController {
 
     @FXML private CheckBox flagForAnnotation;
     @FXML private Circle createAnnotationSuccess;
+    @FXML private TextField annotationNoteField;
 
     @FXML private void initialize() {
         if (model != null) {
@@ -174,6 +177,7 @@ public class AnnotateTabController {
                     flagForAnnotation.setIndeterminate(false);
                     flagForAnnotation.setSelected(false);
                     createAnnotationSuccess.setFill(Color.WHITE);
+                    annotationNoteField.setText("");
                 }
             });
             return row ;
@@ -231,6 +235,7 @@ public class AnnotateTabController {
         flagForAnnotation.setIndeterminate(false);
         flagForAnnotation.setSelected(false);
         createAnnotationSuccess.setFill(Color.WHITE);
+        annotationNoteField.setText("");
     }
 
     @FXML private void handleManualQueryButton(ActionEvent e) {
@@ -297,6 +302,7 @@ public class AnnotateTabController {
         flagForAnnotation.setIndeterminate(false);
         flagForAnnotation.setSelected(false);
         createAnnotationSuccess.setFill(Color.WHITE);
+        annotationNoteField.setText("");
     }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -343,8 +349,12 @@ public class AnnotateTabController {
         task.setOnSucceeded(x -> {
             SparqlQuery.setHPOmodel(task.getValue());
             IntializeHPOmodelbutton.setStyle("-fx-background-color: #00ff00");
+            IntializeHPOmodelbutton.setText("HPO initialized");
         });
-        task.setOnRunning(x -> IntializeHPOmodelbutton.setStyle("-fx-background-color: #ffc0cb"));
+        task.setOnRunning(x -> {
+            IntializeHPOmodelbutton.setStyle("-fx-background-color: #ffc0cb");
+            IntializeHPOmodelbutton.setText("HPO initializing...");
+        });
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Failured to create HPO model");
@@ -552,9 +562,22 @@ public class AnnotateTabController {
         String loincCode = loincTableView.getSelectionModel().getSelectedItem
                 ().getLOINC_Number();
         String loincScale = loincTableView.getSelectionModel().getSelectedItem().getScale();
+
+        //TODO: check whether this loincCode has already been annotated. If so, ask user to confirm overwrite
+        if (model.getTestmap().containsKey(loincCode)) {
+            boolean overwrite = PopUps.getBooleanFromUser(loincCode + " has already been annotated. Overwrite?",
+                    "Annotation already exist", "Overwrite Warning");
+            if (!overwrite) return;
+        }
+
         hpoLo = hpoLowAbnormalTextField.getText();
         hpoNormal = hpoNotAbnormalTextField.getText();
         hpoHi= hpoHighAbnormalTextField.getText();
+
+        //strip "@en" from all of them, if they have it
+        hpoLo = stripEN(hpoLo);
+        hpoNormal = stripEN(hpoNormal);
+        hpoHi = stripEN(hpoHi);
 
 
         //We don't have to force every loinc code to have three phenotypes
@@ -585,15 +608,92 @@ public class AnnotateTabController {
             return;
         }
 
-        AnnotatedLoincRangeTest test =
-                new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high, flagForAnnotation.isSelected());
-        this.model.addLoincTest(test);
-        loinc2HpoAnnotationsTabController.refreshTable();
-        createAnnotationSuccess.setFill(Color.GREEN);
+        Map<String, Boolean> qcresult = qcAnnotation(hpoLo, hpoNormal, hpoHi);
+        if (qcresult.get("issueDetected") && !qcresult.get("userconfirmed")) {
+            createAnnotationSuccess.setFill(Color.RED);
+            return;
+        } else {
+            //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
+            AnnotatedLoincRangeTest test =
+                    new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
+                            flagForAnnotation.isSelected(), annotationNoteField.getText());
+            this.model.addLoincTest(test);
+            loinc2HpoAnnotationsTabController.refreshTable();
+            createAnnotationSuccess.setFill(Color.GREEN);
+            changeColorLoincTableView();
+        }
 
         //showSuccessOfMapping("Go to next loinc code!");
 
     }
+
+    /**
+     * Do a qc of annotation, and ask user questions if there are potential issues
+     * @param HpoLow
+     * @param HpoNorm
+     * @param HpoHigh
+     * @return
+     */
+    private Map<String, Boolean> qcAnnotation(String HpoLow, String HpoNorm, String HpoHigh){
+
+        boolean issueDetected = false;
+        boolean userConfirmed = false;
+
+        if ((HpoLow == null || HpoLow.trim().isEmpty()) &&
+                (HpoNorm == null || HpoNorm.trim().isEmpty()) &&
+                (HpoHigh == null || HpoHigh.trim().isEmpty())) {
+            //popup an alert
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure you want to create an annotation without any HPO terms?",
+                    "Annotation without HPO terms", "No HPO Alert");
+        }
+
+        if (HpoLow != null && HpoNorm != null && !HpoLow.trim().isEmpty() && stringEquals(HpoLow, HpoNorm)) {
+            //alert: low and norm are same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure low and parent are the same HPO term?",
+                    "Same HPO term for low and parent", "Duplicate HPO alert");
+        }
+
+        if (HpoLow != null && HpoHigh != null && !HpoLow.trim().isEmpty() && stringEquals(HpoLow, HpoHigh)) {
+            //alert: low and high are same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure low and high are the same HPO term?",
+                    "Same HPO term for low and high", "Duplicate HPO alert");
+        }
+
+        if (HpoNorm != null && HpoHigh != null && !HpoNorm.trim().isEmpty() && stringEquals(HpoNorm, HpoHigh)) {
+            //alert: norm and high are the same!
+            issueDetected = true;
+            userConfirmed = PopUps.getBooleanFromUser("Are you sure parent and high are the same HPO term?",
+                    "Same HPO term for parent and high", "Duplicate HPO alert");
+        }
+        HashMap<String, Boolean> results = new HashMap<>();
+        results.put("issueDetected", issueDetected);
+        results.put("userconfirmed", userConfirmed);
+        return results;
+
+    }
+
+    private String stripEN(String hpoTerm) {
+        if (hpoTerm.trim().toLowerCase().endsWith("@en")) {
+            return hpoTerm.trim().substring(0, hpoTerm.length() - 3);
+        } else {
+            return hpoTerm.trim();
+        }
+    }
+
+    /**
+     * Determine whether two strings are identical (case insensitive, no space before and after string)
+     * @param x
+     * @param y
+     * @return
+     */
+    private boolean stringEquals(String x, String y) {
+        return x.trim().toLowerCase().equals(y.trim().toLowerCase());
+    }
+
+    
     private void showErrorOfMapping(String message) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.setTitle("Failure");
@@ -694,5 +794,56 @@ public class AnnotateTabController {
     void handleFlagForAnnotation(ActionEvent event) {
 
     }
+
+    //change the color of rows to green after the loinc code has been annotated
+    protected void changeColorLoincTableView(){
+/**
+        loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty){
+                super.updateItem(item, empty);
+                if(item != null && !empty) {
+                    setText(item);
+                    if(model.getTestmap().containsKey(item)) {
+                        logger.info("model contains " + item);
+                        logger.info("num of items in model " + model.getTestmap().size());
+                        //TableRow<LoincEntry> currentRow = getTableRow();
+                        //currentRow.setStyle("-fx-background-color: lightblue");
+                        setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
+                    }
+                }
+            }
+
+        });
+ **/
+    }
+
+/**
+ * The program never go to setRowFactory. WHy?
+    //change the color of rows to green after the loinc code has been annotated
+    protected void changeColorLoincTableView(){
+        logger.debug("enter changeColorLoincTableView");
+        logger.info("model size: " + model.getTestmap().size());
+
+        loincTableView.setRowFactory(x -> new TableRow<LoincEntry>() {
+            @Override
+            protected void updateItem(LoincEntry item, boolean empty){
+                super.updateItem(item, empty);
+                logger.info("row loinc num: " + item.getLOINC_Number());
+
+                //if(item != null && !empty && model.getTestmap().containsKey(item.getLOINC_Number())) {
+                if(item != null && !empty) {
+                        logger.info("model contains " + item);
+                        logger.info("num of items in model " + model.getTestmap().size());
+                        //TableRow<LoincEntry> currentRow = getTableRow();
+                        setStyle("-fx-background-color: lightblue");
+
+                }
+            }
+
+        });
+        logger.debug("exit changeColorLoincTableView");
+    }
+**/
 
 }

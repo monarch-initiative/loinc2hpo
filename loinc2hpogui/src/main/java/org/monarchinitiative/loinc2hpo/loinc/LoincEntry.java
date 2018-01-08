@@ -32,7 +32,7 @@ public class LoincEntry {
 
     private static final int MIN_FIELDS_LOINC=10;
 
-    private static final String HEADER_LINE="FLAG\t#LOINC.id\tLOINC.scale\tHPO.low\tHPO.wnl\tHPO.high";
+    private static final String HEADER_LINE="FLAG\t#LOINC.id\tLOINC.scale\tHPO.low\tHPO.wnl\tHPO.high\tnote";
 
 
 
@@ -63,6 +63,7 @@ public class LoincEntry {
     public String getScale() { return scale; }
     public String getSystem() { return system; }
     public String getLongName() { return longName; }
+
 
     public static String getHeaderLine(){return HEADER_LINE; }
 

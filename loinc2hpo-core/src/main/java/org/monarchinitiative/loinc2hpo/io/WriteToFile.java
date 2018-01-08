@@ -17,6 +17,13 @@ public class WriteToFile {
 
     public static void writeToFile(String content, String pathToFile) {
 
+        try (FileWriter fileWriter = new FileWriter(pathToFile);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            bufferedWriter.write(content);
+        } catch (IOException e) {
+            logger.error("Error occured when trying to save to a new file");
+        }
+
     }
 
     public static void appendToFile(String content, String pathToFile) {
@@ -26,7 +33,7 @@ public class WriteToFile {
             bufferedWriter.write(content);
 
         } catch (IOException e) {
-            logger.error("Error occured when trying to save to file");
+            logger.error("Error occured when trying to append to a file");
         }
 
     }

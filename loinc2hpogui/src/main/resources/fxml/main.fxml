@@ -21,7 +21,10 @@
                       <Menu mnemonicParsing="false" text="File">
                         <items>
                               <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save As" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
                           <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                              <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">
@@ -66,6 +69,11 @@
                         <fx:include fx:id="loinc2HpoAnnotationsTab" source="loinc2HpoAnnotationsTab.fxml" />
                     </content>
                 </Tab>
+                  <Tab text="Loinc2HpoConversion">
+                    <content>
+                      <fx:include fx:id="Loinc2HpoConversionTab" source="loinc2HpoConversionTab.fxml" />
+                    </content>
+                  </Tab>
             </tabs>
             </TabPane>
          </center>
