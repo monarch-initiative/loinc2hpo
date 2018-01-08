@@ -124,9 +124,12 @@ public class Model {
             if (pathToLoincCoreTableFile!=null) {
                 bw.write(String.format("loincTablePath:%s\n",pathToLoincCoreTableFile));
             }
-            if (pathToAnnotationFile!=null) {
-                bw.write(String.format("annotationFile:%s\n",pathToAnnotationFile));
-            }
+
+            //Do not save pathToAnnotationFile so that it can be changed easily
+            //if (pathToAnnotationFile!=null) {
+            //    bw.write(String.format("annotationFile:%s\n",
+            //        pathToAnnotationFile));
+            //}
             if (pathToHpoOboFile!=null) {
                 bw.write(String.format("hp-obo:%s\n",pathToHpoOboFile));
             }

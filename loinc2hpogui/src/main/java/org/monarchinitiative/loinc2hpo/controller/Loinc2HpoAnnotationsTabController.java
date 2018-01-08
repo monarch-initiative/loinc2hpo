@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
+import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
@@ -165,6 +166,10 @@ public class Loinc2HpoAnnotationsTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+                //if opening file is successful, set the path of imported
+                // file to Model
+                model.setPathToAnnotationFile(path);
+
                 String newline = reader.readLine();//first line is header
                 final int N = newline.split("\\t").length; //num of elements
                 logger.debug("first line is: " + newline + "\nNum of columns: " + N);
@@ -205,8 +210,77 @@ public class Loinc2HpoAnnotationsTabController {
     }
 
 
-    public void saveLoincAnnotation() {
+    public void appendLoincAnnotation() {
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose LOINC Core Table file");
+        File f = chooser.showOpenDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            model.setPathToAnnotationFile(path);
+            logger.trace(String.format("append annotation data to: ",path));
+        } else {
+            logger.error("Unable to obtain path to LOINC Core Table file");
+        }
         String path = model.getPathToAnnotationFile();
+        String annotationData = annotationDataToString();
+        WriteToFile.appendToFile(annotationData, path);
+
+    }
+
+    public void saveLoincAnnotation() {
+
+        String path = model.getPathToAnnotationFile();
+        if (path == null) {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Choose LOINC Core Table file");
+            File f = chooser.showSaveDialog(null);
+            if (f != null) {
+                path = f.getAbsolutePath();
+                model.setPathToAnnotationFile(path);
+                logger.trace("Save annotation data to new file: ",path);
+            } else {
+                logger.error("Unable to obtain path to a new file to save " +
+                        "annotation data to");
+            }
+        } else {
+            logger.info("path to destination file: " + path);
+        }
+        String annotationData = annotationDataToString();
+        WriteToFile.writeToFile(LoincEntry.getHeaderLine() + "\n", path);
+        WriteToFile.appendToFile(annotationData, path);
+    }
+
+    public void saveAsLoincAnnotation(){
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose LOINC Core Table file");
+        File f = chooser.showSaveDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            if (f.equals(model.getPathToAnnotationFile())) {
+                PopUps.showInfoMessage("Cannot Save As an existing file",
+                        "ERROR: File Already Existed");
+                return;
+            }
+            model.setPathToAnnotationFile(path);
+            logger.trace(String.format("Setting path to LOINC Core Table file to %s",path));
+        } else {
+            logger.error("Unable to obtain path to LOINC Core Table file");
+        }
+        //model.writeSettings();
+
+        String path = model.getPathToAnnotationFile();
+        String annotationData = annotationDataToString();
+        WriteToFile.writeToFile(LoincEntry.getHeaderLine() + "\n", path);
+        WriteToFile.appendToFile(annotationData, path);
+    }
+
+
+
+
+    public String annotationDataToString() {
+
         StringBuilder builder = new StringBuilder();
         if (loincAnnotationTableView.getItems().size() > 0) {
 
@@ -231,8 +305,11 @@ public class Loinc2HpoAnnotationsTabController {
             }
 
         }
-        WriteToFile.appendToFile(builder.toString(), path);
+
+        return builder.toString();
     }
+
+
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){

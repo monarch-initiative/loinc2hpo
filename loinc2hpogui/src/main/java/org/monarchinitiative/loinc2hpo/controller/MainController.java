@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
+import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
@@ -41,6 +42,7 @@ public class MainController {
     @Inject private SetupTabController setupTabController;
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
+    @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
 
     @FXML private MenuBar loincmenubar;
     @FXML private MenuItem closeMenuItem;
@@ -70,7 +72,12 @@ public class MainController {
             logger.error("loinc2HpoAnnotationsTabController is null");
             return;
         }
+        if (loinc2HPOConversionTabController == null) {
+            logger.error("loinc2HPOConversionTabController is null");
+            return;
+        }
         loinc2HpoAnnotationsTabController.setModel(model);
+        loinc2HPOConversionTabController.setModel(model);
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
@@ -138,8 +145,20 @@ public class MainController {
     }
 
     @FXML public void close(ActionEvent e) {
-        Platform.exit();
-        System.exit(0);
+        //Should give user a warning if there is new annotation data
+        //TODO: implement warning
+        if (true) {
+            boolean choice = PopUps.getBooleanFromUser("Exit without saving " +
+                    "annotation data? You new annotation will be lost if you " +
+                            "choose cancel",
+                    "Data Unsaved", "Data Unsaved");
+            if (!choice) {
+                return;
+            } else {
+                Platform.exit();
+                System.exit(0);
+            }
+        }
     }
 
     /**
@@ -196,6 +215,13 @@ public class MainController {
     }
 
     //TODO: change this to handleSaveToNewFile
+
+    /**
+     * This method will save the current data in annotationTableView to the
+     * file of import. (Set file path when trying importing annotation data).
+     * If file path is not specified (no importing), create a new file
+     * @param e
+     */
     @FXML private void handleSave(ActionEvent e) {
 
         e.consume();
@@ -203,9 +229,31 @@ public class MainController {
         loinc2HpoAnnotationsTabController.saveLoincAnnotation();
 
     }
-    //TODO: implement handleSaveToExistingFile
-    private void handleSaveToExistingFile(ActionEvent e){
-        
+
+
+    /**
+     * This method will save the current data in annotationTableView to a
+     * specified file; overwrite if the specified file already exist
+     * @param e
+     */
+    @FXML private void handleSaveAsButton(ActionEvent e){
+        e.consume();
+        logger.info("user wants to save to a new file");
+        loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
+
+    }
+
+    /**
+     * This method will append the current data in annotationTableView to a
+     * specified file; fail if the specified file does not exist
+     * @param e
+     */
+    @FXML private void handleAppendToButton(ActionEvent e){
+        e.consume();
+        logger.info("usr wants to append to a file");
+        loinc2HpoAnnotationsTabController.appendLoincAnnotation();
+
+
     }
 
     @FXML private void handleImportAnnotationFile(ActionEvent event) {
@@ -213,12 +261,6 @@ public class MainController {
         loinc2HpoAnnotationsTabController.importLoincAnnotation();
         logger.info("usr wants to import an annotation file");
         event.consume();
-
     }
-    @FXML private void handleCreateNewAnnotation(ActionEvent event) {
-
-    }
-
-
 }
 
