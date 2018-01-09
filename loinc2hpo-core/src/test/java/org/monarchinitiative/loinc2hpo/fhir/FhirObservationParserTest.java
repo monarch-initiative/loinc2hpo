@@ -13,10 +13,12 @@ public class FhirObservationParserTest {
 
     private static JsonNode node;
 
+
     @BeforeClass
     public static void setup() throws IOException {
         ClassLoader classLoader = FhirObservationParserTest.class.getClassLoader();
-        String fhirPath = classLoader.getResource("json/erythrocyte.fhir").getFile();
+        String fhirPath = classLoader.getResource("json/glucose.fhir")
+                .getFile();
         ObjectMapper mapper = new ObjectMapper();
         File f = new File(fhirPath);
         FileInputStream fis = new FileInputStream(f);
