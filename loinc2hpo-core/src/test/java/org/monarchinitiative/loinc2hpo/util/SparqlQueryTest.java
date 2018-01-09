@@ -20,22 +20,18 @@ public class SparqlQueryTest {
     static Model model;
 
 
-    //@BeforeClass
+    @BeforeClass
     public static void initializeModel() {
-        //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
-        String hpo = SparqlQuery.class.getResource("/hp.obo").getPath();
-        //need '/' to get a resource file
-        System.out.println("hpo path: " + hpo);
+        String hpo = SparqlQueryTest.class.getResource("/obo/hp.obo").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
     }
 
     @Test
     public void testinitializeModel() {
         //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
-        String hpo = SparqlQuery.class.getResource("/hp.obo").getPath();
-        //need '/' to get a resource file
-        System.out.println("hpo path: " + hpo);
+        String hpo = SparqlQuery.class.getResource("/obo/hp.obo").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
+        assertNotNull(model);
     }
     @Test
     public void testbuildStandardQueryWithSingleKey() {
@@ -52,17 +48,21 @@ public class SparqlQueryTest {
     @Test
     public void testBuildLooseQueryWithMultiKeys() {
         String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
-        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+        //System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+        assertNotNull(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
         keys = new String[]{"chronic", "kidney", "disease"};
-        System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+        //System.out.println(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
+        assertNotNull(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
     }
 
     @Test
     public void testBuildStandardQueryWithMultiKeys() {
         String[] keys = new String[]{"excretion", "urine", "acid", "pH"};
-        System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+        //System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+        assertNotNull(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
         keys = new String[]{"chronic", "kidney", "disease"};
-        System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+        //System.out.println(SparqlQuery.buildStandardQueryWithMultiKeys(Arrays.asList(keys)));
+        assertNotNull(SparqlQuery.buildLooseQueryWithMultiKeys(Arrays.asList(keys)));
     }
 
     @Test
@@ -74,6 +74,7 @@ public class SparqlQueryTest {
         System.out.println("\n\nstandard query:\n" + standardQueryString);
         Query looseQuery = QueryFactory.create(looseQueryString);
         Query standardQuery = QueryFactory.create(standardQueryString);
+        assertNotNull(model);
         List<HPO_Class_Found> results_loose = SparqlQuery.query(looseQuery, model, null);
         List<HPO_Class_Found> results_standard = SparqlQuery.query(standardQuery, model, null);
         System.out.println(results_loose.size() + " HPO terms are found!");
@@ -233,14 +234,14 @@ public class SparqlQueryTest {
     public void testGetParents(){
         String current = "http://purl.obolibrary.org/obo/HP_0012598";
         List<HPO_Class_Found> results = SparqlQuery.getParents(current);
-        //assertEquals(1, results.size());
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
+        assertEquals(1, results.size());
+//        for (HPO_Class_Found hpo_term : results) {
+//            System.out.println(hpo_term.getId());
+//            System.out.println(hpo_term.getLabel());
+//            if(hpo_term.getDefinition() != null) {
+//                System.out.println(hpo_term.getDefinition());
+//            }
+//        }
 
         current = "http://purl.obolibrary.org/obo/HP_0012100";
         results = SparqlQuery.getParents(current);
@@ -278,16 +279,12 @@ public class SparqlQueryTest {
 
     @Test
     public void testRe() {
-
         String label = "Increased urinary potassium" ;
         String definition = "An increased concentration of potassium(1+) in the urine.";
         String loincname = "Potassium [Moles/volume] in Serum or Plasma";
         String total = label + " " + definition;
 
-        String test = "Cardiac*";
-        //assertEquals("cardiac*", test.toLowerCase());
-
-        test = "potassium:chloride symporter activity";
+        String test = "potassium:chloride symporter activity";
         //assertEquals(false, test.matches(".*((increase*)|(decrease*)|(elevate*)|(reduc*)|(high*)|(low*)|(above)|(below)|(abnormal*)).*"));
 
         assertEquals(false, test.matches(".*(increase*|decrease*|elevate*|reduc*|high*|\"low*\").*"));

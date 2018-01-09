@@ -26,7 +26,10 @@ public class LoincObservation {
             case "h":return category.HIGH;
             case "absent": return category.ABSENT;
             case "present": return category.PRESENT;
+            case "n":
+            case "normal":
             case "wnl": return category.WITHIN_NORMAL_RANGE;
+
             default: return category.UNKNOWN;
         }
     }

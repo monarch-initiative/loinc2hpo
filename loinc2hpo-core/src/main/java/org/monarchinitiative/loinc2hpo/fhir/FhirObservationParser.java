@@ -75,7 +75,6 @@ public class FhirObservationParser {
         System.out.println(node.toString());
 
         String resourcetype = node.get("resourceType").asText();
-        //System.out.println("rt: \"" + resourcetype + "\"");
         if (!resourcetype.equals("Observation"))
             throw new WrongElementException("Unexpected resource type " + resourcetype + "(expected: TestResult)");
 
