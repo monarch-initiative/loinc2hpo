@@ -16,14 +16,17 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
+import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
-import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
+import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Singleton
@@ -46,14 +49,14 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<AnnotatedLoincRangeTest> loincAnnotationTableView;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> loincNumberColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> belowNormalHpoColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincScaleColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest, String> loincFlagColumn;
-    @FXML private TableColumn<AnnotatedLoincRangeTest, String> noteColumn;
+    private TableView<QnLoincTest> loincAnnotationTableView;
+    @FXML private TableColumn<QnLoincTest,String> loincNumberColumn;
+    @FXML private TableColumn<QnLoincTest,String> belowNormalHpoColumn;
+    @FXML private TableColumn<QnLoincTest,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<QnLoincTest,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<QnLoincTest, String> loincScaleColumn;
+    @FXML private TableColumn<QnLoincTest, String> loincFlagColumn;
+    @FXML private TableColumn<QnLoincTest, String> noteColumn;
 
 
 
@@ -68,18 +71,18 @@ public class Loinc2HpoAnnotationsTabController {
         logger.trace("Calling initialize");
         loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
-        loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber()));
+        loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber().toString()));
         loincScaleColumn.setSortable(true);
-        loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale()));
+        loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale().toString()));
         belowNormalHpoColumn.setSortable(true);
         belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue()==null ? new ReadOnlyStringWrapper("\" \"") :
-        new ReadOnlyStringWrapper(cdf.getValue().getBelowNormalHpoTermName()));
+        new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getBelowNormalHpoTermId())));
         notAbnormalHpoColumn.setSortable(true);
         notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
-                : new ReadOnlyStringWrapper(cdf.getValue().getNotAbnormalHpoTermName()));
+                : new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getNotAbnormalHpoTermName())));
         aboveNormalHpoColumn.setSortable(true);
         aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
-        : new ReadOnlyStringWrapper(cdf.getValue().getAboveNormalHpoTermName()));
+        : new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getAboveNormalHpoTermName())));
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
@@ -149,7 +152,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<String,AnnotatedLoincRangeTest> testmap = model.getTestmap();
+        Map<String,QnLoincTest> testmap = model.getTestmap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -165,44 +168,10 @@ public class Loinc2HpoAnnotationsTabController {
         File f = chooser.showOpenDialog(null);
         if (f != null) {
             String path = f.getAbsolutePath();
-            try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-                //if opening file is successful, set the path of imported
-                // file to Model
-                model.setPathToAnnotationFile(path);
-
-                String newline = reader.readLine();//first line is header
-                final int N = newline.split("\\t").length; //num of elements
-                logger.debug("first line is: " + newline + "\nNum of columns: " + N);
-                int lineCount = 0;
-                while(newline != null) {
-                    lineCount++;
-                    logger.debug("new line: " + newline + "\nNum of elements: " + newline.split("\\t").length);
-                    if (!newline.contains("#LOINC.id")){//this is header
-                        String[] annotation = newline.split("\\t");
-                        if (annotation.length != N) {
-                            String contentText = String.format("Expecting %d elements per line. Line %d has %d elements. Omit the line and continue?",
-                                    N, lineCount, annotation.length);
-                            boolean omitAndContinue = PopUps.getBooleanFromUser(contentText, "Line missing value", "Bad File");
-                            if (!omitAndContinue) return;
-                        } else {
-                            boolean flag = annotation[0].equals("Y") ? true : false;
-                            String loincNum = annotation[1];
-                            String loincScale = annotation[2];
-                            HpoTerm hpoL = model.getTermMap().get(annotation[3]);
-                            HpoTerm hpoN = model.getTermMap().get(annotation[4]);
-                            HpoTerm hpoH = model.getTermMap().get(annotation[5]);
-                            String note = annotation[6].equals("NA") ? "" : annotation[6];
-                            AnnotatedLoincRangeTest test = new AnnotatedLoincRangeTest(loincNum, loincScale, hpoL, hpoN, hpoH, flag, note);
-                            model.addLoincTest(test);
-                            logger.debug("A new annotation is added to model.");
-                        }
-                    }
-                    newline = reader.readLine();
-                }
-            } catch (FileNotFoundException e){
-                logger.error("annotation file is not found");
-            } catch (IOException e) {
-                logger.error("something is wrong during reading data");
+            LoincMappingParser parser = new LoincMappingParser(path, model.getOntology());
+            Set<QnLoincTest> testset = parser.getQnTests();
+            for (QnLoincTest test : testset) {
+                model.addLoincTest(test);
             }
         }
         logger.debug("Num of annotations in model: " + model.getTestmap().size());
@@ -284,20 +253,20 @@ public class Loinc2HpoAnnotationsTabController {
         StringBuilder builder = new StringBuilder();
         if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<AnnotatedLoincRangeTest> annotations = loincAnnotationTableView
+            List<QnLoincTest> annotations = loincAnnotationTableView
                     .getItems();
-            for (AnnotatedLoincRangeTest annotation : annotations) {
+            for (QnLoincTest annotation : annotations) {
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
-                String scale = annotation.getLoincScale() == null || annotation.getLoincScale().isEmpty() ? "NA" : annotation.getLoincScale();
+                String scale = annotation.getLoincScale() == null  ? "NA" : annotation.getLoincScale().toString();
                 builder.append(scale + "\t");
-                String hpoL = annotation.getBelowNormalHpoTermName() == null ? "NA" : annotation.getBelowNormalHpoTermName();
+                String hpoL = annotation.getBelowNormalHpoTermId() == null ? "NA" : model.termId2HpoName(annotation.getBelowNormalHpoTermId());
                 builder.append(hpoL + "\t");
-                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" : annotation.getNotAbnormalHpoTermName();
+                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" : model.termId2HpoName(annotation.getNotAbnormalHpoTermName());
                 builder.append(hpoN + "\t");
-                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : annotation.getAboveNormalHpoTermName();
+                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : model.termId2HpoName(annotation.getAboveNormalHpoTermName());
                 builder.append(hpoH + "\t");
                 String note = annotation.getNote().isEmpty() ? "NA" : annotation.getNote();
                 builder.append(note);
@@ -313,11 +282,11 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        AnnotatedLoincRangeTest toDelete = loincAnnotationTableView.getSelectionModel()
+        QnLoincTest toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
             loincAnnotationTableView.getItems().remove(toDelete);
-            model.removeLoincTest(toDelete.getLoincNumber());
+            model.removeLoincTest(String.valueOf(toDelete.getLoincNumber()));
         }
         event.consume();
 
