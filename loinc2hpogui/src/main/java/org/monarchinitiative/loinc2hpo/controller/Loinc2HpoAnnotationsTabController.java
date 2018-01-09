@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -49,14 +50,14 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<QnLoincTest> loincAnnotationTableView;
-    @FXML private TableColumn<QnLoincTest,String> loincNumberColumn;
-    @FXML private TableColumn<QnLoincTest,String> belowNormalHpoColumn;
-    @FXML private TableColumn<QnLoincTest,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<QnLoincTest,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<QnLoincTest, String> loincScaleColumn;
-    @FXML private TableColumn<QnLoincTest, String> loincFlagColumn;
-    @FXML private TableColumn<QnLoincTest, String> noteColumn;
+    private TableView<LoincTest> loincAnnotationTableView;
+    @FXML private TableColumn<LoincTest,String> loincNumberColumn;
+    @FXML private TableColumn<LoincTest,String> belowNormalHpoColumn;
+    @FXML private TableColumn<LoincTest,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<LoincTest,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<LoincTest, String> loincScaleColumn;
+    @FXML private TableColumn<LoincTest, String> loincFlagColumn;
+    @FXML private TableColumn<LoincTest, String> noteColumn;
 
 
 
@@ -152,7 +153,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<String,QnLoincTest> testmap = model.getTestmap();
+        Map<LoincId,LoincTest> testmap = model.getTestmap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -169,8 +170,8 @@ public class Loinc2HpoAnnotationsTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             LoincMappingParser parser = new LoincMappingParser(path, model.getOntology());
-            Set<QnLoincTest> testset = parser.getQnTests();
-            for (QnLoincTest test : testset) {
+            Set<LoincTest> testset = parser.getTests();
+            for (LoincTest test : testset) {
                 model.addLoincTest(test);
             }
         }
@@ -253,22 +254,22 @@ public class Loinc2HpoAnnotationsTabController {
         StringBuilder builder = new StringBuilder();
         if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<QnLoincTest> annotations = loincAnnotationTableView
+            List<LoincTest> annotations = loincAnnotationTableView
                     .getItems();
-            for (QnLoincTest annotation : annotations) {
+            for (LoincTest annotation : annotations) {
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
                 builder.append(annotation.getLoincNumber() + "\t");
                 String scale = annotation.getLoincScale() == null  ? "NA" : annotation.getLoincScale().toString();
                 builder.append(scale + "\t");
-                String hpoL = annotation.getBelowNormalHpoTermId() == null ? "NA" : model.termId2HpoName(annotation.getBelowNormalHpoTermId());
+                String hpoL = annotation.getBelowNormalHpoTermId() == null ? "NA" : annotation.getBelowNormalHpoTermId().getIdWithPrefix();
                 builder.append(hpoL + "\t");
-                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" : model.termId2HpoName(annotation.getNotAbnormalHpoTermName());
+                String hpoN = annotation.getNotAbnormalHpoTermName() == null ? "NA" :annotation.getNotAbnormalHpoTermName().getIdWithPrefix();
                 builder.append(hpoN + "\t");
-                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : model.termId2HpoName(annotation.getAboveNormalHpoTermName());
+                String hpoH = annotation.getAboveNormalHpoTermName() == null ? "NA" : annotation.getAboveNormalHpoTermName().getIdWithPrefix();
                 builder.append(hpoH + "\t");
-                String note = annotation.getNote().isEmpty() ? "NA" : annotation.getNote();
+                String note = (annotation==null || annotation.getNote()==null ||annotation.getNote().isEmpty()) ? "NA" : annotation.getNote();
                 builder.append(note);
                 builder.append("\n");
             }
@@ -282,7 +283,7 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        QnLoincTest toDelete = loincAnnotationTableView.getSelectionModel()
+        LoincTest toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
             loincAnnotationTableView.getItems().remove(toDelete);

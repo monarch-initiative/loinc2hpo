@@ -22,5 +22,9 @@ public class Hpo2LoincTermId  {
 
     public TermId getId() {return tid; }
 
+    public boolean isNegated() {
+        return isNegated;
+    }
+
 
 }

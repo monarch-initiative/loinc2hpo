@@ -72,15 +72,17 @@ public class QnLoincTest extends LoincTest {
     }
 
 
-    public LoincId getLoincNumber(){ return this.id; }
-    public TermId  getBelowNormalHpoTermId() { return this.belowNormalTerm==null ? null : belowNormalTerm.getId(); }
+    @Override
+    public TermId getBelowNormalHpoTermId() { return this.belowNormalTerm==null ? null : belowNormalTerm.getId(); }
+    @Override
     public TermId getNotAbnormalHpoTermName() { return this.notAbnormalTerm==null ? null : notAbnormalTerm.getId(); }
+    @Override
     public TermId getAboveNormalHpoTermName() { return this.aboveNormalTerm==null ? null : aboveNormalTerm.getId(); }
-    public LoincScale getLoincScale() { return this.scale;}
 
+    @Override
     public String getNote() { return note;}
 
-
+    @Override
     public boolean getFlag(){ return flag; }
 
 

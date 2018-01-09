@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 
 import java.io.*;
@@ -34,13 +36,17 @@ public class Model {
     private String pathToAnnotationFile=null;
     /** A String such as MGM:rrabbit .*/
     private String biocuratorID=null;
+
+    private String pathToJsonFhirFile=null;
+
+
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoincTest} object .*/
     //public Map<String,QnLoincTest> testmap=new HashMap<>();
     //It's better to keep the order
-    public Map<String,QnLoincTest> testmap=new LinkedHashMap<>();
+    public Map<LoincId,LoincTest> testmap=new LinkedHashMap<>();
 
     private ImmutableMap<String,HpoTerm> termmap=null;
 
@@ -64,6 +70,10 @@ public class Model {
     public String getPathToAnnotationFile(){return pathToAnnotationFile;}
     public String getPathToHpoOwlFile(){ return pathToHpoOwlFile;}
 
+
+    public void setFhirFilePath(String p) { pathToJsonFhirFile=p;}
+    public String getPathToJsonFhirFile() { return pathToJsonFhirFile; }
+
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
     public int getLoincAnnotationCount() { return testmap!=null?this.testmap.size():0;}
 
@@ -74,6 +84,14 @@ public class Model {
 
 
     public String termId2HpoName(TermId id ) {
+        if (id ==null) {
+            logger.error("Could not find id "+id);
+            return "?";
+        }
+        if (ontology.getTermMap().get(id)==null) {
+            logger.error("id not in mapp");
+            return "?";
+        }
         return ontology.getTermMap().get(id).getName();
     }
 
@@ -89,9 +107,9 @@ public class Model {
 
 
 
-    public void addLoincTest(QnLoincTest test) {
+    public void addLoincTest(LoincTest test) {
         // todo warn if term already in map
-        testmap.put(test.getLoincNumber().toString(),test);
+        testmap.put(test.getLoincNumber(),test);
     }
 
     public void removeLoincTest(String loincNum) {
@@ -103,7 +121,7 @@ public class Model {
         }
     }
 
-    public Map<String,QnLoincTest> getTestmap(){ return testmap; }
+    public Map<LoincId,LoincTest> getTestmap(){ return testmap; }
 
 
     private void init() {

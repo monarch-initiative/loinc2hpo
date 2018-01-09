@@ -29,4 +29,8 @@ public class QnTestResult implements TestResult {
     }
 
 
+    @Override
+    public boolean isNegated() { return hpoId.isNegated(); }
+
+
 }

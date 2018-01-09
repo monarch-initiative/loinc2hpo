@@ -7,4 +7,6 @@ public interface TestResult {
 
     public TermId getTermId();
 
+    public boolean isNegated();
+
 }

@@ -54,7 +54,8 @@ public class LoincMappingParser {
         testset=new HashSet<>();
         qntests=new HashSet<>();
         testmap=new HashMap<>();
-        parseLoinc2Hpo(loincPath);
+       // parseLoinc2Hpo(loincPath);
+        parseName(loincPath);
     }
 
 
@@ -64,6 +65,63 @@ public class LoincMappingParser {
 
 
     public Map<LoincId, LoincTest> getTestmap() { return testmap; }
+
+
+    public Map<String,TermId> name2id=new HashMap<>();
+
+    TermId name2id(String name) {
+        if (name2id.size()==0) {
+            // fill it
+            for (TermId id : ontology.getTermMap().keySet()) {
+                String nam = ontology.getTermMap().get(id).getName();
+                name2id.put(nam,id);
+            }
+        }
+        return name2id.get(name);
+
+    }
+
+    private void parseName(String path) {
+        logger.trace("Parsing at " + path);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            String line;
+            while ((line=br.readLine())!=null) {
+                logger.trace("reading line: " +line);
+                if (line.startsWith("#")) continue; // headr or comment
+                String A[] = line.split("\t");
+                String flag=A[0];
+                boolean flagval=false;
+                if (flag.startsWith("Y")) flagval=true;
+                try {
+                    LoincId id = new LoincId(A[1]);
+                    LoincScale loincScale=getScale(A[2]);
+                    TermId low = name2id(A[3]);
+                    TermId wnl = name2id(A[4]);
+                    TermId high = name2id(A[5]);
+                    String note = A[6];
+                    if (loincScale.equals(LoincScale.Qn)) {
+                        LoincTest test = new QnLoincTest(id,LoincScale.Qn,low,wnl,high,flagval,note);
+                        testset.add(test);
+                        qntests.add(new QnLoincTest(id,LoincScale.Qn,low,wnl,high));
+                        testmap.put(id,test);
+                    } else {
+
+                    }
+
+                } catch (Loinc2HpoException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     private void parseLoinc2Hpo(String path) {
