@@ -22,7 +22,7 @@ public class DemoCommand extends  Command   {
     public void execute() {
         ClassLoader classLoader = DemoCommand.class.getClassLoader();
         String loincpath = classLoader.getResource("loinctest2hpo.csv").getFile();
-        ImmutableMap<String,LoincTest> loncmap = LoincTest.getLoincTestMap(loincpath);
+        //ImmutableMap<String,LoincTest> loncmap = LoincTest.getLoincTestMap(loincpath);
     }
 
 

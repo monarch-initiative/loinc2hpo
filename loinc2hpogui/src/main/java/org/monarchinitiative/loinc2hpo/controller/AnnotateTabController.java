@@ -3,33 +3,29 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 //import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
+import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.org.apache.bcel.internal.generic.POP;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
-import org.monarchinitiative.loinc2hpo.gui.WidthAwareTextFields;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
-import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
@@ -38,13 +34,9 @@ import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
-import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.Timer;
-import java.util.regex.Pattern;
 
 
 @Singleton
@@ -614,13 +606,19 @@ public class AnnotateTabController {
             return;
         } else {
             //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
-            AnnotatedLoincRangeTest test =
-                    new AnnotatedLoincRangeTest(loincCode,loincScale, low,normal,high,
-                            flagForAnnotation.isSelected(), annotationNoteField.getText());
-            this.model.addLoincTest(test);
-            loinc2HpoAnnotationsTabController.refreshTable();
-            createAnnotationSuccess.setFill(Color.GREEN);
-            changeColorLoincTableView();
+            try {
+                LoincId lid = new LoincId(loincCode);
+                LoincScale scale = LoincScale.string2enum(loincScale);
+                QnLoincTest test =
+                        new QnLoincTest(lid, scale, low.getId(), normal.getId(), high.getId(),
+                                flagForAnnotation.isSelected(), annotationNoteField.getText());
+                this.model.addLoincTest(test);
+                loinc2HpoAnnotationsTabController.refreshTable();
+                createAnnotationSuccess.setFill(Color.GREEN);
+                changeColorLoincTableView();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
         //showSuccessOfMapping("Go to next loinc code!");

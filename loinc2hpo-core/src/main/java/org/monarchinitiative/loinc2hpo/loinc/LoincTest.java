@@ -1,54 +1,38 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.google.common.collect.ImmutableMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+public abstract class LoincTest {
 
-public class LoincTest {
-    private static final Logger logger = LogManager.getLogger();
+    protected final LoincId id;
 
-    private String loincNum;
-    private Unit unit;
+    protected final LoincScale scale;
+
+    abstract public Hpo2LoincTermId loincValueToHpo(LoincObservation obs);
 
 
-    public void LoincTest(String line ) {
-        String[] A = line.split("\t");
-        if (A.length<7) {
-            logger.error(String.format("Malformed line with %d instead of 7 fields\n\t%s",A.length,line));
-            return;
-        }
-        loincNum=A[0];
-
+    public LoincTest(LoincId lid, LoincScale lsc) {
+        id=lid;
+        scale=lsc;
     }
 
 
 
-
-
-    public static ImmutableMap<String,LoincTest> getLoincTestMap(String path) {
-        ImmutableMap.Builder builder = new ImmutableMap.Builder();
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            String line =null;
-            while ((line=br.readLine())!=null) {
-                if (line.startsWith("LOINC_NUM"))
-                    continue; // header line
-                System.out.println(line);
-            }
-
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof LoincTest)) {
+            return false;
         }
+        LoincTest lt = (LoincTest) o;
+        return this.id.equals(lt.id);
+    }
 
 
-
-        return builder.build();
+    @Override
+    public int hashCode() {
+        int result = 17;
+        return result + 31 * id.hashCode() + 11* scale.hashCode();
     }
 
 

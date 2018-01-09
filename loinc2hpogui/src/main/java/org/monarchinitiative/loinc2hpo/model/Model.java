@@ -3,20 +3,16 @@ package org.monarchinitiative.loinc2hpo.model;
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.formats.hpo.HpoTermRelation;
-import com.github.phenomics.ontolib.ontology.data.Ontology;
+import com.github.phenomics.ontolib.ontology.data.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
-import org.monarchinitiative.loinc2hpo.loinc.AnnotatedLoincRangeTest;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -39,11 +35,12 @@ public class Model {
     /** A String such as MGM:rrabbit .*/
     private String biocuratorID=null;
     /** The complete HPO ontology. */
-    private  Ontology<HpoTerm, HpoTermRelation> ontology=null;
-    /** Key: a loinc code such as 10076-3; value: the corresponding {@link AnnotatedLoincRangeTest} object .*/
-    //public Map<String,AnnotatedLoincRangeTest> testmap=new HashMap<>();
+    private HpoOntology ontology=null;
+    private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
+    /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoincTest} object .*/
+    //public Map<String,QnLoincTest> testmap=new HashMap<>();
     //It's better to keep the order
-    public Map<String,AnnotatedLoincRangeTest> testmap=new LinkedHashMap<>();
+    public Map<String,QnLoincTest> testmap=new LinkedHashMap<>();
 
     private ImmutableMap<String,HpoTerm> termmap=null;
 
@@ -75,9 +72,26 @@ public class Model {
         init();
     }
 
-    public void addLoincTest(AnnotatedLoincRangeTest test) {
+
+    public String termId2HpoName(TermId id ) {
+        return ontology.getTermMap().get(id).getName();
+    }
+
+
+    public TermId string2TermId(String hpoId) {
+        if (! hpoId.startsWith("HP:")) {
+            logger.error("Malformed HPO ID: "+ hpoId);
+            return null;
+        }
+        hpoId= hpoId.substring(3);
+        return new ImmutableTermId(HPPREFIX,hpoId);
+    }
+
+
+
+    public void addLoincTest(QnLoincTest test) {
         // todo warn if term already in map
-        testmap.put(test.getLoincNumber(),test);
+        testmap.put(test.getLoincNumber().toString(),test);
     }
 
     public void removeLoincTest(String loincNum) {
@@ -89,7 +103,7 @@ public class Model {
         }
     }
 
-    public Map<String,AnnotatedLoincRangeTest> getTestmap(){ return testmap; }
+    public Map<String,QnLoincTest> getTestmap(){ return testmap; }
 
 
     private void init() {
@@ -104,7 +118,7 @@ public class Model {
         HpoOntologyParser parser = new HpoOntologyParser(pathToHpoOboFile);
         try {
             parser.parseOntology();
-            this.ontology = parser.getPhenotypeSubontology();
+            this.ontology = parser.getOntology();
         } catch (IOException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
         }
@@ -113,6 +127,10 @@ public class Model {
 
     public ImmutableMap<String,HpoTerm> getTermMap() { return termmap;}
 
+
+    public HpoOntology getOntology() {
+        return ontology;
+    }
 
     /** Write a few settings to a file in the user's .loinc2hpo directory. */
     public void writeSettings() {
