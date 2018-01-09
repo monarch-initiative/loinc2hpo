@@ -20,6 +20,7 @@ public class LoincObservation {
     public static category String2Category(String cat) {
         cat=cat.toLowerCase();
         switch (cat) {
+            case "l":
             case "low" : return category.LOW;
             case "high":
             case "H":

@@ -3,13 +3,11 @@ package org.monarchinitiative.loinc2hpo.fhir;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
-import org.apache.jena.base.Sys;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.io.HPOParser;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
-import org.monarchinitiative.loinc2hpo.io.LoincMappingParserTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.testresult.TestResult;
@@ -38,7 +36,7 @@ public class FhirObservationParserTest {
         loincparser = new LoincMappingParser(loincpath,ontology);
         testmap=loincparser.getTestmap();
 
-        String fhirPath = classLoader.getResource("json/glucose.fhir")
+        String fhirPath = classLoader.getResource("json/glucoseHigh.fhir")
                 .getFile();
         ObjectMapper mapper = new ObjectMapper();
         File f = new File(fhirPath);
