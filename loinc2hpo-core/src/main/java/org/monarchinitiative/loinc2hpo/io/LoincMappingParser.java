@@ -6,6 +6,8 @@ import com.github.phenomics.ontolib.ontology.data.ImmutableTermId;
 import com.github.phenomics.ontolib.ontology.data.ImmutableTermPrefix;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.github.phenomics.ontolib.ontology.data.TermPrefix;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedHpoTermIdException;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -16,7 +18,9 @@ import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,7 +32,7 @@ import java.util.Set;
  * </pre>
  */
 public class LoincMappingParser {
-
+    private static final Logger logger = LogManager.getLogger();
 
 
     private final HpoOntology ontology;
@@ -41,10 +45,16 @@ public class LoincMappingParser {
 
 
 
+    private Map<LoincId, LoincTest> testmap;
+
+
+
     public LoincMappingParser(String loincPath, HpoOntology hpo) {
         this.ontology=hpo;
         testset=new HashSet<>();
         qntests=new HashSet<>();
+        testmap=new HashMap<>();
+        parseLoinc2Hpo(loincPath);
     }
 
 
@@ -53,11 +63,16 @@ public class LoincMappingParser {
     public Set<QnLoincTest> getQnTests() { return qntests; }
 
 
+    public Map<LoincId, LoincTest> getTestmap() { return testmap; }
+
+
     private void parseLoinc2Hpo(String path) {
+        logger.trace("Parsing at " + path);
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
             while ((line=br.readLine())!=null) {
+                logger.trace("reading line: " +line);
                 if (line.startsWith("#")) continue; // headr or comment
                 String A[] = line.split("\t");
                 String flag=A[0];
@@ -71,6 +86,7 @@ public class LoincMappingParser {
                         LoincTest test = new QnLoincTest(id,LoincScale.Qn,low,wnl,high);
                         testset.add(test);
                         qntests.add(new QnLoincTest(id,LoincScale.Qn,low,wnl,high));
+                        testmap.put(id,test);
                     } else {
 
                     }

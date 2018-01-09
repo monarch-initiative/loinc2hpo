@@ -21,7 +21,9 @@ public class LoincObservation {
         cat=cat.toLowerCase();
         switch (cat) {
             case "low" : return category.LOW;
-            case "high": return category.HIGH;
+            case "high":
+            case "H":
+            case "h":return category.HIGH;
             case "absent": return category.ABSENT;
             case "present": return category.PRESENT;
             case "wnl": return category.WITHIN_NORMAL_RANGE;
