@@ -12,15 +12,12 @@ public class LoincId {
 
     public LoincId(String loinccode) throws MaformedLoincCodeException {
         int dash_pos=loinccode.indexOf("-");
-        logger.trace(String.format("loinc id string=%s, length=%d, dashpos=%d",loinccode,loinccode.length(),dash_pos));
         if (dash_pos<=0) throw new MaformedLoincCodeException("No dash found in "+loinccode);
         if (dash_pos >loinccode.length()-2)
             throw new MaformedLoincCodeException("No character found after dash in " + loinccode);
         try {
             num=Integer.parseInt(loinccode.substring(0,dash_pos));
-            logger.trace("num="+num);
             suffix=Integer.parseInt(loinccode.substring(dash_pos+1));
-            logger.trace("suff="+suffix);
         } catch (NumberFormatException nfe) {
             throw new MaformedLoincCodeException("Unable to parse numerical part of "+ loinccode);
         }

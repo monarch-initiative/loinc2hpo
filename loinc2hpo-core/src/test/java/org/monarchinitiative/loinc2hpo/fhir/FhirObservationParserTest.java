@@ -75,11 +75,8 @@ public class FhirObservationParserTest {
     @Test
     public void testGetHyperglycemia() throws Loinc2HpoException{
         TestResult res = FhirObservationParser.fhir2testrest(node,testmap);
-        System.err.println("tests in map 2");
-        for (LoincId id : testmap.keySet()) {
-            System.err.println(id.toString() + ": "+ testmap.get(id).toString());
-        }
         assertNotNull(res);
+        System.err.println(res);
         String expected="HP:0003074";
         String actual=res.getTermId().getIdWithPrefix();
         assertEquals(expected,actual);

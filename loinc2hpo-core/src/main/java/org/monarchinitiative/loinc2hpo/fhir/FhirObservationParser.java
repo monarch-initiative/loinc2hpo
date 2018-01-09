@@ -78,7 +78,7 @@ public class FhirObservationParser {
         //System.out.println("rt: \"" + resourcetype + "\"");
         if (!resourcetype.equals("Observation"))
             throw new WrongElementException("Unexpected resource type " + resourcetype + "(expected: TestResult)");
-        System.out.println("rt:" + resourcetype);
+
 
         JsonNode codeNode = node.get("code");
         lid = getLoincId(codeNode);

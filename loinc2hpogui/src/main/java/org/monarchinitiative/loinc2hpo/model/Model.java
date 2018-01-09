@@ -44,8 +44,6 @@ public class Model {
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoincTest} object .*/
-    //public Map<String,QnLoincTest> testmap=new HashMap<>();
-    //It's better to keep the order
     public Map<LoincId,LoincTest> testmap=new LinkedHashMap<>();
 
     private ImmutableMap<String,HpoTerm> termmap=null;

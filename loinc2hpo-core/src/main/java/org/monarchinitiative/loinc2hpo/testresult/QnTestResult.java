@@ -24,7 +24,15 @@ public class QnTestResult implements TestResult {
 
     @Override
     public String toString() {
-        return String.format("%s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation.toString(),comment);
+        if (hpoId==null) {
+            return "error => hpoId is null in testResult";
+        }
+        if (hpoId.getId()==null) {
+            return "error => hpoId.getId() is null in testResult";
+        }
+        if (observation==null)
+            return "error => observation is null in TestResult";
+        return String.format("QnTestResult: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation.toString(),comment!=null?comment:"");
 
     }
 

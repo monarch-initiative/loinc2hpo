@@ -86,4 +86,6 @@ public class QnLoincTest extends LoincTest {
     public boolean getFlag(){ return flag; }
 
 
+
+
 }
