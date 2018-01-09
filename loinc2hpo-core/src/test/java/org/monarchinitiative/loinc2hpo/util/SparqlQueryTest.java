@@ -7,6 +7,8 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
+import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 import java.util.*;
 import java.util.regex.Pattern;

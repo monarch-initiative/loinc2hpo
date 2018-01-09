@@ -3,6 +3,8 @@ package org.monarchinitiative.loinc2hpo.util;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 
 import java.util.ArrayList;
 import java.util.List;

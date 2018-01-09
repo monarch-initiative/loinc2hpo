@@ -1,7 +1,10 @@
 package org.monarchinitiative.loinc2hpo.util;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 
 import java.util.List;
 import java.util.Queue;
@@ -54,7 +57,7 @@ public class LoincCodeClassTest {
     @Test
     public void testALoinc() {
         String aLoinc = "Erythrocyte distribution width [Ratio] by Automated count";
-        assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
+        Assert.assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
         assertEquals("", LoincLongNameParser.parse(aLoinc).getLoincTissue());
         System.out.println(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().size());
         for (String tissue : LoincLongNameParser.parse(aLoinc).keysInLoincTissue()) {
