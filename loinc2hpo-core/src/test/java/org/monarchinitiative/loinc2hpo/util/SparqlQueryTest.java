@@ -22,7 +22,9 @@ public class SparqlQueryTest {
 
     @BeforeClass
     public static void initializeModel() {
-        String hpo = SparqlQueryTest.class.getResource("/obo/hp.obo").getPath();
+        //String hpo = SparqlQueryTest.class.getResource("/obo/hp.obo")
+                //.getPath();
+        String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
     }
 
@@ -85,7 +87,7 @@ public class SparqlQueryTest {
                                                             // while the same query finds 14 in command line
                                                             //reason: command line uses hp.owl; this program builds a model from hp.owl(?)
         System.out.println(results_standard.size()+ " HPO terms are found!");
-        assertEquals(13, results_standard.size());
+        assertEquals(9, results_standard.size());
     }
 
     @Test
