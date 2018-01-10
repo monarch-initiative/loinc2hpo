@@ -6,8 +6,9 @@ import org.monarchinitiative.loinc2hpo.exception.MaformedLoincCodeException;
 
 public class LoincId {
     private static final Logger logger = LogManager.getLogger();
+    /** The part of the Loinc code prior to the dash */
     private final int num;
-
+    /** The part of the Loinc code following the dash */
     private final int suffix;
 
     public LoincId(String loinccode) throws MaformedLoincCodeException {
