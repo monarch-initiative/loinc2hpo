@@ -21,7 +21,7 @@
                               <Insets top="10.0" />
                            </VBox.margin>
                         </Button>
-                        <ListView fx:id="patientRecordTableView" prefHeight="600.0" prefWidth="500.0">
+                        <ListView fx:id="patientRecordListView" prefHeight="600.0" prefWidth="500.0">
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>
