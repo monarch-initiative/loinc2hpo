@@ -1,5 +1,9 @@
 # loinc2hpo Changelog
 
+## current
+### loinc2hpo-core
+* Adding enums for FHIR observation codes
+
 ## v0.0.2
 
 ### loinc2hpogui
