@@ -1,17 +1,23 @@
-package org.monarchinitiative.loinc2hpo.fhir;
+package org.monarchinitiative.loinc2hpo.io;
 
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.gclient.StringClientParam;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import ca.uhn.fhir.context.FhirContext;
+import javafx.stage.FileChooser;
 import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.monarchinitiative.loinc2hpo.command.LoincUtil;
+import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 
 public class ObservationDownloader {
 
@@ -52,7 +58,7 @@ public class ObservationDownloader {
         String longest = null;
         int size = 0;
         for (Observation observation : observations) {
-            String current = jsonParser.encodeResourceToString(observation).trim();
+            String current = jsonParser.setPrettyPrint(true).encodeResourceToString(observation).trim();
             //System.out.println("size of current observation: " + current.length());
             if ((observation.hasValueQuantity() || observation.hasValueCodeableConcept()) &&
                     current.length() > size) {
@@ -74,7 +80,7 @@ public class ObservationDownloader {
         String firstComplete = null;
         for (Observation observation : observations) {
             if (isComplte(observation)) {
-                firstComplete = jsonParser.encodeResourceToString(observation).trim();
+                firstComplete = jsonParser.setPrettyPrint(true).encodeResourceToString(observation).trim();
             }
         }
         return firstComplete;
@@ -88,7 +94,7 @@ public class ObservationDownloader {
         String firstAcceptable = null;
         for (Observation observation : observations) {
             if (isAcceptable(observation)) {
-                firstAcceptable = jsonParser.encodeResourceToString(observation).trim();
+                firstAcceptable = jsonParser.setPrettyPrint(true).encodeResourceToString(observation).trim();
             }
         }
         return firstAcceptable;
@@ -159,6 +165,105 @@ public class ObservationDownloader {
         //printPatientInfo();
         //BufferedReader bufferedReader = new BufferedReader(new FileReader(""));
         //find20CompleteRecordOfEachType();
+        String path = null;
+        HashMap<String, StringBuilder> completeObservations = new HashMap<>();
+        completeObservations.put("Qn", new StringBuilder());
+        completeObservations.put("Ord", new StringBuilder());
+        completeObservations.put("Nom", new StringBuilder());
+        completeObservations.put("Nar", new StringBuilder());
+        completeObservations.put("OrdQn", new StringBuilder());
+        completeObservations.put("unkown", new StringBuilder());
+        HashMap<String, Integer> countComplete = new HashMap<>();
+        countComplete.put("Qn", 0);
+        countComplete.put("Ord", 0);
+        countComplete.put("Nom", 0);
+        countComplete.put("Nar", 0);
+        countComplete.put("OrdQn", 0);
+        countComplete.put("unknown", 0);
+        HashMap<String, StringBuilder> accetableObservations = new HashMap<>();
+        accetableObservations.put("Qn", new StringBuilder());
+        accetableObservations.put("Ord", new StringBuilder());
+        accetableObservations.put("Nom", new StringBuilder());
+        accetableObservations.put("Nar", new StringBuilder());
+        accetableObservations.put("OrdQn", new StringBuilder());
+        accetableObservations.put("unknown", new StringBuilder());
+        HashMap<String, Integer> countAccetable = new HashMap<>();
+        countAccetable.put("Qn", 0);
+        countAccetable.put("Ord", 0);
+        countAccetable.put("Nom", 0);
+        countAccetable.put("Nar", 0);
+        countAccetable.put("OrdQn", 0);
+        countAccetable.put("unknown", 0);
+
+        JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            path = chooser.getSelectedFile().getAbsolutePath();
+            System.out.println(path);
+            Map<String, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+            System.out.println("size of loinc table: " + loincEntryMap.size());
+            for (LoincEntry loincEntry : loincEntryMap.values()) {
+                if (countComplete.containsKey(loincEntry.getScale()) && countComplete.get(loincEntry.getScale()) < 50) {
+                    try {
+                        List<Observation> results = ObservationDownloader.retrieveObservation(loincEntry.getLOINC_Number());
+                        if (results != null && !results.isEmpty()){
+                            for (Observation observation : results) {
+                                if (isComplte(observation)) {
+                                    String aCompleteRecord = jsonParser.setPrettyPrint(true).encodeResourceToString(observation);
+                                    if (completeObservations.containsKey(loincEntry.getScale())) {
+                                        completeObservations.get(loincEntry.getScale()).append(aCompleteRecord);
+                                        completeObservations.get(loincEntry.getScale()).append("\n\n");
+                                        completeObservations.get(loincEntry.getScale()).append(Character.toString((char) 12));
+                                        countComplete.put(loincEntry.getScale(), countComplete.get(loincEntry.getScale()) + 1);
+                                    } else {
+                                        completeObservations.get("unknown").append(aCompleteRecord);
+                                        completeObservations.get("unknown").append("\n\n");
+                                        completeObservations.get("unknown").append(Character.toString((char) 12));
+                                        countComplete.put("unknown", countAccetable.get("unknown") + 1);
+                                    }
+                                    break;
+                                }
+                                if (isAcceptable(observation)) {
+                                    String aAcceptableRecord = jsonParser.setPrettyPrint(true).encodeResourceToString(observation);
+                                    if (accetableObservations.containsKey(loincEntry.getScale())
+                                            && countAccetable.get(loincEntry.getScale()) < 50) {
+                                        accetableObservations.get(loincEntry.getScale()).append(aAcceptableRecord);
+                                        accetableObservations.get(loincEntry.getScale()).append("\n\n");
+                                        accetableObservations.get(loincEntry.getScale()).append(Character.toString((char) 12));
+                                        countAccetable.put(loincEntry.getScale(), countAccetable.get(loincEntry.getScale()) + 1);
+                                    } else if (countAccetable.get("unknown") < 50){
+                                        accetableObservations.get("unknown").append(aAcceptableRecord);
+                                        accetableObservations.get("unknown").append("\n\n");
+                                        accetableObservations.get("unknown").append(Character.toString((char) 12));
+                                        countAccetable.put("unknown", countAccetable.get("unknown") + 1);
+                                    }
+                                }
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }
+
+
+            }
+        }
+        for (String scale : completeObservations.keySet()) {
+            if (!completeObservations.get(scale).toString().isEmpty()) {
+                WriteToFile.writeToFile(completeObservations.get(scale).toString(), scale + "_complteObservations.txt");
+            } else {
+                System.out.println("No complete observations were found for loinc scale type: " + scale);
+            }
+        }
+        for (String scale : accetableObservations.keySet()) {
+            if (!accetableObservations.get(scale).toString().isEmpty()) {
+                WriteToFile.writeToFile(accetableObservations.get(scale).toString(), scale + "_acceptableObservations.txt");
+            } else {
+                System.out.println("No acceptable observations were found for loinc scale type: " + scale);
+            }
+        }
+
 
     }
 

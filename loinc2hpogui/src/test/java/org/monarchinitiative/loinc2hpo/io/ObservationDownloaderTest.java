@@ -1,7 +1,8 @@
-package org.monarchinitiative.loinc2hpo.fhir;
+package org.monarchinitiative.loinc2hpo.io;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.io.ObservationDownloader;
 
 import java.util.List;
 
