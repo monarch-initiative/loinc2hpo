@@ -1,0 +1,3669 @@
+{
+  "resourceType": "Observation",
+  "id": "213241",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-28T02:39:07.397-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "pt",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">mw47FsCKK3JrTws+uyfxVg==</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "BRN",
+            "display": "Breed Registry Number",
+            "userSelected": false
+          }
+        ],
+        "text": "wM7lq0g3WZlLK5U26fouVQ=="
+      },
+      "system": "http://projectcrucible.org/0nvkSHfaqUiqab9Cs2Gw4w==",
+      "value": "fghibos1wijnIBo09E5CtA==",
+      "period": {
+        "start": "2017-08-28T02:39:07.144Z",
+        "end": "2017-08-28T02:39:07.144Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/INe05MUsHyk+cqyrWThREQ==",
+          "value": "lNX6eI0bnn0puWMYyk+NQw=="
+        },
+        "display": "Organization kLi/qGsFOcqrjmkOKtNarg=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "PSFdFt9QCGRqA+lmE5q5uQ=="
+        },
+        "system": "http://projectcrucible.org/hArDrg1gI2a/cBpyMBg6mA==",
+        "value": "SnW9HVoYftPMVItq9NnzHg==",
+        "period": {
+          "start": "2017-08-28T02:39:07.144Z",
+          "end": "2017-08-28T02:39:07.144Z"
+        },
+        "assigner": {
+          "display": "Organization qiIlg6KjYQ49DQFDEqo5wQ=="
+        }
+      },
+      "display": "NutritionOrder NZwR9Gmdy26mb2+f+VJtpw=="
+    }
+  ],
+  "status": "preliminary",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "imaging",
+          "display": "Imaging",
+          "userSelected": false
+        }
+      ],
+      "text": "rnUFxSgD9mlOuS3/bCd5QA=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10294-7",
+        "display": "Tube or drain Vendor model number",
+        "userSelected": false
+      }
+    ],
+    "text": "EfjC7mFUKCpBcFBqGIvCUg=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "ShiQIJu4SYLWUeofSeUqOg=="
+      },
+      "system": "http://projectcrucible.org/3G9wxg76ev6OJbyxJWsTHw==",
+      "value": "XVTCyPD7WkEblOs8JJHqVg==",
+      "period": {
+        "start": "2017-08-28T02:39:07.149Z",
+        "end": "2017-08-28T02:39:07.149Z"
+      },
+      "assigner": {
+        "display": "Organization kujY0OImTQWd4uG8NMLEhg=="
+      }
+    },
+    "display": "Patient 83SM4ho+r+DYbkCsTuOppQ=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "/lIwf0I/IaxyHeWnUfUqfg=="
+      },
+      "system": "http://projectcrucible.org/A69cwRXp10JK5cpAkm/+3A==",
+      "value": "DeTUV/QfSs77J7RuiSkBKQ==",
+      "period": {
+        "start": "2017-08-28T02:39:07.149Z",
+        "end": "2017-08-28T02:39:07.149Z"
+      },
+      "assigner": {
+        "display": "Organization gZSMAWXImwL2bglYrWP0YA=="
+      }
+    },
+    "display": "EpisodeOfCare h8B6AFS/rhcXres5bCvZSw=="
+  },
+  "effectiveDateTime": "2017-08-28T02:39:07.149Z",
+  "issued": "2017-08-28T02:39:07.149Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "H4I+bita1vicoZk71+o3ag=="
+        },
+        "system": "http://projectcrucible.org/Jn+fV4pdmJwEhyjcgPctDg==",
+        "value": "O+3e5q4HWFuC1dhtUDpWWw==",
+        "period": {
+          "start": "2017-08-28T02:39:07.150Z",
+          "end": "2017-08-28T02:39:07.150Z"
+        },
+        "assigner": {
+          "display": "Organization VewngnNSuL5ygksC1TYyhQ=="
+        }
+      },
+      "display": "Patient Y/+hr3giA7Ei8Yvux26IgA=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.04651081889090791,
+    "comparator": "<",
+    "unit": "WvwGQ2KIBhfoEoL74YOWMQ==",
+    "system": "http://projectcrucible.org/V49SAsRlFSCheo0GkDnxDw==",
+    "code": "UVYoK4gD8E3sojlUseiCpA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "error",
+        "display": "Error",
+        "userSelected": false
+      }
+    ],
+    "text": "70mStyKdzAp1f1+Upmu0kg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "null",
+        "display": "No range defined, or normal ranges don't apply",
+        "userSelected": true
+      }
+    ],
+    "text": "4MWdsMpb3hyzh3X86bN2aw=="
+  },
+  "comment": "T7KE7nsE8ZyD63Y9+nZ7qw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "3120008",
+        "display": "Pleura",
+        "userSelected": true
+      }
+    ],
+    "text": "Rrgvl+4n0o3MUyFLDNX/9g=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "129277006",
+        "display": "Administrative disposition - action",
+        "userSelected": true
+      }
+    ],
+    "text": "/WE99wOX+yu+72NTd5XA1A=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "XCnTIm2G8LBjA/7oJbwvsA=="
+      },
+      "system": "http://projectcrucible.org/TwCZ6+MPBkZ/Or1mjpqPJg==",
+      "value": "ObomPne20ZLeGgimHiBasQ==",
+      "period": {
+        "start": "2017-08-28T02:39:07.193Z",
+        "end": "2017-08-28T02:39:07.193Z"
+      },
+      "assigner": {
+        "display": "Organization BSY9/TSkHIHmVk11DiSYrQ=="
+      }
+    },
+    "display": "Specimen FvV1eIFwWFHDeWyMzQRTlQ=="
+  },
+  "device": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "HoDRHKy8wSY07F5cjAcOXw=="
+      },
+      "system": "http://projectcrucible.org/CXlohIKKuE801WaJDRoyQQ==",
+      "value": "aS6a23dhXjC3jgFjnaGPJw==",
+      "period": {
+        "start": "2017-08-28T02:39:07.193Z",
+        "end": "2017-08-28T02:39:07.193Z"
+      },
+      "assigner": {
+        "display": "Organization mYdHo3gRHibk5mmU3jauCw=="
+      }
+    },
+    "display": "Device ZDcoK89+iGVfF/RDKo26tQ=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.4831489291494806,
+        "comparator": "<",
+        "unit": "nmq+2ynGCyvtW2UBMO5muQ==",
+        "system": "http://projectcrucible.org/AFszMeKtrEpDMuNdmAI07A==",
+        "code": "CrroxAiP479sHl9qoalDjw=="
+      },
+      "high": {
+        "value": 0.8632498388725853,
+        "comparator": ">",
+        "unit": "E+cppb7hDrBGMwbrApvdGQ==",
+        "system": "http://projectcrucible.org/T0nSA8uA63Q32cWkq985vQ==",
+        "code": "tlnSwE83XhjIi21WdFyfMw=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "endocrine",
+            "display": "Endocrine",
+            "userSelected": true
+          }
+        ],
+        "text": "3Frj2UACcaIG/qAiCmcSiQ=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1972-9",
+              "userSelected": true
+            }
+          ],
+          "text": "onIAjbKRACyCcQ+CMdWHLw=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.09158552899068162,
+          "comparator": "<=",
+          "unit": "7PbaYOGJUNToEY6ZDakZUA==",
+          "system": "http://projectcrucible.org/BwtYPNfKRQt4kh6kyviUug==",
+          "code": "TkEoxpubR6auyAbuUcOGuw=="
+        },
+        "high": {
+          "value": 0.2003781679268124,
+          "comparator": "<=",
+          "unit": "FH61QcOKAdr0zwiply0/eA==",
+          "system": "http://projectcrucible.org/5+c/FQdTgcuIm1MWBCi0eQ==",
+          "code": "lfkbu2pSWbXZJXTziM+peg=="
+        }
+      },
+      "text": "jojDIDPdcwI8kAVh45ztkw=="
+    }
+  ],
+  "related": [
+    {
+      "type": "replaces",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/7C5ouv07NwaLk8FUxUcpMw==",
+          "value": "M+vl/QU+uEDvaKbu4ZQWlg=="
+        },
+        "display": "QuestionnaireResponse H/5efgZadDiERN0JM6gbhA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10473-7",
+            "display": "Chymotrypsin Ag [Presence] in Tissue by Immune stain",
+            "userSelected": true
+          }
+        ],
+        "text": "lyLuhnrjQZClQp3WvQDKrA=="
+      },
+      "valueString": "aY/QNItTiCHZlI4GlgF5UA==",
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "error",
+            "display": "Error",
+            "userSelected": false
+          }
+        ],
+        "text": "DUzUNPRwHr8AtUWR08rMNA=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "IE",
+            "display": "Insufficient evidence",
+            "userSelected": true
+          }
+        ],
+        "text": "NrbLU8dmA2ueh5lxROMdUA=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.18495677490147355,
+            "comparator": ">",
+            "unit": "qj86n30vMNCo39y2xUu2Hg==",
+            "system": "http://projectcrucible.org/Qt8SqI077FhINhrYOyKKHQ==",
+            "code": "bDCvVYt79EGmvtODZTfiOg=="
+          },
+          "high": {
+            "value": 0.1896622743835118,
+            "comparator": "<",
+            "unit": "rYXEZGLcZgaju+6sj2UpPg==",
+            "system": "http://projectcrucible.org/b/3V1VNM8Q/emL+/ce41/w==",
+            "code": "LYkmQPH3MJeu/3SEFogv+w=="
+          },
+          "type": {
+            "text": "2zFTY+m0IOujfsIqIx29SQ=="
+          },
+          "appliesTo": [
+            {
+              "text": "3Ux8MjYx4y+wUWIjPCsmKg=="
+            }
+          ],
+          "text": "orLTLIN2w4CfP4UE5WLG1g=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "157245",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-25T01:41:51.554-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "nl-NL",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">xDKIFEHzn2WYTIKwPwDR3A==</div>"
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SB",
+            "display": "Social Beneficiary Identifier",
+            "userSelected": true
+          }
+        ],
+        "text": "0zMJszQaeVfSqDnD/6s4WQ=="
+      },
+      "system": "http://projectcrucible.org/xNorM1Cn4A4DI5DU3YrK1g==",
+      "value": "19NYRV6G91qSUA6H9naghQ==",
+      "period": {
+        "start": "2017-06-25T01:41:51.302Z",
+        "end": "2017-06-25T01:41:51.302Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/ZO350pU8gQn/iiVzH4iD/A==",
+          "value": "wd8PkdvjkUUmRBh2fAFn+w=="
+        },
+        "display": "Organization fGo5h6pB45+wPEb+3hXVXw=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "ZvINdpE7qs6RDC312s21xg=="
+        },
+        "system": "http://projectcrucible.org/oBdSVjMFk5tlcAFZiaQrYQ==",
+        "value": "wxNRUs2FjJEnedbAcciYiQ==",
+        "period": {
+          "start": "2017-06-25T01:41:51.302Z",
+          "end": "2017-06-25T01:41:51.302Z"
+        },
+        "assigner": {
+          "display": "Organization Wc8GwyP4mDl4q2Lr4mjarQ=="
+        }
+      },
+      "display": "ImmunizationRecommendation OFYPnk9J5+BObYhrsUcnFg=="
+    }
+  ],
+  "status": "unknown",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory",
+          "userSelected": false
+        }
+      ],
+      "text": "iJkmFzLNq0RTp8DlMMXtZQ=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10297-0",
+        "display": "Urine tube Vendor model number",
+        "userSelected": false
+      }
+    ],
+    "text": "ZzoQHp94r1DOXo4HzwIlUA=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "EEHq/+PfD47p17Tj9SWM7A=="
+      },
+      "system": "http://projectcrucible.org/w5mDYQYA4pxKmDVU2J2Faw==",
+      "value": "QzOLfZ5vbeNB94toBmMGnA==",
+      "period": {
+        "start": "2017-06-25T01:41:51.307Z",
+        "end": "2017-06-25T01:41:51.307Z"
+      },
+      "assigner": {
+        "display": "Organization Z0Pg1tukGOQ00oR5n3OEjw=="
+      }
+    },
+    "display": "Location 88BP1mB3YR7QSdFLSb4Lrg=="
+  },
+  "context": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "vmuuLI4MMngkzdESIIdAYw=="
+      },
+      "system": "http://projectcrucible.org/tAMvnWk6v4cJUo5E5ORQJA==",
+      "value": "DNuUid3+iVar5xcUB7TPlw==",
+      "period": {
+        "start": "2017-06-25T01:41:51.307Z",
+        "end": "2017-06-25T01:41:51.307Z"
+      },
+      "assigner": {
+        "display": "Organization x2X+Gz5kaVm2Zt+E9s+Sxg=="
+      }
+    },
+    "display": "EpisodeOfCare Dn+0zU4D2+QacWxvB2tz7g=="
+  },
+  "effectiveDateTime": "2017-06-25T01:41:51.307Z",
+  "issued": "2017-06-25T01:41:51.307Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "QDu5rtovqbk6vIOedzafvQ=="
+        },
+        "system": "http://projectcrucible.org/NtuEkgkXnU3wyzd42aaO0g==",
+        "value": "ybdrAR9Zup/nigLwZYZM0g==",
+        "period": {
+          "start": "2017-06-25T01:41:51.308Z",
+          "end": "2017-06-25T01:41:51.308Z"
+        },
+        "assigner": {
+          "display": "Organization cZQWbcIoQu0KuoLnapJDRA=="
+        }
+      },
+      "display": "RelatedPerson ODQ/rVn2+M8ijaTbP0Hnsg=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/gjppzT5Ny5xc5sOrNylnUw==",
+        "code": "h0qfr2f1JLUB2XrLKcgwEg==",
+        "display": "UxIqFn55catxVOaeHBTCdQ==",
+        "userSelected": false
+      }
+    ],
+    "text": "v4Gf1xlw9k0IH0egvfUQJQ=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "not-asked",
+        "display": "Not Asked",
+        "userSelected": false
+      }
+    ],
+    "text": "r8SmF9POfeQVuyl2KEHklw=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "LL",
+        "display": "Critically low",
+        "userSelected": true
+      }
+    ],
+    "text": "v3kyw8QiTALo2ZiGmzwiVw=="
+  },
+  "comment": "azG6PSwU23eVBaxGe+a/Ew==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "2306004",
+        "display": "Base of third metacarpal bone",
+        "userSelected": true
+      }
+    ],
+    "text": "Jm/agJ34TBrU2UwMiywzew=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "129390001",
+        "display": "Coagulation - action",
+        "userSelected": true
+      }
+    ],
+    "text": "DhdAiKQVpfKUDk6CEkmOJw=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "0D5CPCjIODQMclAhoYNlhQ=="
+      },
+      "system": "http://projectcrucible.org/zQWO4OSBQGsCQ4RPEUKufg==",
+      "value": "r8KXAXN5bjdxSsgpHekGaw==",
+      "period": {
+        "start": "2017-06-25T01:41:51.349Z",
+        "end": "2017-06-25T01:41:51.349Z"
+      },
+      "assigner": {
+        "display": "Organization /EudMEz1a8PyplkcefdcFw=="
+      }
+    },
+    "display": "Specimen cgNu07fbcefWEbDb5dSfOg=="
+  },
+  "device": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "OgTHwmDxF2k/I7M0H77/Cg=="
+      },
+      "system": "http://projectcrucible.org/TuZd4MF8RILtIbl6aAk1xQ==",
+      "value": "get0IxZh1gmV74b485plKA==",
+      "period": {
+        "start": "2017-06-25T01:41:51.349Z",
+        "end": "2017-06-25T01:41:51.349Z"
+      },
+      "assigner": {
+        "display": "Organization Tg+jHprwwF/SafrRWI0C+w=="
+      }
+    },
+    "display": "DeviceMetric GYR6WGLd7gHPar8iSh9GuA=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.39611822380554684,
+        "comparator": ">",
+        "unit": "sRUqaSrYYKupqfGy4BfmLQ==",
+        "system": "http://projectcrucible.org/PKIx18ZgtynkZmG3Prm2ig==",
+        "code": "rkahuuR1hqfiHD/kA+VnxQ=="
+      },
+      "high": {
+        "value": 0.6529020083168667,
+        "comparator": "<=",
+        "unit": "wLAId68+xnHjlhH5AbgSTQ==",
+        "system": "http://projectcrucible.org/kyFDnRL2INs2A3AXGiOmGQ==",
+        "code": "HTDF3b898CFs77BRwLQg8A=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "luteal",
+            "display": "Luteal",
+            "userSelected": false
+          }
+        ],
+        "text": "/8PIALrYmdO211Aw580fAg=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1082-7",
+              "userSelected": false
+            }
+          ],
+          "text": "y9LCgNV3Sl9CtW6svEveyA=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.12169543480165534,
+          "comparator": "<=",
+          "unit": "CQcNudCAMr1goxinRjXlbg==",
+          "system": "http://projectcrucible.org/Axmrbw1T8k2XgXFn8W2VnA==",
+          "code": "OFjr4hFu4n0IPFJGe7vZ9Q=="
+        },
+        "high": {
+          "value": 0.6932183051447973,
+          "comparator": ">=",
+          "unit": "m3OQyF8th/0CWWxvpvt9qw==",
+          "system": "http://projectcrucible.org/CqQ2Dswkr4xdV2u9p8LFMA==",
+          "code": "ce+YyMa/1aISlcPHXJ6WHg=="
+        }
+      },
+      "text": "YT8ooLaauHUYHFQ7ejT9Og=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/M+UinjGlqbzK+wKwIyY3Dg==",
+          "value": "RFK2c9rd0UawwG3AeFCncw=="
+        },
+        "display": "Observation GErspX1R+43wY0tEKwpDWA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "1056-1",
+            "display": "Deprecated I (intermediate) subtype [Presence] on Red Blood Cells from donor",
+            "userSelected": false
+          }
+        ],
+        "text": "eyFKZUUYJRmnD6AS7XX90Q=="
+      },
+      "valueRatio": {
+        "numerator": {
+          "value": 0.32666588987492684,
+          "comparator": ">",
+          "unit": "+bczppnu6Ow0aOhbtUsJWQ==",
+          "system": "http://projectcrucible.org/T4P9FZPifIQRplbiaUnLpQ==",
+          "code": "w0uYAD9hbkbWydWpFPEqcA=="
+        },
+        "denominator": {
+          "value": 0.6904624969953113,
+          "comparator": "<",
+          "unit": "TTMI54Gy9/3vSHgvhIGQWQ==",
+          "system": "http://projectcrucible.org/s7Ei7tBclmMEZ5N8/M3BOQ==",
+          "code": "WIJSnucTLlmdbfDWN4cZdQ=="
+        }
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "astext",
+            "display": "As Text",
+            "userSelected": false
+          }
+        ],
+        "text": "zLRJHEnwyxWdGmckT04U5w=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "SYN-R",
+            "display": "Synergy - resistant",
+            "userSelected": false
+          }
+        ],
+        "text": "bUmNeXkNajr59A4nWU5tFw=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.17047759308671895,
+            "comparator": ">=",
+            "unit": "ze76m16m35Kp+tL8Xp9SHw==",
+            "system": "http://projectcrucible.org/mbemSn0Wb8KqgKTCFZCrCQ==",
+            "code": "i2lzQU4m51GMbZv6TggCQQ=="
+          },
+          "high": {
+            "value": 0.39788935952025695,
+            "comparator": ">=",
+            "unit": "iAKKtLVtMZyjrfi/QHez6Q==",
+            "system": "http://projectcrucible.org/J7ayhcSx6+5wcGGZT1QjtQ==",
+            "code": "MuKojv+93oq9oO3WLpx6Tw=="
+          },
+          "type": {
+            "text": "nRqIooANq+lWCUtTRDeasQ=="
+          },
+          "appliesTo": [
+            {
+              "text": "XUK3xWKMR5+kJTF3aBKXQw=="
+            }
+          ],
+          "text": "kKMgD4PDSK9N8Lx6iZ/JBg=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "237742",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-03T14:40:51.103-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "nl-BE",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">q/IEL2+0+TKAePjaKvFE1A==</div>"
+  },
+  "identifier": [
+    {
+      "use": "secondary",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "UDI",
+            "display": "Universal Device Identifier",
+            "userSelected": true
+          }
+        ],
+        "text": "MOoOizn9fg+t5T1r/NBcOA=="
+      },
+      "system": "http://projectcrucible.org/OwB6LQpw7aI09Rw5fSrqmw==",
+      "value": "vfgCmswKa6WlsjO+jkQudg==",
+      "period": {
+        "start": "2017-10-03T14:40:50.759Z",
+        "end": "2017-10-03T14:40:50.759Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/SNjIsKF4RelQ2t6LETXJOw==",
+          "value": "pu5Q8dPsURWhVCgPQS5ExA=="
+        },
+        "display": "Organization WblhuxjjIpbXhSZpPEWgrQ=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "1a7mrJ1yvPHvazQfwBV+5w=="
+        },
+        "system": "http://projectcrucible.org/rGOFpanHaC4bE4LI39xfLw==",
+        "value": "bvsKGco7uD8rDYwSkG2fAQ==",
+        "period": {
+          "start": "2017-10-03T14:40:50.760Z",
+          "end": "2017-10-03T14:40:50.760Z"
+        },
+        "assigner": {
+          "display": "Organization b4x6pGjq7wgPv5eU4kkMLA=="
+        }
+      },
+      "display": "NutritionOrder Va0mh261+8Xt4/7m4Zf52g=="
+    }
+  ],
+  "status": "preliminary",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "procedure",
+          "display": "Procedure",
+          "userSelected": false
+        }
+      ],
+      "text": "FAVikg7pG+ksnY9o/RbNNg=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10353-1",
+        "display": "Bacteria identified in Nose by Aerobe culture",
+        "userSelected": false
+      }
+    ],
+    "text": "oAHv24R26EJ2JwxMi1O/kw=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "SSKFXp7VExW/PAY6LexVlQ=="
+      },
+      "system": "http://projectcrucible.org/04j6rFNe6i0dvgVKg0z3xA==",
+      "value": "w/mLg0M32c17l2xiA1PSWg==",
+      "period": {
+        "start": "2017-10-03T14:40:50.764Z",
+        "end": "2017-10-03T14:40:50.764Z"
+      },
+      "assigner": {
+        "display": "Organization kYMvb9+ipT/aGYgeZ8lmYg=="
+      }
+    },
+    "display": "Location woqdbNzCgBhAi/ySVEH+PA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "Ubu9mnaRjJ8bgsPtxb6f0Q=="
+      },
+      "system": "http://projectcrucible.org/CEgvuVBZRMjBwLUwL5aXHA==",
+      "value": "HWCzXSQ4XMA8vcfaWBqw6w==",
+      "period": {
+        "start": "2017-10-03T14:40:50.765Z",
+        "end": "2017-10-03T14:40:50.765Z"
+      },
+      "assigner": {
+        "display": "Organization HjrEHKxRUrLRK89QmH3KYA=="
+      }
+    },
+    "display": "Encounter syEQC2c4GIXkj49ySlV8xA=="
+  },
+  "effectiveDateTime": "2017-10-03T14:40:50.765Z",
+  "issued": "2017-10-03T14:40:50.765Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "/FzNZ9iXy725pfQviVnk2g=="
+        },
+        "system": "http://projectcrucible.org/LkYK6tfzLPHRI9KHVL+GWw==",
+        "value": "cMknufTTSPan5y7Azp/h1A==",
+        "period": {
+          "start": "2017-10-03T14:40:50.766Z",
+          "end": "2017-10-03T14:40:50.766Z"
+        },
+        "assigner": {
+          "display": "Organization Q04SOY4lD82y6c7FXJydOQ=="
+        }
+      },
+      "display": "Practitioner O8cTdbhkVMuNiXdCdgmTIQ=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/7cF+Bgm9maKUdMnC10iT0Q==",
+        "code": "xmHxgPQOwJ0RMZoiHKCcsw==",
+        "display": "OPgaY1WHS/tK+7uz1a74Pw==",
+        "userSelected": true
+      }
+    ],
+    "text": "VkYhxMZk0MwYLf6M2SdoVw=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "temp",
+        "display": "Temp",
+        "userSelected": false
+      }
+    ],
+    "text": "sJKSRAQw/wNGVyH8nzMa7A=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "U",
+        "display": "Significant change up",
+        "userSelected": false
+      }
+    ],
+    "text": "hBdesIYIJvt1wzblPIME/A=="
+  },
+  "comment": "dabz3jMiba2xn+IFwSkXbw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "9880000",
+        "display": "Thyroid tubercle",
+        "userSelected": true
+      }
+    ],
+    "text": "KizTJ64SCXNkljYeHVRxTA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "2508002",
+        "display": "Retrograde urography with KUB",
+        "userSelected": false
+      }
+    ],
+    "text": "SeYfDvE9nuJFqp/W+2a3XA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "VPtHJRMKh7Y1ejxh7BbB8g=="
+      },
+      "system": "http://projectcrucible.org/uBuvx4n1IFfBORymrbxVxg==",
+      "value": "79LREqTnJr6jo1k0dmgvMg==",
+      "period": {
+        "start": "2017-10-03T14:40:50.793Z",
+        "end": "2017-10-03T14:40:50.793Z"
+      },
+      "assigner": {
+        "display": "Organization AmafUnkKQ312kH7q+Ybffw=="
+      }
+    },
+    "display": "Specimen Oz79kcbv7vqa89h4iUvSOA=="
+  },
+  "device": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "ZWbhjef0/OlbGJv7Ja2eYQ=="
+      },
+      "system": "http://projectcrucible.org/ZoNr+4zIElTgo7ZkMOy66g==",
+      "value": "RXpvsei9CIAhoSO1+vxDiA==",
+      "period": {
+        "start": "2017-10-03T14:40:50.794Z",
+        "end": "2017-10-03T14:40:50.794Z"
+      },
+      "assigner": {
+        "display": "Organization iCbZdCGbha0DjV0ZY6Eoeg=="
+      }
+    },
+    "display": "DeviceMetric tky5LRJJLblwMLSEwUbElg=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.4322340871624536,
+        "comparator": ">",
+        "unit": "z/zHu6fT3kPte9E96l6GQw==",
+        "system": "http://projectcrucible.org/zMIwPy0M9Jb+fXMj46oYiA==",
+        "code": "hwpVM/6V1DCmdQ36utAc2Q=="
+      },
+      "high": {
+        "value": 0.954938326235546,
+        "comparator": "<",
+        "unit": "PRAodCgbj82jLzJADZyp3g==",
+        "system": "http://projectcrucible.org/KRbcswd2M3SNgk0NBG7vmg==",
+        "code": "mtEmL2r9w9ow+4yyL3COCQ=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "pre",
+            "display": "Pre Therapeutic Desired Level",
+            "userSelected": false
+          }
+        ],
+        "text": "h5L0pAFh0z2QnaSjVGOiaw=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": true
+            }
+          ],
+          "text": "UjlLdYCR7M+pgrUZh8ddoA=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.10822605578775002,
+          "comparator": "<=",
+          "unit": "iURYBR2BUkkn3d4J1iUPDg==",
+          "system": "http://projectcrucible.org/ues11BwBzaf1DLTTZtB8Mg==",
+          "code": "1ivm6PwAYUuwqlzBpp6m3w=="
+        },
+        "high": {
+          "value": 0.8810022455752473,
+          "comparator": "<=",
+          "unit": "PvgHeW2WNxWo0i1GW9PSPQ==",
+          "system": "http://projectcrucible.org/c61P5N3bH/Q/S+v62W36kQ==",
+          "code": "z+EbjvWFSe2GimUkfVTRng=="
+        }
+      },
+      "text": "daQ7PmUemElFnCo9eiT6kQ=="
+    }
+  ],
+  "related": [
+    {
+      "type": "has-member",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/tFXnpkl3Zoq7aCAz/lwVtg==",
+          "value": "KV6zo4FR6/krihSQVQkEzg=="
+        },
+        "display": "Observation u81Ke72IWjIEsWkmmhXvcA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10032-1",
+            "display": "R' wave duration in lead V5",
+            "userSelected": true
+          }
+        ],
+        "text": "e4n1xxYJiS7i3T4nIkdGgw=="
+      },
+      "valueAttachment": {
+        "contentType": "audio/SMV-QCP",
+        "language": "sv",
+        "url": "http://projectcrucible.org/xPuBqCf8/Al1QMVnPPtY2A==",
+        "size": 4,
+        "hash": "r4EwqY68dgvsmGQw9c3H+w==",
+        "title": "oDqLYilOvUxFCMin9hHenw==",
+        "creation": "2017-10-03T14:40:50.799Z"
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "temp",
+            "display": "Temp",
+            "userSelected": true
+          }
+        ],
+        "text": "nHALjcyrfEw6gJ8TFCIWfA=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "HH",
+            "display": "Critically high",
+            "userSelected": false
+          }
+        ],
+        "text": "T/bdAWc+wmwb2n0EpkMzeQ=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.6057487651626965,
+            "comparator": ">",
+            "unit": "9zc2mytb4qUrFbjrjjLj4g==",
+            "system": "http://projectcrucible.org/QObAxBU46QdAEMa4X3Q6sg==",
+            "code": "1cu9NkmbpIf2VQpa2/UVeg=="
+          },
+          "high": {
+            "value": 0.22497096623321222,
+            "comparator": ">",
+            "unit": "qS3edyv/rROLsfUquT+86g==",
+            "system": "http://projectcrucible.org/FcYCZlweyqwxztrH9Adhuw==",
+            "code": "RRTNglmNHFvdEh/Qe8ht+Q=="
+          },
+          "type": {
+            "text": "NzXfE8RD1q7MyF6mg6yCmA=="
+          },
+          "appliesTo": [
+            {
+              "text": "97V3HOlOP8ruaU7oWK+eLw=="
+            }
+          ],
+          "text": "t/pNlBav3rtXxrrf4zueKw=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "212711",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-25T02:15:45.004-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "es-AR",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">anIC7WjfFwWjXStEFoocSw==</div>"
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "PPN",
+            "display": "Passport number",
+            "userSelected": true
+          }
+        ],
+        "text": "xUuWbTIDMAJ3d8O/U+gFpw=="
+      },
+      "system": "http://projectcrucible.org/UyfxZIlBT21bY1irdvVQvQ==",
+      "value": "sIDS2GeEBD8dLNUhssmkHw==",
+      "period": {
+        "start": "2017-08-25T02:15:44.750Z",
+        "end": "2017-08-25T02:15:44.750Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/VN7bSYHIYQlMDingOgB9Ig==",
+          "value": "XyrU8gJKRZFlkyoEQivjuA=="
+        },
+        "display": "Organization Hh7gU2nM0cGGz+S4fYEvIw=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "4ADXrtYnMH1kIPbz5sEYAg=="
+        },
+        "system": "http://projectcrucible.org/mY4oGGfyJ/tnZxML/vltOg==",
+        "value": "BO6UPlxi0Xn2zPa+2LUNgA==",
+        "period": {
+          "start": "2017-08-25T02:15:44.750Z",
+          "end": "2017-08-25T02:15:44.750Z"
+        },
+        "assigner": {
+          "display": "Organization 7xePTJERKOMcF0FIHvNyuQ=="
+        }
+      },
+      "display": "MedicationRequest 192d0KiXe8WeGgqH3EEDaQ=="
+    }
+  ],
+  "status": "entered-in-error",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory",
+          "userSelected": true
+        }
+      ],
+      "text": "vLDcUl9afbVZJhAB8WMZvg=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10356-4",
+        "display": "Deprecated Microscopic observation [Identifier] in Stool by Trichrome stain",
+        "userSelected": false
+      }
+    ],
+    "text": "5Nt1hTaqcqdqO2JcP9WmhQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "bepDNWs1rV2SCOh1r6qi1g=="
+      },
+      "system": "http://projectcrucible.org/UZcJyZVqpB0oHeb0CYXJHA==",
+      "value": "waDAPz4EPm8s3oX36bAhag==",
+      "period": {
+        "start": "2017-08-25T02:15:44.755Z",
+        "end": "2017-08-25T02:15:44.755Z"
+      },
+      "assigner": {
+        "display": "Organization Z70HLP4xlr4l/jxvlaI6KQ=="
+      }
+    },
+    "display": "Device vS0LSaTTGHW0kSd71THntw=="
+  },
+  "context": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "LCR3GAyCs1Khl2vGvL7URQ=="
+      },
+      "system": "http://projectcrucible.org/aO7vH1Av96KRMVWCMW8GEg==",
+      "value": "/s3FXXnKfsxS5rcWi+/6Kw==",
+      "period": {
+        "start": "2017-08-25T02:15:44.756Z",
+        "end": "2017-08-25T02:15:44.756Z"
+      },
+      "assigner": {
+        "display": "Organization EVP4x8lklR+oWM7fzcJUNg=="
+      }
+    },
+    "display": "EpisodeOfCare 1HHEwnMeDEXDC/eHklW8qg=="
+  },
+  "effectiveDateTime": "2017-08-25T02:15:44.756Z",
+  "issued": "2017-08-25T02:15:44.756Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "QI9J4obJgad54c/x8Bq30Q=="
+        },
+        "system": "http://projectcrucible.org/KKaPPGpQ5vXfQug0bYYp2A==",
+        "value": "Zsl6atM51tt6UeA0/m9z0w==",
+        "period": {
+          "start": "2017-08-25T02:15:44.756Z",
+          "end": "2017-08-25T02:15:44.756Z"
+        },
+        "assigner": {
+          "display": "Organization /xhQfrUuWuHTSJIg3vyihQ=="
+        }
+      },
+      "display": "Organization BWMDd79I7heJb8E3eKZPMg=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/mqG8Mb4Hrr60QBo8DuUovQ==",
+        "code": "M43dYZuv2pFqH69rs73+EQ==",
+        "display": "kBGeJH9g7QGsxRMV3homIA==",
+        "userSelected": true
+      }
+    ],
+    "text": "E2p4VXBZALUAHXXB9Wa4QA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "unsupported",
+        "display": "Unsupported",
+        "userSelected": false
+      }
+    ],
+    "text": "Cx4vW43JvGSQMzqvN713Zg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "OBX",
+        "display": "Interpretation qualifiers in separate OBX segments",
+        "userSelected": false
+      }
+    ],
+    "text": "smJVY8FGnjFfdf3vwr6oMQ=="
+  },
+  "comment": "+bMNsjY1rjy/p7Ea6jIJVw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1617005",
+        "display": "Intrinsic larynx",
+        "userSelected": true
+      }
+    ],
+    "text": "5XeA9Dd3EBrtSTYnog7BNA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "674004",
+        "display": "Abduction test",
+        "userSelected": true
+      }
+    ],
+    "text": "yHDgce4Gli2lIw4Ih6Ghrw=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "skUfP+PEhYkc0i59Yacoxg=="
+      },
+      "system": "http://projectcrucible.org/yVvuFo++xiPQM0r5di4k7A==",
+      "value": "RZxqak0f9Nfm+rTW0FZRjg==",
+      "period": {
+        "start": "2017-08-25T02:15:44.792Z",
+        "end": "2017-08-25T02:15:44.792Z"
+      },
+      "assigner": {
+        "display": "Organization l9uoGXmCRmvLlEA5uNj4nQ=="
+      }
+    },
+    "display": "Specimen DruVsZJcWTM6kELBcQcFYQ=="
+  },
+  "device": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "yTKY3iZYb823mIcCFl+iwQ=="
+      },
+      "system": "http://projectcrucible.org/DjC7nOAvAFJuMyQyxnf/CQ==",
+      "value": "dyy1pdJSXVUQDBT2NYYSnA==",
+      "period": {
+        "start": "2017-08-25T02:15:44.792Z",
+        "end": "2017-08-25T02:15:44.792Z"
+      },
+      "assigner": {
+        "display": "Organization iej9mBJUWYuQZEZfIlJoUQ=="
+      }
+    },
+    "display": "Device IrNOmMvT+CgSGcLwWwRmdQ=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.13767449002355725,
+        "comparator": "<=",
+        "unit": "bYTvLtqw8qZsR3B9c2ja/g==",
+        "system": "http://projectcrucible.org/ZqWvfTLvS98WIseyj+zApg==",
+        "code": "mcwZq2nr2FbGCJqttVWSzw=="
+      },
+      "high": {
+        "value": 0.27322281582192853,
+        "comparator": ">",
+        "unit": "55Wk97tNLW0cK2cy3triAA==",
+        "system": "http://projectcrucible.org/0SQVcJxA6I7fer/NxiJDww==",
+        "code": "S1F42uE5RBM4x4Jeqcij5g=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "therapeutic",
+            "display": "Therapeutic Desired Level",
+            "userSelected": true
+          }
+        ],
+        "text": "11Ttl2pDOlCg1NpOPkEHgQ=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "77386006",
+              "display": "Pregnancy not delivered",
+              "userSelected": true
+            }
+          ],
+          "text": "0SvfUGUxU19gcnYbPVlH2w=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.41808863623947823,
+          "comparator": "<=",
+          "unit": "hC3EarsMp5FPTBSX/yCNLg==",
+          "system": "http://projectcrucible.org/NTW+6/8cGLtxwx3GaQdfLg==",
+          "code": "qlxUayN8hsYOpxe9ku95BQ=="
+        },
+        "high": {
+          "value": 0.5716056309293289,
+          "comparator": ">=",
+          "unit": "k/Blg+AoI/tJdaC1ntWwHA==",
+          "system": "http://projectcrucible.org/Nh+ESKFIOdkmkYEGcRXrDQ==",
+          "code": "dm4uKQdry0eBKmAVXdKpCg=="
+        }
+      },
+      "text": "rGjEjP5ipBZY0DsBJ604Wg=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/9aHOKGf1KVTjQ91hGVhWtw==",
+          "value": "l94axhYZFkT8sDK2So8SqQ=="
+        },
+        "display": "Sequence gT7PRQoYz9fL5NoZslKpMA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "1053-8",
+            "display": "Deprecated I (intermediate) subtype [Presence] in serum or plasma from donor",
+            "userSelected": true
+          }
+        ],
+        "text": "KVF/4dIvFWiUuWZCzxZDZA=="
+      },
+      "valuePeriod": {
+        "start": "2017-08-25T02:15:44.809Z",
+        "end": "2017-08-25T02:15:44.809Z"
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "masked",
+            "display": "Masked",
+            "userSelected": false
+          }
+        ],
+        "text": "as275PWYNwmP73CCrr3/+Q=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "S",
+            "display": "Susceptible",
+            "userSelected": false
+          }
+        ],
+        "text": "/8ghVR1aSBNoD+U8NCOKFA=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.21754315862266083,
+            "comparator": "<",
+            "unit": "cYj1skttjPH5yQsWFv7SKw==",
+            "system": "http://projectcrucible.org/4WyHZIb0lxQOxkYJl9Ypxw==",
+            "code": "ABn7mUJQMzKdjHbmdg1/eQ=="
+          },
+          "high": {
+            "value": 0.9791272931542888,
+            "comparator": ">",
+            "unit": "sPeY8cng7+TZ7FOhMLYbcQ==",
+            "system": "http://projectcrucible.org/bgXvYrKP4ZMI4VTtJ7B5WA==",
+            "code": "YmkmJtomS2gMAkjdBmpDHw=="
+          },
+          "type": {
+            "text": "W5K93l9buT7WmNGJyTvb6g=="
+          },
+          "appliesTo": [
+            {
+              "text": "fGIhQCNNQNVlRw6C279o8A=="
+            }
+          ],
+          "text": "hWioKsZeKdSwGzF66Nantg=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "141220",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-01T01:37:16.918-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "en-AU",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">wq9fAMpV3IFpJzbgzXoBCQ==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "PPN",
+            "display": "Passport number",
+            "userSelected": true
+          }
+        ],
+        "text": "Yoon1yKY5tANTp/hQ4qGtw=="
+      },
+      "system": "http://projectcrucible.org/GvPDYkwDTFnTNr+/SyWy8w==",
+      "value": "H8t/9in2tVJcOvDYi4z/Jw==",
+      "period": {
+        "start": "2017-06-01T01:37:16.766Z",
+        "end": "2017-06-01T01:37:16.766Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/kvD24q1cQYHEqIv7SBI1jA==",
+          "value": "QAlJO+p2OcvVRF4PnBaWNg=="
+        },
+        "display": "Organization /RR+2xj7eyf13avy7nlmJg=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "EBrEAeI4D1vqRCtnORCCBw=="
+        },
+        "system": "http://projectcrucible.org/PRz2PxwbIzJeT/1wmYEJwA==",
+        "value": "KzhKigRYjgtbV7jSBNswYQ==",
+        "period": {
+          "start": "2017-06-01T01:37:16.766Z",
+          "end": "2017-06-01T01:37:16.766Z"
+        },
+        "assigner": {
+          "display": "Organization ypGK+XWspBUXYtYCeBSm6w=="
+        }
+      },
+      "display": "NutritionOrder DwXk9+1gmjxVkWHyLzJTUw=="
+    }
+  ],
+  "status": "preliminary",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "imaging",
+          "display": "Imaging",
+          "userSelected": false
+        }
+      ],
+      "text": "xu37qsGTCWYzIAcc7yVEGQ=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10393-7",
+        "display": "Factor IX given [Type]",
+        "userSelected": true
+      }
+    ],
+    "text": "WvlNWMuW0JXs3WeVt5/+hw=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "O8vSRBI/J/+PKfivefaYQA=="
+      },
+      "system": "http://projectcrucible.org/XSf1KKMHRCuAtOf+0DnnFg==",
+      "value": "byyBoWMnvzCL88+kgJ+Y9g==",
+      "period": {
+        "start": "2017-06-01T01:37:16.771Z",
+        "end": "2017-06-01T01:37:16.771Z"
+      },
+      "assigner": {
+        "display": "Organization 2YwQ36HbS649jbgaZ6/Mbw=="
+      }
+    },
+    "display": "Group Swx9hw3GE04r2kTCmkjKaA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "Uw6hApdjY7njWVutr2AegQ=="
+      },
+      "system": "http://projectcrucible.org/f0m1jh7rA7i7WJlLJZ4mPQ==",
+      "value": "9pPMcGdJjxonWyRcu8jJIw==",
+      "period": {
+        "start": "2017-06-01T01:37:16.771Z",
+        "end": "2017-06-01T01:37:16.771Z"
+      },
+      "assigner": {
+        "display": "Organization tEsz7ZVYjkzffaGvSUXH+w=="
+      }
+    },
+    "display": "EpisodeOfCare i3k8ncAcxFA4bUAw+PLLmQ=="
+  },
+  "effectiveDateTime": "2017-06-01T01:37:16.771Z",
+  "issued": "2017-06-01T01:37:16.771Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "POuQ+Fa+UNjtR3HX5baW1w=="
+        },
+        "system": "http://projectcrucible.org/pS/RkCnC5bOB1cBURXA6Kg==",
+        "value": "mZka2AKh+RyFUy2snzg4JA==",
+        "period": {
+          "start": "2017-06-01T01:37:16.772Z",
+          "end": "2017-06-01T01:37:16.772Z"
+        },
+        "assigner": {
+          "display": "Organization V6Y/9eif9VwSHE9btfIjZg=="
+        }
+      },
+      "display": "Organization fvsbGcgEEaBsR79YNt6+5w=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.5892399820735622,
+    "comparator": ">",
+    "unit": "txWSFcVJvpe5C1TWF0m3cA==",
+    "system": "http://projectcrucible.org/fB1hTTUxl2LFO3X+3B2D7w==",
+    "code": "vh9aXvcmUD9BzQl74euC6A=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "not-asked",
+        "display": "Not Asked",
+        "userSelected": false
+      }
+    ],
+    "text": "yKm6NEuK8LM619gWiQL+VA=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "POS",
+        "display": "Positive",
+        "userSelected": true
+      }
+    ],
+    "text": "ass9Ng9I7qRLjhcBvKe9zw=="
+  },
+  "comment": "YPGSawJPsQDt3psnpqyiXA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "9379006",
+        "display": "All permanent teeth",
+        "userSelected": false
+      }
+    ],
+    "text": "RLUlwUzOsspRL+ihUfbmlQ=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "257811002",
+        "display": "External drainage",
+        "userSelected": true
+      }
+    ],
+    "text": "KnZYsp77JdPosGSVFVC/YA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "cK7ucvZPxg95t81GXrMg3w=="
+      },
+      "system": "http://projectcrucible.org/K8h7JPz56FEi/tJyA7J46A==",
+      "value": "mlcgdw9npWYSoKa6OEfBaw==",
+      "period": {
+        "start": "2017-06-01T01:37:16.818Z",
+        "end": "2017-06-01T01:37:16.818Z"
+      },
+      "assigner": {
+        "display": "Organization jNLv4TvuW9ckbW6QWBk1dA=="
+      }
+    },
+    "display": "Specimen qMhbSGYwVnp1JEGzVieiog=="
+  },
+  "device": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "EmSBde0aSqnqUDg8KaEK/A=="
+      },
+      "system": "http://projectcrucible.org/fdc1MKxUcBs0I2zINeqdPQ==",
+      "value": "6FE9ECWHqQd28tP6eWgHEw==",
+      "period": {
+        "start": "2017-06-01T01:37:16.818Z",
+        "end": "2017-06-01T01:37:16.818Z"
+      },
+      "assigner": {
+        "display": "Organization Xs2NYQmNl6NKuCAonHEHtQ=="
+      }
+    },
+    "display": "DeviceMetric UbHeF5DGxzCya48b9lu02w=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.26594386978321394,
+        "comparator": "<=",
+        "unit": "ZLEOuxYX9ltSS7Fbeb1XIA==",
+        "system": "http://projectcrucible.org/+oKarg3AEZfLI6wIM8e+Aw==",
+        "code": "0qFPxWefkEidlUJg+uOc5w=="
+      },
+      "high": {
+        "value": 0.9769323863115801,
+        "comparator": ">",
+        "unit": "I8/b3rK86YO5hsP2BKkR1Q==",
+        "system": "http://projectcrucible.org/zn0xfAhhl+AQ/8UHkGvxaw==",
+        "code": "xBVjZIMTdvIerG0Qhtgs5A=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "pre",
+            "display": "Pre Therapeutic Desired Level",
+            "userSelected": false
+          }
+        ],
+        "text": "E+tNCyOBPSpQVSzLjFOe1w=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1534-7",
+              "userSelected": true
+            }
+          ],
+          "text": "4XOwqu+Y23XLNyizVG7itg=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.5099391411931775,
+          "comparator": ">=",
+          "unit": "8bkUcPcvR77A0uL87DwlNA==",
+          "system": "http://projectcrucible.org/bqgkjESiY6402aplfY1Zeg==",
+          "code": "nDcYFu4smj0XqkiKE/MkQA=="
+        },
+        "high": {
+          "value": 0.9451378941849835,
+          "comparator": "<",
+          "unit": "UBgbbeu1lg2AUYG6kaQ2Ow==",
+          "system": "http://projectcrucible.org/KWJYlQ3dTeFokD2Gq67kxg==",
+          "code": "gFs1To560P4lRF3AS8qC+g=="
+        }
+      },
+      "text": "b1B3oDxu+CcUmIIUkT4R9g=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/JC4lolTpbAjDUOwPPRXxgw==",
+          "value": "GiWxCtQDtm99Eos41EIprQ=="
+        },
+        "display": "Sequence Ww1DBjNIfww7vp0BHEMxFg=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10846-4",
+            "display": "Borrelia burgdorferi DNA [Presence] in Blood by Probe with amplification",
+            "userSelected": false
+          }
+        ],
+        "text": "/6fwITLC4WioxrqyMvoHhw=="
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://projectcrucible.org/0qO3NT5TEBPEwMxzNJU6bw==",
+            "code": "XqZcGFunhFtu+HZVwGUu9Q==",
+            "display": "kR+BB8xZcI5rQNWyyBFVFA==",
+            "userSelected": false
+          }
+        ],
+        "text": "IE77kTTG8EJtlPjImDvuvQ=="
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "unknown",
+            "display": "Unknown",
+            "userSelected": false
+          }
+        ],
+        "text": "Q/cQzgDZDI35sCgzQ3bueg=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "<",
+            "display": "Off scale low",
+            "userSelected": true
+          }
+        ],
+        "text": "VMG/FMa8E4kv71uhfJDeTw=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.1318343583901752,
+            "comparator": "<",
+            "unit": "f2/b6i8jmk3NMYlJsLA4dg==",
+            "system": "http://projectcrucible.org/WKq7BdIHz7x0hp9g94rnkA==",
+            "code": "Itd52VOH+fVZuYFcf3W5HQ=="
+          },
+          "high": {
+            "value": 0.88679768398847,
+            "comparator": "<",
+            "unit": "kVgMo4W4JYcUGrbOUPo/iQ==",
+            "system": "http://projectcrucible.org/Kz7E08op8F7mVoZ9cMbt5A==",
+            "code": "s90ZcmrCCu1YHxJHijL8AA=="
+          },
+          "type": {
+            "text": "fjwr86n1DddTCniC6cwtLQ=="
+          },
+          "appliesTo": [
+            {
+              "text": "u8009/ETh1UaHVlrmF4qqA=="
+            }
+          ],
+          "text": "NC45advmHu2eAI3cRvI91Q=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "191909",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-07-19T16:44:38.877-04:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10524-7",
+        "display": "Cyto Cervix"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-04-01T10:00:00",
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "17621005",
+        "display": "normal"
+      }
+    ]
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "NA"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "211778",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-23T08:57:14.881-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "cs",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">XUJ+F1u5Q1Kua/FW57bc7w==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "UDI",
+            "display": "Universal Device Identifier",
+            "userSelected": false
+          }
+        ],
+        "text": "+ERrIAVlJdk2+Q1SMFq7pA=="
+      },
+      "system": "http://projectcrucible.org/OJ/x4hZzN23ME+W9ZcaQbQ==",
+      "value": "+kDge//D22XbcshnnuixjA==",
+      "period": {
+        "start": "2017-08-23T08:57:13.132Z",
+        "end": "2017-08-23T08:57:13.132Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/T9aLQmP0vhGhfk3OYXm68A==",
+          "value": "NqOStn2qIjZ711CYLNDrCg=="
+        },
+        "display": "Organization pXjMpk1HTj11o45XZPlTTQ=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "km6Eew2n91c/FDJV08FIpw=="
+        },
+        "system": "http://projectcrucible.org/SFKFRfsM+CelMePHy9NYwQ==",
+        "value": "wmqsAIqU7fiKMbciMM8XCw==",
+        "period": {
+          "start": "2017-08-23T08:57:13.133Z",
+          "end": "2017-08-23T08:57:13.133Z"
+        },
+        "assigner": {
+          "display": "Organization gY/KtzTMRDcTnGs4/H6zrg=="
+        }
+      },
+      "display": "ImmunizationRecommendation lU6Tr7cIQ9sS6kUIllnxKw=="
+    }
+  ],
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "social-history",
+          "display": "Social History",
+          "userSelected": false
+        }
+      ],
+      "text": "W2I7hWywDByBxTWG4wYsGw=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10685-6",
+        "display": "Hydatid cyst identified in Lung tissue by Wet preparation",
+        "userSelected": true
+      }
+    ],
+    "text": "BdUQazfMrqW0+/XMf8HD1A=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "DQ0BrCC1mI/p+wRaLkoM4g=="
+      },
+      "system": "http://projectcrucible.org/I3FydWPhyUwGLRFi5PJwKw==",
+      "value": "7ICOcI7IkY2mtTA3XzWOxw==",
+      "period": {
+        "start": "2017-08-23T08:57:13.136Z",
+        "end": "2017-08-23T08:57:13.136Z"
+      },
+      "assigner": {
+        "display": "Organization WtJLLBg/clQJi2ngFPm6fw=="
+      }
+    },
+    "display": "Location S43aIfUUcqPBqL1X1RPzrQ=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "w1MzAxbooXTrV6xb5QmRTg=="
+      },
+      "system": "http://projectcrucible.org/lptTgANyFpVWLzVizEIUnw==",
+      "value": "HcW+r3c3inABZBMvt1n5PA==",
+      "period": {
+        "start": "2017-08-23T08:57:13.137Z",
+        "end": "2017-08-23T08:57:13.137Z"
+      },
+      "assigner": {
+        "display": "Organization J2Aau3mDOHvdtubvXI4Rkg=="
+      }
+    },
+    "display": "EpisodeOfCare jHE9U4muSHuCnujbEjl/1g=="
+  },
+  "effectivePeriod": {
+    "start": "2017-08-23T08:57:13.137Z",
+    "end": "2017-08-23T08:57:13.137Z"
+  },
+  "issued": "2017-08-23T08:57:13.137Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "q8KIIh2qzNGZV4KVOA8skA=="
+        },
+        "system": "http://projectcrucible.org/z7dPwm/g1s51ePObwuTRUA==",
+        "value": "e98MNPmwbtlVcgYAc+u3qw==",
+        "period": {
+          "start": "2017-08-23T08:57:13.137Z",
+          "end": "2017-08-23T08:57:13.137Z"
+        },
+        "assigner": {
+          "display": "Organization UEvcOdTrVGQ/UgQNieG2XQ=="
+        }
+      },
+      "display": "Practitioner t2jP13wIIAxD/LBiEIKVFA=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/GkeXU/ViImV9dzWk+tFHYw==",
+        "code": "GBkStmB951YmYI4AVbm0Kg==",
+        "display": "RMhcWbe250sax+Yk91+eLA==",
+        "userSelected": false
+      }
+    ],
+    "text": "Lt6QM0d1YNxFlfbhYG1J0w=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "not-performed",
+        "display": "Not Performed",
+        "userSelected": true
+      }
+    ],
+    "text": "6dV0qFiW1qlEXjKpMZQn5A=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "HU",
+        "display": "Very high",
+        "userSelected": false
+      }
+    ],
+    "text": "HBzRHtzHzRBXX8AOHH0ePg=="
+  },
+  "comment": "q2TmqjDjFUvf5QSItq+c5Q==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "4812002",
+        "display": "Anterior tibial compartment",
+        "userSelected": true
+      }
+    ],
+    "text": "ZF8zNBImmF3ihDQQlGPapA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "313281003",
+        "display": "Forward sliding",
+        "userSelected": false
+      }
+    ],
+    "text": "92dTOMueQkWmehc1Kr7oyw=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "uyPMBJzmYeKgedk5rjAPCg=="
+      },
+      "system": "http://projectcrucible.org/Y0ZGmcSV/7Td+6n30/GzCA==",
+      "value": "vk/zV0WzBeHwAxyQWboLeg==",
+      "period": {
+        "start": "2017-08-23T08:57:13.162Z",
+        "end": "2017-08-23T08:57:13.162Z"
+      },
+      "assigner": {
+        "display": "Organization XNLzzxWU4Xl7b79/2YSnIw=="
+      }
+    },
+    "display": "Specimen v0kMKfdaRoqLL42O15eSmw=="
+  },
+  "device": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "IuvM0chxq+JCcspO/f1srw=="
+      },
+      "system": "http://projectcrucible.org/2p/mvIvFBF98z5POZYkawg==",
+      "value": "alf+Y64RXVA4VM58LVQ4Gg==",
+      "period": {
+        "start": "2017-08-23T08:57:13.163Z",
+        "end": "2017-08-23T08:57:13.163Z"
+      },
+      "assigner": {
+        "display": "Organization lQZ6Qc714B58ooD2hLOXsA=="
+      }
+    },
+    "display": "DeviceMetric RgoOjN0sqlwjzB1Zyp03+g=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.5986948194496232,
+        "comparator": "<",
+        "unit": "KmawJFmsF9tbbOfu4v0vQg==",
+        "system": "http://projectcrucible.org/zYfLzVHFzfpZj2FhIWVsDA==",
+        "code": "ovSIlUit3SGBk9UMmzc0LA=="
+      },
+      "high": {
+        "value": 0.2908258232956441,
+        "comparator": ">=",
+        "unit": "A7pp1F1+t6f5gqJ9cucBpA==",
+        "system": "http://projectcrucible.org/u0Ee/GoaKni0FAu38hWmMw==",
+        "code": "H1/yZ58pP55GkXZd2PUwog=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "normal",
+            "display": "Normal Range",
+            "userSelected": false
+          }
+        ],
+        "text": "7pLunzMBYFYXcPc7M+BEhw=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": false
+            }
+          ],
+          "text": "nr63s+qSqUWSgh9HuLhZiA=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.1071818744609273,
+          "comparator": "<",
+          "unit": "rCVMlRPB7DeWmCvDxMzByg==",
+          "system": "http://projectcrucible.org/2nUifk8YibFUePGPCeqf5Q==",
+          "code": "rv89yoeiWLKlPyQyJTstbA=="
+        },
+        "high": {
+          "value": 0.2513254029061486,
+          "comparator": "<",
+          "unit": "5OskC1zZIrO2dRRNrl367Q==",
+          "system": "http://projectcrucible.org/79vhu9jUKNAdB9LKWVwkNg==",
+          "code": "zPsaU7zP5khkB8h2Rge8oQ=="
+        }
+      },
+      "text": "udZtq/aD2M7bkvDg5i1jtA=="
+    }
+  ],
+  "related": [
+    {
+      "type": "qualified-by",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/YzvmIhXbXYUlo3SFZCXi5A==",
+          "value": "vLFBVzqLlsoFrTWoiOwVJQ=="
+        },
+        "display": "Observation +80Jlq+lsmr09Wd8lK6ITg=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10167-5",
+            "display": "History of Surgical procedures Narrative",
+            "userSelected": true
+          }
+        ],
+        "text": "84VVfGhdyWeWgdyhE1dl4w=="
+      },
+      "valueRatio": {
+        "numerator": {
+          "value": 0.33775640972340626,
+          "comparator": "<",
+          "unit": "SMsI4YwGEXaNvUtkH//44Q==",
+          "system": "http://projectcrucible.org/3myVfkqHcDhx8JZNmHfVMQ==",
+          "code": "Tu4GKsrBq/3DZLpkG4mb/w=="
+        },
+        "denominator": {
+          "value": 0.3625821517278158,
+          "comparator": "<",
+          "unit": "NGxhU/l070Vvv2YD7q4bBg==",
+          "system": "http://projectcrucible.org/+8rg7PYtZcZeG5DuKWBPVA==",
+          "code": "Wyohth5wjxrNdNWzQ2Hi4w=="
+        }
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "masked",
+            "display": "Masked",
+            "userSelected": true
+          }
+        ],
+        "text": "c+L4pLuLCIG+AnmKJjGaWQ=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "null",
+            "display": "No range defined, or normal ranges don't apply",
+            "userSelected": false
+          }
+        ],
+        "text": "ASPX3Z5L4teHnMUlz7fovg=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.35156331651379313,
+            "comparator": "<=",
+            "unit": "UVh8Qe7UPrOiu1YdFB1AgQ==",
+            "system": "http://projectcrucible.org/sXV9XUzBCNv7TR8TY7rCIQ==",
+            "code": "iatmS9BIo+O6p+gb4kV7DQ=="
+          },
+          "high": {
+            "value": 0.16603300198027404,
+            "comparator": "<=",
+            "unit": "AB1BVH1A8NEJsFUTyhFgQw==",
+            "system": "http://projectcrucible.org/tToJxz76AaNInUjgzVss2w==",
+            "code": "dz4A9ktYkkAfuLliKo5XNQ=="
+          },
+          "type": {
+            "text": "RUeYPPE2CAXA3TyE+SXiig=="
+          },
+          "appliesTo": [
+            {
+              "text": "5+SAZBIgWAIr3TZTXiLdXQ=="
+            }
+          ],
+          "text": "lgjAnsS4FMWo8QexZ+OzAQ=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "72581",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-04-21T12:38:09.820-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "te",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Qkxng3+Yk0hZq/2fZMK1vg==</div>"
+  },
+  "identifier": [
+    {
+      "use": "secondary",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SB",
+            "display": "Social Beneficiary Identifier",
+            "userSelected": true
+          }
+        ],
+        "text": "c8uRY76fNwzhREwmfBsANQ=="
+      },
+      "system": "http://projectcrucible.org/Fy4Mxtm2TMxGIvNn1K9/zg==",
+      "value": "NPkz0W+k1mvkP1JvDpQN1w==",
+      "period": {
+        "start": "2017-04-21T12:38:09.360Z",
+        "end": "2017-04-21T12:38:09.360Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/jcgMpvvMhnKt6pY6HpKz4g==",
+          "value": "3TAk5Nuk+pujz7qn+xOVqA=="
+        },
+        "display": "Organization w1K4HVdNqs7Qbz8R0LH6JA=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "//LqMlyA14ZA0ukoBttRKQ=="
+        },
+        "system": "http://projectcrucible.org/tfyHqqRfq281nIFa3LKcRQ==",
+        "value": "uT0NyFWpP9Z3ZOBbSYJJvQ==",
+        "period": {
+          "start": "2017-04-21T12:38:09.361Z",
+          "end": "2017-04-21T12:38:09.361Z"
+        },
+        "assigner": {
+          "display": "Organization TjFX1g/OCA87uMNjQR4fDg=="
+        }
+      },
+      "display": "NutritionOrder zS6RGdLQEly+/m6+6gUNxQ=="
+    }
+  ],
+  "status": "entered-in-error",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "exam",
+          "display": "Exam",
+          "userSelected": false
+        }
+      ],
+      "text": "JIBlVVrksTjHG5nEPLm+3Q=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10694-8",
+        "display": "Naegleria sp identified in Tissue by Organism specific culture",
+        "userSelected": true
+      }
+    ],
+    "text": "ZfdsZP6f3GNETYLpPx5Qxw=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "GKbCe5rEZ2QOi/BfyZCNMw=="
+      },
+      "system": "http://projectcrucible.org/hXTjHRXYiA/JGBvLZctAEA==",
+      "value": "zFZW2vYm+LV+Vc96njTg+Q==",
+      "period": {
+        "start": "2017-04-21T12:38:09.367Z",
+        "end": "2017-04-21T12:38:09.367Z"
+      },
+      "assigner": {
+        "display": "Organization PBqzdIH7KFv9LUygnewPWA=="
+      }
+    },
+    "display": "Location xdoq+TGyd0dpmXHts8saEA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "f3mNZSYQUm+ePlLRsz7ixg=="
+      },
+      "system": "http://projectcrucible.org/4nzTSgNMQPhcefMIvZldQQ==",
+      "value": "RKkFI21A2lnja8yW0NWssQ==",
+      "period": {
+        "start": "2017-04-21T12:38:09.368Z",
+        "end": "2017-04-21T12:38:09.368Z"
+      },
+      "assigner": {
+        "display": "Organization Q7V2Y2J13X1nV5rzMVDJ2Q=="
+      }
+    },
+    "display": "Encounter uF5Qi7/F1WF6qawm2NPL4w=="
+  },
+  "effectiveDateTime": "2017-04-21T12:38:09.368Z",
+  "issued": "2017-04-21T12:38:09.368Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "Vi+1zMomPb1Li7lnzcm1pA=="
+        },
+        "system": "http://projectcrucible.org/PWuDe9jYD7V60XrGfz9nIg==",
+        "value": "dg7BlimKXwb2Vr2SlyfJ5g==",
+        "period": {
+          "start": "2017-04-21T12:38:09.368Z",
+          "end": "2017-04-21T12:38:09.368Z"
+        },
+        "assigner": {
+          "display": "Organization XcuchzByEtLQkekAlRhy8w=="
+        }
+      },
+      "display": "Organization 10mxHqiX9zDwv1cICRIAWg=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/bXVhdsdsXH0PuVwhE1lbIQ==",
+        "code": "5Y+eioyDxrYexKPjgKvP/g==",
+        "display": "9rkUbkJ7c9gtXn043olvwg==",
+        "userSelected": true
+      }
+    ],
+    "text": "MxQiv6aWySM5p2a0eqxOfg=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "masked",
+        "display": "Masked",
+        "userSelected": true
+      }
+    ],
+    "text": "grkalEbbdWm50Ps0tb/BZg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "AC",
+        "display": "Anti-complementary substances present",
+        "userSelected": false
+      }
+    ],
+    "text": "QQDMxaYUj2q7F1Pv46DTfg=="
+  },
+  "comment": "p6H0eDQ4J4QTqqftke29RA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "5769004",
+        "display": "Endocervical epithelium",
+        "userSelected": true
+      }
+    ],
+    "text": "+MUNXd2v9vZVtA8uMBbTyg=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "264279007",
+        "display": "Hydroxylamine method",
+        "userSelected": false
+      }
+    ],
+    "text": "l7SX4kNuCg1rmuOlCjEXRw=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "6CcMQ53ldDnu3iBziAhsCg=="
+      },
+      "system": "http://projectcrucible.org/pGz2ApM9RyQGOOab5ILWuQ==",
+      "value": "GKTin7hDNoBvWEnblyMgZA==",
+      "period": {
+        "start": "2017-04-21T12:38:09.408Z",
+        "end": "2017-04-21T12:38:09.408Z"
+      },
+      "assigner": {
+        "display": "Organization FLVBS4CTYVzKZ+9tk4/9ag=="
+      }
+    },
+    "display": "Specimen V87Dfp0jiDrgTzz3echVpw=="
+  },
+  "device": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "azZNj7Z3WKa6RMMTq7zI3w=="
+      },
+      "system": "http://projectcrucible.org/Wja42d9V70T1Ev/5fq/rpA==",
+      "value": "MZYbp+oA1TXKQqLwOGZOhQ==",
+      "period": {
+        "start": "2017-04-21T12:38:09.408Z",
+        "end": "2017-04-21T12:38:09.408Z"
+      },
+      "assigner": {
+        "display": "Organization bP/M6152GxEDg+lbBpODzA=="
+      }
+    },
+    "display": "DeviceMetric NKDvrmnFlU9OsMnqE1QAmw=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.1943917377246287,
+        "comparator": ">=",
+        "unit": "G1L64IxrYGiWMyLfzJkGPQ==",
+        "system": "http://projectcrucible.org/AGqRT2I/n6tsTCVqjzZEVw==",
+        "code": "13ztP7Tr2+fn35OzTv66cA=="
+      },
+      "high": {
+        "value": 0.4342862585168902,
+        "comparator": ">",
+        "unit": "jrOJOPET56ephKvn/GP3xQ==",
+        "system": "http://projectcrucible.org/8FceYF0WZMqKxN3vyTWzIg==",
+        "code": "sUh8KmYT3BDIG9ev1xsQzQ=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "therapeutic",
+            "display": "Therapeutic Desired Level",
+            "userSelected": false
+          }
+        ],
+        "text": "SQaSXvF9l3jw4hG2PuJdEA=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "248152002",
+              "display": "Female",
+              "userSelected": false
+            }
+          ],
+          "text": "JqjDzkA3p7/QBBwZ6PdV+g=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.06137906185677133,
+          "comparator": ">=",
+          "unit": "ExskrK/glm/Crkf17lLzlA==",
+          "system": "http://projectcrucible.org/HS1JQLfIcPCV6FBu7K7WAA==",
+          "code": "HjaI6VolnG19x6y6HcJqYQ=="
+        },
+        "high": {
+          "value": 0.853416080439539,
+          "comparator": "<",
+          "unit": "PU6S6QE5ycdhUGAe6lmz9A==",
+          "system": "http://projectcrucible.org/d+tTeJo8SuF3+8UVS6qJOw==",
+          "code": "Rs7kEpviDx5whKJ17uIEoA=="
+        }
+      },
+      "text": "v1sL6zGYBEc6p9aBpGnAFQ=="
+    }
+  ],
+  "related": [
+    {
+      "type": "has-member",
+      "target": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/orF0i8Fa5JtHSrNe3c398w==",
+          "value": "p2AKqP4dXdNXf56SXWVzxA=="
+        },
+        "display": "QuestionnaireResponse p8cOaH1CPrb0zv8XuUP8qQ=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10656-7",
+            "display": "Coccidia identified in Stool by Acid fast stain",
+            "userSelected": false
+          }
+        ],
+        "text": "TDhQZJ2gc326hUsx4Qv2yQ=="
+      },
+      "valueDateTime": "2017-04-21T12:38:09.423Z",
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "astext",
+            "display": "As Text",
+            "userSelected": true
+          }
+        ],
+        "text": "jZNx6oIqLM0bYm0As3iX8w=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "HU",
+            "display": "Very high",
+            "userSelected": true
+          }
+        ],
+        "text": "bbmhObbO0xs1+oaS6LzHiw=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.8568629397799344,
+            "comparator": ">",
+            "unit": "RS+cWG/UX8/lpRC5NjbjTQ==",
+            "system": "http://projectcrucible.org/ncP1PS4GyK4KmQuv6mfnHA==",
+            "code": "Vf6AzETIIrbBCuJIFJ/EqA=="
+          },
+          "high": {
+            "value": 0.8437080514896338,
+            "comparator": "<=",
+            "unit": "HU3BGLr0xM1QO9HWlajzDw==",
+            "system": "http://projectcrucible.org/1crret5ShKHZlRuAlj+FXQ==",
+            "code": "Rwb3cyLDAPy3A0U2+wKbog=="
+          },
+          "type": {
+            "text": "Dyrt5ieY9zAQ1NkU9fI7OA=="
+          },
+          "appliesTo": [
+            {
+              "text": "nRszdVSmpf5+iUDGj+zCMg=="
+            }
+          ],
+          "text": "bQEhgdfCbt48/jiKJj9sZg=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "91704",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-05-13T02:05:04.722-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "en",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">8O1iLoQcv0niRQxA3wMT4g==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SNO",
+            "display": "Serial Number",
+            "userSelected": false
+          }
+        ],
+        "text": "Q/A3Rt01VcdYWKHgQ0bHiA=="
+      },
+      "system": "http://projectcrucible.org/9+tQXXqimreU54snP9Y9og==",
+      "value": "gLEB+CDhXviy7TBY7fjqUQ==",
+      "period": {
+        "start": "2017-05-13T02:05:04.484Z",
+        "end": "2017-05-13T02:05:04.484Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/fxDeLddEKvg82H1h4h1BKA==",
+          "value": "9sMgxwWezUzLgPj44TTxmQ=="
+        },
+        "display": "Organization malPH9gDnPHveffv+D3PUQ=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "rSkZUV+TXAUdQMmr7fPKLA=="
+        },
+        "system": "http://projectcrucible.org/On9KY6Ve96uR64slhVUs2g==",
+        "value": "se60kfji3KhnsP3U2o3JDg==",
+        "period": {
+          "start": "2017-05-13T02:05:04.495Z",
+          "end": "2017-05-13T02:05:04.495Z"
+        },
+        "assigner": {
+          "display": "Organization 4rqoMzaJ9PeFYurPHitSKQ=="
+        }
+      },
+      "display": "ReferralRequest WwY7n0dRKL2/bkQvR1o8RQ=="
+    }
+  ],
+  "status": "unknown",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory",
+          "userSelected": false
+        }
+      ],
+      "text": "gq/E6INiKriZ9+VGWIziBg=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10737-5",
+        "display": "Virus identified in Stool by Electron microscopy",
+        "userSelected": false
+      }
+    ],
+    "text": "71cXt7WF1Mrbq2b0cTp19w=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "xStNA9I5CvVfmtzIaHQwBg=="
+      },
+      "system": "http://projectcrucible.org/Zx6GODvn537sFTOgZbz9+Q==",
+      "value": "UN304R16BK8X2Px+FJmqQQ==",
+      "period": {
+        "start": "2017-05-13T02:05:04.500Z",
+        "end": "2017-05-13T02:05:04.500Z"
+      },
+      "assigner": {
+        "display": "Organization b6Va/uQN35pj1ft31yS6Pg=="
+      }
+    },
+    "display": "Patient 4CdpDTRXMAYb6sAc7uh+zw=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "JP/Xcl6PvZLTcL0hxgO9Ow=="
+      },
+      "system": "http://projectcrucible.org/LIz8msB77CrxobNg9o2Lug==",
+      "value": "Yf4mgYSYAceGqbDaIAWtWw==",
+      "period": {
+        "start": "2017-05-13T02:05:04.500Z",
+        "end": "2017-05-13T02:05:04.500Z"
+      },
+      "assigner": {
+        "display": "Organization LMlcG8ixK4kf6dsRJVYSyw=="
+      }
+    },
+    "display": "EpisodeOfCare Lh6T4I+QxkZz0nm+UZkI/g=="
+  },
+  "effectiveDateTime": "2017-05-13T02:05:04.501Z",
+  "issued": "2017-05-13T02:05:04.501Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "M/zBI8/c7rG/aNvnAnZcPg=="
+        },
+        "system": "http://projectcrucible.org/k/Mnv6UZ7Fh72S6yN3nOAw==",
+        "value": "qT1lRoT9wbf9rpfimryfwg==",
+        "period": {
+          "start": "2017-05-13T02:05:04.501Z",
+          "end": "2017-05-13T02:05:04.501Z"
+        },
+        "assigner": {
+          "display": "Organization BaSXDYbUrWgJXerTn9zlHA=="
+        }
+      },
+      "display": "Practitioner rgdcqe29oiCjELsPyijzrQ=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.8212833786562862,
+    "comparator": ">",
+    "unit": "It+gQKJsOSbpIT/MRg3riQ==",
+    "system": "http://projectcrucible.org/C+5Ano4Ae0jltZTdyzK8Bw==",
+    "code": "+xDuwhtxlYc2GkbXUyHqtA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "unknown",
+        "display": "Unknown",
+        "userSelected": false
+      }
+    ],
+    "text": "wtb9iVtIT/gW34tXAtFTGg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "MS",
+        "display": "Moderately susceptible. Indicates for microbiology susceptibilities only.",
+        "userSelected": true
+      }
+    ],
+    "text": "RZFS7cCK0hAasEVnuHQbog=="
+  },
+  "comment": "dIP0hH1c+R2z1T9Rp4CacA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "5501001",
+        "display": "Hyaloid artery",
+        "userSelected": false
+      }
+    ],
+    "text": "Qpg66aK179lSNwkr5Sgjhg=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "360161008",
+        "display": "Induction - action",
+        "userSelected": false
+      }
+    ],
+    "text": "R93QE0orswrY+3RSzb290w=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "3S4jyI5aLSg1E2kMxfmUtg=="
+      },
+      "system": "http://projectcrucible.org/fE9UgiP5Z2ny58BA65zJvQ==",
+      "value": "Z3m/xrdDtFPt2byIcuk9+A==",
+      "period": {
+        "start": "2017-05-13T02:05:04.587Z",
+        "end": "2017-05-13T02:05:04.587Z"
+      },
+      "assigner": {
+        "display": "Organization G7yCk2g1J7qWMf2N5kYrOQ=="
+      }
+    },
+    "display": "Specimen vSP8ZeyOsdvvGhE9eDXT5g=="
+  },
+  "device": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "Q6R8MgPCLBlSaxIIhao7xQ=="
+      },
+      "system": "http://projectcrucible.org/iqOVDfK4hocrgCWFAiJE8Q==",
+      "value": "DTUNqOSQQ9jsKVS/njyfMg==",
+      "period": {
+        "start": "2017-05-13T02:05:04.587Z",
+        "end": "2017-05-13T02:05:04.587Z"
+      },
+      "assigner": {
+        "display": "Organization zZEPrSrLH40mg34aDJbXow=="
+      }
+    },
+    "display": "Device FRgZ8yuxk3kH0DnEMSQ+ww=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.6137283990163821,
+        "comparator": "<=",
+        "unit": "KSKOb1A83GpXvmenWrD0Ng==",
+        "system": "http://projectcrucible.org/xBru4RvLfKFZ7Wu9FO+hKw==",
+        "code": "qIUWiaBXQ1U7oa1DtVPn4g=="
+      },
+      "high": {
+        "value": 0.6881547593189465,
+        "comparator": ">",
+        "unit": "0KTvI8TaP81XOv8WLX53CQ==",
+        "system": "http://projectcrucible.org/5IPy7ZA1NL/Aw02CKPRF5w==",
+        "code": "SYqAoDa0nJezGD3sjVM5ng=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "pre-puberty",
+            "display": "Pre-Puberty",
+            "userSelected": true
+          }
+        ],
+        "text": "bxOOsuDE7Gll8j5T80+i8Q=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": false
+            }
+          ],
+          "text": "iCGAImQIKso3dpaN8Y3xQQ=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.5876030673114231,
+          "comparator": ">=",
+          "unit": "hlEq9Qre7aKOZEUe6U57iw==",
+          "system": "http://projectcrucible.org/ds+F0X4yNcbBBcc2LbnFbQ==",
+          "code": "n9AfKvlV1SBl61pkfC+K+Q=="
+        },
+        "high": {
+          "value": 0.9416435769050658,
+          "comparator": ">",
+          "unit": "AI7u3kSj8LMnxImNc1Ovrw==",
+          "system": "http://projectcrucible.org//ihHJ6E0A+Ug975XrbTqHg==",
+          "code": "DiOO0Eq+TloXD7IJgpjblg=="
+        }
+      },
+      "text": "6XGvPMONiXxUwrMvryqZag=="
+    }
+  ],
+  "related": [
+    {
+      "type": "replaces",
+      "target": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/wVN8O+ZBrKtGuQuDmFT8bQ==",
+          "value": "pIMZCU3P8t8yM1MQv7KEWg=="
+        },
+        "display": "Sequence /tyI9nnPFFfhqpBNfKeXhw=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10793-8",
+            "display": "Microscopic observation [Identifier] in Tissue by Methyl green stain",
+            "userSelected": false
+          }
+        ],
+        "text": "1wPn1Y/C1qUNNDDcP4Nzuw=="
+      },
+      "valueQuantity": {
+        "value": 0.29549646610405766,
+        "comparator": ">=",
+        "unit": "bY7JWJ6Hz8TpYQfN09vjMg==",
+        "system": "http://projectcrucible.org/iR+1qX3Z4gSlDgU6WipKsg==",
+        "code": "gkeSwfo3UsnMlqWy4yPbQw=="
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "not-asked",
+            "display": "Not Asked",
+            "userSelected": true
+          }
+        ],
+        "text": "W/sBscTVxfSFaHrQ+4f7Ow=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "S",
+            "display": "Susceptible",
+            "userSelected": false
+          }
+        ],
+        "text": "CYrtYdankRQ7Xp9SC0kL6A=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.5850567334084946,
+            "comparator": "<",
+            "unit": "ltvOAu/r0gX6Z+rziAB45g==",
+            "system": "http://projectcrucible.org/Ss7ezPCxbxdVheRJi1Q7cA==",
+            "code": "tci8k6ppO7pyeyHISHrptA=="
+          },
+          "high": {
+            "value": 0.32883992965799,
+            "comparator": ">=",
+            "unit": "CY0XES1foWGEqwXTed5JKw==",
+            "system": "http://projectcrucible.org/kF+43wdIPht5mO8DdraK9A==",
+            "code": "rIQBw7NMa8Okfpc87yJsBA=="
+          },
+          "type": {
+            "text": "WwyNwOfOve6L8lVVMXtmsA=="
+          },
+          "appliesTo": [
+            {
+              "text": "cVOtaIcGpLjv9PnyGnh/lg=="
+            }
+          ],
+          "text": "Fv58KVrF1XVGhqzAEpq0VA=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "224544",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-09-13T01:52:09.375-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "hi",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">G8/kUPOgj2es13C2lHPfkQ==</div>"
+  },
+  "identifier": [
+    {
+      "use": "secondary",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "UDI",
+            "display": "Universal Device Identifier",
+            "userSelected": false
+          }
+        ],
+        "text": "FdZ2LX0Ply7Sk2KQx+dOfw=="
+      },
+      "system": "http://projectcrucible.org/vzIIxr7R2CDHcTBppEqGOg==",
+      "value": "+udryFl30sbUfF3BQFzwjA==",
+      "period": {
+        "start": "2017-09-13T01:52:09.064Z",
+        "end": "2017-09-13T01:52:09.064Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/3wa0ObhqUGg7Jxz+Hxe+zQ==",
+          "value": "FX33QOSWp9a1Nsl+HvpgWg=="
+        },
+        "display": "Organization tSegIi0s1EoM10ORKQwcDg=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "PSyfxo6y/Evn2khegSAzFg=="
+        },
+        "system": "http://projectcrucible.org/lVbg1P467DsAyCMU1lVuAw==",
+        "value": "WKtGr2ksDSNLab6DiyyFqA==",
+        "period": {
+          "start": "2017-09-13T01:52:09.065Z",
+          "end": "2017-09-13T01:52:09.065Z"
+        },
+        "assigner": {
+          "display": "Organization injZkUkL5BbSToyg8YLOww=="
+        }
+      },
+      "display": "NutritionOrder cY1J5DBOhttwHkLeyZQnmg=="
+    }
+  ],
+  "status": "entered-in-error",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "therapy",
+          "display": "Therapy",
+          "userSelected": false
+        }
+      ],
+      "text": "EDCy0l1FZGkwe8uVDnrruQ=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10802-7",
+        "display": "Microscopic observation [Identifier] in Tissue by Prussian blue stain",
+        "userSelected": false
+      }
+    ],
+    "text": "oJ/W7MfLRrpERx4hEHU5SQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "/m62N2/npPXwRjIoR3eLog=="
+      },
+      "system": "http://projectcrucible.org/ZqjmdxYBt7wMRRb9CVr6aw==",
+      "value": "ooEEv/dfnmTnCp5QYgk0fQ==",
+      "period": {
+        "start": "2017-09-13T01:52:09.070Z",
+        "end": "2017-09-13T01:52:09.070Z"
+      },
+      "assigner": {
+        "display": "Organization FwV1vK+/BhT43kz+J6UtDg=="
+      }
+    },
+    "display": "Patient aMfKXfBljJUX1/nX/xVJqA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "R4HrpQtehSa/KPt38aNdEg=="
+      },
+      "system": "http://projectcrucible.org/GYI7PG8gUPyuLuUtUu76kA==",
+      "value": "uBT9aM1OaRoQnZai1GvCTQ==",
+      "period": {
+        "start": "2017-09-13T01:52:09.071Z",
+        "end": "2017-09-13T01:52:09.071Z"
+      },
+      "assigner": {
+        "display": "Organization PZnhDaPY0TyvZK78LvfkGw=="
+      }
+    },
+    "display": "EpisodeOfCare JdvsvNe0NXASqzuH4I1pyw=="
+  },
+  "effectivePeriod": {
+    "start": "2017-09-13T01:52:09.072Z",
+    "end": "2017-09-13T01:52:09.072Z"
+  },
+  "issued": "2017-09-13T01:52:09.072Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "Xo/7XWfUBLb0zZ3ey9ZMfg=="
+        },
+        "system": "http://projectcrucible.org/cunGlDo7EyCTWOHt4SIs1A==",
+        "value": "iRuMVqK9RaQ/UW47TfTa+g==",
+        "period": {
+          "start": "2017-09-13T01:52:09.073Z",
+          "end": "2017-09-13T01:52:09.073Z"
+        },
+        "assigner": {
+          "display": "Organization enOfsd0JR1+suOeDmO6nNg=="
+        }
+      },
+      "display": "Practitioner SwJI+h/CC5Yps7IVtqZ/9w=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.21995459154460772,
+    "comparator": "<=",
+    "unit": "51Nkie9aRjyhn7vNVZrBNA==",
+    "system": "http://projectcrucible.org/9ipPzWaGv9eO6B/6nQSYcg==",
+    "code": "ury6U2K0MaZNzAAMUkm2NA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "asked",
+        "display": "Asked",
+        "userSelected": false
+      }
+    ],
+    "text": "L5Fb82EE0K5Lih8j1MSRrg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "WR",
+        "display": "Weakly reactive",
+        "userSelected": true
+      }
+    ],
+    "text": "4ftaRHSOYIERrt3mKZZv+Q=="
+  },
+  "comment": "zORDOvnzlFZHW7eX//eBOA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "6544009",
+        "display": "Gastrohepatic ligament",
+        "userSelected": true
+      }
+    ],
+    "text": "GQPgewE7ri7oFXmM0g0glA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "264859009",
+        "display": "Maclure technique",
+        "userSelected": true
+      }
+    ],
+    "text": "dwkHwZC+gkNltx9atRxozA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "yLT4H39MWMZcEZUF/veBSg=="
+      },
+      "system": "http://projectcrucible.org/Od2w7Eto1RMu8gmQaHQ0qw==",
+      "value": "qOaChrLjYtHRlHZKcY5yJw==",
+      "period": {
+        "start": "2017-09-13T01:52:09.118Z",
+        "end": "2017-09-13T01:52:09.118Z"
+      },
+      "assigner": {
+        "display": "Organization kMe6LW2nb5NRrV6h8tuUOg=="
+      }
+    },
+    "display": "Specimen FxAsmLSY1vlqxeTblfonqg=="
+  },
+  "device": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "nhM1P8V/1soZ9XtjQapilg=="
+      },
+      "system": "http://projectcrucible.org/yXJgCMGki5faGvdJ6MfYRg==",
+      "value": "peVaqTu0ujgBhg5pZAP9ZA==",
+      "period": {
+        "start": "2017-09-13T01:52:09.119Z",
+        "end": "2017-09-13T01:52:09.119Z"
+      },
+      "assigner": {
+        "display": "Organization HaNEj4Ru6yayy7neyQfmMA=="
+      }
+    },
+    "display": "Device 4EdFocF1wpbPhfEnwP+8Dg=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.5220932730147991,
+        "comparator": "<",
+        "unit": "4sYALeCW8maVfcUh6eLX3w==",
+        "system": "http://projectcrucible.org/O1o+lOL+GBUTMrxyzG32uA==",
+        "code": "GDDvM1ZThxd0W3q1g9yMcQ=="
+      },
+      "high": {
+        "value": 0.952119800710723,
+        "comparator": ">",
+        "unit": "qWyplg/b/W3Epen2mNmiQg==",
+        "system": "http://projectcrucible.org/3tkvJstUKt+m1AMjZVI/1g==",
+        "code": "5eYD5VzrpDTTdgxLHDa31w=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "luteal",
+            "display": "Luteal",
+            "userSelected": true
+          }
+        ],
+        "text": "6K3cKrVRvKS6bvFhi6q/Dw=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": true
+            }
+          ],
+          "text": "Sq+mjCq3eDnnsJCRKdeRew=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.4410784115519538,
+          "comparator": ">=",
+          "unit": "zmG7Ah0K06JA3mUPas3eAw==",
+          "system": "http://projectcrucible.org/VNqb4OWaJm4LEABv/GfNbA==",
+          "code": "jOJbvf0tfPvf5EDOqnBbwQ=="
+        },
+        "high": {
+          "value": 0.487991427461006,
+          "comparator": ">",
+          "unit": "DvwFXJ/ua+WYN4q2VKAicQ==",
+          "system": "http://projectcrucible.org/YhFgUwu9HJJXP+50v8eV7g==",
+          "code": "g8bKVNOY7w7TiGKxhQzLrg=="
+        }
+      },
+      "text": "Lm3yyMf28ZbVYS7GwKOGlA=="
+    }
+  ],
+  "related": [
+    {
+      "type": "qualified-by",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/Ccg40JseJuQgQ8qyLK24fA==",
+          "value": "wchbxoMeMPyUk5jsHgeZfg=="
+        },
+        "display": "Observation hnvJax1hy3GMES4VGz8Wbg=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10666-6",
+            "display": "Fungus identified in Tissue by Fontana-Masson stain",
+            "userSelected": false
+          }
+        ],
+        "text": "rCm4esZebhTfrLmQQdFxgw=="
+      },
+      "valueTime": "01:52:09",
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "unknown",
+            "display": "Unknown",
+            "userSelected": false
+          }
+        ],
+        "text": "OiVqSl76q6wPWU6blkndwQ=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "POS",
+            "display": "Positive",
+            "userSelected": true
+          }
+        ],
+        "text": "A5OIJPyiSvYISV0me+ygmA=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.21258080845683414,
+            "comparator": ">=",
+            "unit": "dK8rIDQWWnE/shzqjcsDNg==",
+            "system": "http://projectcrucible.org/hJNMVs55s7m2otZuQqM1/Q==",
+            "code": "wYAGk0/haeTEsIG26vUzKA=="
+          },
+          "high": {
+            "value": 0.8455837814100241,
+            "comparator": "<",
+            "unit": "eLndDp4n774vZeeo63khXQ==",
+            "system": "http://projectcrucible.org/2FnrKHiW575xg+8MLJELoA==",
+            "code": "HGZV5KvrKmbcMIOWEsdjnw=="
+          },
+          "type": {
+            "text": "Qj428FOFSoGSDASQuTDSAw=="
+          },
+          "appliesTo": [
+            {
+              "text": "y0jjh6IXbKrPRcBHt0p93g=="
+            }
+          ],
+          "text": "IvIqiysOXzhrfRe+rJlyag=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "188207",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-07-16T11:15:48.672-04:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1314-4",
+        "display": "Rh Ig Scn Bld-Imp"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2011-03-09T10:00:00",
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "260385009",
+        "display": "negative"
+      }
+    ]
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "NA"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "206006",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-16T08:28:38.017-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "5767-9",
+        "display": "Appearance of Urine"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100491"
+  },
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "A",
+        "display": "Abnormal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 5,
+        "unit": "units"
+      },
+      "high": {
+        "value": 34,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "206008",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-16T08:29:42.274-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "5778-6",
+        "display": "Color of Urine"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100491"
+  },
+  "valueQuantity": {
+    "value": 456,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "AA",
+        "display": "Critically abnormal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 54,
+        "unit": "units"
+      },
+      "high": {
+        "value": 530,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+
