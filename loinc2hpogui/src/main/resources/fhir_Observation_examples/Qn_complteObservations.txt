@@ -1,0 +1,5833 @@
+{
+  "resourceType": "Observation",
+  "id": "209849",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-22T09:18:26.021-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "hr",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">07rdqAp8tokmWLgUbYSCaw==</div>"
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "PLAC",
+            "display": "Placer Identifier",
+            "userSelected": true
+          }
+        ],
+        "text": "aItltu7grwRIgwME8HksCQ=="
+      },
+      "system": "http://projectcrucible.org/gRIZISigPfgKOdcZoetawA==",
+      "value": "dgko9tNGKjWS4AHdTKre7Q==",
+      "period": {
+        "start": "2017-08-22T09:18:25.667Z",
+        "end": "2017-08-22T09:18:25.667Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/XB1yG90TukeHTBOK3905nA==",
+          "value": "fTd9hd9KhVBHi+At1JFZQA=="
+        },
+        "display": "Organization QoEpHzfsbhBWL7w5fGDhfA=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "J+ZRC2oSCKRFuwlmbc48rQ=="
+        },
+        "system": "http://projectcrucible.org/kDUpiLxDy0NICX/6xm7/kw==",
+        "value": "5rPK8ibuJveVLRf4+eM3uw==",
+        "period": {
+          "start": "2017-08-22T09:18:25.667Z",
+          "end": "2017-08-22T09:18:25.667Z"
+        },
+        "assigner": {
+          "display": "Organization t1XEWS6Mgg+aLUFHEAaH7w=="
+        }
+      },
+      "display": "MedicationRequest AsWunmWsORTBBMw0VhDicg=="
+    }
+  ],
+  "status": "cancelled",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "therapy",
+          "display": "Therapy",
+          "userSelected": false
+        }
+      ],
+      "text": "zDrDXU9eDYmBDfsD2d+5vA=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10068-5",
+        "display": "S' wave amplitude in lead V5",
+        "userSelected": true
+      }
+    ],
+    "text": "euCAuwwqVCd9TIiSNaO0cA=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "oLmphz53mpy7IqHEeEbMBQ=="
+      },
+      "system": "http://projectcrucible.org/vif9fo/hLc7YdrwGoASCWQ==",
+      "value": "e4WD3IGB+QD4WVKD11/j7Q==",
+      "period": {
+        "start": "2017-08-22T09:18:25.669Z",
+        "end": "2017-08-22T09:18:25.669Z"
+      },
+      "assigner": {
+        "display": "Organization htZNH1M1bJjQbC/+3Fvdbg=="
+      }
+    },
+    "display": "Device B7Kz1hbhOWteNBM/iftiYg=="
+  },
+  "context": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "pKWAxmfzaIJX2ySouwtPAQ=="
+      },
+      "system": "http://projectcrucible.org/2kx3FwFUZxIfEznfmDRkoQ==",
+      "value": "VLsmbKE2sHMIhh4Pu+RIlQ==",
+      "period": {
+        "start": "2017-08-22T09:18:25.669Z",
+        "end": "2017-08-22T09:18:25.669Z"
+      },
+      "assigner": {
+        "display": "Organization 5bG03Ijius2MU9rb8Cq1Tg=="
+      }
+    },
+    "display": "Encounter 3I8aAjFSGUb9cozoNnB1Yw=="
+  },
+  "effectivePeriod": {
+    "start": "2017-08-22T09:18:25.670Z",
+    "end": "2017-08-22T09:18:25.670Z"
+  },
+  "issued": "2017-08-22T09:18:25.670Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "aFcO7SROC/v74ALKafakgw=="
+        },
+        "system": "http://projectcrucible.org/BNExIQ9W1phYnctCn5pDew==",
+        "value": "IGtWMAAYfpBT3CMkGr2tAg==",
+        "period": {
+          "start": "2017-08-22T09:18:25.670Z",
+          "end": "2017-08-22T09:18:25.670Z"
+        },
+        "assigner": {
+          "display": "Organization ZOmvqzdEA0U54t0P0y1XlQ=="
+        }
+      },
+      "display": "RelatedPerson Tw7IBuJCC3uMjv8NMMinBg=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.9914232880186489,
+    "comparator": ">=",
+    "unit": "UVxgfk20curpOxuAJLVa/g==",
+    "system": "http://projectcrucible.org/ANkwpCQOSyI12jkVt57zeQ==",
+    "code": "pBFgxSEEZ5imHO2v0SuJEQ=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "unsupported",
+        "display": "Unsupported",
+        "userSelected": true
+      }
+    ],
+    "text": "aJQ8xMI8fe5SGOQgJr+kQA=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N",
+        "display": "Normal",
+        "userSelected": true
+      }
+    ],
+    "text": "cjwSSPLxNpo2HOzIwsMvUw=="
+  },
+  "comment": "0T8Sr2CWZPrBZjU3vLGJrQ==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "3665003",
+        "display": "Pelvic wall",
+        "userSelected": true
+      }
+    ],
+    "text": "xVFXLxZ1SV5jCkwFnweVJA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "360166003",
+        "display": "Filtration - action",
+        "userSelected": true
+      }
+    ],
+    "text": "E6Wvz10kWkKEc9smT6utvQ=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "TFZONWHzIkVl5mJtPKEZVw=="
+      },
+      "system": "http://projectcrucible.org/39ctqvFguxkyyfX6DVvRZg==",
+      "value": "BWWkfVZ18qfmoUK34z5bsw==",
+      "period": {
+        "start": "2017-08-22T09:18:25.686Z",
+        "end": "2017-08-22T09:18:25.686Z"
+      },
+      "assigner": {
+        "display": "Organization hp1dOHB1MlygizgFFkiE0A=="
+      }
+    },
+    "display": "Specimen JtU8tQYYWJ2cTTPa+l28oQ=="
+  },
+  "device": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "7hXqkKDaocXjwhTKRyJ8BQ=="
+      },
+      "system": "http://projectcrucible.org/wrpQg9nsmAMW9Xc/RWAUiw==",
+      "value": "7dEw68/3Efy/tBjiABmwzg==",
+      "period": {
+        "start": "2017-08-22T09:18:25.686Z",
+        "end": "2017-08-22T09:18:25.686Z"
+      },
+      "assigner": {
+        "display": "Organization 9tXS61O6PYbCImzAR2pycA=="
+      }
+    },
+    "display": "Device yLhvXbH7XB/RO2T5jbEuhQ=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.32309232224288587,
+        "comparator": ">=",
+        "unit": "yJkhWw6jaSB0a/HR4bWyoQ==",
+        "system": "http://projectcrucible.org/q93i95/VWR20yr028I9hhA==",
+        "code": "IYhI6xZpu7i9ecryC5bGng=="
+      },
+      "high": {
+        "value": 0.40998598757350047,
+        "comparator": "<=",
+        "unit": "bBgRdYtwvOSsSbgEQuO+Jg==",
+        "system": "http://projectcrucible.org/YhR7JWRhsPLa/vSOIXhTXg==",
+        "code": "T6+q4wCRko0xeFDDKxKJfA=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "treatment",
+            "display": "Treatment Range",
+            "userSelected": true
+          }
+        ],
+        "text": "IvCE5rSN2zfkbGc6D5Da+A=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1140-3",
+              "userSelected": true
+            }
+          ],
+          "text": "x00HeX/D4TcW0rtmEWBUQg=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.172548282041611,
+          "comparator": ">=",
+          "unit": "vw7DRIGuaoF2jX+Ydkar7A==",
+          "system": "http://projectcrucible.org/JR9ktLQ08yTP2ThQpDaPbA==",
+          "code": "HTAl+L8R0/kijawGEV32Ow=="
+        },
+        "high": {
+          "value": 0.8239619190948754,
+          "comparator": ">=",
+          "unit": "3XppZkkvD6GLCkDVfXe+wg==",
+          "system": "http://projectcrucible.org/puAx6WCb/tGSJV87iQAFmQ==",
+          "code": "75ypvzW7t3cLlPCtkWLU5A=="
+        }
+      },
+      "text": "hjB/HqdoBCRqjGnqQj1Ceg=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/O2iMaIBOAfWTogSS228duw==",
+          "value": "BOCwBCmwvBTV7x/SGa9/uw=="
+        },
+        "display": "Sequence lexw9ZXZowCm+WoocxWTrw=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10150-1",
+            "display": "T wave amplitude in lead V3",
+            "userSelected": false
+          }
+        ],
+        "text": "e/Spi8PiFF8clFpWOj7Kyg=="
+      },
+      "valueQuantity": {
+        "value": 0.30688130950359793,
+        "comparator": ">=",
+        "unit": "Tat0o74rrs2i0Tpz0HLyZg==",
+        "system": "http://projectcrucible.org/ZehJuIL/AKENW5V8hCxY6Q==",
+        "code": "2HOgyVOkX1wGoysuHuKyxQ=="
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "NaN",
+            "display": "Not a Number",
+            "userSelected": true
+          }
+        ],
+        "text": "fOloYScyv6hARgSwfGgp9A=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "SYN-R",
+            "display": "Synergy - resistant",
+            "userSelected": true
+          }
+        ],
+        "text": "kqH7R8emd3KERxG9WECZ8Q=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.06976452493122864,
+            "comparator": "<",
+            "unit": "LxmgTk1/kxIx994pwluM0g==",
+            "system": "http://projectcrucible.org/RGkuWYdtHiXBWEyTxAiVxQ==",
+            "code": "Ar6XvMcSi5Uz8QSWJEu7Tw=="
+          },
+          "high": {
+            "value": 0.8805294578449193,
+            "comparator": ">=",
+            "unit": "vSPqu+xJMB2xXOcmNE+g4A==",
+            "system": "http://projectcrucible.org/CGcSkIg5EYzaU3UZk/qcSg==",
+            "code": "G2ooUXzPcII6NH82Ssr+wA=="
+          },
+          "type": {
+            "text": "UlP0M/TlJDQgPNDhW75Aig=="
+          },
+          "appliesTo": [
+            {
+              "text": "aL+82DkdTvgrDB1BQradmg=="
+            }
+          ],
+          "text": "wf2WMNHVzW7/AMCp4YaJFw=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "176461",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-07-07T01:51:27.007-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "es-UY",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">1gnN3OUtb3x/QjU+HWpBww==</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "PRN",
+            "display": "Provider number",
+            "userSelected": true
+          }
+        ],
+        "text": "ZeifBYjObHjYkaITesNAVQ=="
+      },
+      "system": "http://projectcrucible.org/XukrfwYrkSvpaHfQOSTKvQ==",
+      "value": "soVvEfKA0u5OggvOoIAU2g==",
+      "period": {
+        "start": "2017-07-07T01:51:26.721Z",
+        "end": "2017-07-07T01:51:26.721Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/seLyR/fRL05TQvnFtx90pg==",
+          "value": "ZS49wPEDFQ8TyWKGOZG2Og=="
+        },
+        "display": "Organization KsSwgEjGGa6b2SlhtlxURQ=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "EMsmFwYh8HW6VbEDPVhvww=="
+        },
+        "system": "http://projectcrucible.org/arhXMJEWyJ399wwSr7YSiw==",
+        "value": "wO3i0X//uvmG7H+rHNHlEg==",
+        "period": {
+          "start": "2017-07-07T01:51:26.721Z",
+          "end": "2017-07-07T01:51:26.721Z"
+        },
+        "assigner": {
+          "display": "Organization MYG/bq5u89os+vyAHflI8g=="
+        }
+      },
+      "display": "NutritionOrder oNbjvEZcwb+e79aa5aMx3A=="
+    }
+  ],
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory",
+          "userSelected": true
+        }
+      ],
+      "text": "RTF5zQw2jCI7ZSA9HJKtug=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10080-0",
+        "display": "S' wave duration in lead V5",
+        "userSelected": true
+      }
+    ],
+    "text": "xs2M3RIlu/2asYSL9BgbZQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "tn3BsMMaJ1eo8sBIM89ioQ=="
+      },
+      "system": "http://projectcrucible.org/dJlMDv4HuyqNlri5b6LqSA==",
+      "value": "3XgKN7ApMXqWKolfgdDxqw==",
+      "period": {
+        "start": "2017-07-07T01:51:26.726Z",
+        "end": "2017-07-07T01:51:26.726Z"
+      },
+      "assigner": {
+        "display": "Organization fFf2rxXc+ioqLbPYnZIyzw=="
+      }
+    },
+    "display": "Patient cDSHZ2af3lo5aHgqVIHgOw=="
+  },
+  "context": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "Y+vo6S+TvxMtkiTeyiXM0g=="
+      },
+      "system": "http://projectcrucible.org/TkZ3y6/DOVFCSfbM0cCDxQ==",
+      "value": "xCnBSNW20rDxoCWOwXJ6SA==",
+      "period": {
+        "start": "2017-07-07T01:51:26.726Z",
+        "end": "2017-07-07T01:51:26.726Z"
+      },
+      "assigner": {
+        "display": "Organization vMr4AFl9/eP4vK61k8HEcw=="
+      }
+    },
+    "display": "Encounter nE7wJt40BS54cjW+plLy0w=="
+  },
+  "effectivePeriod": {
+    "start": "2017-07-07T01:51:26.726Z",
+    "end": "2017-07-07T01:51:26.726Z"
+  },
+  "issued": "2017-07-07T01:51:26.726Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "gbzzAXT0NxCyvmiTzICxlQ=="
+        },
+        "system": "http://projectcrucible.org/dDrgLe2sMvAZevO3YxOb+g==",
+        "value": "MuEyNnroprncnaVmR7C3gw==",
+        "period": {
+          "start": "2017-07-07T01:51:26.727Z",
+          "end": "2017-07-07T01:51:26.727Z"
+        },
+        "assigner": {
+          "display": "Organization ti40W1IkJ/nIT3t6NMjStA=="
+        }
+      },
+      "display": "Practitioner OQE4X5mHfaDau5Eet4HMvA=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.3905863942180764,
+    "comparator": "<=",
+    "unit": "aLNeNEx018OhcXg3xF7vWA==",
+    "system": "http://projectcrucible.org/elM1I7r70S1xNFYf1Gjevg==",
+    "code": "Py2foPEkQMhuXE8oHf41FA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "astext",
+        "display": "As Text",
+        "userSelected": true
+      }
+    ],
+    "text": "idL/UprkuCRnTcTPMfusDg=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "R",
+        "display": "Resistant",
+        "userSelected": true
+      }
+    ],
+    "text": "EtIqUIWdhqJURNB4DO5pZQ=="
+  },
+  "comment": "Yohp6eng9IR1rlSPShaMsw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "9231002",
+        "display": "External pudendal veins",
+        "userSelected": false
+      }
+    ],
+    "text": "cmGYTv7yyVZwdlqZl2catg=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "257425005",
+        "display": "Bright field",
+        "userSelected": false
+      }
+    ],
+    "text": "mnxJNGrqqHR6blAJtmbY4Q=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "WDJ3buTnjj0sQVjniBAN5w=="
+      },
+      "system": "http://projectcrucible.org/9xhfGdmC5gbglO56LxX4qA==",
+      "value": "YVwWSOTio70IfFemwEyauA==",
+      "period": {
+        "start": "2017-07-07T01:51:26.777Z",
+        "end": "2017-07-07T01:51:26.777Z"
+      },
+      "assigner": {
+        "display": "Organization YyrDT149GK0h+0jt39b/YA=="
+      }
+    },
+    "display": "Specimen s08e4PZClp2ax9MX4IssGA=="
+  },
+  "device": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "psS3ZN5WF8ZTeThfPFqoCQ=="
+      },
+      "system": "http://projectcrucible.org/uCkcNFKrNKa0wzm49bEpPg==",
+      "value": "S9KfQqWtJbum9dV+A1sRsQ==",
+      "period": {
+        "start": "2017-07-07T01:51:26.777Z",
+        "end": "2017-07-07T01:51:26.777Z"
+      },
+      "assigner": {
+        "display": "Organization Ouxo/mrmfIpb7zYTGhwb6A=="
+      }
+    },
+    "display": "DeviceMetric re/JEmdRfgQ8Lbkfh1seuw=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.19409829922677546,
+        "comparator": "<=",
+        "unit": "4VPuQqI3kIu5jUvyW+3oQQ==",
+        "system": "http://projectcrucible.org/CIynFkJY0fIyotQSqmq6LA==",
+        "code": "SoL1j1sXOccq2V4WNYUTsQ=="
+      },
+      "high": {
+        "value": 0.4176287149068988,
+        "comparator": ">=",
+        "unit": "Vygvw04iUjqZME+dggLcvg==",
+        "system": "http://projectcrucible.org/V9QkzR8bYWfAHdpeVyBYOw==",
+        "code": "sLp+K2SVNxu80rsdCtEXYQ=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "midcycle",
+            "display": "MidCycle",
+            "userSelected": true
+          }
+        ],
+        "text": "pvdaqhMD4VRoapD0Pd0BsQ=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "77386006",
+              "display": "Pregnancy not delivered",
+              "userSelected": false
+            }
+          ],
+          "text": "RcbDCa7ihJxk1nIjR4V3Mw=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.26721689621890043,
+          "comparator": "<",
+          "unit": "4qzwKK1MrDTiMvcyGrHlzA==",
+          "system": "http://projectcrucible.org/H3/6PXl8VrusfN7zYQxQzg==",
+          "code": "YYr+IUS9NHH7hIdnGYRExA=="
+        },
+        "high": {
+          "value": 0.47251643284069633,
+          "comparator": "<=",
+          "unit": "pE72ORM1bA1maDis9SL2Vw==",
+          "system": "http://projectcrucible.org/ipDxmSO1IBDmHhSpfunC2Q==",
+          "code": "mq4YCMgVzvRUiwGhRk7U+g=="
+        }
+      },
+      "text": "efSy5UCfOqraSyX96e7e5Q=="
+    }
+  ],
+  "related": [
+    {
+      "type": "qualified-by",
+      "target": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/+qsiezX/28t3eIIRf5Ce8Q==",
+          "value": "PL3kn9kupozDxPCbbOTdLQ=="
+        },
+        "display": "Observation k6K4YCqyjtVaQuJDG9hv9g=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10300-2",
+            "display": "Chest tube Vendor serial number",
+            "userSelected": false
+          }
+        ],
+        "text": "KHl4H0D3ZG1s3/nH8vvk9w=="
+      },
+      "valueQuantity": {
+        "value": 0.7798559594104223,
+        "comparator": "<",
+        "unit": "ZMEA+582CuKw5LLzizu5Ew==",
+        "system": "http://projectcrucible.org/Z7VkHBZp69eM/16vTq2bhg==",
+        "code": "pRwrpzdc1dvl2FQaz+BHAw=="
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "not-performed",
+            "display": "Not Performed",
+            "userSelected": false
+          }
+        ],
+        "text": "w9xl5DQ7KqIJKc5GOjqwUA=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "NS",
+            "display": "Non-susceptible",
+            "userSelected": true
+          }
+        ],
+        "text": "gUkjgH8QCacLaPMuFB095g=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.9708115242991905,
+            "comparator": ">=",
+            "unit": "2L2ejj7ts9MjHZfYhnHtNA==",
+            "system": "http://projectcrucible.org/+k/7BKMaij5OibyHPKHS2g==",
+            "code": "YkeestsPGTLy3hV1h+QYAw=="
+          },
+          "high": {
+            "value": 0.6165904149045234,
+            "comparator": ">=",
+            "unit": "+HelIYSmKLTVNGQfFTs1Ug==",
+            "system": "http://projectcrucible.org/oBACok6BhU5N2HChwo+KCw==",
+            "code": "hvALjWI6X4+eRvqwwVWzBQ=="
+          },
+          "type": {
+            "text": "ISgQZIYw9qlSIclFGjf7eg=="
+          },
+          "appliesTo": [
+            {
+              "text": "FScHYenVq/z/mfqFiG1KjQ=="
+            }
+          ],
+          "text": "9xi9C5spMj6AsZEQjbfKrw=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "74818",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-04-26T21:07:30.542-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "sr-SP",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">LgRGcxwoWI9fh8cGjy6ddg==</div>"
+  },
+  "identifier": [
+    {
+      "use": "secondary",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "PRN",
+            "display": "Provider number",
+            "userSelected": true
+          }
+        ],
+        "text": "biBiDS+7Z+gvEYgIYU+Ajg=="
+      },
+      "system": "http://projectcrucible.org/INAkHSQzdi7nJaT1zg32vg==",
+      "value": "1PbsWVgMH7fOiSPFYC89yw==",
+      "period": {
+        "start": "2017-04-26T21:07:30.344Z",
+        "end": "2017-04-26T21:07:30.344Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/Ry9h8F8zCB9zyMXXDZj/sg==",
+          "value": "Jax/amolKOj7mPXQv8pbOA=="
+        },
+        "display": "Organization iMs0CI/1xH80axGk0JCyqg=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "LgubhDboIcARGnPRb7z8QQ=="
+        },
+        "system": "http://projectcrucible.org/E2co5FdYFqF15vSe7UZW2w==",
+        "value": "ErbpWsHciFnIHHMT3Gc4fw==",
+        "period": {
+          "start": "2017-04-26T21:07:30.344Z",
+          "end": "2017-04-26T21:07:30.344Z"
+        },
+        "assigner": {
+          "display": "Organization Tn5DtCUnYWIIERAUUCzfPA=="
+        }
+      },
+      "display": "DeviceRequest RCSpEVw1jC37P/y7HC0oZA=="
+    }
+  ],
+  "status": "corrected",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "exam",
+          "display": "Exam",
+          "userSelected": true
+        }
+      ],
+      "text": "kEj5e+s6Lk1PcqBXGDO9Jg=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10025-5",
+        "display": "R' wave duration in lead I",
+        "userSelected": false
+      }
+    ],
+    "text": "TdDnifXQ0hV8hr0j7Dx9OQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "GFSSd2CqhLV0hr1Mb/3d5Q=="
+      },
+      "system": "http://projectcrucible.org/j/fVOfkVUZxv7VzZ5l5opA==",
+      "value": "SA2NCh/noz/lVV8B2REFvg==",
+      "period": {
+        "start": "2017-04-26T21:07:30.347Z",
+        "end": "2017-04-26T21:07:30.347Z"
+      },
+      "assigner": {
+        "display": "Organization N+6klOkFW0caq3cTEPCF9g=="
+      }
+    },
+    "display": "Device /HLXg9tv+VVWa7Jofamejw=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "aD1vPRvmGFpK7Ri852FR8w=="
+      },
+      "system": "http://projectcrucible.org/PnySMO67pTr7ORZfj2B3Zw==",
+      "value": "jDkmbReJ/R1/rFU+TthodA==",
+      "period": {
+        "start": "2017-04-26T21:07:30.347Z",
+        "end": "2017-04-26T21:07:30.347Z"
+      },
+      "assigner": {
+        "display": "Organization HzOH5DrTbNjE64ywym/UVg=="
+      }
+    },
+    "display": "EpisodeOfCare 9RW38Ff82WLveKSsiIzvRQ=="
+  },
+  "effectiveDateTime": "2017-04-26T21:07:30.348Z",
+  "issued": "2017-04-26T21:07:30.348Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "Qxkhg/+s79nQSeVtlukj4Q=="
+        },
+        "system": "http://projectcrucible.org/yToUVceZ/BPorIX17aJrJA==",
+        "value": "eMEzY40bsg1ULfO4/qDKXQ==",
+        "period": {
+          "start": "2017-04-26T21:07:30.348Z",
+          "end": "2017-04-26T21:07:30.348Z"
+        },
+        "assigner": {
+          "display": "Organization aox190+tof8btMV4RSD/QA=="
+        }
+      },
+      "display": "Patient 2wB5kHFKGl9D92iWjpYpAQ=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org//Kh8YypCpb/OVdkdUWY44A==",
+        "code": "dLZI3vybY3gNqKp0rh5Ncw==",
+        "display": "8nrwFqq6yKJImrw6UeLxsw==",
+        "userSelected": false
+      }
+    ],
+    "text": "2yZOHsJaXHDcy8M6TVFfbw=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "NaN",
+        "display": "Not a Number",
+        "userSelected": true
+      }
+    ],
+    "text": "aiGBj6O/rdj74ehyHHpHiA=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "TOX",
+        "display": "Cytotoxic substance present",
+        "userSelected": true
+      }
+    ],
+    "text": "6dC8oxQ0Hz2LukMu+HCH5w=="
+  },
+  "comment": "j0cU66JJGSbm73vhA1fq/g==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "422005",
+        "display": "Inferior surface of tongue",
+        "userSelected": false
+      }
+    ],
+    "text": "NbRZB7mLpO1nCB4gy4eeNA=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "258080007",
+        "display": "Thermodilution technique",
+        "userSelected": true
+      }
+    ],
+    "text": "W9l8H1v2asduSKXzdtoBMA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "QpLH+J86Ybd1DNpy0WmPfA=="
+      },
+      "system": "http://projectcrucible.org/mYTaei6BkwSIxgrd27zAOQ==",
+      "value": "QnbkHN7PhVMJXq0Nlfh5Hg==",
+      "period": {
+        "start": "2017-04-26T21:07:30.373Z",
+        "end": "2017-04-26T21:07:30.373Z"
+      },
+      "assigner": {
+        "display": "Organization 6UjVuspwDXCZ4WSu7pg0EA=="
+      }
+    },
+    "display": "Specimen 45uEW0juC2ssPkygCi4sSA=="
+  },
+  "device": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "0BptCHIGbP6tK033X3eZ1w=="
+      },
+      "system": "http://projectcrucible.org/2Dky6Ww6b0RjoNSII6q0cA==",
+      "value": "cMcqqNZ6BZxX6/z1ah0ypg==",
+      "period": {
+        "start": "2017-04-26T21:07:30.373Z",
+        "end": "2017-04-26T21:07:30.373Z"
+      },
+      "assigner": {
+        "display": "Organization L77Xx03hZy5OYm0tTPrrEA=="
+      }
+    },
+    "display": "Device 4Mcq88ftqJUhHLqFwNaStA=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.40505070898213824,
+        "comparator": ">=",
+        "unit": "MwXE9phCfX1jcnRfih0UcQ==",
+        "system": "http://projectcrucible.org/ySY2pz5SGrIO3/HNV6C0Iw==",
+        "code": "ROcHWIe6qZsWcqigHON6NA=="
+      },
+      "high": {
+        "value": 0.7099338241591526,
+        "comparator": "<",
+        "unit": "Ajmja3s3mPq2zXY95o/csw==",
+        "system": "http://projectcrucible.org/nLp3Z7u/b9lCbBEFooHW2w==",
+        "code": "N8OjEyfe2ZFhP7fj/y3yIQ=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "type",
+            "display": "Type",
+            "userSelected": true
+          }
+        ],
+        "text": "9QpUNR1LHQYQxDJGgRSjhA=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1358-1",
+              "userSelected": true
+            }
+          ],
+          "text": "XfRP4zqn4L9jem7DYhOGVA=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.02151252572582074,
+          "comparator": "<=",
+          "unit": "3Ocen3VuYqYjvElYzaKOog==",
+          "system": "http://projectcrucible.org/O9mcg1EDlGzbwrIqARpheA==",
+          "code": "X5UR/d7bNKNeVx8vlrAhuA=="
+        },
+        "high": {
+          "value": 0.024955084490555612,
+          "comparator": ">=",
+          "unit": "pVbYAHk2NVx//8HN8x6/uw==",
+          "system": "http://projectcrucible.org/XQo7DLGXA4XLmOelwdJuLA==",
+          "code": "L1nNRF73yx+u8IwnahTYTw=="
+        }
+      },
+      "text": "TAwSSqO4zzrKoctzzkV1WA=="
+    }
+  ],
+  "related": [
+    {
+      "type": "replaces",
+      "target": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/mwiMhdeL9dKAYV9Hwj7m6w==",
+          "value": "fv211bNOgRMW9SI2eIujHA=="
+        },
+        "display": "Observation FbhBGWdWbtZbVv1vnowGAw=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "100-8",
+            "display": "Cefoperazone [Susceptibility] by Minimum inhibitory concentration (MIC)",
+            "userSelected": false
+          }
+        ],
+        "text": "a7iUwY3WjMmf/Y3GsxkGew=="
+      },
+      "valueString": "/bsVVzbEI9X8SYjZf4BJMA==",
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "astext",
+            "display": "As Text",
+            "userSelected": false
+          }
+        ],
+        "text": "aucZ+FFgIyp+RS972EhDxw=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "HU",
+            "display": "Very high",
+            "userSelected": true
+          }
+        ],
+        "text": "itXMK4IVTxUCqSbXjDg4YA=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.6307519864273257,
+            "comparator": "<=",
+            "unit": "9ffJ9jdcoDhWj9uMnHL4Xg==",
+            "system": "http://projectcrucible.org/puF7FGDDV9IRG9lu2qvfEw==",
+            "code": "wJb9wgjd7v5qSXDE3hp6SA=="
+          },
+          "high": {
+            "value": 0.9962729845040685,
+            "comparator": ">",
+            "unit": "cjhEps8nXb/mJzmoJCuX5g==",
+            "system": "http://projectcrucible.org/x83FajpUMD+PrPkvxB91oQ==",
+            "code": "9TWQqJe+DIalCjLnmHF9Uw=="
+          },
+          "type": {
+            "text": "xnTWWNoJ6XdjgYdjYgD9OA=="
+          },
+          "appliesTo": [
+            {
+              "text": "vbOD8O5dr9dwJbAC3xVcGg=="
+            }
+          ],
+          "text": "2PZOxjCoi1XexqabUTBp+Q=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "240541",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-07T05:41:59.160-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "es-UY",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">NVlMb9E4UzYDsvsf8Ln4JQ==</div>"
+  },
+  "identifier": [
+    {
+      "use": "secondary",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SNO",
+            "display": "Serial Number",
+            "userSelected": false
+          }
+        ],
+        "text": "cmkwnJVQzpDLvBvu24kKZw=="
+      },
+      "system": "http://projectcrucible.org/Suc83Jjv8IebhDaZWkEczw==",
+      "value": "T8gzE/x6RfJ1Wp/PQ+YXWA==",
+      "period": {
+        "start": "2017-10-07T05:41:58.724Z",
+        "end": "2017-10-07T05:41:58.724Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/0ASB09fWvdnNua1lWswcNA==",
+          "value": "ud0QQVEsiIttbgtXy9wb3Q=="
+        },
+        "display": "Organization k/ta+y1LhVpIJsCoGXFYhw=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "udH+McUm1iCTyCzqI2e5ww=="
+        },
+        "system": "http://projectcrucible.org/VREsEDTJexvx+GisXXzpPg==",
+        "value": "C2uXkRKNp9fx4bL/3aZ81w==",
+        "period": {
+          "start": "2017-10-07T05:41:58.725Z",
+          "end": "2017-10-07T05:41:58.725Z"
+        },
+        "assigner": {
+          "display": "Organization ZcxDRaDYwZyg2u0BSoLbOw=="
+        }
+      },
+      "display": "CarePlan 5bmH8SaoKZsu3NPA1f/q+Q=="
+    }
+  ],
+  "status": "cancelled",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "survey",
+          "display": "Survey",
+          "userSelected": false
+        }
+      ],
+      "text": "FL1g03RJsT5vS3IXyQGC3w=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10048-7",
+        "display": "S wave duration in lead AVR",
+        "userSelected": false
+      }
+    ],
+    "text": "wyC6+wACCT6PVwLJgPs6HQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "eN/XB/7oUIcHiYs0iBNHxg=="
+      },
+      "system": "http://projectcrucible.org/QHRY1PCqlaizYjB71hyi3w==",
+      "value": "C6bv928dZQAqrQbjI2tv4A==",
+      "period": {
+        "start": "2017-10-07T05:41:58.729Z",
+        "end": "2017-10-07T05:41:58.729Z"
+      },
+      "assigner": {
+        "display": "Organization 9ei4XdFpIinOPyuLD6rVyg=="
+      }
+    },
+    "display": "Patient +f0wwgRyqZSuD82vOWZJkA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "LG3hJCVyC5Ckns6CvVaK5w=="
+      },
+      "system": "http://projectcrucible.org/Hs9ItYQGd5Wcwkkv5xpLQg==",
+      "value": "GDNnXKDmgXIRJZ1IT0fneQ==",
+      "period": {
+        "start": "2017-10-07T05:41:58.730Z",
+        "end": "2017-10-07T05:41:58.730Z"
+      },
+      "assigner": {
+        "display": "Organization BMqyjxYQt8Z3NicY16ziSw=="
+      }
+    },
+    "display": "Encounter 1e4ngFPNtNpCu17yHmEGTQ=="
+  },
+  "effectivePeriod": {
+    "start": "2017-10-07T05:41:58.730Z",
+    "end": "2017-10-07T05:41:58.730Z"
+  },
+  "issued": "2017-10-07T05:41:58.730Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "L1UWh0zVGi2jsmC6EUTV1Q=="
+        },
+        "system": "http://projectcrucible.org/z4jx0gLHmxn7MebgeIUOeg==",
+        "value": "FiFhIje5q9bdB1rIxPdbiw==",
+        "period": {
+          "start": "2017-10-07T05:41:58.731Z",
+          "end": "2017-10-07T05:41:58.731Z"
+        },
+        "assigner": {
+          "display": "Organization JOKQEs3OkXc7kLdG4dDIxg=="
+        }
+      },
+      "display": "Patient F7QzwDMd+mpicucUhcJjIw=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.43757355476152404,
+    "comparator": ">=",
+    "unit": "TRjB9csIbBZZJ7NNR6pYzw==",
+    "system": "http://projectcrucible.org/T7g+TA0dOJie2Hm1fokpVA==",
+    "code": "SljZENujllNsKkYhBL4L8Q=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "error",
+        "display": "Error",
+        "userSelected": true
+      }
+    ],
+    "text": "oCdoj7s62lrpyEtpDVClpw=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "NS",
+        "display": "Non-susceptible",
+        "userSelected": true
+      }
+    ],
+    "text": "t3GnOFijYOIEXqOhAd0hQQ=="
+  },
+  "comment": "Uj3+7l8ZX2DYbhAWY13cZw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1780008",
+        "display": "Premelanosome",
+        "userSelected": true
+      }
+    ],
+    "text": "UkdODzuxPYO8YWPDjw2Ltw=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "258150004",
+        "display": "Transmission",
+        "userSelected": false
+      }
+    ],
+    "text": "VpPn4S9Jzz4nWGvl3DA3eA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "9Szf7NpPidYQA0dSlGZylw=="
+      },
+      "system": "http://projectcrucible.org/ZU/IPALidB0qQQJkFP1iIQ==",
+      "value": "zmdxYfnKYbGhLRbXh2PMaQ==",
+      "period": {
+        "start": "2017-10-07T05:41:58.771Z",
+        "end": "2017-10-07T05:41:58.771Z"
+      },
+      "assigner": {
+        "display": "Organization +4E9iZVCNlzk+ClGhQ54bw=="
+      }
+    },
+    "display": "Specimen YpyPp+j5iqQ8595T92aF1g=="
+  },
+  "device": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "Ok+5C9dl5hgYJFnEXdn9Hg=="
+      },
+      "system": "http://projectcrucible.org/mMLYrkbxs9TQ5OjIadNzmA==",
+      "value": "zEEhrtUp6cqg/M+RujX50g==",
+      "period": {
+        "start": "2017-10-07T05:41:58.772Z",
+        "end": "2017-10-07T05:41:58.772Z"
+      },
+      "assigner": {
+        "display": "Organization lgQSXM9JUe0ghsNtL5Y5Hg=="
+      }
+    },
+    "display": "DeviceMetric 10/5ehmMoX5Q9q7ayXzzEw=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.5320443218020652,
+        "comparator": ">",
+        "unit": "Om1tKlzyddQ6uiI/42Kf2g==",
+        "system": "http://projectcrucible.org/1NEpieWxwreKGFvWFszIrA==",
+        "code": "a2q3S9SnUouCz0pBYmqiwA=="
+      },
+      "high": {
+        "value": 0.9410832538667467,
+        "comparator": "<=",
+        "unit": "Ge3Z8ufpQrBclwRcI8TMCA==",
+        "system": "http://projectcrucible.org/e9xa3oNXnyJA4n5f5A31wg==",
+        "code": "qrtVsvM9+ieSyFBKiHGc6g=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "midcycle",
+            "display": "MidCycle",
+            "userSelected": false
+          }
+        ],
+        "text": "3P7eOTLQs/+cHAitcuYDKg=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1006-6",
+              "userSelected": false
+            }
+          ],
+          "text": "899I23Q5j2CsQJwvYrSfrw=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.5054696643457617,
+          "comparator": ">=",
+          "unit": "KEwiT8vy5gPHPiqNbyo4LQ==",
+          "system": "http://projectcrucible.org/VL9K+5I4MHKrWvgA8wlYiQ==",
+          "code": "fKIMLjYqCmQCqQyn5lxPNA=="
+        },
+        "high": {
+          "value": 0.5271142191885436,
+          "comparator": "<=",
+          "unit": "pB5I+kQYAwIx+naV51WXqw==",
+          "system": "http://projectcrucible.org/FQMRu4Q4pwdJ1J8ZBUiopA==",
+          "code": "nK/IKh+lqDwqstPrSfViMg=="
+        }
+      },
+      "text": "p6Hkvmw89yjsKF6oDFFPrA=="
+    }
+  ],
+  "related": [
+    {
+      "type": "replaces",
+      "target": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/XaMN8bpjT2uMCiClOryp7A==",
+          "value": "OMg+T82xgI1d1VXVDPcOnw=="
+        },
+        "display": "QuestionnaireResponse 2g/8mh/6XPMtCgoajS4JUg=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10423-2",
+            "display": "Transfuse platelets [Volume]",
+            "userSelected": false
+          }
+        ],
+        "text": "FyE9PR6JLkMniNXUFXfTDg=="
+      },
+      "valueAttachment": {
+        "contentType": "application/vnd.yamaha.hv-script",
+        "language": "zh-CN",
+        "url": "http://projectcrucible.org/dlGQQur1rL/nQ1LALWRgmQ==",
+        "size": 93,
+        "hash": "XJGwzUCDgVJLcfE3UhZy0A==",
+        "title": "RyXwbanFko8OqkUjHETuYw==",
+        "creation": "2017-10-07T05:41:58.787Z"
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "masked",
+            "display": "Masked",
+            "userSelected": true
+          }
+        ],
+        "text": "j/pMVJ47T8ucMgUWaiFGJw=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "NS",
+            "display": "Non-susceptible",
+            "userSelected": false
+          }
+        ],
+        "text": "nXnWbLc/45X6iXFYiWNIMw=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.38772093596784485,
+            "comparator": ">",
+            "unit": "9EFCVVoHqam6x7Jsyb24NA==",
+            "system": "http://projectcrucible.org/W/w0WdUMQpEs8fM20GHB/Q==",
+            "code": "bdXLjTcJrvbkoFuD/XTbkw=="
+          },
+          "high": {
+            "value": 0.15547508829420054,
+            "comparator": "<",
+            "unit": "xK0RVYNcnIAvRdc881mB9Q==",
+            "system": "http://projectcrucible.org/Pw1wtdILS5rLWTHS2/oJTg==",
+            "code": "Gb/tIHT9mxFEkpkKGP52QQ=="
+          },
+          "type": {
+            "text": "7wUQLYDav6sYgnFf7o8fNQ=="
+          },
+          "appliesTo": [
+            {
+              "text": "JFyv7FgSCUHU4GJRFrT+0A=="
+            }
+          ],
+          "text": "7FBVQkKgRBj+tLjACR8LRQ=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "305385",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-11-03T02:07:10.915-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "pt",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">9SDDKEG9/mE/HbLF/Lx5WQ==</div>"
+  },
+  "identifier": [
+    {
+      "use": "usual",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/identifier-type",
+            "code": "SNO",
+            "display": "Serial Number",
+            "userSelected": false
+          }
+        ],
+        "text": "AjImVgyT73mfpk+FM2l5vw=="
+      },
+      "system": "http://projectcrucible.org/vwKZkyv5MM/lJ3zOnT4ZNw==",
+      "value": "h0o3ed0Z7LkvmApJDqRMjA==",
+      "period": {
+        "start": "2017-11-03T07:07:09.777Z",
+        "end": "2017-11-03T07:07:09.777Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/oOTZe5D3wOnVfuXKsYcrkw==",
+          "value": "Km7ctOoOnoY2UWpVjle5AQ=="
+        },
+        "display": "Organization 9xAOxcEH5pvcLR3FTcbZlw=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "Y2W3+E/HqwX34zrLomfMcw=="
+        },
+        "system": "http://projectcrucible.org/Oxl4ByFq6hfy4mZG7f5/5g==",
+        "value": "ZqcogyvDZnvlR3+j9dK2Vw==",
+        "period": {
+          "start": "2017-11-03T07:07:09.777Z",
+          "end": "2017-11-03T07:07:09.777Z"
+        },
+        "assigner": {
+          "display": "Organization evHmG1BWMMvTh5hG8nE8ww=="
+        }
+      },
+      "display": "CarePlan TQhVMyJe0PjXO/5WQ3GSWg=="
+    }
+  ],
+  "status": "entered-in-error",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "survey",
+          "display": "Survey",
+          "userSelected": false
+        }
+      ],
+      "text": "1jXagEe6hH2/vG/K6CIcRg=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10246-7",
+        "display": "Oxygen content in Right pulmonary artery",
+        "userSelected": true
+      }
+    ],
+    "text": "HpjaXA8Qz1XE0tu3IASw4A=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "HJNsRSr2qhX2bGzOfm8rXw=="
+      },
+      "system": "http://projectcrucible.org/05lRKa4jSDW8XNaV6kZ6Pw==",
+      "value": "9/q2GuRwSLVsZFzcmHGUbg==",
+      "period": {
+        "start": "2017-11-03T07:07:09.777Z",
+        "end": "2017-11-03T07:07:09.777Z"
+      },
+      "assigner": {
+        "display": "Organization CWemJDuzKCP1tEivOvUoJg=="
+      }
+    },
+    "display": "Device YUxvpFtv307Yai4aUftcRw=="
+  },
+  "context": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "/CtXPmj+UPTqGVitCuwukg=="
+      },
+      "system": "http://projectcrucible.org/+4a9nzgoc6h8pVPk3S+Yxg==",
+      "value": "TaVFPoBu01eur1ReP2mRFQ==",
+      "period": {
+        "start": "2017-11-03T07:07:09.777Z",
+        "end": "2017-11-03T07:07:09.777Z"
+      },
+      "assigner": {
+        "display": "Organization WZqwg45lO+sAvBCfYdxUvA=="
+      }
+    },
+    "display": "Encounter sHIhSxhHqZ+E9RZTE4umTw=="
+  },
+  "effectivePeriod": {
+    "start": "2017-11-03T07:07:09.777Z",
+    "end": "2017-11-03T07:07:09.777Z"
+  },
+  "issued": "2017-11-03T07:07:09.777Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "/dibyflzDbQsMH8kBYIUkw=="
+        },
+        "system": "http://projectcrucible.org/vMPnfxdpBje1gEGq6h7QaA==",
+        "value": "MTuAlZW5ObWtaBZ7iVEYVQ==",
+        "period": {
+          "start": "2017-11-03T07:07:09.777Z",
+          "end": "2017-11-03T07:07:09.777Z"
+        },
+        "assigner": {
+          "display": "Organization Di1OSbK/Yh1C8LawlOJp2g=="
+        }
+      },
+      "display": "Organization Hn4WLVH52GFaM0SquzI7cQ=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.06568460157731482,
+    "comparator": "<",
+    "unit": "93GEv4D573F5wPG4m1WQZA==",
+    "system": "http://projectcrucible.org/XMHC8aCYTELlQx7ABd2oxw==",
+    "code": "p2e+QFhm/iLz9Mf1oM9x+g=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "unknown",
+        "display": "Unknown",
+        "userSelected": false
+      }
+    ],
+    "text": "TcuDwuQz8kfC/3W3BIUQaQ=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "OBX",
+        "display": "Interpretation qualifiers in separate OBX segments",
+        "userSelected": false
+      }
+    ],
+    "text": "9pf3pmpND6cWQjOS4/s3BQ=="
+  },
+  "comment": "MPOrSaSlvlLvp8thXm0XQg==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "5261000",
+        "display": "Intervertebral disc of thoracic vertebra",
+        "userSelected": false
+      }
+    ],
+    "text": "kkAevY/BnjibUFPUpuY+vQ=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "703858009",
+        "display": "Numeric estimation technique",
+        "userSelected": true
+      }
+    ],
+    "text": "1elSr/cdHgW1XxDVJ5OzBA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "ozNrSZXZOYHkGlv/Y/1w9Q=="
+      },
+      "system": "http://projectcrucible.org/QxqldiKI2HZfNKgTHfn9LQ==",
+      "value": "kueST2qtAY3UNK72J+78cQ==",
+      "period": {
+        "start": "2017-11-03T07:07:09.809Z",
+        "end": "2017-11-03T07:07:09.809Z"
+      },
+      "assigner": {
+        "display": "Organization cZaOSGD+m6Bvie/j+3uHYA=="
+      }
+    },
+    "display": "Specimen R3devIvTY23hXLYbYgKz/g=="
+  },
+  "device": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "uPsdHz015LhdDLm8IUuM4A=="
+      },
+      "system": "http://projectcrucible.org//2GFqxXODKY5PFZZ5Provg==",
+      "value": "rlf34TQBzsTiNozgTxFOgw==",
+      "period": {
+        "start": "2017-11-03T07:07:09.809Z",
+        "end": "2017-11-03T07:07:09.809Z"
+      },
+      "assigner": {
+        "display": "Organization Nx+ITaN2kcNkkyK8cnhcnw=="
+      }
+    },
+    "display": "DeviceMetric fE/H3Yl676wVzzud/y4fnA=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.15635167054893617,
+        "comparator": ">=",
+        "unit": "a8MjqDlOejlZyHgb/HyB5w==",
+        "system": "http://projectcrucible.org/tWub8xS55/AaWZh9ywumlw==",
+        "code": "8ChzQ0xlvMolgAYFfKjaPg=="
+      },
+      "high": {
+        "value": 0.34043811614167074,
+        "comparator": ">=",
+        "unit": "vow7NnwLBfwervoEeM//vQ==",
+        "system": "http://projectcrucible.org/x6PJF4YzrQrnHVGNpQqlvQ==",
+        "code": "u9jhMBWirNZ8EZcQrBf74g=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "postmeopausal",
+            "display": "Post-Menopause",
+            "userSelected": true
+          }
+        ],
+        "text": "KY6FgM7vwuA9c+qnaWcOug=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/v3/Race",
+              "code": "1264-1",
+              "userSelected": true
+            }
+          ],
+          "text": "JvsOWE5wcfyxQw6JdCFq2A=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.26063132952143875,
+          "comparator": ">=",
+          "unit": "b6c3dpw2snx0Pt/lXfilFg==",
+          "system": "http://projectcrucible.org/Nk8UspK7S9BvPd1hiKFZbA==",
+          "code": "f2jZB0gyozA/9JgWZbRYSg=="
+        },
+        "high": {
+          "value": 0.8969240249235613,
+          "comparator": ">",
+          "unit": "CUi3PHJqWQMHCgBzrl4Rmg==",
+          "system": "http://projectcrucible.org/EMiCvjiXCv0YszAHfwB3+g==",
+          "code": "KA4MLQckzr2R+o6RVGwOrQ=="
+        }
+      },
+      "text": "SESu8XuIvqPzFxrbFUxatA=="
+    }
+  ],
+  "related": [
+    {
+      "type": "interfered-by",
+      "target": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/l7PleEmE+nCG810xUV2+xQ==",
+          "value": "VfdOoGjlh6u1PPhlEln6uQ=="
+        },
+        "display": "Observation MmfmUu/tn8VJfvlQg0Ue3A=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10803-5",
+            "display": "Microscopic observation [Identifier] in Tissue by Quinacrine fluorescent stain",
+            "userSelected": true
+          }
+        ],
+        "text": "NR5PBAcBUhVUuPIi9rRDZg=="
+      },
+      "valueRange": {
+        "low": {
+          "value": 0.4394026837355388,
+          "comparator": "<",
+          "unit": "U6+Etlb21GbaG4bskh9UcA==",
+          "system": "http://projectcrucible.org/tVBftZZuzkAZ04foYy0gqA==",
+          "code": "bLLY3RC3Cq/b6ANOt7b12A=="
+        },
+        "high": {
+          "value": 0.7744822858755521,
+          "comparator": ">=",
+          "unit": "0l8MZ7uDHPOkNABkjRbbZw==",
+          "system": "http://projectcrucible.org/nFj10i1dU22rVCgK4FOw3A==",
+          "code": "8tQU09+IXIgt9BzvNbMjAA=="
+        }
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "error",
+            "display": "Error",
+            "userSelected": true
+          }
+        ],
+        "text": "ahYlp9vkF3dq3BArUZZbGQ=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "AA",
+            "display": "Critically abnormal",
+            "userSelected": false
+          }
+        ],
+        "text": "ME7JRbwk7Lb2x+w57FIC3Q=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.8439351076216525,
+            "comparator": ">",
+            "unit": "+LNlw7dxSFgUjsooAduA+w==",
+            "system": "http://projectcrucible.org/do/MJkAmoAU6wHYxkH3nkg==",
+            "code": "ko6lr1DjcMAJ59cA6chHWQ=="
+          },
+          "high": {
+            "value": 0.8541698270993061,
+            "comparator": ">",
+            "unit": "Eof7E5e40HiDSsf14zmwaQ==",
+            "system": "http://projectcrucible.org/Ld0q6VPKHsoJzWG2lolByA==",
+            "code": "4F/t4Bm3lQVqzYfdV7IL0Q=="
+          },
+          "type": {
+            "text": "uus+3sj034F2jz9YjpdlpQ=="
+          },
+          "appliesTo": [
+            {
+              "text": "vaJ87njuTXSMW0K2ebWI4w=="
+            }
+          ],
+          "text": "Y4MBKAfG9Hw9ePTNbcnbxQ=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "79551",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-05-07T01:10:39.834-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "en-IN",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">GFuMRVaxRs+DhaHx64Cyqw==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "NIIP",
+            "display": "National Insurance Payor Identifier (Payor)",
+            "userSelected": true
+          }
+        ],
+        "text": "cj835yybqZDOyINYQ4D6nw=="
+      },
+      "system": "http://projectcrucible.org//qO+Rryd6a0y2+pSRd4f2A==",
+      "value": "6Q99AOJZoMph/Flm1F6EJg==",
+      "period": {
+        "start": "2017-05-07T01:10:39.706Z",
+        "end": "2017-05-07T01:10:39.706Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/jTlNMT/cRRRHLDyuLsqduw==",
+          "value": "bMwnYLX3rFzpOZFLyRXBdw=="
+        },
+        "display": "Organization PuRyexta54ljG/1Q6P5yUw=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "ytDp70lft0WQTvC2y6Vbkw=="
+        },
+        "system": "http://projectcrucible.org/3ftvkjz5vEQ98uwoWAFWLw==",
+        "value": "cXzl5udSAy6uQffrJKZM8w==",
+        "period": {
+          "start": "2017-05-07T01:10:39.707Z",
+          "end": "2017-05-07T01:10:39.707Z"
+        },
+        "assigner": {
+          "display": "Organization E4Dga5Hn2WT9rFWNg+Rcow=="
+        }
+      },
+      "display": "DeviceRequest 8R603WaCPQ4zm1ugq4QcZQ=="
+    }
+  ],
+  "status": "entered-in-error",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "imaging",
+          "display": "Imaging",
+          "userSelected": false
+        }
+      ],
+      "text": "xGzOE8ihdcCHpM9KhXchYw=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10427-3",
+        "display": "Transfuse whole blood autologous [Volume]",
+        "userSelected": true
+      }
+    ],
+    "text": "uUJt3e5H9OZ0uw4KzL15iw=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "WEODhtVIvdl1LZnqboRqbg=="
+      },
+      "system": "http://projectcrucible.org/56h3ZIO7Gw3VUY0x+Jg54w==",
+      "value": "qEf5KbPdA0+BY98ulP75CA==",
+      "period": {
+        "start": "2017-05-07T01:10:39.711Z",
+        "end": "2017-05-07T01:10:39.711Z"
+      },
+      "assigner": {
+        "display": "Organization C2CdNhDge/PB+dZHg4+0EA=="
+      }
+    },
+    "display": "Location +N+gtHZ6XKit2ycgx5c8aA=="
+  },
+  "context": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "3SPTYthbXM4nKmwYp14m6A=="
+      },
+      "system": "http://projectcrucible.org/gLUmVcuUWJ3dEBJkcH9uGA==",
+      "value": "uzYTxJdBKtDWYLiqMVyLLw==",
+      "period": {
+        "start": "2017-05-07T01:10:39.712Z",
+        "end": "2017-05-07T01:10:39.712Z"
+      },
+      "assigner": {
+        "display": "Organization M11A4nRfhJ2DtEVUO5KFiA=="
+      }
+    },
+    "display": "EpisodeOfCare 2uFyaGExF15PdFS8Pie13A=="
+  },
+  "effectiveDateTime": "2017-05-07T01:10:39.712Z",
+  "issued": "2017-05-07T01:10:39.712Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "secondary",
+        "type": {
+          "text": "K5HufaHNaQz5O/OaQLpxQw=="
+        },
+        "system": "http://projectcrucible.org//w+Ek2h7d96pmja+K0LG5Q==",
+        "value": "Mri73aI6ELg/Nxmrm+Nb8g==",
+        "period": {
+          "start": "2017-05-07T01:10:39.712Z",
+          "end": "2017-05-07T01:10:39.712Z"
+        },
+        "assigner": {
+          "display": "Organization r/EMQjb8bcCgDGGkUusVYQ=="
+        }
+      },
+      "display": "Organization Kk4lEUE2KNoy7+wxzvY6BQ=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/g4l4O6btQ5xQHpp3wnH+DA==",
+        "code": "2omX3XjHA5v9YqRTSU1okQ==",
+        "display": "YV7zdgKsYI9XJ527P983WA==",
+        "userSelected": false
+      }
+    ],
+    "text": "MLK69SFKq1VJOBTdd/m/UA=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "masked",
+        "display": "Masked",
+        "userSelected": false
+      }
+    ],
+    "text": "4ghbVM0T0kC6H8g9xie+pA=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low",
+        "userSelected": false
+      }
+    ],
+    "text": "up/yufBxvTWH/xIM1E2eSA=="
+  },
+  "comment": "K8vlfiefZNIqUm6mfobgqA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "2489005",
+        "display": "Medial check ligament of eye",
+        "userSelected": true
+      }
+    ],
+    "text": "Hz+QTYuVBN7/ypMbLelF5g=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "129441002",
+        "display": "Counseling - action",
+        "userSelected": false
+      }
+    ],
+    "text": "fAuQKkOK395iMLnF2c2QdA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "X44eZDU/jPnvCYS5cGUs4Q=="
+      },
+      "system": "http://projectcrucible.org/2Q4xfP39pAVzeFN13NhBkA==",
+      "value": "odkUo2+9KvYk/3DVWLDCUg==",
+      "period": {
+        "start": "2017-05-07T01:10:39.751Z",
+        "end": "2017-05-07T01:10:39.751Z"
+      },
+      "assigner": {
+        "display": "Organization 0ZK4q0+O5qV20V3cYmGS2w=="
+      }
+    },
+    "display": "Specimen dqL2xpDZ8IMSVg7h8ZaGeA=="
+  },
+  "device": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "r6S6QGmfYveneeV4aTdTaQ=="
+      },
+      "system": "http://projectcrucible.org/bTklORI8DG8ArfJwwWv0Ag==",
+      "value": "rqobs4hPMweUmLfww0JAmg==",
+      "period": {
+        "start": "2017-05-07T01:10:39.751Z",
+        "end": "2017-05-07T01:10:39.751Z"
+      },
+      "assigner": {
+        "display": "Organization mRDCEMMZDq00maM8WqiHEg=="
+      }
+    },
+    "display": "DeviceMetric i1/0/1tUQjGxiEgKY3btAg=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.02627685901906529,
+        "comparator": "<",
+        "unit": "oD4WTq6BqPZ8F6i25uIOLw==",
+        "system": "http://projectcrucible.org/SvJqbxkwFJCYUOL3hTr6dA==",
+        "code": "Godcr4uiLiPUSN/lIo+/Fg=="
+      },
+      "high": {
+        "value": 0.21726588733082586,
+        "comparator": "<",
+        "unit": "PcuLdCUkB9riTx5NZCLA7w==",
+        "system": "http://projectcrucible.org/RvCem2QcuKnL4V4QcXtIeQ==",
+        "code": "cJ5Z6B8WHR7BZhkJdkXj7A=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "pre",
+            "display": "Pre Therapeutic Desired Level",
+            "userSelected": false
+          }
+        ],
+        "text": "BnvUT5LcW0tvSrF+6YhEJw=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": false
+            }
+          ],
+          "text": "ejXcQR3gmo0DtglDrquRlg=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.44572241386218414,
+          "comparator": ">=",
+          "unit": "7nQsIRbOyLvqezOgm1lZaQ==",
+          "system": "http://projectcrucible.org/gNe/PI9PWPmvoJVRJWa04g==",
+          "code": "Ve0ZHH0kVcTW7PVY4TipLQ=="
+        },
+        "high": {
+          "value": 0.7694702347184798,
+          "comparator": "<=",
+          "unit": "97fo435icvf9+IlJPOpoIA==",
+          "system": "http://projectcrucible.org/UolIZWW4DsssWYEt+nfDaw==",
+          "code": "bMgg6aMOAC7TI9u+EcbYwA=="
+        }
+      },
+      "text": "sND7Tf644gK5g5bbK1jU7A=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/Kv1ooOnev0m/fxJFh/Zlrw==",
+          "value": "Nf+CJHJOwIa39r0JN888CQ=="
+        },
+        "display": "Sequence 420uJVgO8DckNDvNQOpRnA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10044-6",
+            "display": "S wave amplitude in lead V5",
+            "userSelected": true
+          }
+        ],
+        "text": "caRVs6fWPk0VybeDz//p8A=="
+      },
+      "valueRange": {
+        "low": {
+          "value": 0.16098625732691663,
+          "comparator": ">",
+          "unit": "dCTEQq7Hw/fZEIP2Z8GWWg==",
+          "system": "http://projectcrucible.org/ayAC/4cI9YJlItDoDwB+1w==",
+          "code": "vjm6PtAIiOXlhx934ecQoA=="
+        },
+        "high": {
+          "value": 0.3873775517873759,
+          "comparator": "<=",
+          "unit": "beGt294VA3Ky+CH3I2R5Zg==",
+          "system": "http://projectcrucible.org/gupqduLv+tGeA6Y/ununCA==",
+          "code": "Hozf6PLSkz34hBJnija9Og=="
+        }
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "not-performed",
+            "display": "Not Performed",
+            "userSelected": true
+          }
+        ],
+        "text": "mqxW4wmtNiIZUyy7/Usoig=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "ND",
+            "display": "Not Detected",
+            "userSelected": true
+          }
+        ],
+        "text": "WOCEaLmvOBT+J9rj9RW1hQ=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.20023219599512,
+            "comparator": "<",
+            "unit": "WPsA416VGp2/+yPZsnOIqg==",
+            "system": "http://projectcrucible.org/DE1i9Rr1wi8ntzDCvTGgAQ==",
+            "code": "+btsXTQbn7C4qOu1BMuzmg=="
+          },
+          "high": {
+            "value": 0.7055367798088125,
+            "comparator": ">=",
+            "unit": "W1lTRz/o8GwG7QbPerJuOw==",
+            "system": "http://projectcrucible.org/V3VhzpiUDuqbhA0cXU1NNQ==",
+            "code": "Q8KPZ+QyBYnF1vIu47QkPQ=="
+          },
+          "type": {
+            "text": "Bscd1wsg8QMeLQuyoxcCRg=="
+          },
+          "appliesTo": [
+            {
+              "text": "YDBBASkHNvgCBR5pPIMJIg=="
+            }
+          ],
+          "text": "bfTS8twOLxLUB1dEvEwZzg=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "232686",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-09-25T03:36:25.305-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "zh",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">8bcp8GOUE3v86RHjGEYT6A==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "NIIP",
+            "display": "National Insurance Payor Identifier (Payor)",
+            "userSelected": false
+          }
+        ],
+        "text": "m+yoceyacOrwmw6mxVLwZA=="
+      },
+      "system": "http://projectcrucible.org/QCmYaAzATVJdTfsaz021Ng==",
+      "value": "MBp7BmQBCnIDlLEBj5JvmA==",
+      "period": {
+        "start": "2017-09-25T03:36:24.235Z",
+        "end": "2017-09-25T03:36:24.235Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/7T1NYp2DCrTsa+aCt4AYeQ==",
+          "value": "DCvMOlUZrWlX3kYs6Tz4mg=="
+        },
+        "display": "Organization 5ParoGn2n3OF9QtDwpMTGA=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "zU1330uQzg/UeB0nLzjZQg=="
+        },
+        "system": "http://projectcrucible.org/k2S4+Z3jP+bxZGS208NJ/A==",
+        "value": "WJhgL824qalazyzSaHNVvw==",
+        "period": {
+          "start": "2017-09-25T03:36:24.236Z",
+          "end": "2017-09-25T03:36:24.236Z"
+        },
+        "assigner": {
+          "display": "Organization INAH4qRSP97GQ/jJk10PUQ=="
+        }
+      },
+      "display": "ReferralRequest ujqFfuEpjNFfwYErGcikXQ=="
+    }
+  ],
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "exam",
+          "display": "Exam",
+          "userSelected": true
+        }
+      ],
+      "text": "N1Nu5u0T0jABEZszM/YEow=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10528-8",
+        "display": "Acetophenazine [Mass/volume] in Serum or Plasma",
+        "userSelected": false
+      }
+    ],
+    "text": "f9x7lZ+C/TKDWI40n9LFMQ=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "3iA7T3kZNht3a+i2jkHckQ=="
+      },
+      "system": "http://projectcrucible.org/WgRud6/h87LCWjascIprtg==",
+      "value": "r8IgefprH+KI3I3P+8Tycw==",
+      "period": {
+        "start": "2017-09-25T03:36:24.241Z",
+        "end": "2017-09-25T03:36:24.241Z"
+      },
+      "assigner": {
+        "display": "Organization m6ieVs3KqABgtIuRoCStNw=="
+      }
+    },
+    "display": "Group qIq7ztF40HRmZO2vGlvYBQ=="
+  },
+  "context": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "hyMlLBlaul91BDodOhBRIg=="
+      },
+      "system": "http://projectcrucible.org/2Ni6LUTEYQ7z0mzOXHHYVQ==",
+      "value": "8nzmPA4Puk2GwS54WfJ2EQ==",
+      "period": {
+        "start": "2017-09-25T03:36:24.242Z",
+        "end": "2017-09-25T03:36:24.242Z"
+      },
+      "assigner": {
+        "display": "Organization repTTSNa0Ssse+p0fzrBfg=="
+      }
+    },
+    "display": "Encounter kaevFDwcnNs931DBhf2pvw=="
+  },
+  "effectiveDateTime": "2017-09-25T03:36:24.242Z",
+  "issued": "2017-09-25T03:36:24.242Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "e4P0gUWnLxkeitWhm/7ZtQ=="
+        },
+        "system": "http://projectcrucible.org/LRzltisRRErSC8cUi0ZmIQ==",
+        "value": "5h+M8BY1hD+Qxm6HI9r6mw==",
+        "period": {
+          "start": "2017-09-25T03:36:24.243Z",
+          "end": "2017-09-25T03:36:24.243Z"
+        },
+        "assigner": {
+          "display": "Organization 1QT5f84t/1QK0FUHuRA7Ug=="
+        }
+      },
+      "display": "RelatedPerson wmUElwcRpXD2dkILaupRSA=="
+    }
+  ],
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://projectcrucible.org/Kjd3g6/tzfnwTXvkqPYW5w==",
+        "code": "P5l02DfYmJ9ueFzzd5jBDA==",
+        "display": "WTwAmQQy/Uiq1/5nBAMq+w==",
+        "userSelected": true
+      }
+    ],
+    "text": "sOCQ3wEOuV6kFW8sQtYgEg=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "astext",
+        "display": "As Text",
+        "userSelected": true
+      }
+    ],
+    "text": "9s5xOjBXmdFI1GFOaz1ehQ=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "AA",
+        "display": "Critically abnormal",
+        "userSelected": false
+      }
+    ],
+    "text": "r4jMqKKuTJsewHyqL5zCDA=="
+  },
+  "comment": "lHlBBn4Bl5wJ4+ntGl1nWw==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "4812002",
+        "display": "Anterior tibial compartment",
+        "userSelected": true
+      }
+    ],
+    "text": "+VP6HhlCFWRdWDMc+G11Dg=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1225002",
+        "display": "Radiography of humerus",
+        "userSelected": true
+      }
+    ],
+    "text": "a5JpnAsQrc22dSohxgGCEA=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "jlzNNj4fD3uGqSRnPxkBXQ=="
+      },
+      "system": "http://projectcrucible.org/Z/fvEkujA4a1Tg/tLZjDjQ==",
+      "value": "3EZKgeS3lbG9wHPdclO0KA==",
+      "period": {
+        "start": "2017-09-25T03:36:24.274Z",
+        "end": "2017-09-25T03:36:24.274Z"
+      },
+      "assigner": {
+        "display": "Organization WylVxTDl02o9pK4QpE83sw=="
+      }
+    },
+    "display": "Specimen iXLvIryIdWxTu8VUOMyfDQ=="
+  },
+  "device": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "vFOdZWwnfY4O5wHziKYF/A=="
+      },
+      "system": "http://projectcrucible.org/tbXF3+qnKfsrBUgR+6JL2Q==",
+      "value": "32Fr0Ywe2iBksEQ3zfixnw==",
+      "period": {
+        "start": "2017-09-25T03:36:24.275Z",
+        "end": "2017-09-25T03:36:24.275Z"
+      },
+      "assigner": {
+        "display": "Organization fRr+X/YGPIDaDN60jcZI6w=="
+      }
+    },
+    "display": "DeviceMetric S6JX/z5uE1OI+d8aQUasbg=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.03539663874365784,
+        "comparator": "<=",
+        "unit": "+Wd4GBs9t/lQPxP8cxAlbw==",
+        "system": "http://projectcrucible.org/V2yeIs6IZIqwc7y96X/quA==",
+        "code": "uazuVTgR4MP8SClsIPlYKQ=="
+      },
+      "high": {
+        "value": 0.5737694275336253,
+        "comparator": "<=",
+        "unit": "Fi0vwp1e922xdCqjd1wmfg==",
+        "system": "http://projectcrucible.org/Uhq6mMcRL7E0RnvtH8If9Q==",
+        "code": "JZn1m7bGr+svexUgjH8f2A=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "pre",
+            "display": "Pre Therapeutic Desired Level",
+            "userSelected": false
+          }
+        ],
+        "text": "Qz876LX2SF16G1tWr0Jucg=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "77386006",
+              "display": "Pregnancy not delivered",
+              "userSelected": true
+            }
+          ],
+          "text": "3GVThHgOFhGNocaXc5uyfQ=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.20680072764925694,
+          "comparator": "<=",
+          "unit": "EUKyHnP9XyiBRB4YOOJ6NA==",
+          "system": "http://projectcrucible.org/8zrWG4ggkCPjwRcG1R1vUA==",
+          "code": "LuZ/1E+EaY/BABW8W7yHDQ=="
+        },
+        "high": {
+          "value": 0.8142580994844071,
+          "comparator": "<",
+          "unit": "Hq23UgqgBibTRTs4tI0eeQ==",
+          "system": "http://projectcrucible.org/mnUCwEKNnIjzOLLZ8YIPeg==",
+          "code": "W7IpiA+4DkKJGdLmHyjbJg=="
+        }
+      },
+      "text": "o1TpitCvzLSmixhW0Vubdw=="
+    }
+  ],
+  "related": [
+    {
+      "type": "has-member",
+      "target": {
+        "identifier": {
+          "use": "official",
+          "system": "http://projectcrucible.org/uCRkEamwzFOTzeC2v+8MTQ==",
+          "value": "KYggTpFvQQUnhTVhBuvsug=="
+        },
+        "display": "QuestionnaireResponse h63nVuJhKdSfsiGAura+tw=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10539-5",
+            "display": "Glipizide [Mass/volume] in Serum or Plasma",
+            "userSelected": false
+          }
+        ],
+        "text": "dEKfIkbK3CEtRxM52H2GIQ=="
+      },
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://projectcrucible.org/JwhNVAQt7Lpe0TD7XuhkFQ==",
+            "code": "OP+XWEAAx7hmTmlhQ0CYkw==",
+            "display": "bvLyi6udf9ASaQtxAHBThQ==",
+            "userSelected": true
+          }
+        ],
+        "text": "wDE5Ey9d/TF2CIdWT5clRg=="
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "unknown",
+            "display": "Unknown",
+            "userSelected": true
+          }
+        ],
+        "text": "JXO5nFLLB8Q2flB5iF2y6Q=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "NEG",
+            "display": "Negative",
+            "userSelected": true
+          }
+        ],
+        "text": "olqRECjL63zgDhr4uOvvWA=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.739122048409178,
+            "comparator": ">=",
+            "unit": "rEE1jbgpXPyQPqbSpNhYIw==",
+            "system": "http://projectcrucible.org/Xuqjp5nNBf3YdrJIsmKnRQ==",
+            "code": "532uoIOC9MCuw+z7PjnmBQ=="
+          },
+          "high": {
+            "value": 0.9006899166667697,
+            "comparator": ">",
+            "unit": "wGS6ItP1861WRlGU8q9saA==",
+            "system": "http://projectcrucible.org/8KYfsHi4UZdUUWBB5pP+qA==",
+            "code": "6p8ra08rCrlqPD4E9tEBzg=="
+          },
+          "type": {
+            "text": "MKZfBvxYG2tBO4raJYnK4g=="
+          },
+          "appliesTo": [
+            {
+              "text": "ULrb8p5x4YuicO7LB8lOXA=="
+            }
+          ],
+          "text": "iROMlz7Yms+Bv77YKYzDTA=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "263558",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-19T05:57:13.560-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "nl",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">fzbd0zHcV5liw+h2T5wwlQ==</div>"
+  },
+  "identifier": [
+    {
+      "use": "temp",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "MCN",
+            "display": "Microchip Number",
+            "userSelected": false
+          }
+        ],
+        "text": "KxZ+Ds+Vasc+HGWEcPJmug=="
+      },
+      "system": "http://projectcrucible.org/tcrQwjMAUInj7uKkrKFhcA==",
+      "value": "b7/ze+iLINYXMlwhT9WEcA==",
+      "period": {
+        "start": "2017-10-19T05:57:13.115Z",
+        "end": "2017-10-19T05:57:13.115Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "secondary",
+          "system": "http://projectcrucible.org/VjLXaXcMLTw13/UcXLKtkg==",
+          "value": "YXAnoBzcPdMjs5y5m8K1bg=="
+        },
+        "display": "Organization iYA+5wAqxlsOx+IINkAujA=="
+      }
+    }
+  ],
+  "basedOn": [
+    {
+      "identifier": {
+        "use": "official",
+        "type": {
+          "text": "AQLNfP1tR6Rw5koXwkU/Lg=="
+        },
+        "system": "http://projectcrucible.org/K98ejn6h1VS90neb/vB1SQ==",
+        "value": "6OmgvCcHJPp04PJvVjzHZg==",
+        "period": {
+          "start": "2017-10-19T05:57:13.117Z",
+          "end": "2017-10-19T05:57:13.117Z"
+        },
+        "assigner": {
+          "display": "Organization SxrDumU1qzgCqCXGA+5e2A=="
+        }
+      },
+      "display": "ReferralRequest I+rn1al1LyyYgFrncMOLuw=="
+    }
+  ],
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "therapy",
+          "display": "Therapy",
+          "userSelected": true
+        }
+      ],
+      "text": "KchhSHrqBlNEAMYWR7cJoQ=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "10552-8",
+        "display": "Tricyclic antidepressants [Mass/volume] in Serum or Plasma",
+        "userSelected": true
+      }
+    ],
+    "text": "nfSewcgmi0suWmzrYQd+Lg=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "WRCTMNhNlzfdc6RqPK5mgw=="
+      },
+      "system": "http://projectcrucible.org/HpZF1o5a32yUQOZbVzheEg==",
+      "value": "Z3yyD+Rd8UAOJ9+kUgvM2A==",
+      "period": {
+        "start": "2017-10-19T05:57:13.126Z",
+        "end": "2017-10-19T05:57:13.126Z"
+      },
+      "assigner": {
+        "display": "Organization wOPDPcq7xzwl4Zqswfd22w=="
+      }
+    },
+    "display": "Device us77/cfTV6awukgCgtNKng=="
+  },
+  "context": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "YHJvIHFnkmI3mm/rD6MZ1w=="
+      },
+      "system": "http://projectcrucible.org/MFLzTXwVLC1te33PLXYjWA==",
+      "value": "yfR0HpDczw1ZshkXhnuxFw==",
+      "period": {
+        "start": "2017-10-19T05:57:13.128Z",
+        "end": "2017-10-19T05:57:13.128Z"
+      },
+      "assigner": {
+        "display": "Organization NlBpNDkkUvi23Ypa/9O9VA=="
+      }
+    },
+    "display": "Encounter i9qyPSnXhfhJQJ/idGtnFw=="
+  },
+  "effectiveDateTime": "2017-10-19T05:57:13.129Z",
+  "issued": "2017-10-19T05:57:13.129Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "temp",
+        "type": {
+          "text": "dQ82QDUB1f6MA6Zk7e3bXg=="
+        },
+        "system": "http://projectcrucible.org/GTnlGB3zO3qwDzXE5jehqA==",
+        "value": "0BGo8JG9wEWocj77505Hyw==",
+        "period": {
+          "start": "2017-10-19T05:57:13.130Z",
+          "end": "2017-10-19T05:57:13.130Z"
+        },
+        "assigner": {
+          "display": "Organization pVUp0UhfyVNuQgSk6IsMeg=="
+        }
+      },
+      "display": "RelatedPerson WANMmbWID0EkkgCxxZZTTg=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.9232646215518079,
+    "comparator": "<=",
+    "unit": "r219Czkf04bkhRzrTGOGHw==",
+    "system": "http://projectcrucible.org/lSXJwn4Fw3ZcsEINi26V6g==",
+    "code": "56lL2my09aLNCwxbZFAl/w=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "unknown",
+        "display": "Unknown",
+        "userSelected": false
+      }
+    ],
+    "text": "VeXppO8uuMhY5EQ3I4vu4Q=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "LU",
+        "display": "Very low",
+        "userSelected": false
+      }
+    ],
+    "text": "T/cvi5W/nWzgbIAKwovMpw=="
+  },
+  "comment": "TakA7iwjOyupWAktG3b/gA==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "7872004",
+        "display": "Myocardium of ventricle",
+        "userSelected": true
+      }
+    ],
+    "text": "7oq7+MU09qOVwiBQbxK20w=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "272395006",
+        "display": "Typings",
+        "userSelected": true
+      }
+    ],
+    "text": "O3PQqk65N9Gk8cLh6Gvn2A=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "secondary",
+      "type": {
+        "text": "hPetSkbXERofl6T054QcPA=="
+      },
+      "system": "http://projectcrucible.org/Q2n/t9HRHtwUTUEEDz27gA==",
+      "value": "xNFazu5Qlfj20SFmOz39qQ==",
+      "period": {
+        "start": "2017-10-19T05:57:13.173Z",
+        "end": "2017-10-19T05:57:13.173Z"
+      },
+      "assigner": {
+        "display": "Organization Praww02ruSzObyiVoTIPvg=="
+      }
+    },
+    "display": "Specimen COYeBk8n/mYfA1wv8aWWoA=="
+  },
+  "device": {
+    "identifier": {
+      "use": "usual",
+      "type": {
+        "text": "ZTx++mEq59zwcQiUw3TItg=="
+      },
+      "system": "http://projectcrucible.org/EoN/RoPuVcsAqG4DKHsNbQ==",
+      "value": "vFF3wnww/C6iKGE+0o6nIg==",
+      "period": {
+        "start": "2017-10-19T05:57:13.174Z",
+        "end": "2017-10-19T05:57:13.174Z"
+      },
+      "assigner": {
+        "display": "Organization yTISZ+nNhTPDJLZp3xjfTg=="
+      }
+    },
+    "display": "Device a6KGIWlA8MDaYTdIfa3G5A=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.32700782983466914,
+        "comparator": "<=",
+        "unit": "RXXzWrDWI0K8l8yxFOZlmQ==",
+        "system": "http://projectcrucible.org/r9EKj3zPAd0nA8Lma1KbJQ==",
+        "code": "9Uf8ufylcJX1/6Vp3EcCug=="
+      },
+      "high": {
+        "value": 0.5656313025716825,
+        "comparator": ">",
+        "unit": "DPsT/FGybSkWBj4Hr8fSAQ==",
+        "system": "http://projectcrucible.org/yHsNIE6XV4n7tgCpJay7VA==",
+        "code": "f3TzGwK6tqB72xj+vr0Vlg=="
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "postmeopausal",
+            "display": "Post-Menopause",
+            "userSelected": true
+          }
+        ],
+        "text": "J11wdl6T/q2B9J7S2vboxg=="
+      },
+      "appliesTo": [
+        {
+          "coding": [
+            {
+              "userSelected": true
+            }
+          ],
+          "text": "0zbJjl+/84QtDVu33/oYnA=="
+        }
+      ],
+      "age": {
+        "low": {
+          "value": 0.7188773483595404,
+          "comparator": ">=",
+          "unit": "TGdk5vGeoj1KIZ8UYtRp6A==",
+          "system": "http://projectcrucible.org/ayVWVO6hhYfzrSyrrT4f7Q==",
+          "code": "WCoJRFIBzfVrHh1n/Qjt+A=="
+        },
+        "high": {
+          "value": 0.8297486990773008,
+          "comparator": ">",
+          "unit": "39QW93FoRB0pwNWOA8/g4A==",
+          "system": "http://projectcrucible.org/VR03HM4N8b+EN2lKk7lB0w==",
+          "code": "/LZdeR+qCdVb2jTjTh40aA=="
+        }
+      },
+      "text": "DA8g2Vg1GKgSGrT3byRzqg=="
+    }
+  ],
+  "related": [
+    {
+      "type": "has-member",
+      "target": {
+        "identifier": {
+          "use": "temp",
+          "system": "http://projectcrucible.org/qjYrfDqBy2a1LJ2J6bCVYg==",
+          "value": "3BzQeV4zs+awFGMjvhzm3w=="
+        },
+        "display": "QuestionnaireResponse 9Pa4zpAYqVkAAUZUQHAd/Q=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "10123-8",
+            "display": "ST wave mid displacement in lead III",
+            "userSelected": false
+          }
+        ],
+        "text": "edhQyDdkJu6A9zu6sYx0jQ=="
+      },
+      "valueDateTime": "2017-10-19T05:57:13.185Z",
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "unsupported",
+            "display": "Unsupported",
+            "userSelected": true
+          }
+        ],
+        "text": "9hlvVOlkemltdBsp1HxO9Q=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "RR",
+            "display": "Reactive",
+            "userSelected": false
+          }
+        ],
+        "text": "PTsXjoDVNW3a2zqwEipCJw=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.14224980890645267,
+            "comparator": ">=",
+            "unit": "Mq9Yrq3qJqp+BwGK2mej6A==",
+            "system": "http://projectcrucible.org/vlIMhJ4ihHWjs5uwLFrr/A==",
+            "code": "gLPqqfOHQC0t83qwBxGSGw=="
+          },
+          "high": {
+            "value": 0.5747580098009685,
+            "comparator": "<",
+            "unit": "QH9Ru9kIIvS2u6fdyf2F5w==",
+            "system": "http://projectcrucible.org/ZaXmzPpYo84saWWkcLPIlQ==",
+            "code": "EHLKRdcipsYq8sGaNmSvew=="
+          },
+          "type": {
+            "text": "nUifK61G9TbIvOF69x4mhA=="
+          },
+          "appliesTo": [
+            {
+              "text": "v+B81799uC4g3I8G36C2aQ=="
+            }
+          ],
+          "text": "biXI5a1o5ktTLKKHCymWOw=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "66978",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-04-05T10:51:07.011-04:00"
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: f002\n      </p><p><b>identifier</b>: 6324 (OFFICIAL)\n      </p><p><b>status</b>: final\n      </p><p><b>code</b>: Base excess in Blood by calculation \n        <span>(Details : {LOINC code '11555-0' = 'Base excess in Blood by calculation', given as 'Base excess in Blood by calculation'})</span></p><p><b>subject</b>: \n        <a>P. van de Heuvel</a></p><p><b>effective</b>: Apr 2, 2013 10:30:10 AM --&gt; Apr 5, 2013 10:30:10 AM\n      </p><p><b>issued</b>: Apr 3, 2013 3:30:10 PM\n      </p><p><b>performer</b>: \n        <a>A. Langeveld</a></p><p><b>value</b>: 12.6 mmol/l\n        <span> (Details: http://unitsofmeasure.org code mmol/L = 'mmol/L')</span></p><p><b>interpretation</b>: High \n        <span>(Details : {http://hl7.org/fhir/v2/0078 code 'H' = 'High', given as 'High'})</span></p><h3>ReferenceRanges</h3><table><tr><td>-</td><td><b>Low</b></td><td><b>High</b></td></tr><tr><td>*</td><td>7.1 mmol/l\n            <span> (Details: http://unitsofmeasure.org code mmol/L = 'mmol/L')</span></td><td>11.2 mmol/l\n            <span> (Details: http://unitsofmeasure.org code mmol/L = 'mmol/L')</span></td></tr></table></div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://www.bmc.nl/zorgportal/identifiers/observations",
+      "value": "6324"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "11555-0",
+        "display": "Base excess in Blood by calculation"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/23270",
+    "display": "P. van de Heuvel"
+  },
+  "effectivePeriod": {
+    "start": "2013-04-02T10:30:10+01:00",
+    "end": "2013-04-05T10:30:10+01:00"
+  },
+  "issued": "2013-04-03T15:30:10+01:00",
+  "performer": [
+    {
+      "reference": "Practitioner/clinFhirrlCYioXfKqXVwJPryzeI0rXh6842",
+      "display": "A. Langeveld"
+    }
+  ],
+  "valueQuantity": {
+    "value": 12.6,
+    "unit": "mmol/l",
+    "system": "http://unitsofmeasure.org",
+    "code": "mmol/L"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "H",
+        "display": "High"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 7.1,
+        "unit": "mmol/l",
+        "system": "http://unitsofmeasure.org",
+        "code": "mmol/L"
+      },
+      "high": {
+        "value": 11.2,
+        "unit": "mmol/l",
+        "system": "http://unitsofmeasure.org",
+        "code": "mmol/L"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "cf-1511787371708",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-12-02T18:09:12.123-05:00"
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Carbon dioxide in blood</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://www.bmc.nl/zorgportal/identifiers/observations",
+      "value": "6325"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "11557-6",
+        "display": "Carbon dioxide in blood"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/330828"
+  },
+  "effectivePeriod": {
+    "start": "2017-04-02T10:30:10+01:00",
+    "end": "2017-04-05T10:30:10+01:00"
+  },
+  "issued": "2017-04-03T15:30:10+01:00",
+  "performer": [
+    {
+      "reference": "Practitioner/5357"
+    }
+  ],
+  "valueQuantity": {
+    "value": 6.2,
+    "unit": "kPa",
+    "system": "http://unitsofmeasure.org",
+    "code": "kPa"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "H",
+        "display": "High"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 4.8,
+        "unit": "kPa",
+        "system": "http://unitsofmeasure.org",
+        "code": "kPa"
+      },
+      "high": {
+        "value": 6,
+        "unit": "kPa",
+        "system": "http://unitsofmeasure.org",
+        "code": "kPa"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "31179",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-02-28T10:50:12.028-05:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "language": "da",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">iMWvRKk08tSDkGImbdPo0Q==</div>"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "BRN",
+            "display": "Breed Registry Number",
+            "userSelected": true
+          }
+        ],
+        "text": "vdMbNfUrERd+tz3n3U2TSA=="
+      },
+      "system": "http://projectcrucible.org/QUrGCgw9gIOWgc6MtYcqTQ==",
+      "value": "v1VxVS/bIh1hmCNBybV7ZQ==",
+      "period": {
+        "start": "2017-02-28T10:50:11.887Z",
+        "end": "2017-02-28T10:50:11.887Z"
+      },
+      "assigner": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/5zSVcSrw/QVmlUhQjYmt9Q==",
+          "value": "KYSAECqLm0FnY2Sk3gg9Ug=="
+        },
+        "display": "Organization B2DwhhBXZm+ktoI8Qc0VGg=="
+      }
+    }
+  ],
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "exam",
+          "display": "Exam",
+          "userSelected": true
+        }
+      ],
+      "text": "mwZJcZb4aMaCdZ/TEUu1lA=="
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "12773-8",
+        "display": "Cholesterol in LDL [Units/volume] in Serum or Plasma by Electrophoresis",
+        "userSelected": true
+      }
+    ],
+    "text": "ExckkG5yB6z0QjOCwRRIPg=="
+  },
+  "subject": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "R3rG5S4bFgAtevia0VA22Q=="
+      },
+      "system": "http://projectcrucible.org/DIJaIZZ6Atku1gKj0yHnNA==",
+      "value": "F2TWF6l6VB1QcwU9w0CP2A==",
+      "period": {
+        "start": "2017-02-28T10:50:11.900Z",
+        "end": "2017-02-28T10:50:11.900Z"
+      },
+      "assigner": {
+        "display": "Organization SbmdS0Gj5dE/6zwCU3PY+g=="
+      }
+    },
+    "display": "Device R+B/A3O3UiUwR8GMEy2c9g=="
+  },
+  "effectiveDateTime": "2017-02-28T10:50:11.900Z",
+  "issued": "2017-02-28T10:50:11.900Z",
+  "performer": [
+    {
+      "identifier": {
+        "use": "usual",
+        "type": {
+          "text": "TF2hqqCAdupbcnADOmqjMA=="
+        },
+        "system": "http://projectcrucible.org/UAD3qika7JV0ZDWnmeIJyw==",
+        "value": "lyePBSalqmSyGkmmMO+5xw==",
+        "period": {
+          "start": "2017-02-28T10:50:11.900Z",
+          "end": "2017-02-28T10:50:11.900Z"
+        },
+        "assigner": {
+          "display": "Organization nbQBIFINUJES4dFYS9imGw=="
+        }
+      },
+      "display": "Patient wgGKjJExdGtyZoy6e9fw0Q=="
+    }
+  ],
+  "valueQuantity": {
+    "value": 0.8369687576018122,
+    "comparator": ">",
+    "unit": "NAVHd46TAJuI7oq+M+PxjQ==",
+    "system": "http://projectcrucible.org/hdQUPKoc5ciIbRug05+9mA==",
+    "code": "1gJb9AIKzXJadSwcKX153A=="
+  },
+  "dataAbsentReason": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/data-absent-reason",
+        "code": "temp",
+        "display": "Temp",
+        "userSelected": true
+      }
+    ],
+    "text": "RFbBRTwThPlXyhRqiY991Q=="
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "TOX",
+        "display": "Cytotoxic substance present",
+        "userSelected": false
+      }
+    ],
+    "text": "8bxAJ2YKam+pfUBFvKF8fg=="
+  },
+  "comment": "4LdBEYjujvZ2oBvD/VzHWQ==",
+  "bodySite": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "61964005",
+        "display": "Structure of lateral antebrachial cutaneous nerve",
+        "userSelected": false
+      }
+    ],
+    "text": "9YcfzqWcGhflX0cO4gdwdw=="
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v3/ObservationMethod",
+        "code": "0005",
+        "display": "Magnetic resonance",
+        "userSelected": false
+      }
+    ],
+    "text": "wrDCV3NzHdRpu4Is3YGHrg=="
+  },
+  "specimen": {
+    "identifier": {
+      "use": "official",
+      "type": {
+        "text": "le0ZtM8VUlta2QBfMulaWw=="
+      },
+      "system": "http://projectcrucible.org/2ykFVRM7rOk3KhPsCilzRA==",
+      "value": "CQKTdxw02vupvVP0dONAbw==",
+      "period": {
+        "start": "2017-02-28T10:50:11.953Z",
+        "end": "2017-02-28T10:50:11.953Z"
+      },
+      "assigner": {
+        "display": "Organization MAf41cuhA4MRmfNTy16MtA=="
+      }
+    },
+    "display": "Specimen 6UTCN5u3z7GJ4H6J54zqnQ=="
+  },
+  "device": {
+    "identifier": {
+      "use": "temp",
+      "type": {
+        "text": "5xdhVLUoMvhxhU4LSTtfzQ=="
+      },
+      "system": "http://projectcrucible.org/wpXI4tXH+/9KsQFhseyG/w==",
+      "value": "CZ+foDaK7EcV0Zt6+NaiJA==",
+      "period": {
+        "start": "2017-02-28T10:50:11.953Z",
+        "end": "2017-02-28T10:50:11.953Z"
+      },
+      "assigner": {
+        "display": "Organization HXjECBfj4BoWsUuVbsPZvw=="
+      }
+    },
+    "display": "DeviceMetric 5m4TIyQJub+CupLbTQ/QOg=="
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0.23900157452616766,
+        "comparator": "<",
+        "unit": "ih6BxNRSzoryf/zeJUsY1w==",
+        "system": "http://projectcrucible.org/UEEBFJqbtphyhHloSsW6Fg==",
+        "code": "F3WOVkts5HHLKdiLaDGAhg=="
+      },
+      "high": {
+        "value": 0.4909674804995141,
+        "comparator": ">",
+        "unit": "4RJ/SSru1xME8tqHqJcNQw==",
+        "system": "http://projectcrucible.org//L9JCEzyZyOjGt7SSrMWnw==",
+        "code": "JiwxPiwgOE5KC7FBjhJ54A=="
+      },
+      "age": {
+        "low": {
+          "value": 0.3331106221594764,
+          "comparator": "<=",
+          "unit": "TmfBPSpIU94BEg3eqZMxzQ==",
+          "system": "http://projectcrucible.org/YApBt5oHOZJAiciCvourkQ==",
+          "code": "iVjFC3BkuZXoi6J6y1raNQ=="
+        },
+        "high": {
+          "value": 0.8304401173187553,
+          "comparator": "<=",
+          "unit": "TB8tKO5akOFask00nwUuVA==",
+          "system": "http://projectcrucible.org/aq/TT2U1ny3nbfVMnDGHig==",
+          "code": "fZE4hOskwGxpqWiDAbQkoQ=="
+        }
+      },
+      "text": "/lyVfby917SoEFwt1GDAjg=="
+    }
+  ],
+  "related": [
+    {
+      "type": "sequel-to",
+      "target": {
+        "identifier": {
+          "use": "usual",
+          "system": "http://projectcrucible.org/xxdTDyzruzTz4bwNgGYQ/g==",
+          "value": "PDtFEzNQyHTOpsJ2vLBASg=="
+        },
+        "display": "QuestionnaireResponse KDQM5sERHVZjbNKDzKt0DA=="
+      }
+    }
+  ],
+  "component": [
+    {
+      "code": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "13099-7",
+            "display": "Deprecated Sulfatide Ab.IgM in serum",
+            "userSelected": false
+          }
+        ],
+        "text": "/zZMR0I9cCUWP/eaWRFOTQ=="
+      },
+      "valueAttachment": {
+        "contentType": "application/x-pkcs12",
+        "language": "fy-NL",
+        "url": "http://projectcrucible.org/hJSuzX6lP+3pQLfaoAkFIw==",
+        "size": 13,
+        "hash": "O32ZoyJ6yFX+Lo2lL/TM2A==",
+        "title": "Uj9X87SsRhB3HJ8vAW42Eg==",
+        "creation": "2017-02-28T10:50:11.965Z"
+      },
+      "dataAbsentReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/data-absent-reason",
+            "code": "not-performed",
+            "display": "Not Performed",
+            "userSelected": false
+          }
+        ],
+        "text": "l7ndA+v+NZ22EKEqgTKUsQ=="
+      },
+      "interpretation": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0078",
+            "code": "NEG",
+            "display": "Negative",
+            "userSelected": true
+          }
+        ],
+        "text": "wUjMkvvtFgJhZH21qnkLcg=="
+      },
+      "referenceRange": [
+        {
+          "low": {
+            "value": 0.037577217872760804,
+            "comparator": "<",
+            "unit": "TCZXHO/Lic5diM5lwgXWsA==",
+            "system": "http://projectcrucible.org/DJvtXA48J1PQhL7k+troQA==",
+            "code": "R6uOs+t3bx4ktemntqo2mA=="
+          },
+          "high": {
+            "value": 0.6135248422303372,
+            "comparator": ">=",
+            "unit": "WvS79PNvvenZnnt4oZKeKA==",
+            "system": "http://projectcrucible.org/XwByeQfllUdfiUbokjvNKw==",
+            "code": "t34qSzG7TsinIzc0VNQPCg=="
+          },
+          "text": "sQ2GKsgfPHAyU8kHMeyUDQ=="
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692490",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-20T11:05:03.156-05:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "12951-0",
+        "display": "Trigl SerPl Calc-mCnc"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-03-31T10:00:00",
+  "valueQuantity": {
+    "value": 189,
+    "unit": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "10-39 years: 55-110 mg/dL | 40-59 years: 70-150 mg/dL | >60 years: 80-150 mg/dL | Therapeutic Target: <100 mg/dL"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "694820",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-24T11:04:58.099-05:00"
+  },
+  "identifier": [
+    {
+      "system": "urn:redix-fhir",
+      "value": "dne.7FA2D989-D10F-46D1-858B-400684AB1511"
+    },
+    {
+      "system": "submit_obr",
+      "value": "000002006326002362.648088.13457-7.1"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "13457-7"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/141960"
+  },
+  "issued": "2006-11-22T15:47:33",
+  "performer": [
+    {
+      "reference": "Practitioner/694825"
+    }
+  ],
+  "valueQuantity": {
+    "value": 49,
+    "system": "http://loinc.org",
+    "code": "NM"
+  },
+  "interpretation": {
+    "text": "NORMAL (APPLIES TO NON-NUMERIC RESULTS)"
+  },
+  "comment": "THIS IS A COMENT",
+  "referenceRange": [
+    {
+      "text": "0.000 - 100.000"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692487",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-20T11:05:03.156-05:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "14646-4",
+        "display": "HDLc SerPl-sCnc"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-03-31T10:00:00",
+  "valueQuantity": {
+    "value": 63,
+    "unit": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": ">=40 mg/dL"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "691998",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T01:26:38.661-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "14979-9",
+        "display": "aPTT in Platelet poor plasma by Coagulation assay"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 23,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "B",
+        "display": "Better"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 3,
+        "unit": "units"
+      },
+      "high": {
+        "value": 2,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "cf-1511786993953",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-12-02T18:09:12.123-05:00"
+  },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "http://www.bmc.nl/zorgportal/identifiers/observations",
+      "value": "6323"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "15074-8",
+        "display": "Glucose [Moles/volume] in Blood"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/330828"
+  },
+  "effectivePeriod": {
+    "start": "2017-04-02T09:30:10+01:00"
+  },
+  "issued": "2013-04-03T15:30:10+01:00",
+  "performer": [
+    {
+      "reference": "Practitioner/5357"
+    }
+  ],
+  "valueQuantity": {
+    "value": 6.3,
+    "unit": "mmol/l",
+    "system": "http://unitsofmeasure.org",
+    "code": "mmol/L"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "H",
+        "display": "High"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 3.1,
+        "unit": "mmol/l",
+        "system": "http://unitsofmeasure.org",
+        "code": "mmol/L"
+      },
+      "high": {
+        "value": 6.2,
+        "unit": "mmol/l",
+        "system": "http://unitsofmeasure.org",
+        "code": "mmol/L"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "215605",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-30T06:12:42.259-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1742-6",
+        "display": "Alanine aminotransferase [Enzymatic activity/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100734"
+  },
+  "effectiveDateTime": "2017-08-30",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 123,
+        "unit": "units"
+      },
+      "high": {
+        "value": 123,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "215597",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-30T06:10:39.082-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1751-7",
+        "display": "Albumin [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100734"
+  },
+  "effectiveDateTime": "2017-08-30",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 123,
+        "unit": "units"
+      },
+      "high": {
+        "value": 123,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692047",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T05:22:08.893-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "17861-6",
+        "display": "Calcium [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 40,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "AA",
+        "display": "Critically abnormal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 12,
+        "unit": "units"
+      },
+      "high": {
+        "value": 23,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "159035",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-28T16:59:28.817-04:00"
+  },
+  "identifier": [
+    {
+      "value": "aaa00f9e-0154-4eaa-be85-aeb34169f06a"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "18041-4",
+        "display": "Aortic valve Ejection [Time] by US.doppler"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2012-11-26",
+  "valueQuantity": {
+    "value": 55,
+    "unit": "%"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N",
+        "display": "normal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "Normal: 50-75%"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "159036",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-28T16:59:28.817-04:00"
+  },
+  "identifier": [
+    {
+      "value": "347f958c-9b6b-4eeb-848d-624567117cb7"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "18089-3",
+        "display": "AV Orifice Area US"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2012-11-26",
+  "valueQuantity": {
+    "value": 1.5,
+    "unit": "cm2"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "A",
+        "display": "abnormal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "Normal (3.0-4.0 cm2), mild (1.5â€“2.0 cm2), moderate (1.0â€“1.5 cm2), severe (less than 1.0 cm2)"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "cf-1511526268833",
+  "meta": {
+    "versionId": "3",
+    "lastUpdated": "2017-12-02T18:09:12.123-05:00",
+    "tag": [
+      {
+        "system": "https://smarthealthit.org/tags",
+        "code": "synthea-7-2017"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Low Density Lipoprotein Cholesterol</div>"
+  },
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "18262-6",
+        "display": "Low Density Lipoprotein Cholesterol"
+      }
+    ],
+    "text": "Low Density Lipoprotein Cholesterol"
+  },
+  "subject": {
+    "reference": "Patient/330828"
+  },
+  "context": {
+    "reference": "Encounter/330849"
+  },
+  "effectiveDateTime": "2017-05-10",
+  "issued": "2015-01-11T23:41:00-05:00",
+  "valueQuantity": {
+    "value": 72,
+    "unit": "mg/dL",
+    "system": "http://unitsofmeasure.org/",
+    "code": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N",
+        "display": "Normal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 60,
+        "unit": "mg/dL"
+      },
+      "high": {
+        "value": 120,
+        "unit": "mg/dL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "217008",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-09-07T16:13:29.057-04:00"
+  },
+  "identifier": [
+    {
+      "system": "hsgbu.org.box2",
+      "value": "2003-10"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "19123-9",
+        "display": "Magnesium [Mass/volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/211279"
+  },
+  "valueQuantity": {
+    "value": 2.0,
+    "unit": "mg/dL",
+    "system": "http://unitsofmeasure.org",
+    "code": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "display": "In Range"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "1.6-2.3 mg/dL%"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "157854",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-27T16:34:58.240-04:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "19195-7",
+        "display": "PSA SerPl-aCnc"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-05-16T10:00:00",
+  "valueQuantity": {
+    "value": 12,
+    "unit": "ng/mL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "<2.5 ng/mL"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "215604",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-30T06:12:20.938-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1920-8",
+        "display": "Aspartate aminotransferase [Enzymatic activity/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100734"
+  },
+  "effectiveDateTime": "2017-08-30",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 123,
+        "unit": "units"
+      },
+      "high": {
+        "value": 123,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "644859",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-12-09T08:05:47.950-05:00",
+    "profile": [
+      "http://nictiz.nl/fhir/StructureDefinition/zib-LaboratoryTestResult-Observation"
+    ]
+  },
+  "identifier": [
+    {
+      "system": "https://intranet.aumc.nl/labvalues",
+      "value": "1304-03720-Bicarbonate"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1963-8",
+        "display": "Bicarbonate [Moles/?volume] in Serum"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365722008",
+        "display": "Bicarbonate level"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/330828",
+    "display": "Roel"
+  },
+  "issued": "2013-04-04T14:34:00+01:00",
+  "valueQuantity": {
+    "value": 28,
+    "unit": "mmol/L",
+    "system": "http://snomed.info/sct",
+    "code": "258813002"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "166698001",
+        "display": "Serum bicarbonate level normal"
+      },
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N"
+      }
+    ]
+  },
+  "method": {
+    "text": "enzymatic method"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 22
+      },
+      "high": {
+        "value": 29
+      },
+      "type": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/referencerange-meaning",
+            "code": "normal",
+            "display": "Normal Range"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692090",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T06:51:29.586-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1968-7",
+        "display": "Bilirubin.direct [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 12,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692042",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T05:07:37.641-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1975-2",
+        "display": "Bilirubin.total [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "valueQuantity": {
+    "value": 40,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "A",
+        "display": "Abnormal"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "222720",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-09-10T01:03:04.967-04:00"
+  },
+  "identifier": [
+    {
+      "system": "hsgbu.org.box3",
+      "value": "2003-21"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "1988-5",
+        "display": "C-reactive Protein"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/222489"
+  },
+  "valueQuantity": {
+    "value": 4.0,
+    "unit": "mg/L",
+    "system": "http://unitsofmeasure.org",
+    "code": "mg/L"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "display": "High"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "0-1.0 mg/L"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692979",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-22T11:36:39.083-05:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/daf-resultobs"
+    ]
+  },
+  "text": {
+    "status": "empty",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">No narrative available - Error: Exception evaluating OGNL expression: \"resource.coding[0].text\" (template: \"codeableconcept\" - line 2, col 10)</div>"
+  },
+  "identifier": [
+    {
+      "value": "3188cc8d-9460-4a13-91ac-837acc54b034"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2028-9",
+        "display": "CO2"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/692154"
+  },
+  "effectivePeriod": {
+    "start": "2012-08-15T00:00:00-06:00"
+  },
+  "valueQuantity": {
+    "value": 23,
+    "unit": "mmol/L"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "23 mmol/L ; 23 mmol/L"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "216277",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-31T02:54:15.690-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "20505-4",
+        "display": "Bilirubin.total [Mass/​volume] in Urine by Test strip"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/100734"
+  },
+  "effectiveDateTime": "2017-08-31",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 123,
+        "unit": "units"
+      },
+      "high": {
+        "value": 123,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "241115",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-10T03:30:37.342-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>\n        <b>Generated Narrative with Details</b>\n      </p>\n      <p>\n        <b>id</b>: obs-304</p>\n      <p>\n        <b>identifier</b>: obs-304</p>\n      <p>\n        <b>status</b>: final</p>\n      <p>\n        <b>code</b>: Hematocrit \n        <span style=\"background: LightGoldenRodYellow \">(Details : {LOINC code \"20570-8\" := \"20570-8\", given as \"Hematocrit [Volume Fraction] of Blood\"})</span>\n      </p>\n      <p>\n        <b>subject</b>: \n        <a href=\"Patient/patient-uslab-example1\">Todd Lerr</a>\n      </p>\n      <p>\n        <b>effective</b>: 12/5/2014</p>\n      <p>\n        <b>issued</b>: 12/6/2014 3:42:15 PM</p>\n      <p>\n        <b>value</b>: 41%\n        <span style=\"background: LightGoldenRodYellow \">(Details: http://unitsofmeasure.org code % := \"%\")</span>\n      </p>\n      <p>\n        <b>interpretation</b>: Normal \n        <span style=\"background: LightGoldenRodYellow \">(Details : {http://hl7.org/fhir/v2/0078 code \"N\" := \"Normal)</span>\n      </p>\n      <p>\n        <b>specimen</b>: \n        <a href=\"Specimen/spec-uslab-example1\">Blood sample</a>\n      </p>\n    </div>"
+  },
+  "identifier": [
+    {
+      "system": "http://lis.acmelabs.org/identifiers/labtestresult",
+      "value": "obs-304"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "20570-8",
+        "display": "Hematocrit [Volume Fraction] of Blood"
+      }
+    ],
+    "text": "Hematocrit"
+  },
+  "subject": {
+    "reference": "Patient/241090"
+  },
+  "effectiveDateTime": "2014-12-05",
+  "issued": "2014-12-06T15:42:15-08:00",
+  "performer": [
+    {
+      "reference": "Practitioner/241092"
+    }
+  ],
+  "valueQuantity": {
+    "value": 41,
+    "unit": "%",
+    "system": "http://unitsofmeasure.org",
+    "code": "%"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N"
+      }
+    ]
+  },
+  "specimen": {
+    "reference": "Specimen/241097"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 40,
+        "unit": "%",
+        "system": "http://unitsofmeasure.org",
+        "code": "%"
+      },
+      "high": {
+        "value": 52,
+        "unit": "%",
+        "system": "http://unitsofmeasure.org",
+        "code": "%"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "146065",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-15T14:53:08.459-04:00"
+  },
+  "identifier": [
+    {
+      "value": "4AB64BAD-9534-4005-A8FF-06E7A0116C0B"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2069-3",
+        "display": "CHLORIDE:SCNC:PT:BLD:QN:"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2013-07-10T22:25:00",
+  "valueQuantity": {
+    "value": 95,
+    "unit": "mmol/L"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "95-110 mmol/L"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692045",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T05:19:20.416-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2075-0",
+        "display": "Chloride [Moles/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 12,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "cf-1511526302061",
+  "meta": {
+    "versionId": "3",
+    "lastUpdated": "2017-12-02T18:09:12.123-05:00",
+    "tag": [
+      {
+        "system": "https://smarthealthit.org/tags",
+        "code": "synthea-7-2017"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">High Density Lipoprotein Cholesterol</div>"
+  },
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2085-9",
+        "display": "High Density Lipoprotein Cholesterol"
+      }
+    ],
+    "text": "High Density Lipoprotein Cholesterol"
+  },
+  "subject": {
+    "reference": "Patient/330828"
+  },
+  "context": {
+    "reference": "Encounter/330849"
+  },
+  "effectiveDateTime": "2017-05-19",
+  "issued": "2015-01-11T23:41:00-05:00",
+  "valueQuantity": {
+    "value": 68,
+    "unit": "mg/dL",
+    "system": "http://unitsofmeasure.org/",
+    "code": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "LU",
+        "display": "Very low"
+      }
+    ]
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "275972003",
+        "display": "Cholesterol screening (procedure)"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 60,
+        "unit": "mg/dL"
+      },
+      "high": {
+        "value": 125,
+        "unit": "mg/dL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "694822",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-24T11:04:58.099-05:00"
+  },
+  "identifier": [
+    {
+      "system": "urn:redix-fhir",
+      "value": "dne.BB317F23-9DC9-40FA-8D02-5DBF9DB61144"
+    },
+    {
+      "system": "submit_obr",
+      "value": "000002006326002362.648088.2086-7.1"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2086-7"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/141960"
+  },
+  "issued": "2006-11-22T15:47:33",
+  "performer": [
+    {
+      "reference": "Practitioner/694825"
+    }
+  ],
+  "valueQuantity": {
+    "value": 24,
+    "system": "http://loinc.org",
+    "code": "NM"
+  },
+  "interpretation": {
+    "text": "BELOW LOW NORMAL"
+  },
+  "comment": "THIS IS A COMENT",
+  "referenceRange": [
+    {
+      "text": "45.000 - 150.000"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692488",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-20T11:05:03.156-05:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2089-1",
+        "display": "LDLc SerPl-mCnc"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-03-31T10:00:00",
+  "valueQuantity": {
+    "value": 150.2,
+    "unit": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "<130 mg/dL (calc)"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "cf-1511526179032",
+  "meta": {
+    "versionId": "3",
+    "lastUpdated": "2017-12-02T18:09:12.123-05:00",
+    "tag": [
+      {
+        "system": "https://smarthealthit.org/tags",
+        "code": "synthea-7-2017"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Total Cholesterol</div>"
+  },
+  "status": "final",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2093-3",
+        "display": "Total Cholesterol"
+      }
+    ],
+    "text": "Total Cholesterol"
+  },
+  "subject": {
+    "reference": "Patient/330828"
+  },
+  "context": {
+    "reference": "Encounter/330844"
+  },
+  "effectiveDateTime": "2015-01-11T23:41:00-05:00",
+  "issued": "2015-01-11T23:41:00-05:00",
+  "valueQuantity": {
+    "value": 164,
+    "unit": "mg/dL",
+    "system": "http://unitsofmeasure.org/",
+    "code": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "HU",
+        "display": "Very high"
+      }
+    ]
+  },
+  "method": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "275972003",
+        "display": "Cholesterol screening (procedure)"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 100,
+        "unit": "mg/dL"
+      },
+      "high": {
+        "value": 200,
+        "unit": "mg/dL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "691664",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-17T04:16:22.325-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "21000-5",
+        "display": "Erythrocyte distribution width [Entitic volume] by Automated count"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-17",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "B",
+        "display": "Better"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 24,
+        "unit": "units"
+      },
+      "high": {
+        "value": 12,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "184505",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-07-13T13:30:43.519-04:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2119-6",
+        "display": "HCG SerPl-sCnc"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2010-03-31T10:00:00",
+  "valueCodeableConcept": {
+    "coding": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "10828004",
+        "display": "positive"
+      }
+    ]
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "N"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "NA"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "213446",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-08-28T06:53:47.616-04:00"
+  },
+  "status": "registered",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2160-0",
+        "display": "Creatinine [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/6819"
+  },
+  "effectiveDateTime": "2017-08-28",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": ">",
+        "display": "Off scale high"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 123,
+        "unit": "units"
+      },
+      "high": {
+        "value": 123,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "146066",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-06-15T14:53:08.459-04:00"
+  },
+  "identifier": [
+    {
+      "value": "E03D8FCD-2EFC-4EE7-B195-4DFF15BFF96E"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2339-0",
+        "display": "GLUCOSE:MCNC:PT:BLD:QN:"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2013-07-10T22:25:00",
+  "valueQuantity": {
+    "value": 185,
+    "unit": "mg/dL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "H"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "text": "65-110 mg/dL"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692080",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T06:16:52.182-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2345-7",
+        "display": "Glucose [Mass/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 30,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": ">",
+        "display": "Off scale high"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692043",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T05:14:25.550-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "24326-1",
+        "display": "Electrolytes 1998 panel - Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 57,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": ">",
+        "display": "Off scale high"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "692071",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-18T06:09:45.281-05:00"
+  },
+  "status": "registered",
+  "category": [
+    {
+      "coding": [
+        {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory",
+          "display": "Laboratory"
+        }
+      ]
+    }
+  ],
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2532-0",
+        "display": "Lactate dehydrogenase [Enzymatic activity/​volume] in Serum or Plasma"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/215004"
+  },
+  "effectiveDateTime": "2018-01-18",
+  "valueQuantity": {
+    "value": 23,
+    "unit": "/min",
+    "system": "http://unitsofmeasure.org",
+    "code": "/min"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "<",
+        "display": "Off scale low"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 0,
+        "unit": "units"
+      },
+      "high": {
+        "value": 1,
+        "unit": "units"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "694823",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2018-01-24T11:04:58.099-05:00"
+  },
+  "identifier": [
+    {
+      "system": "urn:redix-fhir",
+      "value": "dne.E8B12645-5984-4A14-9499-1A78A6B10151"
+    },
+    {
+      "system": "submit_obr",
+      "value": "000002006326002362.648088.2571-8.1"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "2571-8"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/141960"
+  },
+  "issued": "2006-11-22T15:47:33",
+  "performer": [
+    {
+      "reference": "Practitioner/694825"
+    }
+  ],
+  "valueQuantity": {
+    "value": 324,
+    "system": "http://loinc.org",
+    "code": "NM"
+  },
+  "interpretation": {
+    "text": "ABOVE HIGH NORMAL"
+  },
+  "comment": "THIS IS A COMENT",
+  "referenceRange": [
+    {
+      "text": "0.000 - 150.000"
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "231457",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-09-22T02:14:04.143-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>\n        <b>Generated Narrative with Details</b>\n      </p>\n      <p>\n        <b>id</b>: obs-300</p>\n      <p>\n        <b>identifier</b>: obs-300</p>\n      <p>\n        <b>status</b>: final</p>\n      <p>\n        <b>code</b>: Erythrocytes \n        <span style=\"background: LightGoldenRodYellow \">(Details : {LOINC code \"26453-1\" := \"26453-1\", given as \"Erythrocytes [#/volume] in Blood\"})</span>\n      </p>\n      <p>\n        <b>subject</b>: \n        <a href=\"Patient/patient-uslab-example1\">Todd Lerr</a>\n      </p>\n      <p>\n        <b>effective</b>: 12/5/2014</p>\n      <p>\n        <b>issued</b>: 12/6/2014 3:42:15 PM</p>\n      <p>\n        <b>value</b>: 4.41x10(12)/L\n        <span style=\"background: LightGoldenRodYellow \">(Details: http://unitsofmeasure.org code 10*6/uL := \"10*6/uL\")</span>\n      </p>\n      <p>\n        <b>interpretation</b>: Normal \n        <span style=\"background: LightGoldenRodYellow \">(Details : {http://hl7.org/fhir/v2/0078 code \"N\" := \"Normal)</span>\n      </p>\n      <p>\n        <b>specimen</b>: \n        <a href=\"Specimen/spec-uslab-example1\">Blood sample</a>\n      </p>\n    </div>"
+  },
+  "identifier": [
+    {
+      "system": "http://lis.acmelabs.org/identifiers/labtestresult",
+      "value": "obs-300"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "26453-1",
+        "display": "Erythrocytes [#/volume] in Blood"
+      }
+    ],
+    "text": "Erythrocytes"
+  },
+  "subject": {
+    "reference": "Patient/231438"
+  },
+  "effectiveDateTime": "2014-12-05",
+  "issued": "2014-12-06T15:42:15-08:00",
+  "performer": [
+    {
+      "reference": "Practitioner/231442"
+    }
+  ],
+  "valueQuantity": {
+    "value": 4.41,
+    "unit": "x10(12)/L",
+    "system": "http://unitsofmeasure.org",
+    "code": "10*6/uL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "N"
+      }
+    ]
+  },
+  "specimen": {
+    "reference": "Specimen/231446"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 3.9,
+        "unit": "x10(12)/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "10*6/uL"
+      },
+      "high": {
+        "value": 5.03,
+        "unit": "x10(12)/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "10*6/uL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "241110",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-10T03:30:34.415-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>\n        <b>Generated Narrative with Details</b>\n      </p>\n      <p>\n        <b>id</b>: obs-301</p>\n      <p>\n        <b>identifier</b>: obs-301</p>\n      <p>\n        <b>status</b>: final</p>\n      <p>\n        <b>code</b>: Leukocytes \n        <span style=\"background: LightGoldenRodYellow \">(Details : {LOINC code \"26464-8\" := \"26464-8\", given as \"Leukocytes [#/volume] in Blood\"})</span>\n      </p>\n      <p>\n        <b>subject</b>: \n        <a href=\"Patient/patient-uslab-example1\">Todd Lerr</a>\n      </p>\n      <p>\n        <b>effective</b>: 12/5/2014</p>\n      <p>\n        <b>issued</b>: 12/6/2014 3:42:15 PM</p>\n      <p>\n        <b>value</b>: 105600/uL\n        <span style=\"background: LightGoldenRodYellow \">(Details: http://unitsofmeasure.org code {cells}/uL := \"{cells}/uL\")</span>\n      </p>\n      <p>\n        <b>interpretation</b>: Critically high \n        <span style=\"background: LightGoldenRodYellow \">(Details : {http://hl7.org/fhir/v2/0078 code \"HH\" := \"Critically high)</span>\n      </p>\n      <p>\n        <b>specimen</b>: \n        <a href=\"Specimen/spec-uslab-example1\">Blood sample</a>\n      </p>\n    </div>"
+  },
+  "identifier": [
+    {
+      "system": "http://lis.acmelabs.org/identifiers/labtestresult",
+      "value": "obs-301"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "26464-8",
+        "display": "Leukocytes [#/volume] in Blood"
+      }
+    ],
+    "text": "Leukocytes"
+  },
+  "subject": {
+    "reference": "Patient/241090"
+  },
+  "effectiveDateTime": "2014-12-05",
+  "issued": "2014-12-06T15:42:15-08:00",
+  "performer": [
+    {
+      "reference": "Practitioner/241092"
+    }
+  ],
+  "valueQuantity": {
+    "value": 105600,
+    "unit": "/uL",
+    "system": "http://unitsofmeasure.org",
+    "code": "{cells}/uL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "HH"
+      }
+    ]
+  },
+  "specimen": {
+    "reference": "Specimen/241097"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 4300,
+        "unit": "/uL",
+        "system": "http://unitsofmeasure.org",
+        "code": "{cells}/uL"
+      },
+      "high": {
+        "value": 10800,
+        "unit": "/uL",
+        "system": "http://unitsofmeasure.org",
+        "code": "{cells}/uL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "241111",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-10-10T03:30:34.693-04:00",
+    "tag": [
+      {
+        "system": "http://projectcrucible.org",
+        "code": "testdata"
+      }
+    ]
+  },
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>\n        <b>Generated Narrative with Details</b>\n      </p>\n      <p>\n        <b>id</b>: obs-302</p>\n      <p>\n        <b>identifier</b>: obs-302</p>\n      <p>\n        <b>status</b>: final</p>\n      <p>\n        <b>code</b>: Neutrophils \n        <span style=\"background: LightGoldenRodYellow \">(Details : {LOINC code \"26499-4\" := \"26499-4\", given as \"Neutrophils [#/volume] in Blood\"})</span>\n      </p>\n      <p>\n        <b>subject</b>: \n        <a href=\"Patient/patient-uslab-example1\">Todd Lerr</a>\n      </p>\n      <p>\n        <b>effective</b>: 12/5/2014</p>\n      <p>\n        <b>issued</b>: 12/6/2014 3:42:15 PM</p>\n      <p>\n        <b>value</b>: 58000/uL\n        <span style=\"background: LightGoldenRodYellow \">(Details: http://unitsofmeasure.org code {cells}/uL := \"{cells}/uL\")</span>\n      </p>\n      <p>\n        <b>interpretation</b>: Critically high \n        <span style=\"background: LightGoldenRodYellow \">(Details : {http://hl7.org/fhir/v2/0078 code \"HH\" := \"Critically high)</span>\n      </p>\n      <p>\n        <b>specimen</b>: \n        <a href=\"Specimen/spec-uslab-example1\">Blood sample</a>\n      </p>\n    </div>"
+  },
+  "identifier": [
+    {
+      "system": "http://lis.acmelabs.org/identifiers/labtestresult",
+      "value": "obs-302"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "26499-4",
+        "display": "Neutrophils [#/volume] in Blood"
+      }
+    ],
+    "text": "Neutrophils"
+  },
+  "subject": {
+    "reference": "Patient/241090"
+  },
+  "effectiveDateTime": "2014-12-05",
+  "issued": "2014-12-06T15:42:15-08:00",
+  "performer": [
+    {
+      "reference": "Practitioner/241092"
+    }
+  ],
+  "valueQuantity": {
+    "value": 58000,
+    "unit": "/uL",
+    "system": "http://unitsofmeasure.org",
+    "code": "{cells}/uL"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v2/0078",
+        "code": "HH"
+      }
+    ]
+  },
+  "specimen": {
+    "reference": "Specimen/241097"
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 1500,
+        "unit": "/uL",
+        "system": "http://unitsofmeasure.org",
+        "code": "{cells}/uL"
+      },
+      "high": {
+        "value": 7000,
+        "unit": "/uL",
+        "system": "http://unitsofmeasure.org",
+        "code": "{cells}/uL"
+      }
+    }
+  ]
+}
+
+{
+  "resourceType": "Observation",
+  "id": "652310",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2017-12-22T16:18:56.541-05:00"
+  },
+  "identifier": [
+    {
+      "value": "107c2dc0-67a5-11db-bd13-0800200c9a66"
+    }
+  ],
+  "status": "final",
+  "code": {
+    "coding": [
+      {
+        "system": "http://loinc.org",
+        "code": "26515-7",
+        "display": "PLT"
+      }
+    ]
+  },
+  "subject": {
+    "reference": "Patient/undefined"
+  },
+  "effectiveDateTime": "2012-08-10",
+  "valueQuantity": {
+    "value": 123,
+    "unit": "10*3/ul"
+  },
+  "interpretation": {
+    "coding": [
+      {
+        "system": "urn:oid:2.16.840.1.113883.5.83",
+        "code": "L"
+      }
+    ]
+  },
+  "referenceRange": [
+    {
+      "low": {
+        "value": 150,
+        "unit": "10*3/ul"
+      },
+      "high": {
+        "value": 350,
+        "unit": "10*3/ul"
+      }
+    }
+  ]
+}
+
+

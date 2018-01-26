@@ -15,6 +15,8 @@ public class LoincObservation {
         this.cat=String2Category(cat);
     }
 
+    //public LoincObservation(String value, ReferenceRange range) {}
+
 
 
     public static category String2Category(String cat) {

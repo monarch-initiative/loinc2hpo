@@ -76,7 +76,6 @@ public class SparqlQuery {
             logger.error("this should never happen if initiated from UI");
             //add the following line for test class only
 //            String pathToHpoOwl = hpo;
-//            model = getOntologyModel(pathToHpoOwl);
             modelCreated = true;
             return;
         } else {
