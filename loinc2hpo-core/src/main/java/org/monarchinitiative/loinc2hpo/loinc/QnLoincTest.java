@@ -23,6 +23,22 @@ public class QnLoincTest extends LoincTest {
 
     private String note; //what user wants to say about an annotation, e.g. "the hpo term is the best fit because ..."
 
+    public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
+        super(loinc,loincScale);
+        this.belowNormalTerm=new HpoTermId4LoincTest(low);
+        boolean negated=true;
+        this.notAbnormalTerm=new HpoTermId4LoincTest(normal,negated);
+        this.aboveNormalTerm=new HpoTermId4LoincTest(hi);
+
+        /**
+         logger.trace(String.format("low: %s; normal: %s, high: %s",
+         low.getName(),
+         normal.getName(),
+         hi.getName()));
+         **/
+        // todo more validation.
+
+    }
 
     @Override
     public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs) {
@@ -48,22 +64,7 @@ public class QnLoincTest extends LoincTest {
 
 
 
-    public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
-        super(loinc,loincScale);
-        this.belowNormalTerm=new HpoTermId4LoincTest(low);
-        boolean negated=true;
-        this.notAbnormalTerm=new HpoTermId4LoincTest(normal,negated);
-        this.aboveNormalTerm=new HpoTermId4LoincTest(hi);
 
-        /**
-        logger.trace(String.format("low: %s; normal: %s, high: %s",
-                low.getName(),
-                normal.getName(),
-                hi.getName()));
-         **/
-        // todo more validation.
-
-    }
 
     public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi, boolean fl, String note){
         this(loinc,loincScale,low,normal,hi);

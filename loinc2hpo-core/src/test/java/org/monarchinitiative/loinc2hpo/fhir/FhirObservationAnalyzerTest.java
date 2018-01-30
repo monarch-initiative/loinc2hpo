@@ -1,0 +1,107 @@
+package org.monarchinitiative.loinc2hpo.fhir;
+
+import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
+import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
+import com.github.phenomics.ontolib.ontology.data.Ontology;
+import com.github.phenomics.ontolib.ontology.data.TermId;
+import com.github.phenomics.ontolib.ontology.data.TermPrefix;
+import com.google.common.collect.ImmutableMap;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.io.HPOParser;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
+import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
+import org.monarchinitiative.loinc2hpo.testresult.QnTestResult;
+import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
+
+public class FhirObservationAnalyzerTest {
+
+    private static Observation observation;
+    private static Map<String, HpoTerm> hpoTermMap;
+
+    @BeforeClass
+    public static void setup(){
+        String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
+        observation = FhirObservationRetriever.parseJsonFile2Observation(path);
+
+        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
+        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpoOntology hpo = null;
+        try {
+            hpo = hpoOboParser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        if (hpo !=null) {
+            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+                    .collect(Collectors.toList());
+            res.forEach( term -> termmap.put(term.getName(),term));
+        }
+        hpoTermMap = termmap.build();
+    }
+
+    @Test
+    public void setObservation() throws Exception {
+
+        assertNull(FhirObservationAnalyzer.getObservation());
+        FhirObservationAnalyzer.setObservation(observation);
+        assertNotNull(FhirObservationAnalyzer.getObservation());
+    }
+
+    @Test
+    public void getHPO4ObservationOutcome() throws Exception {
+        FhirObservationAnalyzer.setObservation(observation);
+    }
+
+    @Test
+    public void getLoincIdOfObservation() throws Exception {
+
+        FhirObservationAnalyzer.setObservation(observation);
+        LoincId loincId = FhirObservationAnalyzer.getLoincIdOfObservation();
+        assertEquals("15074-8", loincId.toString());
+
+    }
+
+    @Test
+    public void getHPOFromInterpretation() throws Exception {
+
+        FhirObservationAnalyzer.setObservation(observation);
+
+        Map<LoincId, LoincTest> testmap = new HashMap<>();
+        LoincId loincId = new LoincId("15074-8");
+        LoincScale loincScale = LoincScale.string2enum("Qn");
+        TermId low = hpoTermMap.get("Hypoglycemia").getId();
+        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
+        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
+
+        LoincTest test1 = new QnLoincTest(loincId, loincScale,  low,  normal,  hi);
+
+        testmap.put(loincId, test1);
+        TestResult result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
+        System.out.println(result);
+
+    }
+
+    @Test
+    public void getHPOFromRawValue() throws Exception {
+    }
+
+    @Test
+    public void getHPOFromCodedValue() throws Exception {
+    }
+
+}

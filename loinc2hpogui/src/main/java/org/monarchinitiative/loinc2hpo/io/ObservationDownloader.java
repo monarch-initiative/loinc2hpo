@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import javax.swing.JFileChooser;
 
@@ -202,12 +203,12 @@ public class ObservationDownloader {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             path = chooser.getSelectedFile().getAbsolutePath();
             System.out.println(path);
-            Map<String, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+            Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
             System.out.println("size of loinc table: " + loincEntryMap.size());
             for (LoincEntry loincEntry : loincEntryMap.values()) {
                 if (countComplete.containsKey(loincEntry.getScale()) && countComplete.get(loincEntry.getScale()) < 50) {
                     try {
-                        List<Observation> results = ObservationDownloader.retrieveObservation(loincEntry.getLOINC_Number());
+                        List<Observation> results = ObservationDownloader.retrieveObservation(loincEntry.getLOINC_Number().toString());
                         if (results != null && !results.isEmpty()){
                             for (Observation observation : results) {
                                 if (isComplte(observation)) {

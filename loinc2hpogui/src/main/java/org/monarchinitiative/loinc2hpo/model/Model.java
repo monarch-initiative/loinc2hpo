@@ -14,6 +14,7 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -48,13 +49,16 @@ public class Model {
     public Map<LoincId,LoincTest> testmap=new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
+    private HashSet<LoincId> loincIds = new HashSet<>();
 
     public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
         this.loincEntryMap = map;
+        loincIds.addAll(this.loincEntryMap.keySet());
     }
     public Map<LoincId, LoincEntry> getLoincEntryMap() {
         return this.loincEntryMap;
     }
+    public HashSet<LoincId> getLoincIds() { return this.loincIds; }
 
     private ImmutableMap<String,HpoTerm> termmap=null;
 

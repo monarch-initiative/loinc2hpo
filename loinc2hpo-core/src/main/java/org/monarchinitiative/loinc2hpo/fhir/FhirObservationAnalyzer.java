@@ -25,9 +25,10 @@ public class FhirObservationAnalyzer {
 
     static private Observation observation;
 
-    public void setObservation(Observation aFhirObservation) {
+    public static void setObservation(Observation aFhirObservation) {
         observation = aFhirObservation;
     }
+    public static Observation getObservation(){ return observation; }
 
 
     /**

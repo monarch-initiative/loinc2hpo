@@ -13,6 +13,8 @@ import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationRetriever;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
@@ -49,6 +51,23 @@ public class Loinc2HpoConversionTabController {
     @FXML
     void handleConvertButton(ActionEvent event) {
         String path = model.getPathToJsonFhirFile();
+        Observation observation = FhirObservationRetriever.parseJsonFile2Observation(path);
+        FhirObservationAnalyzer.setObservation(observation);
+        TestResult res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
+        ObservableList<String> items = FXCollections.observableArrayList ();
+        if (res==null) {
+            items.add("Could not find test");
+        } else {
+            TermId id = res.getTermId();
+            String name = model.termId2HpoName(id);
+            String display = String.format("%s [%s]",name,id.getIdWithPrefix());
+            if (res.isNegated()) {
+                display="NOT: "+display;
+            }
+            items.add(display);
+        }
+        patientPhenotypeTableView.setItems(items);
+        /**
         ObjectMapper mapper = new ObjectMapper();
         File f = new File(path);
         try {
@@ -77,6 +96,7 @@ public class Loinc2HpoConversionTabController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+         **/
     }
 
     @FXML

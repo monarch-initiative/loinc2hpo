@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
@@ -84,12 +85,13 @@ public class FhirObservationRetriever {
             byte[] bytes = new byte[(int)file.length()];
             FileInputStream fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytes);
-            observation = (Observation) jsonParser.parseResource(bytes.toString());
+            logger.debug(new String(bytes));
+            observation = (Observation) jsonParser.parseResource(new String(bytes));
             fileInputStream.close();
 
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ClassCastException e) {
+        } catch (DataFormatException e) {
             logger.error("Json file " + filepath + " is not a valid observation");
         }
         return observation;
