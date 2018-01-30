@@ -1,15 +1,17 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 
+/**
+ * This is a class for a Loinc test.
+ */
 public abstract class LoincTest {
 
     protected final LoincId id;
 
     protected final LoincScale scale;
 
-    abstract public Hpo2LoincTermId loincValueToHpo(LoincObservation obs);
+    abstract public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs);
 
 
     public LoincTest(LoincId lid, LoincScale lsc) {
@@ -39,6 +41,7 @@ public abstract class LoincTest {
     public abstract TermId getBelowNormalHpoTermId();
     public abstract TermId getNotAbnormalHpoTermName();
     public abstract TermId getAboveNormalHpoTermName();
+    public abstract TermId getCorrespondingHpoTermName();
     public abstract String getNote();
 
 

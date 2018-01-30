@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpo.loinc;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.exception.MaformedLoincCodeException;
+import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 
 public class LoincId {
     private static final Logger logger = LogManager.getLogger();
@@ -11,16 +11,16 @@ public class LoincId {
     /** The part of the Loinc code following the dash */
     private final int suffix;
 
-    public LoincId(String loinccode) throws MaformedLoincCodeException {
+    public LoincId(String loinccode) throws MalformedLoincCodeException {
         int dash_pos=loinccode.indexOf("-");
-        if (dash_pos<=0) throw new MaformedLoincCodeException("No dash found in "+loinccode);
+        if (dash_pos<=0) throw new MalformedLoincCodeException("No dash found in "+loinccode);
         if (dash_pos >loinccode.length()-2)
-            throw new MaformedLoincCodeException("No character found after dash in " + loinccode);
+            throw new MalformedLoincCodeException("No character found after dash in " + loinccode);
         try {
             num=Integer.parseInt(loinccode.substring(0,dash_pos));
             suffix=Integer.parseInt(loinccode.substring(dash_pos+1));
         } catch (NumberFormatException nfe) {
-            throw new MaformedLoincCodeException("Unable to parse numerical part of "+ loinccode);
+            throw new MalformedLoincCodeException("Unable to parse numerical part of "+ loinccode);
         }
     }
 

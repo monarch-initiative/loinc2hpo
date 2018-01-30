@@ -1,25 +1,31 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.phenomics.ontolib.ontology.data.TermId;
-import org.monarchinitiative.loinc2hpo.Loinc2Hpo;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
-import org.monarchinitiative.loinc2hpo.exception.MaformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.WrongElementException;
-import org.monarchinitiative.loinc2hpo.loinc.Hpo2LoincTermId;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincObservation;
+import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.testresult.QnTestResult;
 import org.monarchinitiative.loinc2hpo.testresult.TestResult;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import java.io.*;
+import java.util.List;
 import java.util.Map;
 
-public class FhirObservationParser {
+public class FhirObservationRetriever {
 
     /**
+     * @TODO: change this class to HapiFHIR API
      * <	Off scale low
      * >	Off scale high
      * A	Abnormal
@@ -62,13 +68,51 @@ public class FhirObservationParser {
      **/
 
     private static final Logger logger = LogManager.getLogger();
+    public static final FhirContext ctx = FhirContext.forDstu3();
+    public static final IParser jsonParser = ctx.newJsonParser();
+
+
+    /**
+     * This function parses a json file stored locally to an hapi-fhir Observation object
+     * @param filepath
+     * @return
+     */
+    public static Observation parseJsonFile2Observation(String filepath) {
+        Observation observation = null;
+        try {
+            File file = new File(filepath);
+            byte[] bytes = new byte[(int)file.length()];
+            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream.read(bytes);
+            observation = (Observation) jsonParser.parseResource(bytes.toString());
+            fileInputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassCastException e) {
+            logger.error("Json file " + filepath + " is not a valid observation");
+        }
+        return observation;
+    }
+
+    /**
+     * @TODO: implement it
+     * retrieve a patient's observations from FHIR server
+     * @param patient
+     * @return
+     */
+    public static List<Observation> retrieveObservationFromServer(Patient patient) {
+
+        return null;
+    }
+
 
     public static TestResult fhir2testrest(JsonNode node, Map<LoincId, LoincTest> testmap) throws Loinc2HpoException {
         boolean interpretationDetected = false;
         String interpretationCode = null;
 
         LoincId lid;
-        LoincObservation observation;
+        LoincObservationResult observation;
         String comment;
 
 
@@ -82,7 +126,7 @@ public class FhirObservationParser {
         JsonNode codeNode = node.get("code");
         lid = getLoincId(codeNode);
         JsonNode interpretationNode = node.get("interpretation");
-        observation = getObservation(interpretationNode);
+        observation = getInterpretationCode(interpretationNode);
         if (observation != null && lid != null) {
             LoincTest test = testmap.get(lid);
             if (test==null) {
@@ -90,7 +134,7 @@ public class FhirObservationParser {
                 debugPrint(testmap);
                 return null;
             }
-            Hpo2LoincTermId hpoId = test.loincValueToHpo(observation);
+            HpoTermId4LoincTest hpoId = test.loincInterpretationToHpo(observation);
             return new QnTestResult(hpoId, observation, "?");
         }
 
@@ -183,10 +227,10 @@ public class FhirObservationParser {
      *]
       *},
      * </pre>
-     * It returns the corresponding {@link LoincObservation} object.
+     * It returns the corresponding {@link LoincObservationResult} object.
      * TODO -- add some text corresponding to the result.
      */
-    static LoincObservation getObservation(JsonNode node) throws Loinc2HpoException {
+    static LoincObservationResult getInterpretationCode(JsonNode node) throws Loinc2HpoException {
         JsonNode codingNode = node.get("coding");
         if (codingNode == null) {
             throw new Loinc2HpoException("Could not find coding node in interpretation");
@@ -197,7 +241,7 @@ public class FhirObservationParser {
         for (JsonNode n : codingNode) {
             if (!n.path("code").isMissingNode()) {
                 String lcode = n.path("code").asText();
-                return new LoincObservation(lcode, lcode);
+                return new LoincObservationResult(lcode);
             }
         }
         throw new Loinc2HpoException("could not find interpretation code");

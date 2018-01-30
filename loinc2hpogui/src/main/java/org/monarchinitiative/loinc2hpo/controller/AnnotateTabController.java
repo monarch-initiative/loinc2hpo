@@ -46,7 +46,7 @@ public class AnnotateTabController {
     private Model model=null;
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
-    private ImmutableMap<String,LoincEntry> loincmap=null;
+    private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
     @FXML private Button IntializeHPOmodelbutton;
@@ -139,7 +139,7 @@ public class AnnotateTabController {
     private void initTableStructure() {
         loincIdTableColumn.setSortable(true);
         loincIdTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getLOINC_Number())
+                new ReadOnlyStringWrapper(cdf.getValue().getLOINC_Number().toString())
         );
         componentTableColumn.setSortable(true);
         componentTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getComponent()));
@@ -306,6 +306,7 @@ public class AnnotateTabController {
             return;
         }
         this.loincmap = LoincEntry.getLoincEntryList(loincCoreTableFile);
+        model.setLoincEntryMap(this.loincmap);
         int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
         List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
         loincTableView.getItems().clear(); // remove any previous entries
@@ -551,7 +552,7 @@ public class AnnotateTabController {
         e.consume();
         String hpoLo,hpoNormal,hpoHi;
         //String loincCode=this.loincSearchTextField.getText();
-        String loincCode = loincTableView.getSelectionModel().getSelectedItem
+        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem
                 ().getLOINC_Number();
         String loincScale = loincTableView.getSelectionModel().getSelectedItem().getScale();
 
@@ -607,10 +608,9 @@ public class AnnotateTabController {
         } else {
             //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
             try {
-                LoincId lid = new LoincId(loincCode);
                 LoincScale scale = LoincScale.string2enum(loincScale);
                 QnLoincTest test =
-                        new QnLoincTest(lid, scale, low.getId(), normal.getId(), high.getId(),
+                        new QnLoincTest(loincCode, scale, low.getId(), normal.getId(), high.getId(),
                                 flagForAnnotation.isSelected(), annotationNoteField.getText());
                 this.model.addLoincTest(test);
                 loinc2HpoAnnotationsTabController.refreshTable();

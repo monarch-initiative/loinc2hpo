@@ -1,18 +1,18 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import com.github.phenomics.ontolib.ontology.data.TermId;
-import org.monarchinitiative.loinc2hpo.loinc.Hpo2LoincTermId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincObservation;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
 
 public class QnTestResult implements TestResult {
 
-    Hpo2LoincTermId hpoId;
+    HpoTermId4LoincTest hpoId;
 
-    LoincObservation observation;
+    LoincObservationResult observation;
 
     String comment;
 
-    public QnTestResult(Hpo2LoincTermId id, LoincObservation obs, String text) {
+    public QnTestResult(HpoTermId4LoincTest id, LoincObservationResult obs, String text) {
 
         hpoId=id;
         observation=obs;

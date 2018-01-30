@@ -4,20 +4,22 @@ import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.gclient.StringClientParam;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import ca.uhn.fhir.context.FhirContext;
-import javafx.stage.FileChooser;
 import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.monarchinitiative.loinc2hpo.command.LoincUtil;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 
-import javax.swing.*;
-import java.io.File;
+import javax.swing.JFileChooser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a helper class that downloads observations from hapi-fhir test server for developing concepts.
+ * it could be deleted when not in use.
+ */
 
 public class ObservationDownloader {
 
@@ -159,7 +161,7 @@ public class ObservationDownloader {
         return patients;
     }
 
-    public static void main(String[] args) {
+    public static void iteratorHapiFHIRServer() {
 
         //printObservationInfo();
         //printPatientInfo();
@@ -221,7 +223,7 @@ public class ObservationDownloader {
                                         completeObservations.get("unknown").append(Character.toString((char) 12));
                                         countComplete.put("unknown", countAccetable.get("unknown") + 1);
                                     }
-                                    break;
+                                    continue;
                                 }
                                 if (isAcceptable(observation)) {
                                     String aAcceptableRecord = jsonParser.setPrettyPrint(true).encodeResourceToString(observation);

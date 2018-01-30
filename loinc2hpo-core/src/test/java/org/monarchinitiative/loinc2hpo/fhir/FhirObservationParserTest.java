@@ -71,7 +71,7 @@ public class FhirObservationParserTest {
 
     @Test
     public void testParse() throws Loinc2HpoException{
-        FhirObservationParser.fhir2testrest(node,testmap);
+        FhirObservationRetriever.fhir2testrest(node,testmap);
     }
 
 
@@ -87,12 +87,12 @@ public class FhirObservationParserTest {
         fis.read(data);
         fis.close();
         JsonNode node2 = mapper.readTree(data);
-        FhirObservationParser.fhir2testrest(node2,testmap);
+        FhirObservationRetriever.fhir2testrest(node2,testmap);
     }
 
     @Test
     public void testGetHyperglycemia() throws Loinc2HpoException{
-        TestResult res = FhirObservationParser.fhir2testrest(node,testmap);
+        TestResult res = FhirObservationRetriever.fhir2testrest(node,testmap);
         assertNotNull(res);
 //        System.err.println(res);
         String expected="HP:0003074";
@@ -104,7 +104,7 @@ public class FhirObservationParserTest {
     public void testGetNormoglycemia() throws Loinc2HpoException{
         JsonNode normGlycNode = getObservationNode("json/glucoseNormal.fhir");
         assertNotNull(normGlycNode);
-        TestResult res =  FhirObservationParser.fhir2testrest(normGlycNode,testmap);
+        TestResult res =  FhirObservationRetriever.fhir2testrest(normGlycNode,testmap);
         assertNotNull(res);
 //        System.err.println(res);
         String expected="HP:0011015"; // Abn of glucose metabolism

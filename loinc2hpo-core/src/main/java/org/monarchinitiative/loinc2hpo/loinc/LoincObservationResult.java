@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-public class LoincObservation {
+public class LoincObservationResult {
 
     static enum category { LOW, WITHIN_NORMAL_RANGE, HIGH, ABSENT, PRESENT, UNKNOWN }
 
@@ -11,17 +11,17 @@ public class LoincObservation {
 
 
 
-    public LoincObservation(String cat, String interpretationString) {
-        this.cat=String2Category(cat);
+    public LoincObservationResult(String interpretationCode) {
+        this.cat=String2Category(interpretationCode);
     }
 
-    //public LoincObservation(String value, ReferenceRange range) {}
+    //public LoincObservationResult(String value, ReferenceRange range) {}
 
 
 
-    public static category String2Category(String cat) {
-        cat=cat.toLowerCase();
-        switch (cat) {
+    public static category String2Category(String interpretationCode) {
+        interpretationCode=interpretationCode.toLowerCase();
+        switch (interpretationCode) {
             case "l":
             case "low" : return category.LOW;
             case "high":

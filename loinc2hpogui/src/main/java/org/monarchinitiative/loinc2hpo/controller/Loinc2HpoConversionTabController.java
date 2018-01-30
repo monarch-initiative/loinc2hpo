@@ -13,8 +13,7 @@ import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationParser;
-import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
+import org.monarchinitiative.loinc2hpo.fhir.FhirObservationRetriever;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -60,7 +59,7 @@ public class Loinc2HpoConversionTabController {
             JsonNode node = mapper.readTree(data);
             Map<LoincId, LoincTest> testmap = model.getTestmap();
            //estmap=loincparser.getTestmap();
-            TestResult res = FhirObservationParser.fhir2testrest(node,testmap);
+            TestResult res = FhirObservationRetriever.fhir2testrest(node,testmap);
             ObservableList<String> items = FXCollections.observableArrayList ();
             if (res==null) {
                 items.add("Could not find test");

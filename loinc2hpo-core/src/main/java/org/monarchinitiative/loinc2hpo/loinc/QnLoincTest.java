@@ -15,9 +15,9 @@ public class QnLoincTest extends LoincTest {
     private static final Logger logger = LogManager.getLogger();
 
 
-    private final Hpo2LoincTermId belowNormalTerm;
-    private final Hpo2LoincTermId notAbnormalTerm;
-    private final Hpo2LoincTermId aboveNormalTerm;
+    private final HpoTermId4LoincTest belowNormalTerm;
+    private final HpoTermId4LoincTest notAbnormalTerm;
+    private final HpoTermId4LoincTest aboveNormalTerm;
 
     boolean flag=false;
 
@@ -25,7 +25,7 @@ public class QnLoincTest extends LoincTest {
 
 
     @Override
-    public Hpo2LoincTermId loincValueToHpo(LoincObservation obs) {
+    public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs) {
         switch (obs.getCategory()) {
             case LOW: return belowNormalTerm;
             case HIGH: return aboveNormalTerm;
@@ -50,10 +50,10 @@ public class QnLoincTest extends LoincTest {
 
     public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
         super(loinc,loincScale);
-        this.belowNormalTerm=new Hpo2LoincTermId(low);
+        this.belowNormalTerm=new HpoTermId4LoincTest(low);
         boolean negated=true;
-        this.notAbnormalTerm=new Hpo2LoincTermId(normal,negated);
-        this.aboveNormalTerm=new Hpo2LoincTermId(hi);
+        this.notAbnormalTerm=new HpoTermId4LoincTest(normal,negated);
+        this.aboveNormalTerm=new HpoTermId4LoincTest(hi);
 
         /**
         logger.trace(String.format("low: %s; normal: %s, high: %s",
@@ -78,6 +78,11 @@ public class QnLoincTest extends LoincTest {
     public TermId getNotAbnormalHpoTermName() { return this.notAbnormalTerm==null ? null : notAbnormalTerm.getId(); }
     @Override
     public TermId getAboveNormalHpoTermName() { return this.aboveNormalTerm==null ? null : aboveNormalTerm.getId(); }
+
+    @Override
+    public TermId getCorrespondingHpoTermName() {
+        return null;
+    }
 
     @Override
     public String getNote() { return note;}

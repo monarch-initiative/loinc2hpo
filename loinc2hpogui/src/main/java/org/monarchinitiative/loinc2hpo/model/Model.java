@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
+import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
@@ -45,6 +46,15 @@ public class Model {
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoincTest} object .*/
     public Map<LoincId,LoincTest> testmap=new LinkedHashMap<>();
+
+    private Map<LoincId, LoincEntry> loincEntryMap;
+
+    public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
+        this.loincEntryMap = map;
+    }
+    public Map<LoincId, LoincEntry> getLoincEntryMap() {
+        return this.loincEntryMap;
+    }
 
     private ImmutableMap<String,HpoTerm> termmap=null;
 
