@@ -36,10 +36,10 @@ public class LoincEntry {
 
 
 
-    public LoincEntry(String line) throws Exception {
+    public LoincEntry(String line) throws MalformedLoincCodeException {
         List<String> F = LoincImporter.splitCSVquoted(line);
         if (F.size()<MIN_FIELDS_LOINC) {
-            throw new Exception("malformed LOINC line: "+line);
+            throw new MalformedLoincCodeException("malformed LOINC line: "+line);
         }
         try {
             LOINC_Number=new LoincId(F.get(0));
@@ -75,10 +75,11 @@ public class LoincEntry {
 
     public static ImmutableMap<LoincId,LoincEntry> getLoincEntryList(String pathToLoincCoreTable) {
         ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder();
+        int count_malformed = 0;
+        int count_correct = 0;
         try {
             BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable));
             String line=null;
-            int c=0;
             String header=br.readLine();
             if (! header.contains("\"LOINC_NUM\"")) {
                 logger.error(String.format("Malformed header line (%s) in Loinc File %s",header,pathToLoincCoreTable));
@@ -88,9 +89,10 @@ public class LoincEntry {
                 try {
                     LoincEntry entry = new LoincEntry(line);
                     builder.put(entry.getLOINC_Number(),entry);
-                } catch (Exception e) {
-                    logger.error("Could not construct LOINC entry");
-                    e.printStackTrace();
+                    count_correct++;
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code in the line:\n " + line);
+                    count_malformed++;
                 }
             }
             br.close();
@@ -98,6 +100,8 @@ public class LoincEntry {
             e.printStackTrace();
         }
 
+        logger.info(count_correct+ " loinc entries are created");
+        logger.warn(count_malformed + " loinc numbers are malformed");
 
         return builder.build();
 

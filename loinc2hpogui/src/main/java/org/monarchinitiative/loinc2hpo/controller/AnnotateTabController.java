@@ -3,7 +3,6 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 //import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,7 +24,7 @@ import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
@@ -609,8 +608,8 @@ public class AnnotateTabController {
             //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
             try {
                 LoincScale scale = LoincScale.string2enum(loincScale);
-                QnLoincTest test =
-                        new QnLoincTest(loincCode, scale, low.getId(), normal.getId(), high.getId(),
+                QnLoinc2HPOAnnotation test =
+                        new QnLoinc2HPOAnnotation(loincCode, scale, low.getId(), normal.getId(), high.getId(),
                                 flagForAnnotation.isSelected(), annotationNoteField.getText());
                 this.model.addLoincTest(test);
                 loinc2HpoAnnotationsTabController.refreshTable();

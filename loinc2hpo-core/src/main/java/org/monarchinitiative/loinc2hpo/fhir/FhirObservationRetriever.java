@@ -4,18 +4,16 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.exception.WrongElementException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.testresult.QnTestResult;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestResultInHPO;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -109,7 +107,8 @@ public class FhirObservationRetriever {
     }
 
 
-    public static TestResult fhir2testrest(JsonNode node, Map<LoincId, LoincTest> testmap) throws Loinc2HpoException {
+
+    public static LabTestResultInHPO fhir2testrest(JsonNode node, Map<LoincId, Loinc2HPOAnnotation> testmap) throws Loinc2HpoException {
         boolean interpretationDetected = false;
         String interpretationCode = null;
 
@@ -122,7 +121,7 @@ public class FhirObservationRetriever {
 
         String resourcetype = node.get("resourceType").asText();
         if (!resourcetype.equals("Observation"))
-            throw new WrongElementException("Unexpected resource type " + resourcetype + "(expected: TestResult)");
+            throw new WrongElementException("Unexpected resource type " + resourcetype + "(expected: LabTestResultInHPO)");
 
 
         JsonNode codeNode = node.get("code");
@@ -130,14 +129,14 @@ public class FhirObservationRetriever {
         JsonNode interpretationNode = node.get("interpretation");
         observation = getInterpretationCode(interpretationNode);
         if (observation != null && lid != null) {
-            LoincTest test = testmap.get(lid);
+            Loinc2HPOAnnotation test = testmap.get(lid);
             if (test==null) {
                 logger.error("Could not retrieve test for " + lid.toString());
                 debugPrint(testmap);
                 return null;
             }
             HpoTermId4LoincTest hpoId = test.loincInterpretationToHpo(observation);
-            return new QnTestResult(hpoId, observation, "?");
+            return new BasicLabTestResultInHPO(hpoId, observation, "?");
         }
 
         logger.info("interpretation node: " + interpretationNode.asText());
@@ -159,7 +158,7 @@ public class FhirObservationRetriever {
                             interpretationCode = loinc.path("code").asText();
                             logger.info("code is detected: " + interpretationCode);
 //                            if (interpretationCode.equalsIgnoreCase("H")) {
-//                                return new QnTestResult()
+//                                return new BasicLabTestResultInHPO()
 //                            }
                         }
                         /**
@@ -204,12 +203,12 @@ public class FhirObservationRetriever {
             }
         }
         return null;
-        //return TestResult(interpretationCode);
+        //return LabTestResultInHPO(interpretationCode);
     }
 
 
 
-    static void debugPrint(Map<LoincId, LoincTest> testmap) {
+    static void debugPrint(Map<LoincId, Loinc2HPOAnnotation> testmap) {
         logger.trace("tests in map");
         for (LoincId id : testmap.keySet()) {
             logger.trace(id.toString() + ": "+ testmap.get(id).toString());

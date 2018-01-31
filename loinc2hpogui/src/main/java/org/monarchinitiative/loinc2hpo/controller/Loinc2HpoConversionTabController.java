@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
@@ -16,13 +14,10 @@ import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationRetriever;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.io.*;
-import java.util.Map;
 
 @Singleton
 public class Loinc2HpoConversionTabController {
@@ -53,7 +48,7 @@ public class Loinc2HpoConversionTabController {
         String path = model.getPathToJsonFhirFile();
         Observation observation = FhirObservationRetriever.parseJsonFile2Observation(path);
         FhirObservationAnalyzer.setObservation(observation);
-        TestResult res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
+        LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
         ObservableList<String> items = FXCollections.observableArrayList ();
         if (res==null) {
             items.add("Could not find test");
@@ -76,9 +71,9 @@ public class Loinc2HpoConversionTabController {
             fis.read(data);
             fis.close();
             JsonNode node = mapper.readTree(data);
-            Map<LoincId, LoincTest> testmap = model.getTestmap();
+            Map<LoincId, Loinc2HPOAnnotation> testmap = model.getTestmap();
            //estmap=loincparser.getTestmap();
-            TestResult res = FhirObservationRetriever.fhir2testrest(node,testmap);
+            LabTestResultInHPO res = FhirObservationRetriever.fhir2testrest(node,testmap);
             ObservableList<String> items = FXCollections.observableArrayList ();
             if (res==null) {
                 items.add("Could not find test");

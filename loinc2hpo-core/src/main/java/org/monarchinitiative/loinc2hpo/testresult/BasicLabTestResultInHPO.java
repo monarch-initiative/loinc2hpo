@@ -4,7 +4,11 @@ import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
 
-public class QnTestResult implements TestResult {
+/**
+ * This class represents the final outcome for a lab test.
+ * It keeps record of the HPO term for the result, and
+ */
+public class BasicLabTestResultInHPO implements LabTestResultInHPO {
 
     HpoTermId4LoincTest hpoId;
 
@@ -12,7 +16,7 @@ public class QnTestResult implements TestResult {
 
     String comment;
 
-    public QnTestResult(HpoTermId4LoincTest id, LoincObservationResult obs, String text) {
+    public BasicLabTestResultInHPO(HpoTermId4LoincTest id, LoincObservationResult obs, String text) {
 
         hpoId=id;
         observation=obs;
@@ -31,8 +35,8 @@ public class QnTestResult implements TestResult {
             return "error => hpoId.getId() is null in testResult";
         }
         if (observation==null)
-            return "error => observation is null in TestResult";
-        return String.format("QnTestResult: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation.toString(),comment!=null?comment:"");
+            return "error => observation is null in LabTestResultInHPO";
+        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation.toString(),comment!=null?comment:"");
 
     }
 

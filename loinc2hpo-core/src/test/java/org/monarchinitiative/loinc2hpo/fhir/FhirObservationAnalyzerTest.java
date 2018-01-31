@@ -3,20 +3,15 @@ package org.monarchinitiative.loinc2hpo.fhir;
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
-import com.github.phenomics.ontolib.ontology.data.Ontology;
 import com.github.phenomics.ontolib.ontology.data.TermId;
-import com.github.phenomics.ontolib.ontology.data.TermPrefix;
 import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.io.HPOParser;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
-import org.monarchinitiative.loinc2hpo.testresult.QnTestResult;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,17 +76,17 @@ public class FhirObservationAnalyzerTest {
 
         FhirObservationAnalyzer.setObservation(observation);
 
-        Map<LoincId, LoincTest> testmap = new HashMap<>();
+        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
         TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
         TermId hi = hpoTermMap.get("Hyperglycemia").getId();
 
-        LoincTest test1 = new QnLoincTest(loincId, loincScale,  low,  normal,  hi);
+        Loinc2HPOAnnotation test1 = new QnLoinc2HPOAnnotation(loincId, loincScale,  low,  normal,  hi);
 
         testmap.put(loincId, test1);
-        TestResult result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
+        LabTestResultInHPO result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
         System.out.println(result);
 
     }

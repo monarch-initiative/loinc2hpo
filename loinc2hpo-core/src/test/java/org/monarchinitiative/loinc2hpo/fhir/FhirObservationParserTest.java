@@ -9,8 +9,8 @@ import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.io.HPOParser;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.io.*;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class FhirObservationParserTest {
 
     private static JsonNode node;
     static private LoincMappingParser loincparser;
-    static  private Map<LoincId, LoincTest> testmap;
+    static  private Map<LoincId, Loinc2HPOAnnotation> testmap;
 
 
 
@@ -92,7 +92,7 @@ public class FhirObservationParserTest {
 
     @Test
     public void testGetHyperglycemia() throws Loinc2HpoException{
-        TestResult res = FhirObservationRetriever.fhir2testrest(node,testmap);
+        LabTestResultInHPO res = FhirObservationRetriever.fhir2testrest(node,testmap);
         assertNotNull(res);
 //        System.err.println(res);
         String expected="HP:0003074";
@@ -104,7 +104,7 @@ public class FhirObservationParserTest {
     public void testGetNormoglycemia() throws Loinc2HpoException{
         JsonNode normGlycNode = getObservationNode("json/glucoseNormal.fhir");
         assertNotNull(normGlycNode);
-        TestResult res =  FhirObservationRetriever.fhir2testrest(normGlycNode,testmap);
+        LabTestResultInHPO res =  FhirObservationRetriever.fhir2testrest(normGlycNode,testmap);
         assertNotNull(res);
 //        System.err.println(res);
         String expected="HP:0011015"; // Abn of glucose metabolism

@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpo.io;
+package org.monarchinitiative.loinc2hpo.exception;
 
 public class FileDownloadException extends Exception {
     private static final long serialVersionUID = 1L;

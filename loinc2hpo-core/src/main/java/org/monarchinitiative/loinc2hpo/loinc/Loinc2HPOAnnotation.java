@@ -5,7 +5,7 @@ import com.github.phenomics.ontolib.ontology.data.TermId;
 /**
  * This is a class for a Loinc test.
  */
-public abstract class LoincTest {
+public abstract class Loinc2HPOAnnotation {
 
     protected final LoincId id;
 
@@ -14,7 +14,7 @@ public abstract class LoincTest {
     abstract public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs);
 
 
-    public LoincTest(LoincId lid, LoincScale lsc) {
+    public Loinc2HPOAnnotation(LoincId lid, LoincScale lsc) {
         id=lid;
         scale=lsc;
     }
@@ -23,10 +23,10 @@ public abstract class LoincTest {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (!(o instanceof LoincTest)) {
+        if (!(o instanceof Loinc2HPOAnnotation)) {
             return false;
         }
-        LoincTest lt = (LoincTest) o;
+        Loinc2HPOAnnotation lt = (Loinc2HPOAnnotation) o;
         return this.id.equals(lt.id);
     }
 

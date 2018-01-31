@@ -1,14 +1,13 @@
 package org.monarchinitiative.loinc2hpo.command;
 
-import com.google.common.collect.ImmutableMap;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DemoCommand extends  Command   {
 
-    Map<String,LoincTest> testMap;
+    Map<String,Loinc2HPOAnnotation> testMap;
 
 
 
@@ -22,7 +21,7 @@ public class DemoCommand extends  Command   {
     public void execute() {
         ClassLoader classLoader = DemoCommand.class.getClassLoader();
         String loincpath = classLoader.getResource("loinctest2hpo.csv").getFile();
-        //ImmutableMap<String,LoincTest> loncmap = LoincTest.getLoincTestMap(loincpath);
+        //ImmutableMap<String,Loinc2HPOAnnotation> loncmap = Loinc2HPOAnnotation.getLoincTestMap(loincpath);
     }
 
 

@@ -2,9 +2,9 @@ package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.github.phenomics.ontolib.ontology.data.TermId;
 
-public class OrdLoincTest extends LoincTest {
+public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 
-    public OrdLoincTest(LoincId lid, LoincScale lsc) {
+    public OrdLoinc2HPOAnnotation(LoincId lid, LoincScale lsc) {
         super(lid, lsc);
     }
 

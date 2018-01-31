@@ -8,11 +8,11 @@ import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.LoincCodeNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.UnsupportedCodingSystemException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.testresult.QnTestResult;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestResultInHPO;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class FhirObservationAnalyzer {
 
 
     /**
-     * A core function that tries three ways to return a TestResult object:
+     * A core function that tries three ways to return a LabTestResultInHPO object:
      * first, it tries to return the result through the interpretation field. If it fails,
      * second, it tries to return the result through the quantative value, or
      * third, it tries to return the retult through the coded value (ordinal Loinc)
@@ -40,7 +40,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static TestResult getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, LoincTest> loinc2HPOannotationMap) {
+    public static LabTestResultInHPO getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, Loinc2HPOAnnotation> loinc2HPOannotationMap) {
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
             //TODO: consider handling this as a future project
@@ -137,8 +137,8 @@ public class FhirObservationAnalyzer {
      * @throws LoincCodeNotFoundException
      * @throws UnsupportedCodingSystemException
      */
-    public static TestResult getHPOFromInterpretation(
-            CodeableConcept interpretation, Map<LoincId, LoincTest> testmap) throws MalformedLoincCodeException,
+    public static LabTestResultInHPO getHPOFromInterpretation(
+            CodeableConcept interpretation, Map<LoincId, Loinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
             LoincCodeNotFoundException, UnsupportedCodingSystemException {
         //here we only look at interpretation code system defined by HL7
         String interpretationCode = null;
@@ -161,9 +161,9 @@ public class FhirObservationAnalyzer {
                 logger.error("Could not find a valid loinc id from the ");
                 return null;
             }
-            LoincTest test = testmap.get(loincId);
+            Loinc2HPOAnnotation test = testmap.get(loincId);
             HpoTermId4LoincTest hpoId = test.loincInterpretationToHpo(observationResult);
-            return new QnTestResult(hpoId, observationResult, "?");
+            return new BasicLabTestResultInHPO(hpoId, observationResult, "?");
         }
     }
 
@@ -172,7 +172,7 @@ public class FhirObservationAnalyzer {
      * need to have a Qn value AND a reference range
      * @return
      */
-    public static TestResult getHPOFromRawValue(){
+    public static LabTestResultInHPO getHPOFromRawValue(){
 
         return null;
     }
@@ -182,7 +182,7 @@ public class FhirObservationAnalyzer {
      * need to have an ordinal value
      * @return
      */
-    public static TestResult getHPOFromCodedValue() throws FHIRException {
+    public static LabTestResultInHPO getHPOFromCodedValue() throws FHIRException {
 
         return null;
     }

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
  * @version 0.1.2
  */
-public class QnLoincTest extends LoincTest {
+public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     private static final Logger logger = LogManager.getLogger();
 
 
@@ -19,11 +19,11 @@ public class QnLoincTest extends LoincTest {
     private final HpoTermId4LoincTest notAbnormalTerm;
     private final HpoTermId4LoincTest aboveNormalTerm;
 
-    boolean flag=false;
+    private boolean flag=false;
 
     private String note; //what user wants to say about an annotation, e.g. "the hpo term is the best fit because ..."
 
-    public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
+    public QnLoinc2HPOAnnotation(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
         super(loinc,loincScale);
         this.belowNormalTerm=new HpoTermId4LoincTest(low);
         boolean negated=true;
@@ -66,7 +66,7 @@ public class QnLoincTest extends LoincTest {
 
 
 
-    public QnLoincTest(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi, boolean fl, String note){
+    public QnLoinc2HPOAnnotation(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi, boolean fl, String note){
         this(loinc,loincScale,low,normal,hi);
         this.note=note;
         this.flag=fl;

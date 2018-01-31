@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.exception.FileDownloadException;
 
 import java.io.*;
 import java.net.SocketException;
