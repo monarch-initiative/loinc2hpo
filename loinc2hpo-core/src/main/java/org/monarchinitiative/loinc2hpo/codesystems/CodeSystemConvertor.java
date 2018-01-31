@@ -1,4 +1,5 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
+import org.hl7.fhir.dstu3.model.Coding;
 
 public class CodeSystemConvertor {
 
@@ -7,7 +8,7 @@ public class CodeSystemConvertor {
 
     }
 
-    public static Code convertToInternalCode(Code other){
+    public static Coding convertToInternalCode(Coding other){
 
         return null;
     }

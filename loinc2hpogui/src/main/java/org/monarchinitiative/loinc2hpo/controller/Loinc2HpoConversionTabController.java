@@ -51,11 +51,11 @@ public class Loinc2HpoConversionTabController {
         LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
         ObservableList<String> items = FXCollections.observableArrayList ();
         if (res==null) {
-            items.add("Could not find test");
+            items.add(observation.getId() + ": failed not interpret");
         } else {
             TermId id = res.getTermId();
             String name = model.termId2HpoName(id);
-            String display = String.format("%s [%s]",name,id.getIdWithPrefix());
+            String display = String.format("%s: %s [%s]",observation.getId(), name,id.getIdWithPrefix());
             if (res.isNegated()) {
                 display="NOT: "+display;
             }

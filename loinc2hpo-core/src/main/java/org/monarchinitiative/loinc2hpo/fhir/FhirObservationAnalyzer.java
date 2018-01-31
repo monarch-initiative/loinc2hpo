@@ -4,13 +4,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.monarchinitiative.loinc2hpo.exception.AnnotationNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.LoincCodeNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.UnsupportedCodingSystemException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
+import org.monarchinitiative.loinc2hpo.loinc.ObservationResultInInternalCode;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestResultInHPO;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
@@ -58,6 +59,8 @@ public class FhirObservationAnalyzer {
             } catch (UnsupportedCodingSystemException e3) {
                 //not going to happen
                 logger.error("The interpretation coding system cannot be recognized.");
+            } catch (AnnotationNotFoundException e4){
+                logger.error("Annotation is not found");
             }
         }
 
@@ -137,9 +140,9 @@ public class FhirObservationAnalyzer {
      * @throws LoincCodeNotFoundException
      * @throws UnsupportedCodingSystemException
      */
-    public static LabTestResultInHPO getHPOFromInterpretation(
+    public static LabTestResultInHPO getHPOFromInterpretation (
             CodeableConcept interpretation, Map<LoincId, Loinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
-            LoincCodeNotFoundException, UnsupportedCodingSystemException {
+            LoincCodeNotFoundException, UnsupportedCodingSystemException, AnnotationNotFoundException  {
         //here we only look at interpretation code system defined by HL7
         String interpretationCode = null;
         for (Coding coding : interpretation.getCoding()) {
@@ -155,14 +158,12 @@ public class FhirObservationAnalyzer {
             }
             throw new UnsupportedCodingSystemException("Coding system is not supported");
         } else {
-            LoincObservationResult observationResult = new LoincObservationResult(interpretationCode);
-            LoincId loincId = getLoincIdOfObservation();
-            if (loincId == null) {
-                logger.error("Could not find a valid loinc id from the ");
-                return null;
-            }
-            Loinc2HPOAnnotation test = testmap.get(loincId);
-            HpoTermId4LoincTest hpoId = test.loincInterpretationToHpo(observationResult);
+            //TODO: create a factory that convert external coding system to internal coding
+            ObservationResultInInternalCode observationResult = new ObservationResultInInternalCode(interpretationCode);
+            LoincId loincId = getLoincIdOfObservation(); //get the loinc code from the observation
+            Loinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
+            if(annotationForLoinc == null) throw new AnnotationNotFoundException();
+            HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHpo(observationResult);
             return new BasicLabTestResultInHPO(hpoId, observationResult, "?");
         }
     }

@@ -9,7 +9,7 @@ public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     }
 
     @Override
-    public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs) {
+    public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs) {
         return null;
     }
 

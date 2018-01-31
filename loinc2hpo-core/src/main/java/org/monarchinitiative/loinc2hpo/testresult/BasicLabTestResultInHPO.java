@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
+import org.monarchinitiative.loinc2hpo.loinc.ObservationResultInInternalCode;
 
 /**
  * This class represents the final outcome for a lab test.
@@ -12,11 +12,11 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
 
     HpoTermId4LoincTest hpoId;
 
-    LoincObservationResult observation;
+    ObservationResultInInternalCode observation;
 
     String comment;
 
-    public BasicLabTestResultInHPO(HpoTermId4LoincTest id, LoincObservationResult obs, String text) {
+    public BasicLabTestResultInHPO(HpoTermId4LoincTest id, ObservationResultInInternalCode obs, String text) {
 
         hpoId=id;
         observation=obs;

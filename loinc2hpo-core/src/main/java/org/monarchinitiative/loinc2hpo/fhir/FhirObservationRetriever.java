@@ -11,7 +11,7 @@ import org.monarchinitiative.loinc2hpo.exception.WrongElementException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincObservationResult;
+import org.monarchinitiative.loinc2hpo.loinc.ObservationResultInInternalCode;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestResultInHPO;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 import org.apache.logging.log4j.Logger;
@@ -113,7 +113,7 @@ public class FhirObservationRetriever {
         String interpretationCode = null;
 
         LoincId lid;
-        LoincObservationResult observation;
+        ObservationResultInInternalCode observation;
         String comment;
 
 
@@ -228,10 +228,10 @@ public class FhirObservationRetriever {
      *]
       *},
      * </pre>
-     * It returns the corresponding {@link LoincObservationResult} object.
+     * It returns the corresponding {@link ObservationResultInInternalCode} object.
      * TODO -- add some text corresponding to the result.
      */
-    static LoincObservationResult getInterpretationCode(JsonNode node) throws Loinc2HpoException {
+    static ObservationResultInInternalCode getInterpretationCode(JsonNode node) throws Loinc2HpoException {
         JsonNode codingNode = node.get("coding");
         if (codingNode == null) {
             throw new Loinc2HpoException("Could not find coding node in interpretation");
@@ -242,7 +242,7 @@ public class FhirObservationRetriever {
         for (JsonNode n : codingNode) {
             if (!n.path("code").isMissingNode()) {
                 String lcode = n.path("code").asText();
-                return new LoincObservationResult(lcode);
+                return new ObservationResultInInternalCode(lcode);
             }
         }
         throw new Loinc2HpoException("could not find interpretation code");

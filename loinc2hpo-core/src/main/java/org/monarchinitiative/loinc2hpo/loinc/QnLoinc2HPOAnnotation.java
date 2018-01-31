@@ -4,6 +4,9 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Coding;
+
+import java.util.HashMap;
 
 /**
  * This is a key class of the library, and represents one annotated Loinc test, including three values: one if the
@@ -14,15 +17,17 @@ import org.apache.logging.log4j.Logger;
 public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     private static final Logger logger = LogManager.getLogger();
 
-
-    private final HpoTermId4LoincTest belowNormalTerm;
-    private final HpoTermId4LoincTest notAbnormalTerm;
-    private final HpoTermId4LoincTest aboveNormalTerm;
+    private  HpoTermId4LoincTest belowNormalTerm;
+    private  HpoTermId4LoincTest notAbnormalTerm;
+    private  HpoTermId4LoincTest aboveNormalTerm;
 
     private boolean flag=false;
 
     private String note; //what user wants to say about an annotation, e.g. "the hpo term is the best fit because ..."
 
+    public QnLoinc2HPOAnnotation(){
+        super();
+    }
     public QnLoinc2HPOAnnotation(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
         super(loinc,loincScale);
         this.belowNormalTerm=new HpoTermId4LoincTest(low);
@@ -41,7 +46,7 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     }
 
     @Override
-    public HpoTermId4LoincTest loincInterpretationToHpo(LoincObservationResult obs) {
+    public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs) {
         switch (obs.getCategory()) {
             case LOW: return belowNormalTerm;
             case HIGH: return aboveNormalTerm;
@@ -60,10 +65,6 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     public HpoTerm loincValueToHpo(String loincCode, String value, String unit) {
         return null;
     }
-
-
-
-
 
 
     public QnLoinc2HPOAnnotation(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi, boolean fl, String note){
