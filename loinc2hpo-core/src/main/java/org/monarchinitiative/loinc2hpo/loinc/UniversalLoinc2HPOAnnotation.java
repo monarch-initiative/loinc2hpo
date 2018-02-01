@@ -5,8 +5,7 @@ import org.hl7.fhir.dstu3.model.Coding;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
-import java.util.stream.Stream.Builder;
+
 
 public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 

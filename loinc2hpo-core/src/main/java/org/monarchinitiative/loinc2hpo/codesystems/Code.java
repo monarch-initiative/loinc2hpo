@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
+@Deprecated
 public class Code {
     private String system;
     private String code;
