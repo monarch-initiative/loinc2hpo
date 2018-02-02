@@ -9,8 +9,9 @@ public enum Loinc2HPOCodedValue {
     P,
     U;
 
-    public static String getSystem(){
-        return "http://jax.org/loinc2hpo";
+    public static final String CODESYSTEM = "http://jax.org/loinc2hpo";
+    public String getSystem(){
+        return CODESYSTEM;
     }
 
     public static Loinc2HPOCodedValue fromCode(String codeString) throws Exception{

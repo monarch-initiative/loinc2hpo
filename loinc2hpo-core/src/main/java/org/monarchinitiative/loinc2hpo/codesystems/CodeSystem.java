@@ -18,7 +18,7 @@ public abstract class CodeSystem {
     protected abstract void init();
 
     public void addToCodeContainer(CodeContainer codeContainer){
-        codeContainer.add(this);
+        //codeContainer.add(this);
     }
 
 
