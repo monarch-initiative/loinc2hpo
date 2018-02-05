@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.codesystems;
 
 public enum Loinc2HPOCodedValue {
 
+    A,
     L,
     N,
     H,
@@ -17,6 +18,9 @@ public enum Loinc2HPOCodedValue {
     public static Loinc2HPOCodedValue fromCode(String codeString) throws Exception{
         if (codeString == null || codeString.isEmpty()) {
             return null;
+        }
+        if (codeString.equals("A")) {
+            return A;
         }
         if (codeString.equals("L")) {
             return L;
@@ -41,6 +45,7 @@ public enum Loinc2HPOCodedValue {
 
     public String toCode(){
         switch(this) {
+            case A: return "A";
             case L: return "L";
             case N: return "N";
             case H: return "H";
@@ -53,6 +58,7 @@ public enum Loinc2HPOCodedValue {
 
     public String getDisplay(){
         switch(this){
+            case A: return "abnormal";
             case L: return "below normal range";
             case N: return "within normal range";
             case H: return "above normal range";

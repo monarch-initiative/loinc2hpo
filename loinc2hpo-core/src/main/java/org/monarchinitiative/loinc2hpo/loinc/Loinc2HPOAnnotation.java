@@ -1,7 +1,10 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 
 import java.util.HashMap;
 
@@ -22,6 +25,8 @@ public abstract class Loinc2HPOAnnotation {
     }
 
     abstract public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs);
+    //use this method to retrieve the hpo term for a particular result (coded with an internal code)
+    abstract public HpoTermId4LoincTest loincInterpretationToHPO(Code code);
 
     public Loinc2HPOAnnotation setLoincId(LoincId loincId){
         this.id = loincId;
@@ -51,10 +56,13 @@ public abstract class Loinc2HPOAnnotation {
     public LoincScale getLoincScale() { return this.scale;}
     public LoincId getLoincNumber(){ return this.id; }
     public abstract String getNote();
+    //For the following five methods, the first five are for easy access
+    //the fifth one can be used to deal with all cases
     public abstract TermId getBelowNormalHpoTermId();
+    public abstract TermId getAbnormalHpoTermName();
     public abstract TermId getNotAbnormalHpoTermName();
     public abstract TermId getAboveNormalHpoTermName();
-    public abstract TermId getCorrespondingHpoTermName();
+    //public abstract TermId getCorrespondingHpoTermName(String code);
 
 
 

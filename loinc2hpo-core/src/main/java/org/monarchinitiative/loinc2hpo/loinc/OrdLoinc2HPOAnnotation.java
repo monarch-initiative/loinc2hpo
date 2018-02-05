@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.github.phenomics.ontolib.ontology.data.TermId;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
 
 public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 
@@ -14,7 +15,17 @@ public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     }
 
     @Override
+    public HpoTermId4LoincTest loincInterpretationToHPO(Code code) {
+        return null;
+    }
+
+    @Override
     public TermId getBelowNormalHpoTermId() {
+        return null;
+    }
+
+    @Override
+    public TermId getAbnormalHpoTermName() {
         return null;
     }
 
@@ -28,10 +39,6 @@ public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
         return null;
     }
 
-    @Override
-    public TermId getCorrespondingHpoTermName() {
-        return null;
-    }
 
     @Override
     public String getNote() {

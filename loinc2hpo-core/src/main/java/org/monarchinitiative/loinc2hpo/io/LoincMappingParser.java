@@ -8,6 +8,9 @@ import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.github.phenomics.ontolib.ontology.data.TermPrefix;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedHpoTermIdException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
@@ -142,8 +145,17 @@ public class LoincMappingParser {
                     TermId high = getHpoTermId(A[5]);
                     String comment = (A.length>5 && A[5]!=null)? A[5]:"";
                     if (loincScale.equals(LoincScale.Qn)) {
-                        Loinc2HPOAnnotation test = new QnLoinc2HPOAnnotation(id,LoincScale.Qn,low,wnl,high,flagval,comment);
+                        //Loinc2HPOAnnotation test = new QnLoinc2HPOAnnotation(id,LoincScale.Qn,low,wnl,high,flagval,comment);
+                        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+                        Loinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(id, loincScale)
+                                .addAnnotation(internalCode.get("L"), new HpoTermId4LoincTest(low, false))
+                                .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(wnl, false))
+                                .addAnnotation(internalCode.get("N"), new HpoTermId4LoincTest(wnl, true))
+                                .addAnnotation(internalCode.get("H"), new HpoTermId4LoincTest(high, false))
+                                .addAnnotation(internalCode.get("P"), new HpoTermId4LoincTest(high, false))
+                                .addAnnotation(internalCode.get("NP"), new HpoTermId4LoincTest(wnl, true));
                         testset.add(test);
+                        //what is the following line doing? TODO:?
                         qntests.add(new QnLoinc2HPOAnnotation(id,LoincScale.Qn,low,wnl,high));
                         testmap.put(id,test);
                     } else {

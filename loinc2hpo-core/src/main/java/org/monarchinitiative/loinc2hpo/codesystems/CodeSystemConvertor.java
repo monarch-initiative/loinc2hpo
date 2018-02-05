@@ -25,6 +25,7 @@ public class CodeSystemConvertor {
     static void init(){
         addRelevantCodeSystems();
         initV2toInternalCodeMap();
+        initV3toInternalCodeMap(); //not implemented yet
         //create many other maps
     }
     private static void addRelevantCodeSystems(){
@@ -81,41 +82,43 @@ public class CodeSystemConvertor {
 
     static void initV2toInternalCodeMap(){
         final String v2System = "http://hl7.org/fhir/v2/0078";
-        String[] v2Codes = new String[] {
-                "<",
-                ">",
-                "H",
-                "HH",
-                "I",
-                "N",
-                "L",
-                "LL",
-                "POS",
-                "NEG",
-                "W"
-        };
         final String internalSystem = Loinc2HPOCodedValue.CODESYSTEM;
-        String[] internalCodes = new String[]{
-                "L",
-                "H",
-                "H",
-                "H",
-                "N",
-                "N",
-                "L",
-                "L",
-                "P",
-                "NP",
-                "U"
-        };
-
-        for (int i = 0; i < v2Codes.length; i++) {
-            Code v2Code = codeContainer.getCodeSystemMap().get(v2System).get(v2Codes[i]);
-            Code internalCode = codeContainer.getCodeSystemMap().get(internalSystem).get(internalCodes[i]);
-            if (v2Code != null && internalCode != null){
-                codeConversionmap.put(v2Code, internalCode);
+        String mappath = CodeSystemConvertor.class.getClassLoader().getResource("external2internalCodeMap/HL7_v2_table0078_to_internal.tsv").getPath();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(mappath))){
+            String line = bufferedReader.readLine();
+            if (line == null || line.split("\\t").length != 3) {
+                logger.error("The first line does not have 3 tab-separated elements");
+                return;
             }
+            String external = line.split("\\t")[0];
+            String internal = line.split("\\t")[2];
+            if (!(external.equals(v2System) && internal.equals(internalSystem))) {
+                logger.error("check whether the code system is spelled correctly.");
+                return;
+            }
+            line = bufferedReader.readLine();
+            while (line != null) {
+                String[] elements = line.split("\\t");
+                if (elements.length == 3) {
+                    Code v2Code = codeContainer.getCodeSystemMap().get(v2System).get(elements[0]);
+                    Code internalCode = codeContainer.getCodeSystemMap().get(internalSystem).get(elements[2]);
+                    if (v2Code != null && internalCode != null){
+                        codeConversionmap.put(v2Code, internalCode);
+                    }
+                } else {
+                    logger.error("The line does not have 3 tab-separated elements: " + line);
+                }
+                line = bufferedReader.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+
         }
+    }
+
+    //Todo: implement this
+    public static void initV3toInternalCodeMap(){
 
     }
 

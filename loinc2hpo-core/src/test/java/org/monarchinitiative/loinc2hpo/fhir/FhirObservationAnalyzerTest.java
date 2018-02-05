@@ -8,6 +8,9 @@ import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
@@ -86,9 +89,32 @@ public class FhirObservationAnalyzerTest {
         Loinc2HPOAnnotation test1 = new QnLoinc2HPOAnnotation(loincId, loincScale,  low,  normal,  hi);
 
         testmap.put(loincId, test1);
+        //LabTestResultInHPO result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
+        //System.out.println(result);
+
+    }
+
+    @Test
+    public void testUniversalAnnotation() throws Exception {
+
+        FhirObservationAnalyzer.setObservation(observation);
+
+        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        LoincId loincId = new LoincId("15074-8");
+        LoincScale loincScale = LoincScale.string2enum("Qn");
+        TermId low = hpoTermMap.get("Hypoglycemia").getId();
+        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
+        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
+
+        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation();
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        testmap.put(loincId, glucoseAnnotation);
         LabTestResultInHPO result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
         System.out.println(result);
-
     }
 
     @Test

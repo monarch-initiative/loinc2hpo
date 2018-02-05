@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
+@Deprecated
 public class ObservationResultInInternalCode {
 
     static enum category { LOW, WITHIN_NORMAL_RANGE, HIGH, ABSENT, PRESENT, UNKNOWN }

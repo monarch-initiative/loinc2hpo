@@ -23,9 +23,14 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
         comment=text;
     }
 
+    public BasicLabTestResultInHPO(HpoTermId4LoincTest id, String text) {
+        this.hpoId = id;
+        this.comment = text;
+    }
+
     @Override
     public TermId getTermId() { return hpoId.getId(); }
-
+/**
     @Override
     public String toString() {
         if (hpoId==null) {
@@ -37,7 +42,17 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
         if (observation==null)
             return "error => observation is null in LabTestResultInHPO";
         return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation.toString(),comment!=null?comment:"");
-
+    }
+**/
+    @Override
+    public String toString() {
+        if (hpoId==null) {
+            return "error => hpoId is null in testResult";
+        }
+        if (hpoId.getId()==null) {
+            return "error => hpoId.getId() is null in testResult";
+        }
+        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation!=null?observation.toString():"NA",comment!=null?comment:"NA");
     }
 
 

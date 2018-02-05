@@ -5,6 +5,7 @@ import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Coding;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
 
 import java.util.HashMap;
 
@@ -55,6 +56,11 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
         }
     }
 
+    @Override
+    public HpoTermId4LoincTest loincInterpretationToHPO(Code code) {
+        return null;
+    }
+
     /**
      * ToDo implement me.
      * @param loincCode
@@ -76,15 +82,16 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 
     @Override
     public TermId getBelowNormalHpoTermId() { return this.belowNormalTerm==null ? null : belowNormalTerm.getId(); }
+
+    @Override
+    public TermId getAbnormalHpoTermName() {
+        return null;
+    }
+
     @Override
     public TermId getNotAbnormalHpoTermName() { return this.notAbnormalTerm==null ? null : notAbnormalTerm.getId(); }
     @Override
     public TermId getAboveNormalHpoTermName() { return this.aboveNormalTerm==null ? null : aboveNormalTerm.getId(); }
-
-    @Override
-    public TermId getCorrespondingHpoTermName() {
-        return null;
-    }
 
     @Override
     public String getNote() { return note;}
