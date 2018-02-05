@@ -107,7 +107,7 @@ public class FhirObservationAnalyzerTest {
         TermId hi = hpoTermMap.get("Hyperglycemia").getId();
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation();
+        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
         glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
                 .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
                 .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))

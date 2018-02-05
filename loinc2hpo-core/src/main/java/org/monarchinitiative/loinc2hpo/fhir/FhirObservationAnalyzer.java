@@ -200,23 +200,6 @@ public class FhirObservationAnalyzer {
             }
             throw new UnsupportedCodingSystemException("Coding system is not supported");
         }
-        /**
-        if (interpretationCode == null) {
-            logger.error("Could not recognize the coding system for interpretation");
-            for (Coding coding : interpretation.getCoding()) {
-                logger.error("coding system: " + coding.getSystem() + " Value: " + coding.getCode());
-            }
-            throw new UnsupportedCodingSystemException("Coding system is not supported");
-        } else {
-            //TODO: create a factory that convert external coding system to internal coding
-            ObservationResultInInternalCode observationResult = new ObservationResultInInternalCode(interpretationCode);
-            LoincId loincId = getLoincIdOfObservation(); //get the loinc code from the observation
-            Loinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
-            if(annotationForLoinc == null) throw new AnnotationNotFoundException();
-            HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHpo(observationResult);
-            return new BasicLabTestResultInHPO(hpoId, observationResult, "?");
-        }
-         **/
         return null;
     }
 

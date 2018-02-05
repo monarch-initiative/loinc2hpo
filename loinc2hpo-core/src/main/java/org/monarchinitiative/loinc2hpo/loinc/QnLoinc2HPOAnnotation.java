@@ -26,9 +26,7 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 
     private String note; //what user wants to say about an annotation, e.g. "the hpo term is the best fit because ..."
 
-    public QnLoinc2HPOAnnotation(){
-        super();
-    }
+    //public QnLoinc2HPOAnnotation(){ }
     public QnLoinc2HPOAnnotation(LoincId loinc, LoincScale loincScale, TermId low, TermId normal, TermId hi){
         super(loinc,loincScale);
         this.belowNormalTerm=new HpoTermId4LoincTest(low);

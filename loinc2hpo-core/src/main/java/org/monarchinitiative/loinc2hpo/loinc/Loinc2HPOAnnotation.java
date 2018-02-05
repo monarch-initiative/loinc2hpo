@@ -16,9 +16,6 @@ public abstract class Loinc2HPOAnnotation {
     protected LoincId id;
     protected LoincScale scale;
 
-    public Loinc2HPOAnnotation(){
-
-    }
     public Loinc2HPOAnnotation(LoincId lid, LoincScale lsc) {
         id=lid;
         scale=lsc;

@@ -176,10 +176,7 @@ public class LoincMappingParser {
     }
 
     LoincScale getScale(String sc) {
-        switch (sc) {
-            case "Qn": return LoincScale.Qn;
-            default: return LoincScale.Unknown;
-        }
+        return LoincScale.string2enum(sc);
     }
 
 

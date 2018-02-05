@@ -19,13 +19,13 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
@@ -608,9 +608,15 @@ public class AnnotateTabController {
             //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
             try {
                 LoincScale scale = LoincScale.string2enum(loincScale);
-                QnLoinc2HPOAnnotation test =
-                        new QnLoinc2HPOAnnotation(loincCode, scale, low.getId(), normal.getId(), high.getId(),
-                                flagForAnnotation.isSelected(), annotationNoteField.getText());
+                Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+                Loinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(loincCode, scale)
+                        .addAnnotation(internalCode.get("L"), low!=null ? new HpoTermId4LoincTest(low.getId(), false) : null)
+                        .addAnnotation(internalCode.get("A"), normal != null ? new HpoTermId4LoincTest(normal.getId(), false) : null)
+                        .addAnnotation(internalCode.get("N"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null)
+                        .addAnnotation(internalCode.get("H"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
+                        .addAnnotation(internalCode.get("P"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
+                        .addAnnotation(internalCode.get("NP"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null);
+
                 this.model.addLoincTest(test);
                 loinc2HpoAnnotationsTabController.refreshTable();
                 createAnnotationSuccess.setFill(Color.GREEN);
