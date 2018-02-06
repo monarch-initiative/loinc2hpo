@@ -42,10 +42,8 @@ public class CodeSystemConvertor {
 
         //add HL7 V2 0078 interpretation values
         String path = CodeSystemConvertor.class.getClassLoader().getResource("CodeSystems/HL7_V2_table0078.tsv").getPath();
-        System.out.println(path);
         try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path), Charset.forName("UTF-8")))) {
             String line = bufferedReader.readLine();
-            System.out.println(line);
             if (line == null || line.trim().isEmpty()) {
                 logger.error("File is empty or first line is empty. First line should be code system");
                 return;

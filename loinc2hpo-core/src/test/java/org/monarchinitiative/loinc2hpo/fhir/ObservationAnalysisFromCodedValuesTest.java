@@ -13,6 +13,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.ReferenceNotFoundException;
+import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 
 import java.io.File;
@@ -84,27 +85,33 @@ public class ObservationAnalysisFromCodedValuesTest {
         testmap.put(loincId, bacterialAnnotation);
         ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[0].getValueCodeableConcept(), testmap);
         assertNotNull(analyzer.getHPOforObservation());
-        System.out.println(analyzer.getHPOforObservation().getId());
+        assertEquals("0002726", analyzer.getHPOforObservation().getId().getId());
     }
 
 
-    @Test (expected = ReferenceNotFoundException.class)
+    @Test (expected = UnrecognizedCodeException.class)
     public void testGetInterpretationCodes2() throws Exception {
         Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
-        LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
+        LoincId loincId = new LoincId("600-7");
+        LoincScale loincScale = LoincScale.string2enum("Nom");
+        TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
+        TermId forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections").getId();
+
+        TermId positive = hpoTermMap.get("Recurrent bacterial infections").getId();
+
+        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
+        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
-        testmap.put(loincId, glucoseAnnotation);
-        ObservationAnalysisFromQnValue analyzer = new ObservationAnalysisFromQnValue(loincId, observations[1], testmap);
+
+
+        Loinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
+                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
+                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
+                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+
+        testmap.put(loincId, bacterialAnnotation);
+        ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[3].getValueCodeableConcept(), testmap);
         analyzer.getHPOforObservation();
     }
 }

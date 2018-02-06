@@ -91,10 +91,23 @@ public class FhirObservationAnalyzer {
         //Ord will have a ValueCodeableConcept field
         if (observation.hasValueCodeableConcept()) {
             try {
-                return getHPOFromCodedValue();
+                HpoTermId4LoincTest hpoterm = null;
+                hpoterm = new ObservationAnalysisFromCodedValues(getLoincIdOfObservation(),
+                        observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
+                return new BasicLabTestResultInHPO(hpoterm, null);
+            } catch (AmbiguousResultsFoundException e) {
+                logger.error("multiple results are found");
+            } catch (UnrecognizedCodeException e) {
+                logger.error("unrecognized codes");
             } catch (FHIRException e) {
                 //not going to happen
                 logger.error("Could not get HPO term from coded value");
+            } catch (LoincCodeNotFoundException e) {
+                logger.error("Code not found");
+            } catch (UnsupportedCodingSystemException e) {
+                logger.error("Code system is not recognized");
+            } catch (MalformedLoincCodeException e) {
+                logger.error("Loinc code is not formed correctly.");
             }
         }
 
