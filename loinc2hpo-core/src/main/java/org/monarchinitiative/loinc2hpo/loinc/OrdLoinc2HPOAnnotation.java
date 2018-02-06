@@ -3,6 +3,8 @@ package org.monarchinitiative.loinc2hpo.loinc;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 
+import java.util.Set;
+@Deprecated
 public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
 
     public OrdLoinc2HPOAnnotation(LoincId lid, LoincScale lsc) {
@@ -48,5 +50,10 @@ public class OrdLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     @Override
     public boolean getFlag() {
         return false;
+    }
+
+    @Override
+    public Set<Code> getCodes() {
+        return null;
     }
 }

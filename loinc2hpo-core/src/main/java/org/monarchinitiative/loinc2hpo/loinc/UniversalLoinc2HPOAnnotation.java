@@ -119,6 +119,15 @@ public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
         return codeSystems;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Set<Code> getCodes(){
+        return candidateHpoTerms.keySet();
+    }
+
     @Override
     public  String getNote(){
         return this.note;

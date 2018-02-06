@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import org.apache.jena.base.Sys;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ public class FhirObservationRetrieverTest {
     public void testParseJsonFile2Observation(){
 
         String path = getClass().getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
-        Observation observation = FhirObservationRetriever.parseJsonFile2Observation(path);
+        Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         assertNotNull(observation);
         assertEquals("Observation", observation.getResourceType());
     }
@@ -19,7 +18,7 @@ public class FhirObservationRetrieverTest {
     @Test
     public void testParseJsonFile2ObservationException(){
         String path = getClass().getClassLoader().getResource("json/malformedObservation.fhir").getPath();
-        Observation observation = FhirObservationRetriever.parseJsonFile2Observation(path);
+        Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         assertNull(observation);
     }
 

@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This is a key class of the library, and represents one annotated Loinc test, including three values: one if the
@@ -15,6 +16,7 @@ import java.util.HashMap;
  * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
  * @version 0.1.2
  */
+@Deprecated
 public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     private static final Logger logger = LogManager.getLogger();
 
@@ -97,7 +99,10 @@ public class QnLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
     @Override
     public boolean getFlag(){ return flag; }
 
-
+    @Override
+    public Set<Code> getCodes() {
+        return null;
+    }
 
 
 }

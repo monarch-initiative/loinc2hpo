@@ -7,6 +7,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This is a class for a Loinc test.
@@ -64,5 +65,6 @@ public abstract class Loinc2HPOAnnotation {
 
 
     public abstract boolean getFlag();
+    public abstract Set<Code> getCodes();
 
 }

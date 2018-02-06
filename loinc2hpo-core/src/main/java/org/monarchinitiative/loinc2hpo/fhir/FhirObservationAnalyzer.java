@@ -46,7 +46,9 @@ public class FhirObservationAnalyzer {
         }
         if (observation.hasInterpretation()) {
             try {
-                return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
+                //return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
+                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
+                return new BasicLabTestResultInHPO(hpoterm, null);
             } catch (MalformedLoincCodeException e1) {
                 //not going to happen
                 logger.error("malformed loinc code.");
@@ -56,16 +58,34 @@ public class FhirObservationAnalyzer {
             } catch (UnsupportedCodingSystemException e3) {
                 //not going to happen
                 logger.error("The interpretation coding system cannot be recognized.");
-            } catch (AnnotationNotFoundException e4){
-                logger.error("Annotation is not found");
+            } catch (AmbiguousResultsFoundException e) {
+                logger.error("The observation has conflicting interpretation codes.");
             }
         }
 
         //if we failed to analyze the outcome through the interpretation field, we try to analyze the raw value using
         //the reference range
         //Qn will have a value field
-        if (observation.hasValue()) {
-            return getHPOFromRawValue();
+        if (observation.hasValueQuantity()) {
+            try {
+                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromQnValue(getLoincIdOfObservation(), observation, loinc2HPOannotationMap).getHPOforObservation();
+                return new BasicLabTestResultInHPO(hpoterm, null);
+            } catch (ReferenceNotFoundException e) {
+                //if there is no reference
+                logger.error("The observation has no reference field.");
+                //TODO: make a list of our own references
+            } catch (AmbiguousReferenceException e) {
+                logger.info("There are two reference ranges or more");
+            } catch (UnrecognizedCodeException e) {
+                logger.error("uncognized coding system");
+            } catch (MalformedLoincCodeException e) {
+                logger.error("malformed loinc code; should never happen");
+            } catch (LoincCodeNotFoundException e) {
+                logger.error("No loinc code was found in the observation; should never happen");
+            } catch (UnsupportedCodingSystemException e) {
+                logger.error("coding system not recognized");
+            }
+
         }
 
         //Ord will have a ValueCodeableConcept field
@@ -88,6 +108,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds: a hashset of all loinc codes (just codes)
      * @return false if the observation does not have one, or in wrong format, or recognized in the hashset
      */
+    @Deprecated
     private static boolean hasValidLoincCode(HashSet<LoincId> loincIds){
 
         for (Coding coding : observation.getCode().getCoding()) {
@@ -137,35 +158,6 @@ public class FhirObservationAnalyzer {
      * @throws LoincCodeNotFoundException
      * @throws UnsupportedCodingSystemException
      */
-    /**
-    public static LabTestResultInHPO getHPOFromInterpretation (
-            CodeableConcept interpretation, Map<LoincId, Loinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
-            LoincCodeNotFoundException, UnsupportedCodingSystemException, AnnotationNotFoundException  {
-        //here we only look at interpretation code system defined by HL7
-        String interpretationCode = null;
-        for (Coding coding : interpretation.getCoding()) {
-            if (coding.getSystem().equals("http://hl7.org/fhir/v2/0078")) {
-                interpretationCode = coding.getCode();
-                break;
-            }
-        }
-        if (interpretationCode == null) {
-            logger.error("Could not recognize the coding system for interpretation");
-            for (Coding coding : interpretation.getCoding()) {
-                logger.error("coding system: " + coding.getSystem() + " Value: " + coding.getCode());
-            }
-            throw new UnsupportedCodingSystemException("Coding system is not supported");
-        } else {
-            //TODO: create a factory that convert external coding system to internal coding
-            ObservationResultInInternalCode observationResult = new ObservationResultInInternalCode(interpretationCode);
-            LoincId loincId = getLoincIdOfObservation(); //get the loinc code from the observation
-            Loinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
-            if(annotationForLoinc == null) throw new AnnotationNotFoundException();
-            HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHpo(observationResult);
-            return new BasicLabTestResultInHPO(hpoId, observationResult, "?");
-        }
-    }
-**/
     public static LabTestResultInHPO getHPOFromInterpretation (
             CodeableConcept interpretation, Map<LoincId, Loinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
             LoincCodeNotFoundException, UnsupportedCodingSystemException, AnnotationNotFoundException  {

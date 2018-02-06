@@ -4,8 +4,10 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.exception.WrongElementException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
@@ -21,50 +23,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-public class FhirObservationRetriever {
-
-    /**
-     * @TODO: change this class to HapiFHIR API
-     * <	Off scale low
-     * >	Off scale high
-     * A	Abnormal
-     * AA	Critically abnormal
-     * AC	Anti-complementary substances present
-     * B	Better
-     * D	Significant change down
-     * DET	Detected
-     * H	High
-     * HH	Critically high
-     * HM	Hold for Medical Review
-     * HU	Very high
-     * I	Intermediate
-     * IE	Insufficient evidence
-     * IND	Indeterminate
-     * L	Low
-     * LL	Critically low
-     * LU	Very low
-     * MS	Moderately susceptible. Indicates for microbiology susceptibilities only.
-     * N	Normal
-     * ND	Not Detected
-     * NEG	Negative
-     * NR	Non-reactive
-     * NS	Non-susceptible
-     * null	No range defined, or normal ranges don't apply
-     * OBX	Interpretation qualifiers in separate OBX segments
-     * POS	Positive
-     * QCF	Quality Control Failure
-     * R	Resistant
-     * RR	Reactive
-     * S	Susceptible
-     * SDD	Susceptible-dose dependent
-     * SYN-R	Synergy - resistant
-     * SYN-S	Synergy - susceptible
-     * TOX	Cytotoxic substance present
-     * U	Significant change up
-     * VS	Very susceptible. Indicates for microbiology susceptibilities only.
-     * W	Worse
-     * WR	Weakly reactive
-     **/
+public class FhirResourceRetriever {
 
     private static final Logger logger = LogManager.getLogger();
     public static final FhirContext ctx = FhirContext.forDstu3();
@@ -104,6 +63,23 @@ public class FhirObservationRetriever {
     public static List<Observation> retrieveObservationFromServer(Patient patient) {
 
         return null;
+    }
+
+    /**
+     * Retrieve a patient from the reference field of an observation
+     * @param subject
+     * @return
+     */
+    public static Patient retrievePatientFromServer(Reference subject) {
+
+        if (subject.hasReference()) {
+            String ref = subject.getReference();
+            //TODO: find patient through string reference
+        } else if (subject.hasIdentifier()) {
+            Identifier identifier = subject.getIdentifier();
+            //TODO: find patient through the identifier
+        }
+        return new Patient();
     }
 
 

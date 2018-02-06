@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
+import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
+
 public enum Loinc2HPOCodedValue {
 
     A,
@@ -15,7 +17,7 @@ public enum Loinc2HPOCodedValue {
         return CODESYSTEM;
     }
 
-    public static Loinc2HPOCodedValue fromCode(String codeString) throws Exception{
+    public static Loinc2HPOCodedValue fromCode(String codeString) throws UnrecognizedCodeException{
         if (codeString == null || codeString.isEmpty()) {
             return null;
         }
@@ -40,7 +42,7 @@ public enum Loinc2HPOCodedValue {
         if (codeString.equals("U")) {
             return U;
         }
-        throw new Exception("Cannot recognize the code: " + codeString);
+        throw new UnrecognizedCodeException("Cannot recognize the code: " + codeString);
     }
 
     public String toCode(){

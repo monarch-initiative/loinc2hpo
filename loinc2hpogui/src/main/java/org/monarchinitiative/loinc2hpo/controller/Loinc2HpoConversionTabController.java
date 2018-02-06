@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationRetriever;
+import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
@@ -46,7 +46,7 @@ public class Loinc2HpoConversionTabController {
     @FXML
     void handleConvertButton(ActionEvent event) {
         String path = model.getPathToJsonFhirFile();
-        Observation observation = FhirObservationRetriever.parseJsonFile2Observation(path);
+        Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         FhirObservationAnalyzer.setObservation(observation);
         LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
         ObservableList<String> items = FXCollections.observableArrayList ();
@@ -73,7 +73,7 @@ public class Loinc2HpoConversionTabController {
             JsonNode node = mapper.readTree(data);
             Map<LoincId, Loinc2HPOAnnotation> testmap = model.getTestmap();
            //estmap=loincparser.getTestmap();
-            LabTestResultInHPO res = FhirObservationRetriever.fhir2testrest(node,testmap);
+            LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,testmap);
             ObservableList<String> items = FXCollections.observableArrayList ();
             if (res==null) {
                 items.add("Could not find test");

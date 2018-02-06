@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
+import org.hl7.fhir.dstu3.model.Coding;
+
 /**
  * This is an class for coded values. This correspond to the Coding class in hapi-fhir with some modification (equal method)
  */
@@ -18,6 +20,12 @@ public class Code {
         this.display = display;
 
     }
+
+    public Code (Coding coding) {
+        this.system = coding.getSystem();
+        this.code = coding.getCode();
+    }
+
     public static Code getNewCode(){
         return new Code();
     }
