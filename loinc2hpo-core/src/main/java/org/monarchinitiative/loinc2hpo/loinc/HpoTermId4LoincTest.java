@@ -1,20 +1,18 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 
-import com.github.phenomics.ontolib.ontology.data.ImmutableTermId;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 
-public class Hpo2LoincTermId  {
-
+public class HpoTermId4LoincTest {
 
     private boolean isNegated=false;
     private final TermId tid;
 
-    public Hpo2LoincTermId(TermId id) {
+    public HpoTermId4LoincTest(TermId id) {
         this.tid=id;
     }
 
-    public Hpo2LoincTermId(TermId id, boolean negated) {
+    public HpoTermId4LoincTest(TermId id, boolean negated) {
         this(id);
         isNegated=negated;
     }

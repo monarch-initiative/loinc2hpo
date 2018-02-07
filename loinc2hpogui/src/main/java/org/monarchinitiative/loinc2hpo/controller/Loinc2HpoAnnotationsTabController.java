@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
@@ -18,9 +17,8 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
@@ -50,14 +48,14 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<LoincTest> loincAnnotationTableView;
-    @FXML private TableColumn<LoincTest,String> loincNumberColumn;
-    @FXML private TableColumn<LoincTest,String> belowNormalHpoColumn;
-    @FXML private TableColumn<LoincTest,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<LoincTest,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<LoincTest, String> loincScaleColumn;
-    @FXML private TableColumn<LoincTest, String> loincFlagColumn;
-    @FXML private TableColumn<LoincTest, String> noteColumn;
+    private TableView<Loinc2HPOAnnotation> loincAnnotationTableView;
+    @FXML private TableColumn<Loinc2HPOAnnotation,String> loincNumberColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation,String> belowNormalHpoColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation, String> loincScaleColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation, String> loincFlagColumn;
+    @FXML private TableColumn<Loinc2HPOAnnotation, String> noteColumn;
 
 
 
@@ -153,7 +151,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<LoincId,LoincTest> testmap = model.getTestmap();
+        Map<LoincId,Loinc2HPOAnnotation> testmap = model.getTestmap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -170,8 +168,8 @@ public class Loinc2HpoAnnotationsTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             LoincMappingParser parser = new LoincMappingParser(path, model.getOntology());
-            Set<LoincTest> testset = parser.getTests();
-            for (LoincTest test : testset) {
+            Set<Loinc2HPOAnnotation> testset = parser.getTests();
+            for (Loinc2HPOAnnotation test : testset) {
                 model.addLoincTest(test);
             }
         }
@@ -254,9 +252,9 @@ public class Loinc2HpoAnnotationsTabController {
         StringBuilder builder = new StringBuilder();
         if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<LoincTest> annotations = loincAnnotationTableView
+            List<Loinc2HPOAnnotation> annotations = loincAnnotationTableView
                     .getItems();
-            for (LoincTest annotation : annotations) {
+            for (Loinc2HPOAnnotation annotation : annotations) {
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
@@ -283,7 +281,7 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        LoincTest toDelete = loincAnnotationTableView.getSelectionModel()
+        Loinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
             loincAnnotationTableView.getItems().remove(toDelete);

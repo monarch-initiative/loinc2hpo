@@ -4,20 +4,23 @@ import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.gclient.StringClientParam;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import ca.uhn.fhir.context.FhirContext;
-import javafx.stage.FileChooser;
 import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.monarchinitiative.loinc2hpo.command.LoincUtil;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
-import javax.swing.*;
-import java.io.File;
+import javax.swing.JFileChooser;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This is a helper class that downloads observations from hapi-fhir test server for developing concepts.
+ * it could be deleted when not in use.
+ */
 
 public class ObservationDownloader {
 
@@ -159,7 +162,7 @@ public class ObservationDownloader {
         return patients;
     }
 
-    public static void main(String[] args) {
+    public static void iteratorHapiFHIRServer() {
 
         //printObservationInfo();
         //printPatientInfo();
@@ -200,12 +203,12 @@ public class ObservationDownloader {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             path = chooser.getSelectedFile().getAbsolutePath();
             System.out.println(path);
-            Map<String, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+            Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
             System.out.println("size of loinc table: " + loincEntryMap.size());
             for (LoincEntry loincEntry : loincEntryMap.values()) {
                 if (countComplete.containsKey(loincEntry.getScale()) && countComplete.get(loincEntry.getScale()) < 50) {
                     try {
-                        List<Observation> results = ObservationDownloader.retrieveObservation(loincEntry.getLOINC_Number());
+                        List<Observation> results = ObservationDownloader.retrieveObservation(loincEntry.getLOINC_Number().toString());
                         if (results != null && !results.isEmpty()){
                             for (Observation observation : results) {
                                 if (isComplte(observation)) {
@@ -221,7 +224,7 @@ public class ObservationDownloader {
                                         completeObservations.get("unknown").append(Character.toString((char) 12));
                                         countComplete.put("unknown", countAccetable.get("unknown") + 1);
                                     }
-                                    break;
+                                    continue;
                                 }
                                 if (isAcceptable(observation)) {
                                     String aAcceptableRecord = jsonParser.setPrettyPrint(true).encodeResourceToString(observation);

@@ -2,17 +2,17 @@ package org.monarchinitiative.loinc2hpo.model;
 
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.formats.hpo.HpoTermRelation;
 import com.github.phenomics.ontolib.ontology.data.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,8 +43,20 @@ public class Model {
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
-    /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoincTest} object .*/
-    public Map<LoincId,LoincTest> testmap=new LinkedHashMap<>();
+    /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
+    public Map<LoincId,Loinc2HPOAnnotation> testmap=new LinkedHashMap<>();
+
+    private Map<LoincId, LoincEntry> loincEntryMap;
+    private HashSet<LoincId> loincIds = new HashSet<>();
+
+    public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
+        this.loincEntryMap = map;
+        loincIds.addAll(this.loincEntryMap.keySet());
+    }
+    public Map<LoincId, LoincEntry> getLoincEntryMap() {
+        return this.loincEntryMap;
+    }
+    public HashSet<LoincId> getLoincIds() { return this.loincIds; }
 
     private ImmutableMap<String,HpoTerm> termmap=null;
 
@@ -105,7 +117,7 @@ public class Model {
 
 
 
-    public void addLoincTest(LoincTest test) {
+    public void addLoincTest(Loinc2HPOAnnotation test) {
         // todo warn if term already in map
         testmap.put(test.getLoincNumber(),test);
     }
@@ -119,7 +131,7 @@ public class Model {
         }
     }
 
-    public Map<LoincId,LoincTest> getTestmap(){ return testmap; }
+    public Map<LoincId,Loinc2HPOAnnotation> getTestmap(){ return testmap; }
 
 
     private void init() {

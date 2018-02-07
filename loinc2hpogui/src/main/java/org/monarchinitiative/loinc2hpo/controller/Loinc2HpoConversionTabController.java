@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
@@ -13,15 +11,13 @@ import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationParser;
-import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincTest;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
+import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.testresult.TestResult;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.io.*;
-import java.util.Map;
 
 @Singleton
 public class Loinc2HpoConversionTabController {
@@ -50,6 +46,23 @@ public class Loinc2HpoConversionTabController {
     @FXML
     void handleConvertButton(ActionEvent event) {
         String path = model.getPathToJsonFhirFile();
+        Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
+        FhirObservationAnalyzer.setObservation(observation);
+        LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
+        ObservableList<String> items = FXCollections.observableArrayList ();
+        if (res==null) {
+            items.add(observation.getId() + ": failed not interpret");
+        } else {
+            TermId id = res.getTermId();
+            String name = model.termId2HpoName(id);
+            String display = String.format("%s: %s [%s]",observation.getId(), name,id.getIdWithPrefix());
+            if (res.isNegated()) {
+                display="NOT: "+display;
+            }
+            items.add(display);
+        }
+        patientPhenotypeTableView.setItems(items);
+        /**
         ObjectMapper mapper = new ObjectMapper();
         File f = new File(path);
         try {
@@ -58,9 +71,9 @@ public class Loinc2HpoConversionTabController {
             fis.read(data);
             fis.close();
             JsonNode node = mapper.readTree(data);
-            Map<LoincId, LoincTest> testmap = model.getTestmap();
+            Map<LoincId, Loinc2HPOAnnotation> testmap = model.getTestmap();
            //estmap=loincparser.getTestmap();
-            TestResult res = FhirObservationParser.fhir2testrest(node,testmap);
+            LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,testmap);
             ObservableList<String> items = FXCollections.observableArrayList ();
             if (res==null) {
                 items.add("Could not find test");
@@ -78,6 +91,7 @@ public class Loinc2HpoConversionTabController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+         **/
     }
 
     @FXML

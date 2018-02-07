@@ -1,9 +1,9 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.util.LoincImporter;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ import java.util.List;
 public class LoincEntry {
     private static final Logger logger = LogManager.getLogger();
 
-    private String LOINC_Number=null;
+    private LoincId LOINC_Number=null;
 
     private String component=null;
 
@@ -36,12 +36,16 @@ public class LoincEntry {
 
 
 
-    public LoincEntry(String line) throws Exception {
+    public LoincEntry(String line) throws MalformedLoincCodeException {
         List<String> F = LoincImporter.splitCSVquoted(line);
         if (F.size()<MIN_FIELDS_LOINC) {
-            throw new Exception("malformed LOINC line: "+line);
+            throw new MalformedLoincCodeException("malformed LOINC line: "+line);
         }
-        LOINC_Number=F.get(0);
+        try {
+            LOINC_Number=new LoincId(F.get(0));
+        } catch (MalformedLoincCodeException e) {
+            logger.error("Invalid loinc id detected: " + F.get(0));
+        }
         component=F.get(1);
         property=F.get(2);
         timeAspect=F.get(3);
@@ -55,7 +59,7 @@ public class LoincEntry {
     }
 
 
-    public String getLOINC_Number(){ return LOINC_Number;}
+    public LoincId getLOINC_Number(){ return LOINC_Number;}
     public String getComponent() { return component; }
     public String getProperty() { return property; }
     public String getTimeAspect() { return timeAspect; }
@@ -69,12 +73,13 @@ public class LoincEntry {
 
 
 
-    public static ImmutableMap<String,LoincEntry> getLoincEntryList(String pathToLoincCoreTable) {
-        ImmutableMap.Builder<String,LoincEntry> builder = new ImmutableMap.Builder();
+    public static ImmutableMap<LoincId,LoincEntry> getLoincEntryList(String pathToLoincCoreTable) {
+        ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder();
+        int count_malformed = 0;
+        int count_correct = 0;
         try {
             BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable));
             String line=null;
-            int c=0;
             String header=br.readLine();
             if (! header.contains("\"LOINC_NUM\"")) {
                 logger.error(String.format("Malformed header line (%s) in Loinc File %s",header,pathToLoincCoreTable));
@@ -84,9 +89,10 @@ public class LoincEntry {
                 try {
                     LoincEntry entry = new LoincEntry(line);
                     builder.put(entry.getLOINC_Number(),entry);
-                } catch (Exception e) {
-                    logger.error("Could not construct LOINC entry");
-                    e.printStackTrace();
+                    count_correct++;
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code in the line:\n " + line);
+                    count_malformed++;
                 }
             }
             br.close();
@@ -94,6 +100,8 @@ public class LoincEntry {
             e.printStackTrace();
         }
 
+        logger.info(count_correct+ " loinc entries are created");
+        logger.warn(count_malformed + " loinc numbers are malformed");
 
         return builder.build();
 

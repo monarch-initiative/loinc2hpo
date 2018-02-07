@@ -3,7 +3,6 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 //import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -20,13 +19,13 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
@@ -46,7 +45,7 @@ public class AnnotateTabController {
     private Model model=null;
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
-    private ImmutableMap<String,LoincEntry> loincmap=null;
+    private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
     @FXML private Button IntializeHPOmodelbutton;
@@ -139,7 +138,7 @@ public class AnnotateTabController {
     private void initTableStructure() {
         loincIdTableColumn.setSortable(true);
         loincIdTableColumn.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getLOINC_Number())
+                new ReadOnlyStringWrapper(cdf.getValue().getLOINC_Number().toString())
         );
         componentTableColumn.setSortable(true);
         componentTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getComponent()));
@@ -306,6 +305,7 @@ public class AnnotateTabController {
             return;
         }
         this.loincmap = LoincEntry.getLoincEntryList(loincCoreTableFile);
+        model.setLoincEntryMap(this.loincmap);
         int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
         List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
         loincTableView.getItems().clear(); // remove any previous entries
@@ -551,7 +551,7 @@ public class AnnotateTabController {
         e.consume();
         String hpoLo,hpoNormal,hpoHi;
         //String loincCode=this.loincSearchTextField.getText();
-        String loincCode = loincTableView.getSelectionModel().getSelectedItem
+        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem
                 ().getLOINC_Number();
         String loincScale = loincTableView.getSelectionModel().getSelectedItem().getScale();
 
@@ -607,11 +607,16 @@ public class AnnotateTabController {
         } else {
             //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
             try {
-                LoincId lid = new LoincId(loincCode);
                 LoincScale scale = LoincScale.string2enum(loincScale);
-                QnLoincTest test =
-                        new QnLoincTest(lid, scale, low.getId(), normal.getId(), high.getId(),
-                                flagForAnnotation.isSelected(), annotationNoteField.getText());
+                Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+                Loinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(loincCode, scale)
+                        .addAnnotation(internalCode.get("L"), low!=null ? new HpoTermId4LoincTest(low.getId(), false) : null)
+                        .addAnnotation(internalCode.get("A"), normal != null ? new HpoTermId4LoincTest(normal.getId(), false) : null)
+                        .addAnnotation(internalCode.get("N"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null)
+                        .addAnnotation(internalCode.get("H"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
+                        .addAnnotation(internalCode.get("P"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
+                        .addAnnotation(internalCode.get("NP"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null);
+
                 this.model.addLoincTest(test);
                 loinc2HpoAnnotationsTabController.refreshTable();
                 createAnnotationSuccess.setFill(Color.GREEN);
