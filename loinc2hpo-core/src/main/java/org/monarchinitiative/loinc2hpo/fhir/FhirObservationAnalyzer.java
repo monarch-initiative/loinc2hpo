@@ -121,7 +121,6 @@ public class FhirObservationAnalyzer {
      * @param loincIds: a hashset of all loinc codes (just codes)
      * @return false if the observation does not have one, or in wrong format, or recognized in the hashset
      */
-    @Deprecated
     private static boolean hasValidLoincCode(HashSet<LoincId> loincIds){
 
         for (Coding coding : observation.getCode().getCoding()) {

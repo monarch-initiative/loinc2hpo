@@ -3,12 +3,14 @@ package org.monarchinitiative.loinc2hpo.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.monarchinitiative.loinc2hpo.exception.AmbiguousSubjectException;
 import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
+import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.WrongElementException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
@@ -20,13 +22,21 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FhirResourceRetriever {
 
+
+    static final String LOINC_SYSTEM = "http://loinc.org";
+    //let user set the base url from the GUI
+    //By default, we use hapi-fhir test server
+    public static String BASEURL = "http://fhirtest.uhn.ca/baseDstu3";
     private static final Logger logger = LogManager.getLogger();
     public static final FhirContext ctx = FhirContext.forDstu3();
+    static final IGenericClient client = ctx.newRestfulGenericClient(BASEURL);
     public static final IParser jsonParser = ctx.newJsonParser();
 
 
@@ -62,7 +72,27 @@ public class FhirResourceRetriever {
      */
     public static List<Observation> retrieveObservationFromServer(Patient patient) {
 
-        return null;
+        List<Observation> observationList = new ArrayList<>();
+        String id = patient.getId();
+        if (id != null) {
+            Bundle observationBundle = client.search().forResource(Observation.class)
+                    .where(new ReferenceClientParam("subject").hasId(id))
+                    .prettyPrint()
+                    .returnBundle(Bundle.class)
+                    .execute();
+
+            while(true) {
+                 observationBundle.getEntry()
+                        .forEach(p -> observationList.add((Observation) p.getResource()));
+                if (observationBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                    observationBundle = client.loadPage().next(observationBundle).execute();
+                } else {
+                    break;
+                }
+            }
+        }
+        return observationList;
+
     }
 
     /**
@@ -70,20 +100,49 @@ public class FhirResourceRetriever {
      * @param subject
      * @return
      */
-    public static Patient retrievePatientFromServer(Reference subject) {
+    public static Patient retrievePatientFromServer(Reference subject) throws SubjectNotFoundException, AmbiguousSubjectException {
 
+        List<Patient> patients = new ArrayList<>();
         if (subject.hasReference()) {
             String ref = subject.getReference();
-            //TODO: find patient through string reference
+            if (!ref.startsWith(BASEURL) && ref.startsWith("Patient")) {
+                ref = BASEURL + "/" + ref;
+            }
+            Bundle patientBundle = client.search().byUrl(ref).returnBundle(Bundle.class).execute();
+
+            while (true) {
+                 patientBundle.getEntry()
+                                .forEach(p -> patients.add((Patient) p.getResource()));
+                if (patientBundle.getLink(IBaseBundle.LINK_NEXT) != null){
+                    patientBundle = client.loadPage().next(patientBundle).execute();
+                } else {
+                    break;
+                }
+            }
         } else if (subject.hasIdentifier()) {
             Identifier identifier = subject.getIdentifier();
             //TODO: find patient through the identifier
         }
-        return new Patient();
+        if (patients.size() == 1) {
+            return patients.iterator().next();
+        } else if (patients.isEmpty()) {
+            throw new SubjectNotFoundException("Expect one subject, but found none");
+        } else {
+            throw new AmbiguousSubjectException("Except one subject, but found multiple");
+        }
+
+    }
+
+    public void setBaseURL(String url) {
+        BASEURL = url;
+    }
+
+    public String getBaseURL(){
+        return BASEURL;
     }
 
 
-
+    @Deprecated
     public static LabTestResultInHPO fhir2testrest(JsonNode node, Map<LoincId, Loinc2HPOAnnotation> testmap) throws Loinc2HpoException {
         boolean interpretationDetected = false;
         String interpretationCode = null;
@@ -183,7 +242,7 @@ public class FhirResourceRetriever {
     }
 
 
-
+    @Deprecated
     static void debugPrint(Map<LoincId, Loinc2HPOAnnotation> testmap) {
         logger.trace("tests in map");
         for (LoincId id : testmap.keySet()) {
@@ -207,6 +266,7 @@ public class FhirResourceRetriever {
      * It returns the corresponding {@link ObservationResultInInternalCode} object.
      * TODO -- add some text corresponding to the result.
      */
+    @Deprecated
     static ObservationResultInInternalCode getInterpretationCode(JsonNode node) throws Loinc2HpoException {
         JsonNode codingNode = node.get("coding");
         if (codingNode == null) {
@@ -236,6 +296,7 @@ public class FhirResourceRetriever {
     ]
   },
      */
+    @Deprecated
     static LoincId getLoincId(JsonNode node) throws Loinc2HpoException {
         JsonNode codingNode = node.get("coding");
         if (codingNode == null) {
