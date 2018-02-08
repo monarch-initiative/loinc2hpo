@@ -106,6 +106,9 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
     @Override
     public HpoTermId4LoincTest getHPOforObservation() throws ReferenceNotFoundException, AmbiguousReferenceException, UnrecognizedCodeException {
+
+        HpoTermId4LoincTest hpoTermId4LoincTest = null;
+        //find applicable reference range
         List<Observation.ObservationReferenceRangeComponent> references =
                 this.references.stream()
                 .filter(p -> withinAgeRange(p))
@@ -127,17 +130,24 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
                 result = Loinc2HPOCodedValue.fromCode("N");
             }
             Code resultCode = Code.getNewCode().setSystem(Loinc2HPOCodedValue.CODESYSTEM).setCode(result.toCode());
-            return annotationMap.get(loincId).loincInterpretationToHPO(resultCode);
+            hpoTermId4LoincTest = annotationMap.get(loincId).loincInterpretationToHPO(resultCode);
         } else if (references.size() == 2) {
             //what does it mean with multiple references
             throw new AmbiguousReferenceException();
         } else if (references.size() == 3){
+            //it can happen when there is actually one range but coded in three ranges
+            //e.g. normal 20-30
+            //in this case, one range ([20, 30]) is sufficient;
+            //however, it is written as three ranges: ( , 20) [20, 30] (30, )
+            //We should handle this case
 
 
 
         } else {
             throw new AmbiguousReferenceException();
         }
-        return null;
+        //if we can still not find an answer, it is probably that we did not have the annotation
+        if (hpoTermId4LoincTest == null) throw new UnrecognizedCodeException();
+        return hpoTermId4LoincTest;
     }
 }

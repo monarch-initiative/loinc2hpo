@@ -57,25 +57,38 @@ public class FhirObservationAnalyzer {
             logger.error("coding system not recognized");
             return null;
         }
+
+
         if (!loinc2HPOannotationMap.containsKey(loincId)) {
             return null;
         }
+
+
+
         if (observation.hasInterpretation()) {
+            logger.debug("enter analyzer using the interpretation field");
             try {
                 //return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
                 HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
                 return new BasicLabTestResultInHPO(hpoterm, null);
+            } catch (UnrecognizedCodeException e) {
+                //this means the interpretation code is not recognized
+                logger.info("The interpretation codes for this loinc code is not annotated; system will try using raw values");
             } catch (MalformedLoincCodeException e1) {
                 //not going to happen
                 logger.error("malformed loinc code.");
+                return null;
             } catch (LoincCodeNotFoundException e2) {
                 //not going to happen
                 logger.error("no loinc code is found in the observation");
+                return null;
             } catch (UnsupportedCodingSystemException e3) {
                 //not going to happen
                 logger.error("The interpretation coding system cannot be recognized.");
+                return null;
             } catch (AmbiguousResultsFoundException e) {
                 logger.error("The observation has conflicting interpretation codes.");
+                return null;
             } catch (AnnotationNotFoundException e) {
                 logger.error("There is no annotation for the loinc code used in the observation");
             }
@@ -87,7 +100,7 @@ public class FhirObservationAnalyzer {
         if (observation.hasValueQuantity()) {
             try {
                 HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
-                return new BasicLabTestResultInHPO(hpoterm, null);
+                if (hpoterm != null) return new BasicLabTestResultInHPO(hpoterm, null);
             } catch (ReferenceNotFoundException e) {
                 //if there is no reference
                 logger.error("The observation has no reference field.");
@@ -106,7 +119,7 @@ public class FhirObservationAnalyzer {
                 HpoTermId4LoincTest hpoterm = null;
                 hpoterm = new ObservationAnalysisFromCodedValues(loincId,
                         observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
-                return new BasicLabTestResultInHPO(hpoterm, null);
+                if (hpoterm != null) return new BasicLabTestResultInHPO(hpoterm, null);
             } catch (AmbiguousResultsFoundException e) {
                 logger.error("multiple results are found");
             } catch (UnrecognizedCodeException e) {

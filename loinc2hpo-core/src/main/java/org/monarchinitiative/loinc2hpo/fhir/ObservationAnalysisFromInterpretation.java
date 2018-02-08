@@ -36,7 +36,7 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
 
 
     @Override
-    public HpoTermId4LoincTest getHPOforObservation() throws UnsupportedCodingSystemException, AmbiguousResultsFoundException, AnnotationNotFoundException {
+    public HpoTermId4LoincTest getHPOforObservation() throws UnsupportedCodingSystemException, AmbiguousResultsFoundException, AnnotationNotFoundException, UnrecognizedCodeException {
         //here we use a map to store the results: since there could be more than one interpretation coding system,
         //we try them all and store the results in a map <external code, result in internal code>
         Map<Code, Code> results = new HashMap<>();
@@ -57,7 +57,9 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
                 });
         List<Code> distinct = results.values().stream().distinct().collect(Collectors.toList());
         if (distinct.size() == 1) {
-            return annotationForLoinc.loincInterpretationToHPO(distinct.get(0));
+            HpoTermId4LoincTest hpoTermId4LoincTest = annotationForLoinc.loincInterpretationToHPO(distinct.get(0));
+            if (hpoTermId4LoincTest == null) throw new UnrecognizedCodeException();
+            return hpoTermId4LoincTest;
         } else {
             throw new AmbiguousResultsFoundException();
         }

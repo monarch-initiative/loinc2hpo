@@ -100,7 +100,7 @@
                                                 <Insets left="9.0" />
                                              </padding>
                                           </CheckBox>
-                                          <Button mnemonicParsing="false" onAction="#handleAdvancedAnnotationButton" text="advanced &gt;&gt;&gt;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                          <Button fx:id="modeButton" mnemonicParsing="false" onAction="#handleAdvancedAnnotationButton" text="advanced &gt;&gt;&gt;" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="5.0" left="20.0" top="10.0" />
                                              </GridPane.margin>
@@ -217,9 +217,9 @@
                   </VBox>
                </items>
             </SplitPane>
-            <Accordion maxHeight="280.0" prefHeight="280.0" prefWidth="1198.0">
+            <Accordion fx:id="accordion" maxHeight="280.0" prefHeight="280.0" prefWidth="1198.0">
               <panes>
-                <TitledPane fx:id="LoincTable" animated="false" expanded="true" text="Loinc Table">
+                <TitledPane fx:id="loincTableTitledpane" animated="false" expanded="true" text="Loinc Table">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -246,7 +246,7 @@
                         </AnchorPane>
                   </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Advanced Annotation">
+                <TitledPane fx:id="advancedAnnotationTitledPane" animated="false" text="Advanced Annotation">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
