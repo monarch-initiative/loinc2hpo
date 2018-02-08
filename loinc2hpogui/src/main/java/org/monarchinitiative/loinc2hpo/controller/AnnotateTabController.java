@@ -22,10 +22,12 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
@@ -48,20 +50,24 @@ public class AnnotateTabController {
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
+
     @FXML private Button IntializeHPOmodelbutton;
     @FXML private Button initLOINCtableButton;
     @FXML private Button searchForLOINCIdButton;
     @FXML private Button createAnnotationButton;
     @FXML private TextField loincSearchTextField;
-    @FXML private TextField loincStringSearchTextField;
     @FXML private Button filterLoincTableByList;
-    @FXML private TextField LoincFilterField;
     @FXML private TextField userInputForManualQuery;
 
     //drag and drop to the following fields
-    @FXML private TextField hpoLowAbnormalTextField;
-    @FXML private TextField hpoNotAbnormalTextField;
-    @FXML private TextField hpoHighAbnormalTextField;
+    private boolean advancedAnnotationModeSelected = false;
+    @FXML private Label annotationLeftLabel;
+    @FXML private Label annotationMiddleLabel;
+    @FXML private Label annotationRightLabel;
+    @FXML private TextField annotationTextFieldLeft;
+    @FXML private TextField annotationTextFieldMiddle;
+    @FXML private TextField annotationTextFieldRight;
+    @FXML private CheckBox inverseChecker;
     private HPO_Class_Found hpo_drag_and_drop;
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
@@ -71,6 +77,7 @@ public class AnnotateTabController {
 
 
 
+    @FXML private TitledPane LoincTable;
     @FXML private TableView<LoincEntry> loincTableView;
     @FXML private TableColumn<LoincEntry, String> loincIdTableColumn;
     @FXML private TableColumn<LoincEntry, String> componentTableColumn;
@@ -80,6 +87,13 @@ public class AnnotateTabController {
     @FXML private TableColumn<LoincEntry, String> scaleTableColumn;
     @FXML private TableColumn<LoincEntry, String> systemTableColumn;
     @FXML private TableColumn<LoincEntry, String> nameTableColumn;
+
+
+
+    @FXML private TableView<Annotation> advancedAnnotationTable;
+    @FXML private TableColumn<Annotation, String> advancedAnnotationSystem;
+    @FXML private TableColumn<Annotation, String> advancedAnnotationCode;
+    @FXML private TableColumn<Annotation, String> advancedAnnotationHpo;
 
     //candidate HPO classes found by Sparql query
     //@FXML private TableView<HPO_Class_Found> candidateHPOList;
@@ -112,9 +126,9 @@ public class AnnotateTabController {
     }
 
     private void clearAbnormalityTextField(){
-        hpoLowAbnormalTextField.setText("");
-        hpoHighAbnormalTextField.setText("");
-        hpoNotAbnormalTextField.setText("");
+        annotationTextFieldLeft.setText("");
+        annotationTextFieldRight.setText("");
+        annotationTextFieldMiddle.setText("");
     }
 
 
@@ -128,9 +142,9 @@ public class AnnotateTabController {
         }
         model.parseOntology();
         termmap = model.getTermMap();
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoLowAbnormalTextField, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoNotAbnormalTextField, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(hpoHighAbnormalTextField, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldLeft, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldMiddle, termmap.keySet());
+//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldRight, termmap.keySet());
         logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
     }
 
@@ -358,45 +372,39 @@ public class AnnotateTabController {
     }
 
 
-
-
-
-
-    @FXML private void searchForSpecificLoincEntry(ActionEvent e) {
+    @FXML private void search(ActionEvent e) {
         e.consume();
-        String s = this.loincSearchTextField.getText().trim();
-        LoincEntry entry = this.loincmap.get(s);
-        if (entry==null) {
-            logger.error(String.format("Could not identify LOINC entry for \"%s\"",s));
-            PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",s));
+        String query = this.loincSearchTextField.getText().trim();
+        if (query.isEmpty()) return;
+        List<LoincEntry> entrylist=new ArrayList<>();
+        try {
+            LoincId loincId = new LoincId(query);
+            entrylist.add(this.loincmap.get(loincId));
+        } catch (MalformedLoincCodeException msg) {
+            loincmap.values().stream()
+                    .filter( loincEntry -> containedIn(query, loincEntry.getLongName()))
+                    .forEach(loincEntry -> entrylist.add(loincEntry));
+        }
+        if (entrylist.isEmpty()) {
+            logger.error(String.format("Could not identify LOINC entry for \"%s\"",query));
+            PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",query));
             return;
         } else {
-            logger.trace(String.format("Searching table for term %s",entry.getLongName()));
+            logger.trace(String.format("Searching table for:  %s",query));
         }
         if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
         loincTableView.getItems().clear();
-        loincTableView.getItems().add(entry);
+        loincTableView.getItems().addAll(entrylist);
     }
 
-    @FXML private void searchLoincByString(ActionEvent e) {
-        final String query = this.loincStringSearchTextField.getText().trim();
-        if (query==null){
-            logger.error("Null query string. Cowardly refusing to search LOINC entries");
-            return;
-        }
-        logger.trace(String.format("Filter LOINC catalog by \"%s\"",query));
-        List<LoincEntry> entrylist=new ArrayList<>();
-        //The following implements "contains" in a case-insensitive fashion
-        loincmap.values().stream().forEach( loincEntry -> {
-           // if (Pattern.compile(Pattern.quote(loincEntry.getLongName()),Pattern.CASE_INSENSITIVE).matcher(query).find()){
-            if (loincEntry.getLongName().contains(query)) {
-                entrylist.add(loincEntry);
+    private boolean containedIn(String query, String text) {
+        String [] keys = query.split("\\W");
+        for (String key : keys) {
+            if (!text.contains(key)) {
+                return false;
             }
-        });
-
-        loincTableView.getItems().clear();
-        loincTableView.getItems().addAll(entrylist);
-        e.consume();
+        }
+        return true;
     }
 
     @FXML private void handleLoincFiltering(ActionEvent e){
@@ -522,33 +530,111 @@ public class AnnotateTabController {
     @FXML private void handleHPOLowAbnormality(DragEvent e){
 
         if (e.getDragboard().hasString()) {
-            hpoLowAbnormalTextField.setText(e.getDragboard().getString());
+            annotationTextFieldLeft.setText(e.getDragboard().getString());
         }
-        hpoLowAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldLeft.setStyle("-fx-background-color: WHITE;");
         e.consume();
     }
 
     @FXML private void handleHPOHighAbnormality(DragEvent e){
 
         if (e.getDragboard().hasString()) {
-            hpoHighAbnormalTextField.setText(e.getDragboard().getString());
+            annotationTextFieldRight.setText(e.getDragboard().getString());
         }
-        hpoHighAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldRight.setStyle("-fx-background-color: WHITE;");
         e.consume();
 
     }
 
     @FXML private void handleParentAbnormality(DragEvent e){
         if (e.getDragboard().hasString()) {
-            hpoNotAbnormalTextField.setText(e.getDragboard().getString());
+            annotationTextFieldMiddle.setText(e.getDragboard().getString());
         }
-        hpoNotAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldMiddle.setStyle("-fx-background-color: WHITE;");
         e.consume();
     }
 
+    private UniversalLoinc2HPOAnnotation tempLoinc2HPOAnnotation = null;
+
+    private void createTempAnnotation(){
+
+        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
+        LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
+
+        tempLoinc2HPOAnnotation = new UniversalLoinc2HPOAnnotation(loincCode, loincScale);
+
+        if (model.getTestmap().containsKey(loincCode)) {
+            boolean overwrite = PopUps.getBooleanFromUser(loincCode + " has already been annotated. Overwrite?",
+                    "Annotation already exist", "Overwrite Warning");
+            if (!overwrite) return;
+        }
+        //strip "@en" from all of terms, if they have it
+        String hpoLo = stripEN(annotationTextFieldLeft.getText().trim());
+        String hpoNormal = stripEN(annotationTextFieldMiddle.getText().trim());
+        String hpoHi= stripEN(annotationTextFieldRight.getText().trim());
+
+        //We don't have to force every loinc code to have three phenotypes
+        HpoTerm low = termmap.get(hpoLo);
+        HpoTerm normal = termmap.get(hpoNormal);
+        HpoTerm high = termmap.get(hpoHi);
+
+        //Warning user that there is something wrong
+        //it happens when something is wrong with hpo termmap (a name could not be mapped)
+        if (!hpoLo.trim().isEmpty() && low==null) {
+            logger.error(hpoLo + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
+            showErrorOfMapping(hpoLo);
+            return;
+        }
+
+        if (!hpoHi.trim().isEmpty() && high==null) {
+            logger.error(hpoHi + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
+            showErrorOfMapping(hpoHi);
+            return;
+        }
+
+        if (!hpoNormal.trim().isEmpty() && normal==null) {
+            logger.error(hpoNormal + "cannot be mapped to a term");
+            createAnnotationSuccess.setFill(Color.RED);
+            showErrorOfMapping(hpoNormal);
+            return;
+        }
+
+        Map<String, Boolean> qcresult = qcAnnotation(hpoLo, hpoNormal, hpoHi);
+        if (qcresult.get("issueDetected") && !qcresult.get("userconfirmed")) {
+            createAnnotationSuccess.setFill(Color.RED);
+            return;
+        } else {
+            //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
+            try {
+                Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+                if (low != null) {
+                    tempLoinc2HPOAnnotation.addAnnotation(internalCode.get("L"), new HpoTermId4LoincTest(low.getId(), false));
+                }
+                if (normal != null) {
+                    tempLoinc2HPOAnnotation
+                            .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(normal.getId(), false));
+                }
+                if (normal != null && inverseChecker.isSelected()) {
+                    tempLoinc2HPOAnnotation
+                            .addAnnotation(internalCode.get("N"),  new HpoTermId4LoincTest(normal.getId(), true))
+                            .addAnnotation(internalCode.get("NP"), new HpoTermId4LoincTest(normal.getId(), true));
+
+                }
+                if (high != null)
+                tempLoinc2HPOAnnotation
+                        .addAnnotation(internalCode.get("H"),  new HpoTermId4LoincTest(high.getId(), false))
+                        .addAnnotation(internalCode.get("P"),  new HpoTermId4LoincTest(high.getId(), false));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
         e.consume();
+        /**
         String hpoLo,hpoNormal,hpoHi;
         //String loincCode=this.loincSearchTextField.getText();
         LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem
@@ -562,9 +648,9 @@ public class AnnotateTabController {
             if (!overwrite) return;
         }
 
-        hpoLo = hpoLowAbnormalTextField.getText();
-        hpoNormal = hpoNotAbnormalTextField.getText();
-        hpoHi= hpoHighAbnormalTextField.getText();
+        hpoLo = annotationTextFieldLeft.getText();
+        hpoNormal = annotationTextFieldMiddle.getText();
+        hpoHi= annotationTextFieldRight.getText();
 
         //strip "@en" from all of them, if they have it
         hpoLo = stripEN(hpoLo);
@@ -612,7 +698,7 @@ public class AnnotateTabController {
                 Loinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(loincCode, scale)
                         .addAnnotation(internalCode.get("L"), low!=null ? new HpoTermId4LoincTest(low.getId(), false) : null)
                         .addAnnotation(internalCode.get("A"), normal != null ? new HpoTermId4LoincTest(normal.getId(), false) : null)
-                        .addAnnotation(internalCode.get("N"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null)
+                        .addAnnotation(internalCode.get("N"), normal != null && inverseChecker.isSelected() ? new HpoTermId4LoincTest(normal.getId(), true) : null)
                         .addAnnotation(internalCode.get("H"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
                         .addAnnotation(internalCode.get("P"), high != null ? new HpoTermId4LoincTest(high.getId(), false) : null)
                         .addAnnotation(internalCode.get("NP"), normal != null ? new HpoTermId4LoincTest(normal.getId(), true) : null);
@@ -625,10 +711,27 @@ public class AnnotateTabController {
                 ex.printStackTrace();
             }
         }
+**/
+        if (tempLoinc2HPOAnnotation == null) createTempAnnotation();
 
+        if (tempLoinc2HPOAnnotation != null && !tempAdvancedAnnotations.isEmpty()) {
+            for (Annotation annotation : tempAdvancedAnnotations) {
+                tempLoinc2HPOAnnotation.addAnnotation(annotation.getCode(), annotation.getHpo());
+            }
+        }
+        if (tempLoinc2HPOAnnotation != null) {
+   logger.info(tempLoinc2HPOAnnotation.getCodes().size() + " annotations");
+            this.model.addLoincTest(tempLoinc2HPOAnnotation);
+            tempLoinc2HPOAnnotation = null;
+
+            loinc2HpoAnnotationsTabController.refreshTable();
+            createAnnotationSuccess.setFill(Color.GREEN);
+            changeColorLoincTableView();
+        }
         //showSuccessOfMapping("Go to next loinc code!");
 
     }
+
 
     /**
      * Do a qc of annotation, and ask user questions if there are potential issues
@@ -755,21 +858,21 @@ public class AnnotateTabController {
     @FXML
     void handleDragEnterHighAbnorm(DragEvent event) {
 
-        hpoHighAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        annotationTextFieldRight.setStyle("-fx-background-color: LIGHTBLUE;");
         event.consume();
 
     }
 
     @FXML
     void handleDragEnterLowAbnorm(DragEvent event) {
-        hpoLowAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        annotationTextFieldLeft.setStyle("-fx-background-color: LIGHTBLUE;");
         event.consume();
 
     }
 
     @FXML
     void handleDragEnterParentAbnorm(DragEvent event) {
-        hpoNotAbnormalTextField.setStyle("-fx-background-color: LIGHTBLUE;");
+        annotationTextFieldMiddle.setStyle("-fx-background-color: LIGHTBLUE;");
         event.consume();
 
     }
@@ -777,20 +880,20 @@ public class AnnotateTabController {
     @FXML
     void handleDragExitHighAbnorm(DragEvent event) {
 
-        hpoHighAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldRight.setStyle("-fx-background-color: WHITE;");
         event.consume();
 
     }
 
     @FXML
     void handleDragExitLowAbnorm(DragEvent event) {
-        hpoLowAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldLeft.setStyle("-fx-background-color: WHITE;");
         event.consume();
     }
 
     @FXML
     void handleDragExitParentAbnorm(DragEvent event) {
-        hpoNotAbnormalTextField.setStyle("-fx-background-color: WHITE;");
+        annotationTextFieldMiddle.setStyle("-fx-background-color: WHITE;");
         event.consume();
     }
     @FXML
@@ -848,5 +951,84 @@ public class AnnotateTabController {
         logger.debug("exit changeColorLoincTableView");
     }
 **/
+
+
+
+
+    private ObservableList<Annotation> tempAdvancedAnnotations = FXCollections.observableArrayList();
+    @FXML
+    private void handleAdvancedAnnotationButton(ActionEvent e) {
+        e.consume();
+        createTempAnnotation(); //Important: Save annotation data at basic mode
+        advancedAnnotationModeSelected = ! advancedAnnotationModeSelected;
+        if (advancedAnnotationModeSelected) {
+            switchToAdvancedAnnotationMode();
+        } else {
+            switchToBasicAnnotationMode();
+        }
+
+    }
+
+    private void switchToAdvancedAnnotationMode(){
+        //before switching to advanced mode, save any data in the basic mode
+
+        annotationLeftLabel.setText("system");
+        annotationMiddleLabel.setText("code");
+        annotationRightLabel.setText("hpo term");
+        annotationTextFieldLeft.clear();
+        annotationTextFieldMiddle.clear();
+        annotationTextFieldRight.clear();
+        annotationTextFieldLeft.setPromptText("code system");
+        annotationTextFieldMiddle.setPromptText("code");
+        annotationTextFieldRight.setPromptText("candidate HPO");
+
+    }
+
+    private void switchToBasicAnnotationMode(){
+        annotationLeftLabel.setText("<Low threshold");
+        annotationMiddleLabel.setText("intermediate");
+        annotationRightLabel.setText(">High threshold");
+        annotationTextFieldLeft.clear();
+        annotationTextFieldMiddle.clear();
+        annotationTextFieldRight.clear();
+        annotationTextFieldLeft.setPromptText("hpo for low value");
+        annotationTextFieldMiddle.setPromptText("hpo for mid value");
+        annotationTextFieldRight.setPromptText("hpo for high value");
+    }
+
+    @FXML
+    private void handleAnnotateCodedValue(ActionEvent e){
+        e.consume();
+
+        Annotation annotation = null;
+        String system = annotationTextFieldLeft.getText().trim().toLowerCase();
+        String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
+        Code code = null;
+        if (system != null && !system.isEmpty() && codeId != null && !codeId.isEmpty()) {
+            code = Code.getNewCode().setSystem(system).setCode(codeId);
+        }
+        String candidateHPO = annotationTextFieldRight.getText();
+        HpoTerm hpoterm = model.getTermMap().get(candidateHPO);
+        if (hpoterm == null) logger.error("hpoterm is null");
+        if (code != null && hpoterm != null) {
+            annotation = new Annotation(code, candidateHPO, new HpoTermId4LoincTest(hpoterm.getId(), false));
+        }
+        tempAdvancedAnnotations.add(annotation);
+        //add annotated value to the advanced table view
+        initadvancedAnnotationTable();
+    }
+
+
+    private void initadvancedAnnotationTable(){
+
+        advancedAnnotationSystem.setSortable(true);
+        advancedAnnotationSystem.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getCode().getSystem()));
+        advancedAnnotationCode.setSortable(true);
+        advancedAnnotationCode.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode()));
+        advancedAnnotationHpo.setSortable(true);
+        advancedAnnotationHpo.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getHpo_term()));
+
+        advancedAnnotationTable.setItems(tempAdvancedAnnotations);
+    }
 
 }

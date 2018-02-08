@@ -50,7 +50,7 @@ public class Loinc2HpoConversionTabController {
         FhirObservationAnalyzer.setObservation(observation);
         LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
         ObservableList<String> items = FXCollections.observableArrayList ();
-        if (res==null) {
+        if (res == null) {
             items.add(observation.getId() + ": failed not interpret");
         } else {
             TermId id = res.getTermId();

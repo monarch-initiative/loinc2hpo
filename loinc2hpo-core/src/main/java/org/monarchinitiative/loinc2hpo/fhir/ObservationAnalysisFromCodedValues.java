@@ -7,6 +7,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
+import org.monarchinitiative.loinc2hpo.exception.AnnotationNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
@@ -43,7 +44,8 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
 
     @Override
-    public HpoTermId4LoincTest getHPOforObservation() throws AmbiguousResultsFoundException, UnrecognizedCodeException {
+    public HpoTermId4LoincTest getHPOforObservation() throws AmbiguousResultsFoundException, UnrecognizedCodeException, AnnotationNotFoundException {
+        if (annotationMap.get(loincId) == null) throw new AnnotationNotFoundException();
         Set<HpoTermId4LoincTest> results = new HashSet<>();
         codedValue.getCoding()
                 .stream()

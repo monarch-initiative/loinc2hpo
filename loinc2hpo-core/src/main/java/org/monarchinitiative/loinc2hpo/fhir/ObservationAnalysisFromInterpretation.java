@@ -36,11 +36,12 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
 
 
     @Override
-    public HpoTermId4LoincTest getHPOforObservation() throws UnsupportedCodingSystemException, AmbiguousResultsFoundException {
+    public HpoTermId4LoincTest getHPOforObservation() throws UnsupportedCodingSystemException, AmbiguousResultsFoundException, AnnotationNotFoundException {
         //here we use a map to store the results: since there could be more than one interpretation coding system,
         //we try them all and store the results in a map <external code, result in internal code>
         Map<Code, Code> results = new HashMap<>();
         Loinc2HPOAnnotation annotationForLoinc = annotationMap.get(this.loincId); //get the annotation class for this loinc code
+        if (annotationForLoinc == null) throw new AnnotationNotFoundException();
         Set<Code> interpretationCodes = getInterpretationCodes(); //all interpretation codes in different coding systems. Expect one in most cases.
         interpretationCodes.stream()
                 //filter out interpretation codes whose coding system are not mapped by us

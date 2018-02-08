@@ -44,6 +44,22 @@ public class FhirObservationAnalyzer {
             //TODO: consider handling this as a future project
             return null;
         }
+        LoincId loincId = null;
+        try {
+            loincId = getLoincIdOfObservation();
+        } catch (MalformedLoincCodeException e) {
+            logger.error("malformed loinc code; should never happen");
+            return null;
+        } catch (LoincCodeNotFoundException e) {
+            logger.error("No loinc code was found in the observation; should never happen");
+            return null;
+        } catch (UnsupportedCodingSystemException e) {
+            logger.error("coding system not recognized");
+            return null;
+        }
+        if (!loinc2HPOannotationMap.containsKey(loincId)) {
+            return null;
+        }
         if (observation.hasInterpretation()) {
             try {
                 //return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
@@ -60,6 +76,8 @@ public class FhirObservationAnalyzer {
                 logger.error("The interpretation coding system cannot be recognized.");
             } catch (AmbiguousResultsFoundException e) {
                 logger.error("The observation has conflicting interpretation codes.");
+            } catch (AnnotationNotFoundException e) {
+                logger.error("There is no annotation for the loinc code used in the observation");
             }
         }
 
@@ -68,7 +86,7 @@ public class FhirObservationAnalyzer {
         //Qn will have a value field
         if (observation.hasValueQuantity()) {
             try {
-                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromQnValue(getLoincIdOfObservation(), observation, loinc2HPOannotationMap).getHPOforObservation();
+                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
                 return new BasicLabTestResultInHPO(hpoterm, null);
             } catch (ReferenceNotFoundException e) {
                 //if there is no reference
@@ -78,12 +96,6 @@ public class FhirObservationAnalyzer {
                 logger.info("There are two reference ranges or more");
             } catch (UnrecognizedCodeException e) {
                 logger.error("uncognized coding system");
-            } catch (MalformedLoincCodeException e) {
-                logger.error("malformed loinc code; should never happen");
-            } catch (LoincCodeNotFoundException e) {
-                logger.error("No loinc code was found in the observation; should never happen");
-            } catch (UnsupportedCodingSystemException e) {
-                logger.error("coding system not recognized");
             }
 
         }
@@ -92,7 +104,7 @@ public class FhirObservationAnalyzer {
         if (observation.hasValueCodeableConcept()) {
             try {
                 HpoTermId4LoincTest hpoterm = null;
-                hpoterm = new ObservationAnalysisFromCodedValues(getLoincIdOfObservation(),
+                hpoterm = new ObservationAnalysisFromCodedValues(loincId,
                         observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
                 return new BasicLabTestResultInHPO(hpoterm, null);
             } catch (AmbiguousResultsFoundException e) {
@@ -102,12 +114,8 @@ public class FhirObservationAnalyzer {
             } catch (FHIRException e) {
                 //not going to happen
                 logger.error("Could not get HPO term from coded value");
-            } catch (LoincCodeNotFoundException e) {
-                logger.error("Code not found");
-            } catch (UnsupportedCodingSystemException e) {
-                logger.error("Code system is not recognized");
-            } catch (MalformedLoincCodeException e) {
-                logger.error("Loinc code is not formed correctly.");
+            } catch (AnnotationNotFoundException e) {
+                logger.error("There is no annotation for the loinc code used in the observation");
             }
         }
 
