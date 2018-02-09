@@ -405,7 +405,7 @@ public class AnnotateTabController {
     private boolean containedIn(String query, String text) {
         String [] keys = query.split("\\W");
         for (String key : keys) {
-            if (!text.contains(key)) {
+            if (!text.toLowerCase().contains(key.toLowerCase())) {
                 return false;
             }
         }
@@ -691,8 +691,6 @@ public class AnnotateTabController {
         e.consume();
 
         if(!advancedAnnotationModeSelected) recordTempTerms(tempTerms); //update terms for basic annotation
- System.out.println("mode: " + advancedAnnotationModeSelected);
- System.out.println("content in temp: ");
         tempTerms.values().stream().forEach(System.out::println);
         //if this function is called at advanced annotation mode, the terms for basic annotation was already saved
         String hpoLo = tempTerms.get("hpoLo");
@@ -1061,6 +1059,7 @@ public class AnnotateTabController {
     private void handleAnnotateCodedValue(ActionEvent e){
         e.consume();
 
+        if (!advancedAnnotationModeSelected) return;
         Annotation annotation = null;
         String system = annotationTextFieldLeft.getText().trim().toLowerCase();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
