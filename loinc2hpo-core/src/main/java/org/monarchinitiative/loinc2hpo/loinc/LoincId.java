@@ -4,7 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 
-public class LoincId {
+import java.io.Serializable;
+
+public class LoincId  implements Serializable{
     private static final Logger logger = LogManager.getLogger();
     /** The part of the Loinc code prior to the dash */
     private final int num;

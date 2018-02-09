@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -29,7 +30,7 @@ import java.util.Set;
  * code. We still need to have more maps for different interpretation systems.
  */
 
-public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation {
+public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements Serializable {
 
     //the keys are internal codes; each one should correspond to one HpoTerm4LoincTest
     //alternatively, the codes can be external codes, if it is for a Ord or Nom loinc test
