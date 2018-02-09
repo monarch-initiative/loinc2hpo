@@ -3,15 +3,15 @@ package org.monarchinitiative.loinc2hpo.controller;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -24,6 +24,7 @@ import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
+import java.awt.event.MouseEvent;
 import java.io.*;
 
 import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
@@ -49,6 +50,7 @@ public class MainController {
     @FXML private MenuItem importAnnotationButton;
     @FXML private MenuItem newAnnotationFileButton;
 
+    @FXML private TabPane tabPane;
 
 
     @FXML private void initialize() {
@@ -62,7 +64,7 @@ public class MainController {
             logger.error("setupTabController is null");
             return;
         }
-       setupTabController.setModel(model);
+        setupTabController.setModel(model);
         if (annotateTabController==null) {
             logger.error("annotate Controller is null");
             return;
@@ -81,6 +83,13 @@ public class MainController {
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+                System.out.println("tab switched");
+                System.out.println("new Tab: " + newValue.getText());
+            }
+        });
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
@@ -261,6 +270,14 @@ public class MainController {
         loinc2HpoAnnotationsTabController.importLoincAnnotation();
         logger.info("usr wants to import an annotation file");
         event.consume();
+    }
+
+    private void updateMenu(String msg) {
+
+        System.out.println("tabPane selection event: ");
+        System.out.println(tabPane.getSelectionModel().getSelectedItem().getText());
+
+
     }
 }
 

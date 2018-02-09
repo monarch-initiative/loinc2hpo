@@ -108,7 +108,8 @@ public class AnnotateTabController {
 
     @FXML private CheckBox flagForAnnotation;
     @FXML private Circle createAnnotationSuccess;
-    @FXML private TextField annotationNoteField;
+    @FXML private TextArea annotationNoteField;
+
 
     @FXML private void initialize() {
         if (model != null) {
@@ -1034,6 +1035,7 @@ public class AnnotateTabController {
         annotationTextFieldMiddle.setPromptText("code");
         annotationTextFieldRight.setPromptText("candidate HPO");
         modeButton.setText("<<<basic");
+        inverseChecker.setSelected(false);
 
     }
 
@@ -1048,6 +1050,7 @@ public class AnnotateTabController {
         annotationTextFieldMiddle.setPromptText("hpo for mid value");
         annotationTextFieldRight.setPromptText("hpo for high value");
         modeButton.setText("advanced>>>");
+        inverseChecker.setSelected(true);
         if (!tempTerms.isEmpty()) {
             annotationTextFieldLeft.setText(tempTerms.get("hpoLo"));
             annotationTextFieldMiddle.setText(tempTerms.get("hpoNormal"));
@@ -1059,7 +1062,8 @@ public class AnnotateTabController {
     private void handleAnnotateCodedValue(ActionEvent e){
         e.consume();
 
-        if (!advancedAnnotationModeSelected) return;
+        if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
+
         Annotation annotation = null;
         String system = annotationTextFieldLeft.getText().trim().toLowerCase();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
@@ -1071,12 +1075,13 @@ public class AnnotateTabController {
         HpoTerm hpoterm = model.getTermMap().get(candidateHPO);
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new Annotation(code, candidateHPO, new HpoTermId4LoincTest(hpoterm.getId(), false));
+            annotation = new Annotation(code, candidateHPO, new HpoTermId4LoincTest(hpoterm.getId(), inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
         initadvancedAnnotationTable();
         accordion.setExpandedPane(advancedAnnotationTitledPane);
+        inverseChecker.setSelected(false);
     }
 
 

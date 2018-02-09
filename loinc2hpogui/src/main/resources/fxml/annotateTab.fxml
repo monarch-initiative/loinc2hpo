@@ -9,6 +9,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
@@ -100,7 +101,7 @@
                                                 <Insets left="9.0" />
                                              </padding>
                                           </CheckBox>
-                                          <Button fx:id="modeButton" mnemonicParsing="false" onAction="#handleAdvancedAnnotationButton" text="advanced &gt;&gt;&gt;" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                          <Button fx:id="modeButton" mnemonicParsing="false" onAction="#handleAdvancedAnnotationButton" stylesheets="@../css/loinc2hpo.css" text="advanced &gt;&gt;&gt;" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="5.0" left="20.0" top="10.0" />
                                              </GridPane.margin>
@@ -203,11 +204,11 @@
                               <Insets left="20.0" top="20.0" />
                            </VBox.margin>
                         </HBox>
-                        <TextField fx:id="annotationNoteField" alignment="TOP_LEFT" prefHeight="160.0" promptText="Optional: note for annotation">
+                        <TextArea fx:id="annotationNoteField" prefHeight="200.0" prefWidth="200.0" promptText="Optional: note for annotation" wrapText="true">
                            <VBox.margin>
                               <Insets left="20.0" right="20.0" top="20.0" />
                            </VBox.margin>
-                        </TextField>
+                        </TextArea>
                         <TreeView fx:id="treeView" onDragDetected="#handleDragInTreeView" prefHeight="420.0" prefWidth="300.0" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
