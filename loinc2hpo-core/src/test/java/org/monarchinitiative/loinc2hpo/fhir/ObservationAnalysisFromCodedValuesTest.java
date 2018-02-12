@@ -63,7 +63,7 @@ public class ObservationAnalysisFromCodedValuesTest {
     }
     @Test
     public void testNom1() throws Exception {
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("600-7");
         LoincScale loincScale = LoincScale.string2enum("Nom");
         TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
@@ -77,7 +77,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
 
-        Loinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
+        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
                 .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                 .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
                 .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
@@ -91,7 +91,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 
     @Test (expected = UnrecognizedCodeException.class)
     public void testGetInterpretationCodes2() throws Exception {
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("600-7");
         LoincScale loincScale = LoincScale.string2enum("Nom");
         TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
@@ -105,7 +105,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
 
-        Loinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
+        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
                 .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                 .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
                 .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));

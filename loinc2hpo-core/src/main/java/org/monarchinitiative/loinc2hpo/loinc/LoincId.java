@@ -1,12 +1,14 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 
 import java.io.Serializable;
 
-public class LoincId  implements Serializable{
+public class LoincId  implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final Logger logger = LogManager.getLogger();
     /** The part of the Loinc code prior to the dash */
     private final int num;
@@ -47,6 +49,7 @@ public class LoincId  implements Serializable{
     }
 
     @Override
+    @JsonValue
     public String toString() { return String.format("%d-%d",num,suffix); }
 
 

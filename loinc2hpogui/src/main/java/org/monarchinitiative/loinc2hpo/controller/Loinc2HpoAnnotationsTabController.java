@@ -20,6 +20,7 @@ import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
@@ -48,7 +49,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @FXML
-    private TableView<Loinc2HPOAnnotation> loincAnnotationTableView;
+    private TableView<UniversalLoinc2HPOAnnotation> loincAnnotationTableView;
     @FXML private TableColumn<Loinc2HPOAnnotation,String> loincNumberColumn;
     @FXML private TableColumn<Loinc2HPOAnnotation,String> belowNormalHpoColumn;
     @FXML private TableColumn<Loinc2HPOAnnotation,String> notAbnormalHpoColumn;
@@ -151,7 +152,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<LoincId,Loinc2HPOAnnotation> testmap = model.getTestmap();
+        Map<LoincId,UniversalLoinc2HPOAnnotation> testmap = model.getTestmap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -168,8 +169,8 @@ public class Loinc2HpoAnnotationsTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             LoincMappingParser parser = new LoincMappingParser(path, model.getOntology());
-            Set<Loinc2HPOAnnotation> testset = parser.getTests();
-            for (Loinc2HPOAnnotation test : testset) {
+            Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
+            for (UniversalLoinc2HPOAnnotation test : testset) {
                 model.addLoincTest(test);
             }
         }
@@ -252,9 +253,9 @@ public class Loinc2HpoAnnotationsTabController {
         StringBuilder builder = new StringBuilder();
         if (loincAnnotationTableView.getItems().size() > 0) {
 
-            List<Loinc2HPOAnnotation> annotations = loincAnnotationTableView
+            List<UniversalLoinc2HPOAnnotation> annotations = loincAnnotationTableView
                     .getItems();
-            for (Loinc2HPOAnnotation annotation : annotations) {
+            for (UniversalLoinc2HPOAnnotation annotation : annotations) {
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
@@ -281,7 +282,7 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void deleteLoincAnnotation(ActionEvent event){
-        Loinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
+        UniversalLoinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toDelete != null) {
             loincAnnotationTableView.getItems().remove(toDelete);

@@ -55,7 +55,7 @@ public class ObservationAnalysisFromQnValueTest {
     }
     @Test
     public void testGetInterpretationCodes1() throws Exception {
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -77,7 +77,7 @@ public class ObservationAnalysisFromQnValueTest {
 
     @Test (expected = ReferenceNotFoundException.class)
     public void testGetInterpretationCodes2() throws Exception {
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();

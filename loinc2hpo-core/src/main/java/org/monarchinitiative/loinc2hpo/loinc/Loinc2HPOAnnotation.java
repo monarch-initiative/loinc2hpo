@@ -6,13 +6,15 @@ import org.hl7.fhir.dstu3.model.Coding;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Set;
 
 /**
  * This is a class for a Loinc test.
  */
-public abstract class Loinc2HPOAnnotation {
+public abstract class Loinc2HPOAnnotation implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     protected LoincId id;
     protected LoincScale scale;

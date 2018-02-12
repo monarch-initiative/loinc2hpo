@@ -51,6 +51,9 @@ public class MainController {
     @FXML private MenuItem newAnnotationFileButton;
 
     @FXML private TabPane tabPane;
+    @FXML private Tab annotateTabButton;
+    @FXML private Tab Loinc2HPOAnnotationsTabButton;
+    @FXML private Tab Loinc2HpoConversionTabButton;
 
 
     @FXML private void initialize() {
@@ -83,11 +86,22 @@ public class MainController {
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
+
+
+        //control how menu items should be shown
+        importAnnotationButton.setDisable(true);
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
-                System.out.println("tab switched");
-                System.out.println("new Tab: " + newValue.getText());
+
+                if(newValue.getText().equals(Loinc2HPOAnnotationsTabButton.getText())) {
+                    System.out.println("annotations tab chosen");
+                    importAnnotationButton.setDisable(false);
+                } else {
+                    importAnnotationButton.setDisable(true);
+                }
+
+
             }
         });
     }
@@ -272,12 +286,5 @@ public class MainController {
         event.consume();
     }
 
-    private void updateMenu(String msg) {
-
-        System.out.println("tabPane selection event: ");
-        System.out.println(tabPane.getSelectionModel().getSelectedItem().getText());
-
-
-    }
 }
 

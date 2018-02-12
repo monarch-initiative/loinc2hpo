@@ -54,17 +54,17 @@
          <center>
             <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
               <tabs>
-                  <Tab text="Annotate">
+                  <Tab fx:id="annotateTabButton" text="Annotate">
                       <content>
                           <fx:include fx:id="annotateTab" source="annotateTab.fxml" />
                       </content>
                   </Tab>
-                <Tab text="Loinc2HpoAnnotations">
+                <Tab fx:id="Loinc2HPOAnnotationsTabButton" text="Loinc2HpoAnnotations">
                     <content>
                         <fx:include fx:id="loinc2HpoAnnotationsTab" source="loinc2HpoAnnotationsTab.fxml" />
                     </content>
                 </Tab>
-                  <Tab text="Loinc2HpoConversion">
+                  <Tab fx:id="Loinc2HpoConversionTabButton" text="Loinc2HpoConversion">
                     <content>
                       <fx:include fx:id="Loinc2HpoConversionTab" source="loinc2HpoConversionTab.fxml" />
                     </content>

@@ -10,6 +10,7 @@ import org.monarchinitiative.loinc2hpo.io.HPOParser;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 
 import java.io.*;
@@ -21,7 +22,7 @@ public class FhirObservationParserTest {
 
     private static JsonNode node;
     static private LoincMappingParser loincparser;
-    static  private Map<LoincId, Loinc2HPOAnnotation> testmap;
+    static  private Map<LoincId, UniversalLoinc2HPOAnnotation> testmap;
 
 
 
@@ -66,57 +67,5 @@ public class FhirObservationParserTest {
         }
         return node;
     }
-
-
-
-    @Test
-    public void testParse() throws Loinc2HpoException{
-        FhirResourceRetriever.fhir2testrest(node,testmap);
-    }
-
-
-    @Test(expected = Loinc2HpoException.class)
-    public void testCheckForObservation() throws Exception {
-
-        ClassLoader classLoader = FhirObservationParserTest.class.getClassLoader();
-        String fhirPath = classLoader.getResource("json/malformedObservation.fhir").getFile();
-        ObjectMapper mapper = new ObjectMapper();
-        File f = new File(fhirPath);
-        FileInputStream fis = new FileInputStream(f);
-        byte[] data = new byte[(int) f.length()];
-        fis.read(data);
-        fis.close();
-        JsonNode node2 = mapper.readTree(data);
-        FhirResourceRetriever.fhir2testrest(node2,testmap);
-    }
-
-    @Test
-    public void testGetHyperglycemia() throws Loinc2HpoException{
-        LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,testmap);
-        assertNotNull(res);
-//        System.err.println(res);
-        String expected="HP:0003074";
-        String actual=res.getTermId().getIdWithPrefix();
-        assertEquals(expected,actual);
-    }
-
-    @Test
-    public void testGetNormoglycemia() throws Loinc2HpoException{
-        JsonNode normGlycNode = getObservationNode("json/glucoseNormal.fhir");
-        assertNotNull(normGlycNode);
-        LabTestResultInHPO res =  FhirResourceRetriever.fhir2testrest(normGlycNode,testmap);
-        assertNotNull(res);
-//        System.err.println(res);
-        String expected="HP:0011015"; // Abn of glucose metabolism
-        assertTrue(res.isNegated());
-        assertEquals(expected,res.getTermId().getIdWithPrefix());
-    }
-
-
-
-
-
-
-
 
 }

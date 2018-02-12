@@ -4,6 +4,7 @@ import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 import java.io.IOException;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class LoincMappingParserTest {
 
     @Test
     public void testGetTest() {
-        Set<Loinc2HPOAnnotation> tests = loincparser.getTests();
+        Set<UniversalLoinc2HPOAnnotation> tests = loincparser.getTests();
         assertTrue(tests.size()>0);
     }
 

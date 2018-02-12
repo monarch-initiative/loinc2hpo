@@ -38,7 +38,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestResultInHPO getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, Loinc2HPOAnnotation> loinc2HPOannotationMap) {
+    public static LabTestResultInHPO getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, UniversalLoinc2HPOAnnotation> loinc2HPOannotationMap) {
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
             //TODO: consider handling this as a future project
@@ -192,7 +192,7 @@ public class FhirObservationAnalyzer {
      * @throws UnsupportedCodingSystemException
      */
     public static LabTestResultInHPO getHPOFromInterpretation (
-            CodeableConcept interpretation, Map<LoincId, Loinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
+            CodeableConcept interpretation, Map<LoincId, UniversalLoinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
             LoincCodeNotFoundException, UnsupportedCodingSystemException, AnnotationNotFoundException  {
         //here we only look at interpretation code system defined by HL7
         Code interpretationCode = null;
@@ -209,7 +209,7 @@ public class FhirObservationAnalyzer {
             try {
                 Code internalCode = CodeSystemConvertor.convertToInternalCode(interpretationCode);
                 LoincId loincId = getLoincIdOfObservation(); //get the loinc code from the observation
-                Loinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
+                UniversalLoinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
                 if(annotationForLoinc == null) throw new AnnotationNotFoundException();
                 HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHPO(internalCode);
                 return new BasicLabTestResultInHPO(hpoId, null, "?");

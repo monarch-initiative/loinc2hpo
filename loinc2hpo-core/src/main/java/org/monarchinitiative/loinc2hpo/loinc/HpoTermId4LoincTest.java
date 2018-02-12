@@ -3,7 +3,10 @@ package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.github.phenomics.ontolib.ontology.data.TermId;
 
-public class HpoTermId4LoincTest {
+import java.io.Serializable;
+
+public class HpoTermId4LoincTest implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private boolean isNegated=false;
     private final TermId tid;

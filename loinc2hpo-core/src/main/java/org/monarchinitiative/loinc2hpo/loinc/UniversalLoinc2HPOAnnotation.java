@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
@@ -30,8 +32,15 @@ import java.util.Set;
  * code. We still need to have more maps for different interpretation systems.
  */
 
-public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements Serializable {
+@JsonIgnoreProperties({"codeSystems", "unrecognizedCodes"})
+public class UniversalLoinc2HPOAnnotation implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
+
+
+    private LoincId loincId;
+    private LoincScale loincScale;
     //the keys are internal codes; each one should correspond to one HpoTerm4LoincTest
     //alternatively, the codes can be external codes, if it is for a Ord or Nom loinc test
     //access the codes from the CodeSystemConvertor.getCodeContainer
@@ -46,7 +55,9 @@ public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements
 
     public UniversalLoinc2HPOAnnotation(LoincId lid, LoincScale lsc){
 
-        super(lid, lsc);
+        //super(lid, lsc);
+        this.loincId = lid;
+        this.loincScale = lsc;
 
     }
 
@@ -124,16 +135,16 @@ public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements
      *
      * @return
      */
-    @Override
+    //@Override
     public Set<Code> getCodes(){
         return candidateHpoTerms.keySet();
     }
 
-    @Override
+    //@Override
     public  String getNote(){
         return this.note;
     }
-    @Override
+    //@Override
     public boolean getFlag(){
         return this.flag;
     }
@@ -145,7 +156,7 @@ public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements
      *             an external coding system
      * @return the hpo term wrapped in the HpoTermId4LoincTest class
      */
-    @Override
+    //@Override
     public HpoTermId4LoincTest loincInterpretationToHPO(Code code) {
         return candidateHpoTerms.get(code);
     }
@@ -161,30 +172,44 @@ public class UniversalLoinc2HPOAnnotation extends Loinc2HPOAnnotation implements
         }
 
     }
-    @Override
+
+    public UniversalLoinc2HPOAnnotation setLoincId(LoincId loincId){
+        this.loincId = loincId;
+        return this;
+    }
+    public UniversalLoinc2HPOAnnotation setLoincScale(LoincScale scale){
+        this.loincScale = scale;
+        return this;
+    }
+
+    public LoincScale getLoincScale() { return this.loincScale;}
+    public LoincId getLoincNumber(){ return this.loincId; }
+
+    //@Override
     @Deprecated
     public  TermId getBelowNormalHpoTermId(){
         return getHpoTermIdForInternalCode("L");
     }
-    @Override
+    //@Override
     @Deprecated
     public  TermId getNotAbnormalHpoTermName(){
         return getHpoTermIdForInternalCode("N");
     }
-    @Override
+    //@Override
     @Deprecated
     public TermId getAbnormalHpoTermName() {
         return getHpoTermIdForInternalCode("A");
     }
-    @Override
+    //@Override
     @Deprecated
     public  TermId getAboveNormalHpoTermName(){
 
         return getHpoTermIdForInternalCode("H");
     }
-    @Override
+
     @Deprecated
     public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs){
         return null;
     }
+
 }

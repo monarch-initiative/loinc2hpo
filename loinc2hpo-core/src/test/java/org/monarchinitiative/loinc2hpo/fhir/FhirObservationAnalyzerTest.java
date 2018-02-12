@@ -79,7 +79,7 @@ public class FhirObservationAnalyzerTest {
 
         FhirObservationAnalyzer.setObservation(observation);
 
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -88,7 +88,7 @@ public class FhirObservationAnalyzerTest {
 
         Loinc2HPOAnnotation test1 = new QnLoinc2HPOAnnotation(loincId, loincScale,  low,  normal,  hi);
 
-        testmap.put(loincId, test1);
+        //testmap.put(loincId, test1);
         //LabTestResultInHPO result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
         //System.out.println(result);
 
@@ -99,7 +99,7 @@ public class FhirObservationAnalyzerTest {
 
         FhirObservationAnalyzer.setObservation(observation);
 
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();

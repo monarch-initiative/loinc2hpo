@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.io;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -38,11 +40,11 @@ public class WriteToFile {
 
     }
 
-    public static void serializeObject(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap, String pathToFile) {
+    public static <K extends Serializable, V extends Serializable> void serialize(Map<K, V> map, String pathToFile) {
 
         try (FileOutputStream fileOutputStream = new FileOutputStream(pathToFile);
              ObjectOutputStream out = new ObjectOutputStream(fileOutputStream)) {
-            out.writeObject(annotationMap);
+            out.writeObject(map);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -50,19 +52,42 @@ public class WriteToFile {
         }
     }
 
-    public static Map<LoincId, UniversalLoinc2HPOAnnotation> deserializeObject(String pathToFile) {
+    public static <K extends Serializable, V extends Serializable> Map<K, V> deserialize(String pathToFile) {
         try (FileInputStream fileInputStream = new FileInputStream(pathToFile);
              ObjectInputStream in = new ObjectInputStream(fileInputStream)) {
-            Map<LoincId, UniversalLoinc2HPOAnnotation> map = (Map<LoincId, UniversalLoinc2HPOAnnotation>) in.readObject();
+            Map<K, V> map = (Map<K, V>) in.readObject();
             return map;
         } catch (FileNotFoundException e) {
+            logger.error("File is not found for deserialization");
 
         } catch (IOException e) {
+            logger.error("IO error when trying to read deserialization file: " + pathToFile);
 
         } catch (ClassNotFoundException e) {
+            logger.error("Class mismatch: deserizlized objects does not match expectation");
 
         }
         return null;
     }
+
+    public static void toJson(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap){
+
+        ObjectMapper mapper = new ObjectMapper();
+        annotationMap.entrySet().forEach(p -> {
+            try {
+                System.out.println(mapper.writeValueAsString(p));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+    }
+
+    public static Map<LoincId, UniversalLoinc2HPOAnnotation> fromJson(String path) {
+
+        return null;
+    }
+
 
 }

@@ -8,6 +8,7 @@ import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.util.AgeCalculator;
 
 import java.math.BigDecimal;
@@ -26,10 +27,10 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
     private Patient patient;
 
     private Observation observation;
-    private Map<LoincId, Loinc2HPOAnnotation> annotationMap;
+    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap;
     private LoincId loincId;
 
-    public ObservationAnalysisFromQnValue(LoincId loincId, Observation observation, Map<LoincId, Loinc2HPOAnnotation> annotationMap){
+    public ObservationAnalysisFromQnValue(LoincId loincId, Observation observation, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap){
         this.loincId = loincId;
         this.observation = observation;
         this.annotationMap = annotationMap;

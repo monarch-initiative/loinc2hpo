@@ -41,13 +41,13 @@ public class LoincMappingParser {
 
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
 
-    private Set<Loinc2HPOAnnotation> testset;
+    private Set<UniversalLoinc2HPOAnnotation> testset;
 
     private Set<QnLoinc2HPOAnnotation> qntests;
 
 
 
-    private Map<LoincId, Loinc2HPOAnnotation> testmap;
+    private Map<LoincId, UniversalLoinc2HPOAnnotation> testmap;
 
 
 
@@ -60,12 +60,12 @@ public class LoincMappingParser {
     }
 
 
-    public Set<Loinc2HPOAnnotation> getTests() { return testset; };
+    public Set<UniversalLoinc2HPOAnnotation> getTests() { return testset; };
 
     public Set<QnLoinc2HPOAnnotation> getQnTests() { return qntests; }
 
 
-    public Map<LoincId, Loinc2HPOAnnotation> getTestmap() { return testmap; }
+    public Map<LoincId, UniversalLoinc2HPOAnnotation> getTestmap() { return testmap; }
 
 
 
@@ -147,7 +147,7 @@ public class LoincMappingParser {
                     if (loincScale.equals(LoincScale.Qn)) {
                         //Loinc2HPOAnnotation test = new QnLoinc2HPOAnnotation(id,LoincScale.Qn,low,wnl,high,flagval,comment);
                         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-                        Loinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(id, loincScale)
+                        UniversalLoinc2HPOAnnotation test = new UniversalLoinc2HPOAnnotation(id, loincScale)
                                 .addAnnotation(internalCode.get("L"), new HpoTermId4LoincTest(low, false))
                                 .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(wnl, false))
                                 .addAnnotation(internalCode.get("N"), new HpoTermId4LoincTest(wnl, true))

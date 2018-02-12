@@ -12,6 +12,7 @@ import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -23,15 +24,15 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
     private LoincId loincId;
     private CodeableConcept codedValue;
-    private Map<LoincId, Loinc2HPOAnnotation> annotationMap;
+    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap;
 
-    public ObservationAnalysisFromCodedValues(LoincId loincId, CodeableConcept codedvalue, Map<LoincId, Loinc2HPOAnnotation> annotationMap) {
+    public ObservationAnalysisFromCodedValues(LoincId loincId, CodeableConcept codedvalue, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) {
         this.loincId = loincId;
         this.codedValue = codedvalue;
         this.annotationMap = annotationMap;
     }
 
-    public ObservationAnalysisFromCodedValues(LoincId loincId, Observation observation, Map<LoincId, Loinc2HPOAnnotation> annotationMap) {
+    public ObservationAnalysisFromCodedValues(LoincId loincId, Observation observation, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) {
         this.loincId = loincId;
         try {
             this.codedValue = observation.getValueCodeableConcept();

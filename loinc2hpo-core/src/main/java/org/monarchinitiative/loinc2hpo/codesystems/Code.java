@@ -2,10 +2,13 @@ package org.monarchinitiative.loinc2hpo.codesystems;
 
 import org.hl7.fhir.dstu3.model.Coding;
 
+import java.io.Serializable;
+
 /**
  * This is an class for coded values. This correspond to the Coding class in hapi-fhir with some modification (equal method)
  */
-public class Code {
+public class Code implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String system;
     private String code;
     private String display;

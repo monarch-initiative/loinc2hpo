@@ -56,7 +56,7 @@ public class ObservationAnalysisFromInterpretationTest {
     }
     @Test
     public void testGetInterpretationCodes() throws Exception{
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -83,7 +83,7 @@ public class ObservationAnalysisFromInterpretationTest {
     @Test
     public void getHPOforObservation() throws Exception {
 
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -111,7 +111,7 @@ public class ObservationAnalysisFromInterpretationTest {
     @Test (expected = AmbiguousResultsFoundException.class)
     public void getHPOforObservationTestException() throws Exception {
 
-        Map<LoincId, Loinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();

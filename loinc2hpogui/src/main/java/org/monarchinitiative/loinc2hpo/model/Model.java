@@ -44,7 +44,7 @@ public class Model {
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
-    public Map<LoincId,Loinc2HPOAnnotation> testmap=new LinkedHashMap<>();
+    public Map<LoincId,UniversalLoinc2HPOAnnotation> testmap=new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
@@ -117,7 +117,7 @@ public class Model {
 
 
 
-    public void addLoincTest(Loinc2HPOAnnotation test) {
+    public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
         // todo warn if term already in map
         testmap.put(test.getLoincNumber(),test);
     }
@@ -131,7 +131,7 @@ public class Model {
         }
     }
 
-    public Map<LoincId,Loinc2HPOAnnotation> getTestmap(){ return testmap; }
+    public Map<LoincId,UniversalLoinc2HPOAnnotation> getTestmap(){ return testmap; }
 
 
     private void init() {
