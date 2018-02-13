@@ -13,6 +13,7 @@ import java.util.Set;
 /**
  * This is a class for a Loinc test.
  */
+@Deprecated
 public abstract class Loinc2HPOAnnotation implements Serializable {
     private static final long serialVersionUID = 1L;
 

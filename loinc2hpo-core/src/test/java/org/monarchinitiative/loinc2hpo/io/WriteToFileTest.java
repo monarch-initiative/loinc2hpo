@@ -16,7 +16,9 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +131,7 @@ public class WriteToFileTest {
 
         //serialize
         String serializedFile = tempFolder.newFile("testAnnotations.ser").getAbsolutePath();
-        WriteToFile.serialize(testmap, serializedFile);
+        //WriteToFile.serialize(testmap, serializedFile);
 
         //deserialize
         Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedAnnotations = WriteToFile.deserialize(serializedFile);
@@ -192,7 +194,7 @@ public class WriteToFileTest {
 
         testmap.put(loincId, bacterialAnnotation);
 
-        //WriteToFile.toJson(testmap);
+        WriteToFile.toJson(testmap);
 
         idSer = new HashMap<>();
         idSer.put(new LoincId("600-7"), "Bacterial infection");
@@ -201,6 +203,82 @@ public class WriteToFileTest {
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(idSer);
         System.out.println(jsonResult);
 
+    }
+
+    @Test
+    public void testFromTSV() throws Exception{
+        Map<String, HpoTerm> hpoTermMapSerialize;
+        Map<TermId, HpoTerm> hpoTermMapDeserialize;
+        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
+        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpoOntology hpo = null;
+        try {
+            hpo = hpoOboParser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ImmutableMap.Builder<String,HpoTerm> termmapSerialize = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId, HpoTerm> termMapDeserialize = new ImmutableMap.Builder<>();
+        if (hpo !=null) {
+            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+                    .collect(Collectors.toList());
+            res.forEach( term -> termmapSerialize.put(term.getName(),term));
+            res.forEach( term -> termMapDeserialize.put(term.getId(), term));
+
+        }
+
+        hpoTermMapSerialize = termmapSerialize.build();
+        hpoTermMapDeserialize = termMapDeserialize.build();
+
+        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        LoincId loincId = new LoincId("15074-8");
+        LoincScale loincScale = LoincScale.string2enum("Qn");
+        TermId low = hpoTermMapSerialize.get("Hypoglycemia").getId();
+        TermId normal = hpoTermMapSerialize.get("Abnormality of blood glucose concentration").getId();
+        TermId hi = hpoTermMapSerialize.get("Hyperglycemia").getId();
+
+        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        testmap.put(loincId, glucoseAnnotation);
+
+
+
+        loincId = new LoincId("600-7");
+        loincScale = LoincScale.string2enum("Nom");
+        TermId forCode1 = hpoTermMapSerialize.get("Recurrent E. coli infections").getId();
+        TermId forCode2 = hpoTermMapSerialize.get("Recurrent Staphylococcus aureus infections").getId();
+        TermId positive = hpoTermMapSerialize.get("Recurrent bacterial infections").getId();
+
+        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
+        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+
+        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
+                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
+                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
+                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+
+        testmap.put(loincId, bacterialAnnotation);
+
+        //testmap.entrySet().forEach(System.out::println);
+
+        String path = tempFolder.newFile("testoutput.tsv").getPath();
+        //WriteToFile.writeToFile("", path);
+        //testmap.forEach((k, v) -> WriteToFile.appendToFile(v.toString(), path));
+
+        WriteToFile.toTSV(path, testmap);
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        reader.lines().forEach(p -> System.out.println(p.toString()));
+        reader.close();
+
+
+        Map<LoincId, UniversalLoinc2HPOAnnotation> deserialziedFromTSV = WriteToFile.fromTSV(path, hpoTermMapDeserialize);
+        assertNotNull(deserialziedFromTSV);
+        assertEquals(testmap.size(), deserialziedFromTSV.size());
+        assertEquals(bacterialAnnotation.toString(), deserialziedFromTSV.get(new LoincId("600-7")).toString());
     }
 
 

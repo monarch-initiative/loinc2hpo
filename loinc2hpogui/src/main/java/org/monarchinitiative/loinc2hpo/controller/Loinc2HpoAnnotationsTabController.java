@@ -259,7 +259,7 @@ public class Loinc2HpoAnnotationsTabController {
                 boolean flag = annotation.getFlag();
                 char flagString = flag ? 'Y' : 'N';
                 builder.append(flagString + "\t");
-                builder.append(annotation.getLoincNumber() + "\t");
+                builder.append(annotation.getLoincId() + "\t");
                 String scale = annotation.getLoincScale() == null  ? "NA" : annotation.getLoincScale().toString();
                 builder.append(scale + "\t");
                 String hpoL = annotation.getBelowNormalHpoTermId() == null ? "NA" : annotation.getBelowNormalHpoTermId().getIdWithPrefix();
@@ -286,7 +286,7 @@ public class Loinc2HpoAnnotationsTabController {
                 .getSelectedItem();
         if (toDelete != null) {
             loincAnnotationTableView.getItems().remove(toDelete);
-            model.removeLoincTest(String.valueOf(toDelete.getLoincNumber()));
+            model.removeLoincTest(String.valueOf(toDelete.getLoincId()));
         }
         event.consume();
 

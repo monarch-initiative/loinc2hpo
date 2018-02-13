@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 
 import java.io.*;
@@ -119,7 +118,7 @@ public class Model {
 
     public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
         // todo warn if term already in map
-        testmap.put(test.getLoincNumber(),test);
+        testmap.put(test.getLoincId(),test);
     }
 
     public void removeLoincTest(String loincNum) {
