@@ -11,9 +11,7 @@ import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -58,6 +56,25 @@ public class Model {
     public HashSet<LoincId> getLoincIds() { return this.loincIds; }
 
     private ImmutableMap<String,HpoTerm> termmap=null;
+
+
+    /**
+     * The following section handles github labels for HPO
+     * (used to suggest new hpo terms for some loinc codes)
+     */
+    private List<String> labels = new ArrayList<>();
+    public boolean hasLabels() {
+        return !labels.isEmpty();
+    }
+
+    public void setGithublabels(List<String> labels) {
+        this.labels.addAll(labels);
+    }
+
+    public List<String> getGithublabels() {
+        return this.labels;
+    }
+
 
     public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
         this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;

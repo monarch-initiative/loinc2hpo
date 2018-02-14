@@ -172,11 +172,16 @@
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <TextField fx:id="userInputForManualQuery" onAction="#handleManualQueryButton" prefHeight="36.0" prefWidth="466.0" promptText="comma seperated keys" stylesheets="@../css/loinc2hpo.css" HBox.hgrow="ALWAYS">
+                              <TextField fx:id="userInputForManualQuery" onAction="#handleManualQueryButton" prefHeight="37.0" prefWidth="330.0" promptText="comma seperated keys" stylesheets="@../css/loinc2hpo.css" HBox.hgrow="ALWAYS">
                                  <HBox.margin>
                                     <Insets bottom="5.0" left="20.0" top="10.0" />
                                  </HBox.margin>
                               </TextField>
+                              <Button fx:id="suggestHPOButton" mnemonicParsing="false" onAction="#suggestNewTerm" prefWidth="100.0" stylesheets="@../css/loinc2hpo.css" text="Suggest New HPO term">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="5.0" top="10.0" />
+                                 </HBox.margin>
+                              </Button>
                            </children>
                            <VBox.margin>
                               <Insets />

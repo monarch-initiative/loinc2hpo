@@ -12,17 +12,25 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpo.exception.NetPostException;
+import org.monarchinitiative.loinc2hpo.github.GitHubLabelRetriever;
+import org.monarchinitiative.loinc2hpo.github.GitHubPoster;
+import org.monarchinitiative.loinc2hpo.gui.GitHubPopup;
+import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
@@ -33,6 +41,7 @@ import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
+import sun.nio.ch.Net;
 
 
 import java.io.File;
@@ -50,6 +59,7 @@ public class AnnotateTabController {
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
+    //private final Stage primarystage;
 
     @FXML private Button IntializeHPOmodelbutton;
     @FXML private Button initLOINCtableButton;
@@ -111,10 +121,14 @@ public class AnnotateTabController {
     @FXML private TextArea annotationNoteField;
 
 
+    @FXML private Button suggestHPOButton;
+
     @FXML private void initialize() {
         if (model != null) {
             setModel(model);
         }
+
+        suggestHPOButton.setTooltip(new Tooltip("Suggest new HPO terms"));
     }
 
 
@@ -1096,5 +1110,107 @@ public class AnnotateTabController {
 
         advancedAnnotationTable.setItems(tempAdvancedAnnotations);
     }
+
+
+
+
+    private String githubUsername;
+    private String githubPassword;
+    LoincId loincIdSelected=null;
+    /**
+     * For the GitHub new issues, we want to allow the user to choose a pre-existing label for the issue.
+     * For this, we first go to GitHub and retrieve the labels with
+     * {@link org.monarchinitiative.loinc2hpo.github.GitHubLabelRetriever}. We only do this
+     * once per session though.
+     */
+    private void initializeGitHubLabelsIfNecessary() {
+        if (model.hasLabels()) {
+            return; // we only need to retrieve the labels from the server once per session!
+        }
+        GitHubLabelRetriever retriever = new GitHubLabelRetriever();
+        List<String> labels = retriever.getLabels();
+        if (labels == null) {
+            labels = new ArrayList<>();
+        }
+        if (labels.size() == 0) {
+            labels.add("new term request");
+        }
+        model.setGithublabels(labels);
+    }
+
+    /**
+    private void suggestNewChildTerm(ActionEvent e) {
+        if (getSelectedTerm() == null) {
+            logger.error("Select a term before creating GitHub issue");
+            PopUps.showInfoMessage("Please select an HPO term before creating GitHub issue",
+                    "Error: No HPO Term selected");
+            return;
+        } else {
+            selectedTerm = getSelectedTerm().getValue().term;
+        }
+        GitHubPopup popup = new GitHubPopup(selectedTerm, true);
+        initializeGitHubLabelsIfNecessary();
+        popup.setLabels(model.getGithublabels());
+        popup.setupGithubUsernamePassword(githubUsername, githubPassword);
+        popup.displayWindow(primarystage);
+        String githubissue = popup.retrieveGitHubIssue();
+        if (githubissue == null) {
+            logger.trace("got back null github issue");
+            return;
+        }
+        String title = String.format("Suggesting new child term of \"%s\"", selectedTerm.getName());
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+    }
+     **/
+
+    @FXML
+    private void suggestNewTerm(ActionEvent e) {
+        e.consume();
+        initializeGitHubLabelsIfNecessary();
+        LoincEntry loincEntrySelected = loincTableView.getSelectionModel().getSelectedItem();
+        if (loincEntrySelected == null) {
+
+            logger.error("Select a loinc code before making a suggestion");
+            PopUps.showInfoMessage("Please select a loinc code before creating GitHub issue",
+                    "Error: No HPO Term selected");
+            return;
+        }
+        loincIdSelected = loincEntrySelected.getLOINC_Number();
+        logger.info("Selected loinc to create github issue for: " + loincIdSelected);
+
+        GitHubPopup popup = new GitHubPopup(loincEntrySelected);
+        initializeGitHubLabelsIfNecessary();
+        popup.setLabels(model.getGithublabels());
+        popup.setupGithubUsernamePassword(githubUsername, githubPassword);
+        popup.displayWindow(Main.getPrimarystage());
+        String githubissue = popup.retrieveGitHubIssue();
+        if (githubissue == null) {
+            logger.trace("got back null github issue");
+            return;
+        }
+        String title = String.format("Suggesting new term for Loinc:  \"%s\"", loincIdSelected);
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+    }
+
+    private void postGitHubIssue(String message, String title, String uname, String pword) {
+        GitHubPoster poster = new GitHubPoster(uname, pword, title, message);
+        this.githubUsername = uname;
+        this.githubPassword = pword;
+        try {
+            poster.postIssue();
+        } catch (NetPostException he) {
+            PopUps.showException("GitHub error", "Bad Request (400): Could not post issue", he);
+        } catch (Exception ex) {
+            PopUps.showException("GitHub error", "GitHub error: Could not post issue", ex);
+            return;
+        }
+        String response = poster.getHttpResponse();
+        PopUps.showInfoMessage(
+                String.format("Created issue for %s\nServer response: %s", loincIdSelected.toString(), response), "Created new issue");
+
+    }
+
+
+
 
 }

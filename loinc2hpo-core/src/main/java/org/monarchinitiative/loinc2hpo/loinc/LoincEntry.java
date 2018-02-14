@@ -53,9 +53,7 @@ public class LoincEntry {
         scale=F.get(5);
         method=F.get(6);
         longName=F.get(9);
-//        for (int i=0;i<F.size();i++) {
-//            System.out.println(i + ") "+ F.get(i));
-//        }
+
     }
 
 
