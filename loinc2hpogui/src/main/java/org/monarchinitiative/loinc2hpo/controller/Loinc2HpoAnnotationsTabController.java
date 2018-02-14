@@ -50,13 +50,13 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private TableView<UniversalLoinc2HPOAnnotation> loincAnnotationTableView;
-    @FXML private TableColumn<Loinc2HPOAnnotation,String> loincNumberColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation,String> belowNormalHpoColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation, String> loincScaleColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation, String> loincFlagColumn;
-    @FXML private TableColumn<Loinc2HPOAnnotation, String> noteColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> loincNumberColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> belowNormalHpoColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> loincScaleColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> loincFlagColumn;
+    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> noteColumn;
 
 
 
@@ -71,7 +71,7 @@ public class Loinc2HpoAnnotationsTabController {
         logger.trace("Calling initialize");
         loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
-        loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincNumber().toString()));
+        loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincId().toString()));
         loincScaleColumn.setSortable(true);
         loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale().toString()));
         belowNormalHpoColumn.setSortable(true);
@@ -292,4 +292,30 @@ public class Loinc2HpoAnnotationsTabController {
 
     }
 
+    protected void exportAnnotationsAsTSV() {
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Specify file name");
+        chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        File f = chooser.showSaveDialog(null);
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            if (f.exists()) {
+                boolean overwrite = PopUps.getBooleanFromUser("Overwrite?", "File will be overwritten", null);
+                if (overwrite) {
+                    try {
+                        WriteToFile.toTSV(path, model.getTestmap());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                try {
+                    WriteToFile.toTSV(path, model.getTestmap());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

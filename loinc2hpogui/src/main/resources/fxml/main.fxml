@@ -25,6 +25,12 @@
                               <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
                           <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
                               <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
+                              <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export As...">
+                                <items>
+                                    <MenuItem mnemonicParsing="false" onAction="#handleExportAsTSV" text=".tsv" />
+                                  <MenuItem mnemonicParsing="false" text=".json" />
+                                </items>
+                              </Menu>
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">

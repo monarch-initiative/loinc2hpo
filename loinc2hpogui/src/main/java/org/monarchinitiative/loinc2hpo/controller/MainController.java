@@ -49,6 +49,7 @@ public class MainController {
     @FXML private MenuItem closeMenuItem;
     @FXML private MenuItem importAnnotationButton;
     @FXML private MenuItem newAnnotationFileButton;
+    @FXML private Menu exportMenu;
 
     @FXML private TabPane tabPane;
     @FXML private Tab annotateTabButton;
@@ -90,15 +91,17 @@ public class MainController {
 
         //control how menu items should be shown
         importAnnotationButton.setDisable(true);
+        exportMenu.setDisable(true);
         tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
 
                 if(newValue.getText().equals(Loinc2HPOAnnotationsTabButton.getText())) {
-                    System.out.println("annotations tab chosen");
                     importAnnotationButton.setDisable(false);
+                    exportMenu.setDisable(false);
                 } else {
                     importAnnotationButton.setDisable(true);
+                    exportMenu.setDisable(true);
                 }
 
 
@@ -283,6 +286,12 @@ public class MainController {
 
         loinc2HpoAnnotationsTabController.importLoincAnnotation();
         logger.info("usr wants to import an annotation file");
+        event.consume();
+    }
+
+    @FXML private void handleExportAsTSV(ActionEvent event) {
+        logger.info("usr wants to export annotations to a TSV file");
+        loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
         event.consume();
     }
 
