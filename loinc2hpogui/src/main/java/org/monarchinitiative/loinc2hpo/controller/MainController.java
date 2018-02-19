@@ -208,7 +208,9 @@ public class MainController {
     }
 
     @FXML private void setBiocuratorID(ActionEvent e) {
-        String bcid=getStringFromUser("Biocurator ID", "e.g., MGM:rrabbit", "Enter biocurator ID");
+        String prompText = (model.getBiocuratorID() == null || model.getBiocuratorID().isEmpty())
+                ? "e.g., MGM:rrabbit" : model.getBiocuratorID();
+        String bcid=getStringFromUser("Biocurator ID", prompText, "Enter biocurator ID");
         if (bcid!=null && bcid.indexOf(":")>0) {
             model.setBiocuratorID(bcid);
             model.writeSettings();

@@ -206,6 +206,14 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         return header;
     }
 
+    public HashMap<Code, HpoTermId4LoincTest> getCandidateHpoTerms() {
+        return new HashMap<>(candidateHpoTerms);
+    }
+
+    public void setCandidateHpoTerms(HashMap<Code, HpoTermId4LoincTest> candidateHpoTerms) {
+        this.candidateHpoTerms = candidateHpoTerms;
+    }
+
     @Override
     public String toString(){
 
@@ -226,6 +234,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
             stringBuilder.append("\t" + this.lastEditedBy);
             stringBuilder.append("\n");
         });
+
         return stringBuilder.toString().trim();
     }
 

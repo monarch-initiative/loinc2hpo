@@ -41,10 +41,14 @@ public class Model {
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> testmap=new LinkedHashMap<>();
+    public Map<LoincId,UniversalLoinc2HPOAnnotation> loincAnnotationMap =new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
+
+    private Map<String, String> tempBasicTerms = new HashMap<>();//hpo terms before being used to create an annotation
+    private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
+    private UniversalLoinc2HPOAnnotation currentAnnotation = null;
 
     public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
         this.loincEntryMap = map;
@@ -101,8 +105,17 @@ public class Model {
     public String getPathToJsonFhirFile() { return pathToJsonFhirFile; }
 
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
-    public int getLoincAnnotationCount() { return testmap!=null?this.testmap.size():0;}
+    public int getLoincAnnotationCount() { return loincAnnotationMap !=null?this.loincAnnotationMap.size():0;}
 
+
+    public void setTempTerms(Map<String, String> temp) { this.tempBasicTerms = temp; }
+    public Map<String, String> getTempTerms() { return new HashMap<>(this.tempBasicTerms); }
+    public void setTempAdvancedAnnotation(Map<String, String> tempAdvancedAnnotation) { this.tempAdvancedAnnotation = tempAdvancedAnnotation;}
+    public Map<String, String> getTempAdvancedAnnotation() {return new HashMap<>(this.tempAdvancedAnnotation);}
+    public void setCurrentAnnotation(UniversalLoinc2HPOAnnotation current) {this.currentAnnotation = current;}
+    public UniversalLoinc2HPOAnnotation getCurrentAnnotation() {
+        return currentAnnotation;
+    }
 
     public Model() {
         init();
@@ -135,19 +148,20 @@ public class Model {
 
     public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
         // todo warn if term already in map
-        testmap.put(test.getLoincId(),test);
+        loincAnnotationMap.put(test.getLoincId(),test);
+        logger.debug("Annotation is add for: " + test.getLoincId());
     }
 
     public void removeLoincTest(String loincNum) {
-        if (this.testmap.containsKey(loincNum)) {
-            this.testmap.remove(loincNum);
+        if (this.loincAnnotationMap.containsKey(loincNum)) {
+            this.loincAnnotationMap.remove(loincNum);
         } else {
             logger.error("removing a Loinc annotation record that does not " +
                     "exist");
         }
     }
 
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> getTestmap(){ return testmap; }
+    public Map<LoincId,UniversalLoinc2HPOAnnotation> getLoincAnnotationMap(){ return loincAnnotationMap; }
 
 
     private void init() {

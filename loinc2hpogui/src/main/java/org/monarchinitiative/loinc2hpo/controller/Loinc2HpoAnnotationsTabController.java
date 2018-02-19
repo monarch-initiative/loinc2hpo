@@ -17,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
@@ -152,7 +151,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<LoincId,UniversalLoinc2HPOAnnotation> testmap = model.getTestmap();
+        Map<LoincId,UniversalLoinc2HPOAnnotation> testmap = model.getLoincAnnotationMap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -162,7 +161,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void importLoincAnnotation() {
-        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose annotation file");
         File f = chooser.showOpenDialog(null);
@@ -174,7 +173,7 @@ public class Loinc2HpoAnnotationsTabController {
                 model.addLoincTest(test);
             }
         }
-        logger.debug("Num of annotations in model: " + model.getTestmap().size());
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
     }
 
@@ -304,14 +303,14 @@ public class Loinc2HpoAnnotationsTabController {
                 boolean overwrite = PopUps.getBooleanFromUser("Overwrite?", "File will be overwritten", null);
                 if (overwrite) {
                     try {
-                        WriteToFile.toTSV(path, model.getTestmap());
+                        WriteToFile.toTSV(path, model.getLoincAnnotationMap());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             } else {
                 try {
-                    WriteToFile.toTSV(path, model.getTestmap());
+                    WriteToFile.toTSV(path, model.getLoincAnnotationMap());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -30,7 +30,7 @@ public class GitHubPopup {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private LoincId loincId; //suggestions for the loinc code
+    //suggestion for the loinc code
     private LoincEntry loincEntry;
 
     private HpoTerm hpoTerm; //if the suggestion is about a known term
@@ -53,14 +53,14 @@ public class GitHubPopup {
     private String githubIssueText = null;
     private boolean newAnnotation = false;
 
-    /**
-     * Use this constructor to Suggest a new hpo term for a loinc code.
-     */
-    public GitHubPopup(LoincId loincId) {
-        this.loincId = loincId;
-    }
+    private String biocuratorId = "";
 
+    /**
+     * Use this constructor to Suggest a new hpo term for a loinc code without suggesting the parent.
+     */
     public GitHubPopup(LoincEntry loincEntry) {
+
+        this.newAnnotation = true;
         this.loincEntry = loincEntry;
     }
 
@@ -69,8 +69,8 @@ public class GitHubPopup {
      * @param term      An HPO Term for which we ant to suggest a new child term.
      * @param childterm set this to true if we want to create an issue to make a new child term
      */
-    public GitHubPopup(HpoTerm term, LoincId loincId, boolean childterm) {
-        this(loincId);
+    public GitHubPopup(LoincEntry loincEntry, HpoTerm term,  boolean childterm) {
+        this.loincEntry = loincEntry;
         this.hpoTerm = term;
         this.suggestNewChildTerm = childterm;
     }
@@ -99,6 +99,9 @@ public class GitHubPopup {
         root.getChildren().add(new Label(String.format("Enter new GitHub issue for Loinc: %s", this.loincEntry.getLongName())));
 
         TextArea textArea = new TextArea();
+        if (getInitialText().trim().isEmpty()) {
+            textArea.setPromptText("Type in your suggestions");
+        }
         textArea.setText(getInitialText());
         root.getChildren().add(textArea);
 
@@ -178,18 +181,20 @@ public class GitHubPopup {
 
     private String getInitialText() {
         if (suggestNewChildTerm) {
-            return String.format("Suggest creating a new child term of %s [%s] for Loinc: %s\n" +
-                    "New term label: %s\n" +
-                    "New term comment (if any): %s\n" +
-                    "Your biocurator ID for nanoattribution (if desired): %s", "?", "?", "?", "?", "?", "?");
+            return String.format("Suggest creating a new child term of %s [%s] for Loinc %s [%s]\n" +
+                    "New term label:\n" +
+                    "New term comment (if any):\n" +
+                    "Your biocurator ID for loinc2hpo (if desired): %s",
+                    hpoTerm.getId().getIdWithPrefix(), hpoTerm.getName(), loincEntry.getLOINC_Number(),
+                    loincEntry.getLongName(), this.biocuratorId);
         } else if (newAnnotation) {
-            return String.format("Suggest creating a new term for Loinc %s [%s] \n" +
-                            "new term label: %s\n" +
-                            "New term comment (if any): %s\n" +
-                            "Your biocurator ID for nanoattribution (if desired): %s\n",
-                    "?", "?", "?", "?", "?");
+            return String.format("Suggest creating a new term for Loinc: %s [%s] \n" +
+                            "New term label:\n" +
+                            "New term comment (if any):\n" +
+                            "Your biocurator ID for loinc2hpo (if desired): %s",
+                    loincEntry.getLOINC_Number(), loincEntry.getLongName(), this.biocuratorId);
         } else {
-            return String.format("Suggestion");
+            return "";
         }
     }
 
@@ -207,6 +212,11 @@ public class GitHubPopup {
     }
 
     public String getGitHubLabel() { return chosenLabel; }
+
+    public void setBiocuratorId(String id) {
+
+        this.biocuratorId = id;
+    }
 
 
     /**

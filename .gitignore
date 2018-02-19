@@ -10,7 +10,7 @@ loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/util/TST.java
 logs/
 .idea/codeStyleSettings.xml
 loinc2hpo-core/logs/
-loinc-hpo-mapping.tsv
+loinc-hpoTermId4LoincTest-mapping.tsv
 loinc2hpo-core/src/main/resources
 loinc2hpo-core/src/resource/
 .idea/.name

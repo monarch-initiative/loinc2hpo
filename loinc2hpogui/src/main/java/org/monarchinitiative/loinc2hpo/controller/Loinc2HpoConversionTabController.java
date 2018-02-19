@@ -48,7 +48,7 @@ public class Loinc2HpoConversionTabController {
         String path = model.getPathToJsonFhirFile();
         Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         FhirObservationAnalyzer.setObservation(observation);
-        LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getTestmap());
+        LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getLoincAnnotationMap());
         ObservableList<String> items = FXCollections.observableArrayList ();
         if (res == null) {
             items.add(observation.getId() + ": failed not interpret");
@@ -71,9 +71,9 @@ public class Loinc2HpoConversionTabController {
             fis.read(data);
             fis.close();
             JsonNode node = mapper.readTree(data);
-            Map<LoincId, Loinc2HPOAnnotation> testmap = model.getTestmap();
-           //estmap=loincparser.getTestmap();
-            LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,testmap);
+            Map<LoincId, Loinc2HPOAnnotation> loincAnnotationMap = model.getLoincAnnotationMap();
+           //estmap=loincparser.getLoincAnnotationMap();
+            LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,loincAnnotationMap);
             ObservableList<String> items = FXCollections.observableArrayList ();
             if (res==null) {
                 items.add("Could not find test");
