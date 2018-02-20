@@ -83,6 +83,9 @@ public class MainController {
             logger.error("loinc2HPOConversionTabController is null");
             return;
         }
+        currentAnnotationController.setModel(model);
+        logger.error("main controller model is null: " + (model == null));
+
 
         loinc2HpoAnnotationsTabController.setModel(model);
         loinc2HPOConversionTabController.setModel(model);

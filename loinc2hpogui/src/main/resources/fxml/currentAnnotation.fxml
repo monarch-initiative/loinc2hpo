@@ -28,15 +28,18 @@
                      <children>
                         <Label text="internal coding system" />
                         <TextField fx:id="internalCodingSystem" />
-                        <TableView fx:id="internalTableview" prefHeight="122.0" prefWidth="259.0">
+                        <TableView fx:id="internalTableview" prefHeight="200.0" prefWidth="259.0">
                           <columns>
-                            <TableColumn fx:id="codeInternalTableview" prefWidth="75.0" text="code" />
-                            <TableColumn fx:id="hpoInternalTableview" prefWidth="75.0" text="hpoTerm" />
-                              <TableColumn fx:id="inversedInternalTableview" prefWidth="75.0" text="inversed" />
+                            <TableColumn fx:id="codeInternalTableview" prefWidth="-1.0" text="code" />
+                            <TableColumn fx:id="hpoInternalTableview" prefWidth="142.0" text="hpoTerm" />
+                              <TableColumn fx:id="inversedInternalTableview" prefWidth="-1.0" text="inversed" />
                           </columns>
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                         <Label text="external codings">
                            <VBox.margin>
@@ -50,6 +53,9 @@
                               <TableColumn fx:id="hpoExternalTableview" prefWidth="75.0" text="hpoTerm" />
                               <TableColumn fx:id="inversedExternalTableview" prefWidth="75.0" text="inversed" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </children>
                   </VBox>
@@ -70,6 +76,9 @@
                               <TableColumn fx:id="hpoInterpretTableview" prefWidth="75.0" text="hpoTerm" />
                               <TableColumn fx:id="inversedInterpretTableview" prefWidth="75.0" text="inversed" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                         <HBox alignment="BASELINE_LEFT" prefWidth="200.0">
                            <children>

@@ -65,6 +65,7 @@ public class AnnotateTabController {
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
+
     //private final Stage primarystage;
 
     @FXML private Button IntializeHPOmodelbutton;
@@ -136,10 +137,9 @@ public class AnnotateTabController {
     @FXML private void initialize() {
         if (model != null) {   //weird line. model is set by main controller; this line never runs
             setModel(model);
-
-            currentAnnotationController.setModel(model); //let current annotation stage have access to model
+            //currentAnnotationController.setModel(model); //let current annotation stage have access to model
         }
-
+        //currentAnnotationController.setModel(model); //let current annotation stage have access to model
         suggestHPOButton.setTooltip(new Tooltip("Suggest new HPO terms"));
     }
 
@@ -1262,10 +1262,12 @@ public class AnnotateTabController {
         LoincEntry loincEntry2Review = getLoincIdSelected();
         if (model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()) != null) {
             logger.debug("The annotation to review is already added to the annotation map");
-            currentAnnotationController.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
+            //currentAnnotationController.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
+            model.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
         } else {
             logger.debug("currently selected loinc has no annotation. A temporary annotation is being created for " + loincEntry2Review.getLOINC_Number());
-            currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
+            //currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
+            model.setCurrentAnnotation(createCurrentAnnotation());
         }
 
 
@@ -1280,14 +1282,16 @@ public class AnnotateTabController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/currentAnnotation.fxml"));
 
-            fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
-                @Override
-                public Object call(Class<?> clazz) {
-                    return injector.getInstance(clazz);
-                }
-            });
 //            This sets the same controller factory (Callback) as above using method reference syntax (in single line)
 //            fxmlLoader.setControllerFactory(injector::getInstance);
+
+            fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+                 @Override
+                 public Object call(Class<?> clazz) {
+                     return injector.getInstance(clazz);
+                 }
+            });
+
             root = fxmlLoader.load();
             Scene scene = new Scene(root, 800, 600);
 
