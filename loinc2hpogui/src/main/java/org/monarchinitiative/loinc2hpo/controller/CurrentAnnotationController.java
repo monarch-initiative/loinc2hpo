@@ -8,9 +8,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +24,11 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 @Singleton
-public class CurrentAnnotationController {
+public class CurrentAnnotationController{
     private static final Logger logger = LogManager.getLogger();
 
     @FXML
@@ -37,6 +42,8 @@ public class CurrentAnnotationController {
 
     @FXML
     private Label annotationTitle;
+    @FXML
+    private TextField internalCodingSystem;
 
     private ObservableList<Annotation> internalAnnotations = FXCollections.observableArrayList();
     @FXML
@@ -86,17 +93,6 @@ public class CurrentAnnotationController {
             setModel(model);
         }
 
-        codeInternalTableview.setSortable(true);
-        codeInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
-        );
-        hpoInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
-        inversedInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
-        internalTableview.setItems(internalAnnotations);
-        logger.debug("internalTableview is null: " + (internalTableview == null));
-        logger.debug("internalAnnotations is null: " + (internalTableview == null));
     }
 
     private void initInternalTableview(){
@@ -115,8 +111,17 @@ public class CurrentAnnotationController {
 
 logger.debug("internal annotation size: " + internalAnnotations.size());
 
-logger.debug("internalTableview is null: " + (internalTableview == null));
-logger.debug("internalAnnotations is null: " + (internalTableview == null));
+//logger.debug("internalTableview is null: " + (internalTableview == null));
+//logger.debug("internalAnnotations is null: " + (internalTableview == null));
+
+        codeInternalTableview.setSortable(true);
+        codeInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
+        );
+        hpoInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+        inversedInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
         internalTableview.setItems(internalAnnotations);
 
 
@@ -146,18 +151,22 @@ logger.debug("internalAnnotations is null: " + (internalTableview == null));
 
     @FXML
     void handleEdit(ActionEvent event) {
-
+        System.out.println("user wants to edit the annotation");
+        internalCodingSystem.setText("edit button is clicked");
+        event.consume();
     }
 
     @FXML
     void handleSave(ActionEvent event) {
-
+        System.out.println("user wants to save the annotation after editing");
+        event.consume();
     }
 
     @FXML
     void setReferences(ActionEvent event) {
+        System.out.println("user wants to set references");
+        event.consume();
 
     }
-
 }
 

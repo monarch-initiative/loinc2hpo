@@ -27,7 +27,7 @@
                   <VBox prefHeight="373.0" prefWidth="294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label text="internal coding system" />
-                        <TextField />
+                        <TextField fx:id="internalCodingSystem" />
                         <TableView fx:id="internalTableview" prefHeight="122.0" prefWidth="259.0">
                           <columns>
                             <TableColumn fx:id="codeInternalTableview" prefWidth="75.0" text="code" />

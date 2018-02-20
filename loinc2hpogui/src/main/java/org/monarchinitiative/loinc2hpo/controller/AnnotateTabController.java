@@ -125,7 +125,7 @@ public class AnnotateTabController {
     @FXML private Button suggestHPOButton;
     @FXML private ContextMenu contextMenu;
 
-    @Inject CurrentAnnotationController currentAnnotationController;
+    @Inject private CurrentAnnotationController currentAnnotationController;
 
     @FXML private void initialize() {
         if (model != null) {   //weird line. model is set by main controller; this line never runs
@@ -1275,7 +1275,7 @@ public class AnnotateTabController {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/currentAnnotation.fxml"));
             root = fxmlLoader.load();
-            Scene scene = new Scene(root, 500, 400);
+            Scene scene = new Scene(root, 800, 600);
 
             window.setScene(scene);
             window.showAndWait();
