@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,6 +90,17 @@ public class CurrentAnnotationController{
             setModel(model);
         }
 
+        //internalTableview.setRowFactory(tv -> {TableRow<Annotation> row = new TableRow<>(); return row;});
+        internalTableview.setItems(internalAnnotations);
+        codeInternalTableview.setSortable(true);
+        codeInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
+        );
+        hpoInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+        inversedInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+
     }
 
     private void initInternalTableview(){
@@ -103,6 +111,7 @@ public class CurrentAnnotationController{
             return;
         }
 
+        internalAnnotations.clear();
         currentAnnotation.getCandidateHpoTerms().entrySet()
         .stream()
         .filter(p -> p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
@@ -110,19 +119,11 @@ public class CurrentAnnotationController{
         .forEach(p -> internalAnnotations.add(new Annotation(p.getKey(), p.getValue())));
 
 logger.debug("internal annotation size: " + internalAnnotations.size());
+logger.debug("internalTableview is null: " + (internalTableview == null));
+logger.debug("internalAnnotations is null: " + (internalTableview == null));
 
-//logger.debug("internalTableview is null: " + (internalTableview == null));
-//logger.debug("internalAnnotations is null: " + (internalTableview == null));
+        internalTableview.setItems(internalAnnotations); //error line: will throw NPE
 
-        codeInternalTableview.setSortable(true);
-        codeInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
-        );
-        hpoInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
-        inversedInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
-        internalTableview.setItems(internalAnnotations);
 
 
 
@@ -153,6 +154,10 @@ logger.debug("internal annotation size: " + internalAnnotations.size());
     void handleEdit(ActionEvent event) {
         System.out.println("user wants to edit the annotation");
         internalCodingSystem.setText("edit button is clicked");
+        logger.debug("internalCodingSystem textfield is null: " + (internalCodingSystem == null));
+
+        internalTableview.setItems(internalAnnotations);
+        internalTableview.refresh();
         event.consume();
     }
 

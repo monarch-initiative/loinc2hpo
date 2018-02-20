@@ -1253,7 +1253,6 @@ public class AnnotateTabController {
     private void showAllAnnotations(ActionEvent event) {
         event.consume();
 
-
         LoincEntry loincEntry2Review = getLoincIdSelected();
         if (model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()) != null) {
             logger.debug("The annotation to review is already added to the annotation map");
@@ -1267,7 +1266,7 @@ public class AnnotateTabController {
         Stage window = new Stage();
         window.setResizable(true);
         window.centerOnScreen();
-        window.setTitle("All annotations for " + loincIdSelected);
+        window.setTitle("All annotations for Loinc " + getLoincIdSelected().getLOINC_Number());
         window.initStyle(StageStyle.UTILITY);
         window.initModality(Modality.APPLICATION_MODAL);
         Parent root = null;
