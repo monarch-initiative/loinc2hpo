@@ -218,6 +218,7 @@
                                  <HBox.margin>
                                     <Insets left="50.0" />
                                  </HBox.margin>
+                                  <fx:include source="currentAnnotation.fxml"/>
                               </Button>
                            </children>
                            <VBox.margin>
