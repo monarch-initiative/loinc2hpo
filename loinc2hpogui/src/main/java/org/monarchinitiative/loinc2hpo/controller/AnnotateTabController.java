@@ -5,6 +5,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import javafx.scene.input.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.*;
+import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -54,6 +56,10 @@ public class AnnotateTabController {
     private static final Logger logger = LogManager.getLogger();
 
     private Model model=null;
+
+    @Inject
+    private Injector injector;
+
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
@@ -1273,6 +1279,15 @@ public class AnnotateTabController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/currentAnnotation.fxml"));
+
+            fxmlLoader.setControllerFactory(new Callback<Class<?>, Object>() {
+                @Override
+                public Object call(Class<?> clazz) {
+                    return injector.getInstance(clazz);
+                }
+            });
+//            This sets the same controller factory (Callback) as above using method reference syntax (in single line)
+//            fxmlLoader.setControllerFactory(injector::getInstance);
             root = fxmlLoader.load();
             Scene scene = new Scene(root, 800, 600);
 
