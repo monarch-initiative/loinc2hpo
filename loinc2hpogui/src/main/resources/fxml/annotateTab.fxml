@@ -24,7 +24,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
   <items>
       <SplitPane dividerPositions="0.6185308848080133">
          <items>
@@ -69,17 +69,17 @@
                               <Insets bottom="10.0" left="20.0" top="20.0" />
                            </HBox.margin>
                         </Label>
-                        <GridPane alignment="CENTER" HBox.hgrow="ALWAYS">
+                        <GridPane alignment="CENTER" HBox.hgrow="SOMETIMES">
                           <columnConstraints>
                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
                             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="NEVER" minWidth="10.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints minHeight="30.0" prefHeight="30.0" valignment="CENTER" />
-                            <RowConstraints minHeight="30.0" valignment="CENTER" />
-                              <RowConstraints minHeight="30.0" valignment="CENTER" />
+                            <RowConstraints valignment="CENTER" />
+                            <RowConstraints valignment="CENTER" />
+                              <RowConstraints valignment="CENTER" />
                           </rowConstraints>
                            <children>
                               <Label fx:id="annotationLeftLabel" prefHeight="30.0" text="&lt;Low threshold" textFill="#0e1ccf" GridPane.halignment="CENTER">
@@ -118,7 +118,10 @@
                                     <Insets />
                                  </GridPane.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#handleAnnotateCodedValue" stylesheets="@../css/loinc2hpo.css" text="+" GridPane.columnIndex="3" />
+                              <Button mnemonicParsing="false" onAction="#handleAnnotateCodedValue" stylesheets="@../css/loinc2hpo.css" text="+" GridPane.columnIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </GridPane.margin></Button>
                            </children>
                            <HBox.margin>
                               <Insets />
@@ -224,7 +227,7 @@
                         </Button>
                      </children>
                      <VBox.margin>
-                        <Insets left="20.0" top="20.0" />
+                        <Insets left="20.0" top="5.0" />
                      </VBox.margin>
                   </HBox>
                   <TextArea fx:id="annotationNoteField" promptText="Optional: note for annotation" wrapText="true" VBox.vgrow="NEVER">
