@@ -30,7 +30,8 @@ public class Annotation {
     //This is the preferred constructor.
     public Annotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
         this.code = code;
-        this.hpo_term = hpoTermId4LoincTest.getHpoTerm().getName();
+        if (hpoTermId4LoincTest != null )
+            this.hpo_term = hpoTermId4LoincTest.getHpoTerm().getName();
         this.hpoTermId4LoincTest = hpoTermId4LoincTest;
     }
 
@@ -53,7 +54,12 @@ public class Annotation {
 
     @Override
     public String toString() {
-        String negate = this.hpoTermId4LoincTest.isNegated()? "not " : "";
-        return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTermId4LoincTest.getHpoTerm().getName();
+        if (this.hpoTermId4LoincTest != null) {
+            String negate = this.hpoTermId4LoincTest.isNegated() ? "not " : "";
+            return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTermId4LoincTest.getHpoTerm().getName();
+
+        } else {
+            return this.code.getSystem() + ": " + this.code.getCode() + " -> No annotation";
+        }
     }
 }

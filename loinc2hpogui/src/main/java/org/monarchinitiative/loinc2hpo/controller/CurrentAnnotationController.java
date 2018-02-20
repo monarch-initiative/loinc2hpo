@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -9,13 +10,19 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javassist.CodeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
+
+import java.util.Map;
 
 @Singleton
 public class CurrentAnnotationController{
@@ -25,6 +32,9 @@ public class CurrentAnnotationController{
 
     private LoincEntry currentLoincEntry = null;
     private UniversalLoinc2HPOAnnotation currentAnnotation = null;
+
+    @Inject AnnotateTabController annotateTabController;
+    @Inject MainController mainController;
 
     @FXML private BorderPane currentAnnotationPane;
 
@@ -97,7 +107,7 @@ public class CurrentAnnotationController{
                 new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
         inversedInterpretTableview.setCellValueFactory(cdf ->
                 new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
-        internalTableview.setItems(internalCodeAnnotations);
+        interpretationTableview.setItems(interpretationCodeAnnotations);
     }
 
     private void populateTables(){
@@ -124,6 +134,17 @@ public class CurrentAnnotationController{
                 .filter(p -> !p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
                 .map(p -> new Annotation(p.getKey(), p.getValue()))
                 .forEach(externalCodeAnnotations::add);
+
+        for (Map.Entry<Code, Code> entry: CodeSystemConvertor.getCodeConversionMap().entrySet()) {
+            logger.debug("key: " + entry.getKey() + "\nvalue: " + entry.getValue());
+            HpoTermId4LoincTest result = currentAnnotation.loincInterpretationToHPO(entry.getValue());
+            logger.debug("result is null? " + (result == null));
+            if (result != null) {
+                Annotation annotation = new Annotation(entry.getKey(), result);
+                interpretationCodeAnnotations.add(annotation);
+                logger.debug("interpretationCodeAnnotations size: " + interpretationCodeAnnotations.size());
+            }
+        }
 
         logger.debug("internalTableview is null: " + (internalTableview == null));
         logger.debug("internalCodeAnnotations is null: " + (internalTableview == null));
@@ -164,12 +185,9 @@ public class CurrentAnnotationController{
 
     @FXML
     void handleEdit(ActionEvent event) {
-        System.out.println("user wants to edit the annotation");
-        internalCodingSystem.setText("edit button is clicked");
-        logger.debug("internalCodingSystem textfield is null: " + (internalCodingSystem == null));
 
-        //tempList.setItems(internalCodeAnnotations);
-
+        logger.debug("user wants to edit current annotation");
+        annotateTabController.editCurrentAnnotation(currentAnnotation);
         event.consume();
     }
 

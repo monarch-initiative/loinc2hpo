@@ -1258,10 +1258,10 @@ public class AnnotateTabController {
     }
 
 
-
     protected LoincEntry getLoincIdSelected() {
         return loincTableView.getSelectionModel().getSelectedItem();
     }
+
     @FXML
     private void showAllAnnotations(ActionEvent event) {
         event.consume();
@@ -1308,11 +1308,21 @@ public class AnnotateTabController {
             Scene scene = new Scene(root, 800, 600);
 
             window.setScene(scene);
-            window.showAndWait();
+            window.show();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * This method is called from the pop up window
+     * @param loincAnnotation passed from the pop up window
+     */
+    protected void editCurrentAnnotation(UniversalLoinc2HPOAnnotation loincAnnotation) {
+
 
     }
+
+
 }
