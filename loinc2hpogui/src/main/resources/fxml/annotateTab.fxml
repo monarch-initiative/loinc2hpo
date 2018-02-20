@@ -214,10 +214,11 @@
                                     <Insets top="5.0" />
                                  </HBox.margin>
                               </Circle>
-                              <Button mnemonicParsing="false" onAction="#showAllAnnotations" stylesheets="@../css/loinc2hpo.css" text="All annotations">
+                              <Button fx:id="allAnnotationsButton" mnemonicParsing="false" onAction="#showAllAnnotations" stylesheets="@../css/loinc2hpo.css" text="All annotations">
                                  <HBox.margin>
                                     <Insets left="50.0" />
                                  </HBox.margin>
+                                  <fx:include source="currentAnnotation.fxml"/>
                               </Button>
                            </children>
                            <VBox.margin>

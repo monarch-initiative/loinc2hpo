@@ -90,16 +90,7 @@ public class CurrentAnnotationController{
             setModel(model);
         }
 
-        //internalTableview.setRowFactory(tv -> {TableRow<Annotation> row = new TableRow<>(); return row;});
-        internalTableview.setItems(internalAnnotations);
-        codeInternalTableview.setSortable(true);
-        codeInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
-        );
-        hpoInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
-        inversedInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+
 
     }
 
@@ -118,13 +109,23 @@ public class CurrentAnnotationController{
         //.map(p -> new Annotation(p.getKey(), p.getValue()))
         .forEach(p -> internalAnnotations.add(new Annotation(p.getKey(), p.getValue())));
 
-logger.debug("internal annotation size: " + internalAnnotations.size());
-logger.debug("internalTableview is null: " + (internalTableview == null));
-logger.debug("internalAnnotations is null: " + (internalTableview == null));
 
-        internalTableview.setItems(internalAnnotations); //error line: will throw NPE
+        logger.debug("internalTableview is null: " + (internalTableview == null));
+        logger.debug("internalAnnotations is null: " + (internalTableview == null));
+        logger.debug("internal annotation size: " + internalAnnotations.size());
+        internalAnnotations.forEach(System.out::println);
 
 
+        codeInternalTableview.setSortable(true);
+        codeInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
+        );
+        hpoInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+        inversedInternalTableview.setCellValueFactory(cdf ->
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+        internalTableview.setItems(internalAnnotations);
+logger.trace("exit initInternalTableview()");
 
 
     }

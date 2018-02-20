@@ -50,4 +50,10 @@ public class Annotation {
     public void setHpoTermId4LoincTest(HpoTermId4LoincTest hpoTermId4LoincTest) {
         this.hpoTermId4LoincTest = hpoTermId4LoincTest;
     }
+
+    @Override
+    public String toString() {
+        String negate = this.hpoTermId4LoincTest.isNegated()? "not " : "";
+        return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTermId4LoincTest.getHpoTerm().getName();
+    }
 }
