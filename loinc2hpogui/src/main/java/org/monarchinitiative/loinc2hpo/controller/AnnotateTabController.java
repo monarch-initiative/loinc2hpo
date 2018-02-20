@@ -635,6 +635,13 @@ public class AnnotateTabController {
         String hpoNormal = tempTerms.get("hpoNormal");
         String hpoHi = tempTerms.get("hpoHi");
 
+        if ((hpoLo == null || hpoLo.isEmpty()) &&
+                (hpoNormal == null || hpoNormal.isEmpty()) &&
+                (hpoHi == null || hpoHi.isEmpty()) &&
+                tempAdvancedAnnotations.isEmpty()) {
+            return;
+        }
+
         //We don't have to force every loinc code to have three phenotypes
         HpoTerm low = termmap.get(hpoLo);
         HpoTerm normal = termmap.get(hpoNormal);
@@ -1260,6 +1267,11 @@ public class AnnotateTabController {
         event.consume();
 
         LoincEntry loincEntry2Review = getLoincIdSelected();
+        if (loincEntry2Review == null) {
+            PopUps.showInfoMessage("There is not annotation to review. Select a loinc entry and try again",
+                    "No content to show");
+            return;
+        }
         if (model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()) != null) {
             logger.debug("The annotation to review is already added to the annotation map");
             //currentAnnotationController.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
@@ -1301,26 +1313,6 @@ public class AnnotateTabController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-/**
-        VBox root = new VBox();
-        root.setSpacing(20);
-        root.getChildren().add(new Label("Entire map"));
-
-        TableView<Annotation> loincAnnotationMap = new TableView<>();
-        ObservableList<Annotation> annotations = FXCollections.observableArrayList();
-
-        TableColumn system = new TableColumn("system");
-        system.setSortable(true);
-        //system.setCellValueFactory();
-        TableColumn code = new TableColumn("code");
-        TableColumn hpoterm = new TableColumn("HpoTerm");
-        TableColumn inverse = new TableColumn("inversed");
-        loincAnnotationMap.getColumns().addAll(system, code, hpoterm, inverse);
-
-
-        root.getChildren().add(loincAnnotationMap);
- **/
 
     }
 }
