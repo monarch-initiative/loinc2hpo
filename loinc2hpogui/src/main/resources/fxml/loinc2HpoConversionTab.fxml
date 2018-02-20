@@ -1,73 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoConversionTabController">
-   <children>
-      <SplitPane dividerPositions="0.4991652754590985" layoutY="93.0" prefHeight="700.0" prefWidth="1200.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-               <children>
-                  <VBox prefHeight="700.0" prefWidth="550.0">
-                     <children>
-                        <Button fx:id="importPatientDataButton" mnemonicParsing="false" onAction="#handleImportantPatientData" stylesheets="@../css/loinc2hpo.css" text="import patient data">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </Button>
-                        <ListView fx:id="patientRecordListView" prefHeight="600.0" prefWidth="500.0">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </ListView>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="500.0" text="Patient Loinc Test Results" textAlignment="CENTER">
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="20.0" />
-                     </padding>
-                  </VBox>
-               </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="600.0">
-               <children>
-                  <VBox prefHeight="700.0" prefWidth="550.0">
-                     <children>
-                        <Button fx:id="convertButton" mnemonicParsing="false" onAction="#handleConvertButton" stylesheets="@../css/loinc2hpo.css" text="Convert">
-                           <VBox.margin>
-                              <Insets left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Button>
-                        <ListView fx:id="patientPhenotypeTableView" prefHeight="600.0" prefWidth="500.0">
-                           <VBox.margin>
-                              <Insets top="10.0" />
-                           </VBox.margin>
-                        </ListView>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefWidth="500.0" text="Patient Loinc Test Results" textAlignment="CENTER">
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </Label>
-                     </children>
-                     <padding>
-                        <Insets left="50.0" />
-                     </padding>
-                  </VBox>
-               </children>
-               <padding>
-                  <Insets left="600.0" />
-               </padding>
-            </AnchorPane>
-        </items>
-      </SplitPane>
-   </children>
-</AnchorPane>
+
+<SplitPane dividerPositions="0.4991652754590985" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoConversionTabController">
+  <items>
+    <AnchorPane>
+         <children>
+            <Button fx:id="importPatientDataButton" layoutX="20.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleImportantPatientData" stylesheets="@../css/loinc2hpo.css" text="import patient data" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0" />
+            <ListView fx:id="patientRecordListView" layoutX="20.0" layoutY="46.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="666.0" text="Patient Loinc Test Results" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+         </children>
+      </AnchorPane>
+    <AnchorPane>
+         <children>
+            <Button fx:id="convertButton" layoutX="60.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleConvertButton" stylesheets="@../css/loinc2hpo.css" text="Convert" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0" />
+            <ListView fx:id="patientPhenotypeTableView" layoutX="50.0" layoutY="46.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="666.0" text="Patient Loinc Test Results" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+         </children>
+      </AnchorPane>
+  </items>
+</SplitPane>

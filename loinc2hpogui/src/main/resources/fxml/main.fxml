@@ -5,79 +5,75 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<AnchorPane fx:id="pane" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
-   <children>
-      <BorderPane prefHeight="800.0" prefWidth="1200.0">
-         <top>
-            <HBox maxWidth="1.7976931348623157E308" prefHeight="29.0" prefWidth="722.0" BorderPane.alignment="CENTER">
-               <children>
-                  <MenuBar fx:id="loincmenubar" HBox.hgrow="NEVER">
-                    <menus>
-                      <Menu mnemonicParsing="false" text="File">
-                        <items>
-                              <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save As" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
-                          <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
-                              <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
-                              <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export As...">
-                                <items>
-                                    <MenuItem mnemonicParsing="false" onAction="#handleExportAsTSV" text=".tsv" />
-                                  <MenuItem mnemonicParsing="false" text=".json" />
-                                </items>
-                              </Menu>
-                        </items>
-                      </Menu>
-                      <Menu mnemonicParsing="false" text="Edit">
-                        <items>
-                          <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
-                              <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
-                              <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
-                              <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-                  <Region prefHeight="50.0" prefWidth="384.0" styleClass="menu-bar" HBox.hgrow="ALWAYS" />
-                  <MenuBar HBox.hgrow="NEVER">
-                    <menus>
-                      <Menu mnemonicParsing="false" text="Help">
-                        <items>
-                              <MenuItem mnemonicParsing="false" onAction="#openHelpDialog" text="Help" />
-                          <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
-                        </items>
-                      </Menu>
-                    </menus>
-                  </MenuBar>
-               </children>
-            </HBox>
-         </top>
-         <center>
-            <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-              <tabs>
-                  <Tab fx:id="annotateTabButton" text="Annotate">
-                      <content>
-                          <fx:include fx:id="annotateTab" source="annotateTab.fxml" />
-                      </content>
-                  </Tab>
-                <Tab fx:id="Loinc2HPOAnnotationsTabButton" text="Loinc2HpoAnnotations">
-                    <content>
-                        <fx:include fx:id="loinc2HpoAnnotationsTab" source="loinc2HpoAnnotationsTab.fxml" />
-                    </content>
-                </Tab>
-                  <Tab fx:id="Loinc2HpoConversionTabButton" text="Loinc2HpoConversion">
-                    <content>
-                      <fx:include fx:id="Loinc2HpoConversionTab" source="loinc2HpoConversionTab.fxml" />
-                    </content>
-                  </Tab>
-            </tabs>
-            </TabPane>
-         </center>
-      </BorderPane>
-   </children>
-</AnchorPane>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
+   <top>
+      <HBox maxHeight="30.0" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="loincmenubar" HBox.hgrow="NEVER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save As" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
+                    <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                        <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
+                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export As...">
+                          <items>
+                              <MenuItem mnemonicParsing="false" onAction="#handleExportAsTSV" text=".tsv" />
+                            <MenuItem mnemonicParsing="false" text=".json" />
+                          </items>
+                        </Menu>
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
+                        <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
+                        <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
+                        <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <Region styleClass="menu-bar" HBox.hgrow="ALWAYS" />
+            <MenuBar HBox.hgrow="NEVER">
+              <menus>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openHelpDialog" text="Help" />
+                    <MenuItem mnemonicParsing="false" onAction="#aboutWindow" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+            <Tab fx:id="annotateTabButton" text="Annotate">
+                <content>
+                    <fx:include fx:id="annotateTab" source="annotateTab.fxml" />
+                </content>
+            </Tab>
+          <Tab fx:id="Loinc2HPOAnnotationsTabButton" text="Loinc2HpoAnnotations">
+              <content>
+                  <fx:include fx:id="loinc2HpoAnnotationsTab" source="loinc2HpoAnnotationsTab.fxml" />
+              </content>
+          </Tab>
+            <Tab fx:id="Loinc2HpoConversionTabButton" text="Loinc2HpoConversion">
+              <content>
+                <fx:include fx:id="Loinc2HpoConversionTab" source="loinc2HpoConversionTab.fxml" />
+              </content>
+            </Tab>
+      </tabs>
+      </TabPane>
+   </center>
+</BorderPane>
