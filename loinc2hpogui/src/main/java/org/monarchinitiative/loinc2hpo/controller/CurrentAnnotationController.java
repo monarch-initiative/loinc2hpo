@@ -28,73 +28,50 @@ import java.util.ResourceBundle;
 public class CurrentAnnotationController{
     private static final Logger logger = LogManager.getLogger();
 
-    @FXML
     private Model model;
 
     private LoincEntry currentLoincEntry = null;
     private UniversalLoinc2HPOAnnotation currentAnnotation = null;
 
-    @FXML
-    private BorderPane currentAnnotationPane;
+    @FXML private BorderPane currentAnnotationPane;
 
-    @FXML
-    private Label annotationTitle;
-    @FXML
-    private TextField internalCodingSystem;
+    @FXML private Label annotationTitle;
+    @FXML private TextField internalCodingSystem;
 
     private ObservableList<Annotation> internalAnnotations = FXCollections.observableArrayList();
-    @FXML
-    private TableView<Annotation> internalTableview;
+    @FXML private TableView<Annotation> internalTableview;
+    @FXML private TableColumn<Annotation, String> codeInternalTableview;
+    @FXML private TableColumn<Annotation, String> hpoInternalTableview;
+    @FXML private TableColumn<Annotation, Boolean> inversedInternalTableview;
 
-    @FXML
-    private TableColumn<Annotation, String> codeInternalTableview;
+    @FXML private TableView<Annotation> externalTableview;
+    @FXML private TableColumn<Annotation, String> systemExternalTableview;
+    @FXML private TableColumn<Annotation, String> codeExternalTableview;
+    @FXML private TableColumn<Annotation, String> hpoExternalTableview;
+    @FXML private TableColumn<Annotation, String> inversedExternalTableview;
 
-    @FXML
-    private TableColumn<Annotation, String> hpoInternalTableview;
+    @FXML private TableView<Annotation> interpretationTableview;
+    @FXML private TableColumn<Annotation, String> systemInterpretTableview;
+    @FXML private TableColumn<Annotation, String> codeInterpretTableview;
+    @FXML private TableColumn<Annotation, String> hpoInterpretTableview;
+    @FXML private TableColumn<Annotation, String> inversedInterpretTableview;
 
-    @FXML
-    private TableColumn<Annotation, Boolean> inversedInternalTableview;
 
-    @FXML
-    private TableView<Annotation> externalTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> systemExternalTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> codeExternalTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> hpoExternalTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> inversedExternalTableview;
-
-    @FXML
-    private TableView<Annotation> interpretationTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> systemInterpretTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> codeInterpretTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> hpoInterpretTableview;
-
-    @FXML
-    private TableColumn<Annotation, String> inversedInterpretTableview;
 
     @FXML private void initialize() {
-        if (model != null) {
-            setModel(model);
-        }
 
-
+        internalCodingSystem.setText(Loinc2HPOCodedValue.CODESYSTEM);
+        initInternalTableview();
 
     }
 
     private void initInternalTableview(){
+
+        if (model == null) {
+            logger.error("model is null.");
+            return;
+        }
+        this.currentAnnotation = model.getCurrentAnnotation();
 
         if (this.currentAnnotation == null) {
             PopUps.showInfoMessage("There is not annotation to review. Select a loinc entry and try again",
@@ -113,19 +90,18 @@ public class CurrentAnnotationController{
         logger.debug("internalTableview is null: " + (internalTableview == null));
         logger.debug("internalAnnotations is null: " + (internalTableview == null));
         logger.debug("internal annotation size: " + internalAnnotations.size());
-        internalAnnotations.forEach(System.out::println);
-
+        internalAnnotations.forEach(logger::info);
 
         codeInternalTableview.setSortable(true);
         codeInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getCode().toString())
+                new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode())
         );
         hpoInternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
         inversedInternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
         internalTableview.setItems(internalAnnotations);
-logger.trace("exit initInternalTableview()");
+        logger.trace("exit initInternalTableview()");
 
 
     }
@@ -137,7 +113,12 @@ logger.trace("exit initInternalTableview()");
     }
 
     public void setModel(Model model) {
+        if (model == null) {
+            logger.trace("model for CurrentAnnotationController is set to null");
+            return;
+        }
         this.model = model;
+        logger.info("model for CurrentAnnotationController is set");
     }
 
 
@@ -157,8 +138,8 @@ logger.trace("exit initInternalTableview()");
         internalCodingSystem.setText("edit button is clicked");
         logger.debug("internalCodingSystem textfield is null: " + (internalCodingSystem == null));
 
-        internalTableview.setItems(internalAnnotations);
-        internalTableview.refresh();
+        //tempList.setItems(internalAnnotations);
+
         event.consume();
     }
 
