@@ -260,7 +260,8 @@ public class MainController {
 
         e.consume();
         logger.info("usr wants to save file");
-        loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+        //loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+        loinc2HpoAnnotationsTabController.newSave();
 
     }
 
@@ -273,8 +274,8 @@ public class MainController {
     @FXML private void handleSaveAsButton(ActionEvent e){
         e.consume();
         logger.info("user wants to save to a new file");
-        loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-
+        //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
+        loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
     }
 
     /**
@@ -285,7 +286,8 @@ public class MainController {
     @FXML private void handleAppendToButton(ActionEvent e){
         e.consume();
         logger.info("usr wants to append to a file");
-        loinc2HpoAnnotationsTabController.appendLoincAnnotation();
+        //loinc2HpoAnnotationsTabController.appendLoincAnnotation()
+        loinc2HpoAnnotationsTabController.newAppend();
 
 
     }

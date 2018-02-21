@@ -3,7 +3,6 @@ package org.monarchinitiative.loinc2hpo.io;
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 import java.io.IOException;
@@ -12,18 +11,18 @@ import java.util.Set;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class LoincMappingParserTest {
+public class FromFileTest {
 
-    static private LoincMappingParser loincparser;
+    static private FromFile loincparser;
 
     @BeforeClass
     public static void setup() throws IOException {
-        ClassLoader classLoader = LoincMappingParserTest.class.getClassLoader();
+        ClassLoader classLoader = FromFileTest.class.getClassLoader();
         String obopath = classLoader.getResource("obo/hp.obo").getFile();
         String loincpath=classLoader.getResource("loinc2hpoAnnotationTest.tsv").getFile();
         HPOParser parser = new HPOParser(obopath);
         HpoOntology ontology = parser.getHPO();
-        loincparser = new LoincMappingParser(loincpath,ontology);
+        loincparser = new FromFile(loincpath,ontology);
     }
 
 

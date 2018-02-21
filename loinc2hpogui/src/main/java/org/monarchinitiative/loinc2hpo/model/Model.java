@@ -46,9 +46,12 @@ public class Model {
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
 
-    private Map<String, String> tempBasicTerms = new HashMap<>();//hpo terms before being used to create an annotation
+    private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
     private UniversalLoinc2HPOAnnotation currentAnnotation = null;
+    //private boolean tempInversed= false;
+    private boolean inversedBasicMode = false; //whether inverse is checked for basic mode
+    private boolean inversedAdvancedMode = false; //whether inverse is checked for advanced mode
 
     public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
         this.loincEntryMap = map;
@@ -59,7 +62,9 @@ public class Model {
     }
     public HashSet<LoincId> getLoincIds() { return this.loincIds; }
 
+    //hpo term maps from name or id to hpoterm
     private ImmutableMap<String,HpoTerm> termmap=null;
+    private ImmutableMap<TermId, HpoTerm> termmap2 = null;
 
 
     /**
@@ -108,10 +113,27 @@ public class Model {
     public int getLoincAnnotationCount() { return loincAnnotationMap !=null?this.loincAnnotationMap.size():0;}
 
 
-    public void setTempTerms(Map<String, String> temp) { this.tempBasicTerms = temp; }
-    public Map<String, String> getTempTerms() { return new HashMap<>(this.tempBasicTerms); }
+    public void setTempTerms(Map<String, String> temp) { this.tempStrings = temp; }
+    public Map<String, String> getTempTerms() { return new HashMap<>(this.tempStrings); }
     public void setTempAdvancedAnnotation(Map<String, String> tempAdvancedAnnotation) { this.tempAdvancedAnnotation = tempAdvancedAnnotation;}
     public Map<String, String> getTempAdvancedAnnotation() {return new HashMap<>(this.tempAdvancedAnnotation);}
+
+    public boolean isInversedBasicMode() {
+        return inversedBasicMode;
+    }
+
+    public void setInversedBasicMode(boolean inversedBasicMode) {
+        this.inversedBasicMode = inversedBasicMode;
+    }
+
+    public boolean isInversedAdvancedMode() {
+        return inversedAdvancedMode;
+    }
+
+    public void setInversedAdvancedMode(boolean inversedAdvancedMode) {
+        this.inversedAdvancedMode = inversedAdvancedMode;
+    }
+
     public void setCurrentAnnotation(UniversalLoinc2HPOAnnotation current) {this.currentAnnotation = current;}
     public UniversalLoinc2HPOAnnotation getCurrentAnnotation() {
         return currentAnnotation;
@@ -181,9 +203,12 @@ public class Model {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
         }
         termmap=parser.getTermMap();
+        termmap2=parser.getTermMap2();
     }
 
     public ImmutableMap<String,HpoTerm> getTermMap() { return termmap;}
+
+    public Map<TermId, HpoTerm> getTermMap2() { return termmap2; }
 
 
     public HpoOntology getOntology() {

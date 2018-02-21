@@ -625,9 +625,13 @@ public class AnnotateTabController {
         return temp;
     }
 
+    private boolean recordInversed() {
+        return inverseChecker.isSelected();
+    }
+
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
-        e.consume();
+
 
         LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
         LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
@@ -638,7 +642,18 @@ public class AnnotateTabController {
             if (!toOverwrite) return;
         }
 
-        if(!advancedAnnotationModeSelected) model.setTempTerms(recordTempTerms()); //update terms for basic annotation
+        logger.debug("advancedAnnotationModeSelected: " + advancedAnnotationModeSelected);
+        if(!advancedAnnotationModeSelected) { //we are last in basic mode, user might have changed data for basic annotation
+            logger.debug("advancedAnnotationModeSelected: " + advancedAnnotationModeSelected + " recording");
+            model.setTempTerms(recordTempTerms()); //update terms for basic annotation
+            model.setInversedBasicMode(recordInversed());
+            logger.debug("annotationTextFieldLeft is recorded: " + annotationTextFieldLeft.getText());
+            logger.debug("annotationTextFieldMiddle is recorded: " + annotationTextFieldMiddle.getText());
+            logger.debug("annotationTextFieldRight is recorded: " + annotationTextFieldRight.getText());
+        } else { //if we are last in the advanced mode, user might have added a new annotation, we add this annotation
+            handleAnnotateCodedValue(e);
+        }
+
         //tempTerms.values().stream().forEach(System.out::println);
         //if this function is called at advanced annotation mode, the terms for basic annotation was already saved
         Map<String, String> tempTerms = model.getTempTerms();
@@ -656,6 +671,7 @@ public class AnnotateTabController {
         //We don't have to force every loinc code to have three phenotypes
         HpoTerm low = termmap.get(hpoLo);
         HpoTerm normal = termmap.get(hpoNormal);
+  logger.debug("normal: " + hpoNormal + " " + normal.getId());
         HpoTerm high = termmap.get(hpoHi);
 
         //Warning user that there is something wrong
@@ -700,7 +716,7 @@ public class AnnotateTabController {
                     loinc2HPOAnnotation
                             .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(normal, false));
                 }
-                if (hpoNormal != null && normal != null && inverseChecker.isSelected()) {
+                if (hpoNormal != null && normal != null && model.isInversedBasicMode()) {
                     loinc2HPOAnnotation
                             .addAnnotation(internalCode.get("N"),  new HpoTermId4LoincTest(normal, true))
                             .addAnnotation(internalCode.get("NP"), new HpoTermId4LoincTest(normal, true));
@@ -716,7 +732,6 @@ public class AnnotateTabController {
         }
 
 
-
         if (loinc2HPOAnnotation != null && !tempAdvancedAnnotations.isEmpty()) {
             for (Annotation annotation : tempAdvancedAnnotations) {
                 loinc2HPOAnnotation.addAnnotation(annotation.getCode(), annotation.getHpoTermId4LoincTest());
@@ -727,6 +742,9 @@ public class AnnotateTabController {
             this.model.addLoincTest(loinc2HPOAnnotation);
             advancedAnnotationModeSelected = false;
             model.setTempTerms(new HashMap<>());//clear the temp term in model
+            model.setInversedBasicMode(false);
+            model.setTempAdvancedAnnotation(new HashMap<>());
+            model.setInversedAdvancedMode(false);
             tempAdvancedAnnotations.clear();
             switchToBasicAnnotationMode();
 
@@ -738,11 +756,17 @@ public class AnnotateTabController {
             changeColorLoincTableView();
         }
         //showSuccessOfMapping("Go to next loinc code!");
+
+        e.consume();
     }
 
+    /**
     protected UniversalLoinc2HPOAnnotation createCurrentAnnotation() {
         logger.trace("enter createCurrentAnnotation() ");
-        if(!advancedAnnotationModeSelected) model.setTempTerms(recordTempTerms()); //update terms for basic annotation
+        if(!advancedAnnotationModeSelected) {
+            model.setTempTerms(recordTempTerms()); //update terms for basic annotation
+            model.setTempInversed(recordInversed());
+        }
         //if this function is called at advanced annotation mode, the terms for basic annotation was already saved
         Map<String, String> tempTerms = model.getTempTerms();
         String hpoLo = tempTerms.get("hpoLo");
@@ -822,7 +846,7 @@ public class AnnotateTabController {
         logger.trace("exit createCurrentAnnotation() for: " + loinc2HPOAnnotation.getLoincId() + " with success.");
         return loinc2HPOAnnotation;
     }
-
+**/
 
 
     /**
@@ -1052,13 +1076,21 @@ public class AnnotateTabController {
     private void annotationModeSwitchButton(ActionEvent e) {
         e.consume();
         //createTempAnnotation();
-        if (!advancedAnnotationModeSelected) model.setTempTerms(recordTempTerms());//Important: Save annotation data at basic mode
-        if (advancedAnnotationModeSelected) model.setTempAdvancedAnnotation(recordAdvancedAnnotation());
-        advancedAnnotationModeSelected = ! advancedAnnotationModeSelected;
+        //Important: Save annotation current annotation data
+        if (!advancedAnnotationModeSelected) { //current state: Basic mode
+            model.setTempTerms(recordTempTerms());
+            model.setInversedBasicMode(recordInversed());
+        }
+        if (advancedAnnotationModeSelected) { //current state: Advanced mode
+            model.setTempAdvancedAnnotation(recordAdvancedAnnotation());
+            model.setInversedAdvancedMode(recordInversed());
+        }
+
+        advancedAnnotationModeSelected = ! advancedAnnotationModeSelected; //switch mode
         if (advancedAnnotationModeSelected) {
-            switchToAdvancedAnnotationMode();
+            switchToAdvancedAnnotationMode(); //change display for advanced mode
         } else {
-            switchToBasicAnnotationMode();
+            switchToBasicAnnotationMode(); //change display for basic mode
         }
 
     }
@@ -1077,10 +1109,11 @@ public class AnnotateTabController {
         annotationTextFieldRight.setPromptText("candidate HPO");
         modeButton.setText("<<<basic");
         inverseChecker.setSelected(false);
-        if (!model.getTempAdvancedAnnotation().isEmpty()) {
+        if (!model.getTempAdvancedAnnotation().isEmpty()) { //if we have recorded temp data, display it accordingly
             annotationTextFieldLeft.setText(model.getTempAdvancedAnnotation().get("system"));
             annotationTextFieldMiddle.setText(model.getTempAdvancedAnnotation().get("code"));
             annotationTextFieldRight.setText(model.getTempAdvancedAnnotation().get("hpoTerm"));
+            inverseChecker.setSelected(model.isInversedAdvancedMode());
         }
     }
 
@@ -1096,10 +1129,11 @@ public class AnnotateTabController {
         annotationTextFieldRight.setPromptText("hpo for high value");
         modeButton.setText("advanced>>>");
         inverseChecker.setSelected(true);
-        if (!model.getTempTerms().isEmpty()) {
+        if (!model.getTempTerms().isEmpty()) { //if we have recorded temp data, display it accordingly
             annotationTextFieldLeft.setText(model.getTempTerms().get("hpoLo"));
             annotationTextFieldMiddle.setText(model.getTempTerms().get("hpoNormal"));
             annotationTextFieldRight.setText(model.getTempTerms().get("hpoHi"));
+            inverseChecker.setSelected(model.isInversedBasicMode());
         }
     }
 
@@ -1117,7 +1151,7 @@ public class AnnotateTabController {
             code = Code.getNewCode().setSystem(system).setCode(codeId);
         }
         String candidateHPO = annotationTextFieldRight.getText();
-        HpoTerm hpoterm = model.getTermMap().get(candidateHPO);
+        HpoTerm hpoterm = model.getTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
             annotation = new Annotation(code, new HpoTermId4LoincTest(hpoterm, inverseChecker.isSelected()));
@@ -1127,6 +1161,8 @@ public class AnnotateTabController {
         initadvancedAnnotationTable();
         accordion.setExpandedPane(advancedAnnotationTitledPane);
         inverseChecker.setSelected(false);
+        model.setTempAdvancedAnnotation(new HashMap<>());
+        model.setInversedAdvancedMode(false);
     }
 
     @FXML
@@ -1311,7 +1347,7 @@ public class AnnotateTabController {
         } else {
             logger.debug("currently selected loinc has no annotation. A temporary annotation is being created for " + loincEntry2Review.getLOINC_Number());
             //currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
-            model.setCurrentAnnotation(createCurrentAnnotation());
+            //model.setCurrentAnnotation(createCurrentAnnotation());
         }
 
 
@@ -1404,6 +1440,7 @@ public class AnnotateTabController {
         tempAdvancedAnnotations.clear();
         switchToBasicAnnotationMode();
         clearButton.setText("Clear");
+        createAnnotationButton.setText("Create annotation");
 
     }
 

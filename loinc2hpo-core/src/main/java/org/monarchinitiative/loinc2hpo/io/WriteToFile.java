@@ -18,8 +18,6 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -112,6 +110,16 @@ public class WriteToFile {
         }
 
         writer.close();
+    }
+
+    public static void appendtoTSV(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+
+        StringBuilder builder = new StringBuilder();
+        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+            builder.append("\n");
+            builder.append(annotation.toString());
+        }
+        appendToFile(builder.toString(), path);
     }
 
 

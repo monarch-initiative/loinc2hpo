@@ -15,7 +15,7 @@ import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
-import org.monarchinitiative.loinc2hpo.io.LoincMappingParser;
+import org.monarchinitiative.loinc2hpo.io.FromFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -23,6 +23,7 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
+import java.nio.Buffer;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -161,7 +162,9 @@ public class Loinc2HpoAnnotationsTabController {
 
     }
 
-
+    /**
+     * This method handles my old and new TSV format
+     */
     public void importLoincAnnotation() {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         FileChooser chooser = new FileChooser();
@@ -169,17 +172,52 @@ public class Loinc2HpoAnnotationsTabController {
         File f = chooser.showOpenDialog(null);
         if (f != null) {
             String path = f.getAbsolutePath();
-            LoincMappingParser parser = new LoincMappingParser(path, model.getOntology());
-            Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
-            for (UniversalLoinc2HPOAnnotation test : testset) {
-                model.addLoincTest(test);
+
+            String header = null;
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(path));
+                header = reader.readLine();
+                reader.close();
+            } catch (FileNotFoundException e) {
+                PopUps.showInfoMessage("File is not found", "Error: missing file");
+                return;
+            } catch (IOException e) {
+                PopUps.showInfoMessage("An error occurred during importing", "Error: importing is not completed");
             }
+
+            //handles my old annotation
+            if (header != null && header.equals(LoincEntry.getHeaderLine())) {
+                FromFile parser = new FromFile(path, model.getOntology());
+                Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
+                for (UniversalLoinc2HPOAnnotation test : testset) {
+                    model.addLoincTest(test);
+                }
+            }
+
+            //handles my current TSV annotation
+            if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeader())) {
+                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
+                try {
+                    annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
+                } catch (FileNotFoundException e) {
+                    //already handled
+                }
+                model.getLoincAnnotationMap().putAll(annotationMap);
+            }
+
+
+
         }
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
     }
 
 
+    @Deprecated
+    /**
+     * This is the old stype, too simple to handle all cases
+     */
     public void appendLoincAnnotation() {
 
         FileChooser chooser = new FileChooser();
@@ -198,6 +236,10 @@ public class Loinc2HpoAnnotationsTabController {
 
     }
 
+    @Deprecated
+    /**
+     * This is the old stype, too simple to handle all cases
+     */
     public void saveLoincAnnotation() {
 
         String path = model.getPathToAnnotationFile();
@@ -221,6 +263,12 @@ public class Loinc2HpoAnnotationsTabController {
         WriteToFile.appendToFile(annotationData, path);
     }
 
+
+
+    @Deprecated
+    /**
+     * This is the old stype, too simple to handle all cases
+     */
     public void saveAsLoincAnnotation(){
 
         FileChooser chooser = new FileChooser();
@@ -248,7 +296,10 @@ public class Loinc2HpoAnnotationsTabController {
 
 
 
-
+    @Deprecated
+    /**
+     * This is the old stype, too simple to handle all cases
+     */
     public String annotationDataToString() {
 
         StringBuilder builder = new StringBuilder();
@@ -283,6 +334,14 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML
     private void handleReview(ActionEvent event) {
 
+        if (model.getLoincEntryMap() == null || model.getLoincEntryMap().isEmpty()) {
+            PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
+            return;
+        }
+        if (model.getTermMap() == null || model.getTempTerms().isEmpty()) {
+            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
+            return;
+        }
         UniversalLoinc2HPOAnnotation selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
         if (selected != null) {
             annotateTabController.setLoincIdSelected(selected.getLoincId());
@@ -293,6 +352,15 @@ public class Loinc2HpoAnnotationsTabController {
 
     @FXML
     private void handleEdit(ActionEvent event) {
+
+        if (model.getLoincEntryMap() == null || model.getLoincEntryMap().isEmpty()) {
+            PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
+            return;
+        }
+        if (model.getTermMap() == null || model.getTempTerms().isEmpty()) {
+            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
+            return;
+        }
 
         UniversalLoinc2HPOAnnotation toEdit = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
@@ -339,9 +407,65 @@ public class Loinc2HpoAnnotationsTabController {
                 try {
                     WriteToFile.toTSV(path, model.getLoincAnnotationMap());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
                 }
             }
         }
     }
+
+    protected void newSave() {
+        boolean saveToNewFile = false;
+        String path = model.getPathToAnnotationFile();
+        if (path == null) {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Choose LOINC Core Table file");
+            File f = chooser.showSaveDialog(null);
+            if (f != null) {
+                path = f.getAbsolutePath();
+                model.setPathToAnnotationFile(path);
+                saveToNewFile = true;
+                logger.trace("Save annotation data to new file: ",path);
+            } else {
+                logger.error("Unable to obtain path to a new file to save " +
+                        "annotation data to");
+            }
+        } else {
+            logger.info("path to destination file: " + path);
+        }
+
+        try {
+            WriteToFile.toTSV(path, model.getLoincAnnotationMap());
+        } catch (IOException e) {
+            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
+        }
+
+    }
+
+    protected void newAppend() {
+
+        String path = model.getPathToAnnotationFile();
+        if (path == null) {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Choose LOINC Core Table file");
+            File f = chooser.showSaveDialog(null);
+            if (f != null) {
+                path = f.getAbsolutePath();
+                model.setPathToAnnotationFile(path);
+                logger.trace("Save annotation data to new file: ",path);
+            } else {
+                logger.error("Unable to obtain path to a new file to save " +
+                        "annotation data to");
+            }
+        } else {
+            logger.info("path to destination file: " + path);
+        }
+
+        try {
+            WriteToFile.appendtoTSV(path, model.getLoincAnnotationMap());
+        } catch (IOException e) {
+            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
+        }
+
+    }
+
 }
