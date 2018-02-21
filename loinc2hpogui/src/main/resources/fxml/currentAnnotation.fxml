@@ -8,27 +8,30 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="currentAnnotationPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.CurrentAnnotationController">
-   <top>
-      <Label fx:id="annotationTitle" stylesheets="@../css/loinc2hpo.css" text="Annotation" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets top="20.0" />
-         </BorderPane.margin></Label>
-   </top>
-   <center>
-      <SplitPane dividerPositions="0.4983277591973244" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.CurrentAnnotationController">
+   <children>
+      <Label fx:id="annotationTitle" stylesheets="@../css/loinc2hpo.css" text="Annotation" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+      <SplitPane dividerPositions="0.4983277591973244" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane>
                <children>
                   <VBox prefHeight="373.0" prefWidth="294.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label text="internal coding system" />
-                        <TextField fx:id="internalCodingSystem" />
-                        <TableView fx:id="internalTableview" prefHeight="200.0" prefWidth="259.0">
+                        <Label text="internal coding system">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <TextField fx:id="internalCodingSystem">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <TableView fx:id="internalTableview" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="codeInternalTableview" prefWidth="-1.0" text="code" />
                             <TableColumn fx:id="hpoInternalTableview" prefWidth="142.0" text="hpoTerm" />
@@ -43,10 +46,13 @@
                         </TableView>
                         <Label text="external codings">
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets />
                            </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
                         </Label>
-                        <TableView fx:id="externalTableview" prefHeight="198.0" prefWidth="200.0">
+                        <TableView fx:id="externalTableview" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="systemExternalTableview" prefWidth="75.0" text="system" />
                               <TableColumn fx:id="codeExternalTableview" prefWidth="75.0" text="code" />
@@ -64,12 +70,16 @@
                   <Insets left="5.0" right="5.0" />
                </padding>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="373.0" prefWidth="306.0">
+          <AnchorPane>
                <children>
-                  <VBox prefHeight="373.0" prefWidth="296.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label text="interpretation codings" />
-                        <TableView fx:id="interpretationTableview" prefHeight="382.0" prefWidth="396.0">
+                        <Label text="interpretation codings">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </Label>
+                        <TableView fx:id="interpretationTableview" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="systemInterpretTableview" prefWidth="75.0" text="system" />
                               <TableColumn fx:id="codeInterpretTableview" prefWidth="75.0" text="code" />
@@ -80,26 +90,26 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <HBox alignment="BASELINE_LEFT" prefWidth="200.0">
+                        <HBox alignment="CENTER">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#setReferences" stylesheets="@../css/loinc2hpo.css" text="Reference range">
+                              <Button mnemonicParsing="false" onAction="#setReferences" prefWidth="150.0" stylesheets="@../css/loinc2hpo.css" text="Reference range">
                                  <HBox.margin>
-                                    <Insets />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </HBox.margin>
                               </Button>
                               <Button mnemonicParsing="false" onAction="#handleEdit" stylesheets="@../css/loinc2hpo.css" text="Edit">
                                  <HBox.margin>
-                                    <Insets left="150.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </HBox.margin>
                               </Button>
                               <Button mnemonicParsing="false" onAction="#handleSave" stylesheets="@../css/loinc2hpo.css" text="Save">
                                  <HBox.margin>
-                                    <Insets left="20.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </HBox.margin>
                               </Button>
                            </children>
                            <VBox.margin>
-                              <Insets top="50.0" />
+                              <Insets />
                            </VBox.margin>
                         </HBox>
                      </children>
@@ -110,9 +120,6 @@
                </children>
             </AnchorPane>
         </items>
-         <BorderPane.margin>
-            <Insets top="20.0" />
-         </BorderPane.margin>
       </SplitPane>
-   </center>
-</BorderPane>
+   </children>
+</AnchorPane>
