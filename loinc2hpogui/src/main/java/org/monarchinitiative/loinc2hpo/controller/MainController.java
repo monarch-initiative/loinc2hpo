@@ -22,6 +22,7 @@ import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.awt.event.MouseEvent;
@@ -301,6 +302,29 @@ public class MainController {
         loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
         event.consume();
     }
+
+    public enum TabPaneTabs{
+        AnnotateTabe,
+        Loinc2HpoAnnotationsTab,
+        Loinc2HpoConversionTab
+    }
+
+    public void switchTab(TabPaneTabs tab) {
+        switch (tab) {
+            case AnnotateTabe:
+                tabPane.getSelectionModel().select(annotateTabButton);
+            case Loinc2HpoAnnotationsTab:
+                tabPane.getSelectionModel().select(Loinc2HPOAnnotationsTabButton);
+            case Loinc2HpoConversionTab:
+                tabPane.getSelectionModel().select(Loinc2HpoConversionTabButton);
+            default:
+                    tabPane.getSelectionModel().select(annotateTabButton);
+        }
+
+    }
+
+
+
 
 }
 

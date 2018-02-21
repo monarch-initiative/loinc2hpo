@@ -127,10 +127,12 @@ public class AnnotateTabController {
     @FXML private CheckBox flagForAnnotation;
     @FXML private Circle createAnnotationSuccess;
     @FXML private TextArea annotationNoteField;
+    @FXML private Button clearButton;
 
 
     @FXML private Button suggestHPOButton;
     @FXML private ContextMenu contextMenu;
+
 
     @Inject private CurrentAnnotationController currentAnnotationController;
 
@@ -627,6 +629,15 @@ public class AnnotateTabController {
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
         e.consume();
 
+        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
+        LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
+
+        if (createAnnotationButton.getText().equals("Create annotation") && model.getLoincAnnotationMap().containsKey(loincCode)) {
+            boolean toOverwrite = PopUps.getBooleanFromUser("Do you want to overwrite?",
+                    loincCode + " is already annotated", "Overwrite warning");
+            if (!toOverwrite) return;
+        }
+
         if(!advancedAnnotationModeSelected) model.setTempTerms(recordTempTerms()); //update terms for basic annotation
         //tempTerms.values().stream().forEach(System.out::println);
         //if this function is called at advanced annotation mode, the terms for basic annotation was already saved
@@ -670,8 +681,7 @@ public class AnnotateTabController {
             return;
         }
 
-        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
-        LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
+
 
         UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = new UniversalLoinc2HPOAnnotation(loincCode, loincScale);
 
@@ -717,10 +727,14 @@ public class AnnotateTabController {
             this.model.addLoincTest(loinc2HPOAnnotation);
             advancedAnnotationModeSelected = false;
             model.setTempTerms(new HashMap<>());//clear the temp term in model
+            tempAdvancedAnnotations.clear();
             switchToBasicAnnotationMode();
 
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);
+            if (createAnnotationButton.getText().equals("Save")) {
+                createAnnotationButton.setText("Create annotation");
+            }
             changeColorLoincTableView();
         }
         //showSuccessOfMapping("Go to next loinc code!");
@@ -1115,6 +1129,16 @@ public class AnnotateTabController {
         inverseChecker.setSelected(false);
     }
 
+    @FXML
+    private void handleDeleteCodedAnnotation(ActionEvent event) {
+        logger.debug("user wants to delete an annotation");
+        Annotation selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
+        if (selectedToDelete != null) {
+            tempAdvancedAnnotations.remove(selectedToDelete);
+        }
+        event.consume();
+    }
+
 
     private void initadvancedAnnotationTable(){
 
@@ -1262,8 +1286,16 @@ public class AnnotateTabController {
         return loincTableView.getSelectionModel().getSelectedItem();
     }
 
+    protected void setLoincIdSelected(LoincEntry loincEntry) {
+        loincTableView.getSelectionModel().select(loincEntry);
+    }
+    protected void setLoincIdSelected(LoincId loincId) {
+        LoincEntry loincEntry = model.getLoincEntryMap().get(loincId);
+        loincTableView.getSelectionModel().select(loincEntry);
+    }
+
     @FXML
-    private void showAllAnnotations(ActionEvent event) {
+    protected void showAllAnnotations(ActionEvent event) {
         event.consume();
 
         LoincEntry loincEntry2Review = getLoincIdSelected();
@@ -1321,6 +1353,57 @@ public class AnnotateTabController {
      */
     protected void editCurrentAnnotation(UniversalLoinc2HPOAnnotation loincAnnotation) {
 
+        setLoincIdSelected(loincAnnotation.getLoincId());
+
+        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        Code codeLow = internalCode.get("L");
+        Code codeHigh = internalCode.get("H");
+        Code codeNormal = internalCode.get("N");
+        HpoTermId4LoincTest hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
+        HpoTermId4LoincTest hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
+        HpoTermId4LoincTest hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
+        if (hpoLow != null) {
+            String hpoLowTermName = hpoLow.getHpoTerm().getName();
+            annotationTextFieldLeft.setText(hpoLowTermName);
+        }
+        if (hpoHigh != null) {
+            String hpoHighTermName = hpoHigh.getHpoTerm().getName();
+            annotationTextFieldRight.setText(hpoHighTermName);
+        }
+        if (hpoNormal != null) {
+            String hpoNormalTermName = hpoNormal.getHpoTerm().getName();
+            boolean isnegated = hpoNormal.isNegated();
+            annotationTextFieldMiddle.setText(hpoNormalTermName);
+            inverseChecker.setSelected(isnegated);
+        }
+
+        for (Map.Entry<Code, HpoTermId4LoincTest> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
+            if (entry.getKey().getSystem() != Loinc2HPOCodedValue.CODESYSTEM) {
+                tempAdvancedAnnotations.add(new Annotation(entry.getKey(), entry.getValue()));
+            }
+        }
+
+        boolean flag = loincAnnotation.getFlag();
+        flagForAnnotation.setSelected(flag);
+        String comment = loincAnnotation.getNote();
+        annotationNoteField.setText(comment);
+
+        createAnnotationButton.setText("Save");
+        clearButton.setText("Cancel");
+
+    }
+
+
+    @FXML
+    private void handleClear(ActionEvent event) {
+        annotationTextFieldLeft.clear();
+        annotationTextFieldMiddle.clear();
+        annotationTextFieldRight.clear();
+        flagForAnnotation.setSelected(false);
+        annotationNoteField.clear();
+        tempAdvancedAnnotations.clear();
+        switchToBasicAnnotationMode();
+        clearButton.setText("Clear");
 
     }
 

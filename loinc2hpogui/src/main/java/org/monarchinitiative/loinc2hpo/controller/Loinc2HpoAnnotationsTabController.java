@@ -35,6 +35,8 @@ public class Loinc2HpoAnnotationsTabController {
     /** Reference to the second tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject
     private AnnotateTabController annotateTabController;
+    @Inject
+    private MainController mainController;
 
     /** This is the message users will see if they open the analysis tab before they have entered the genes
      * and started the analysis of the viewpoints. */
@@ -276,19 +278,44 @@ public class Loinc2HpoAnnotationsTabController {
 
         return builder.toString();
     }
-
-
+    
 
     @FXML
-    private void deleteLoincAnnotation(ActionEvent event){
-        UniversalLoinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
+    private void handleReview(ActionEvent event) {
+
+        UniversalLoinc2HPOAnnotation selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            annotateTabController.setLoincIdSelected(selected.getLoincId());
+            annotateTabController.showAllAnnotations(event);
+        }
+
+    }
+
+    @FXML
+    private void handleEdit(ActionEvent event) {
+
+        UniversalLoinc2HPOAnnotation toEdit = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
-        if (toDelete != null) {
-            loincAnnotationTableView.getItems().remove(toDelete);
-            model.removeLoincTest(String.valueOf(toDelete.getLoincId()));
+        if (toEdit != null) {
+            mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
+            annotateTabController.editCurrentAnnotation(toEdit);
         }
         event.consume();
+    }
 
+    @FXML
+    private void handleDelete(ActionEvent event) {
+
+        boolean confirmation = PopUps.getBooleanFromUser("Are you sure you want to delete the record?", "Confirm deletion request", "Deletion");
+        if (confirmation) {
+            UniversalLoinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
+                    .getSelectedItem();
+            if (toDelete != null) {
+                loincAnnotationTableView.getItems().remove(toDelete);
+                model.removeLoincTest(String.valueOf(toDelete.getLoincId()));
+            }
+        }
+        event.consume();
     }
 
     protected void exportAnnotationsAsTSV() {

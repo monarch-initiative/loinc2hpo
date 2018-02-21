@@ -201,7 +201,7 @@
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <HBox prefWidth="200.0" spacing="20.0">
+                        <HBox prefWidth="200.0" spacing="10.0">
                            <children>
                               <Button fx:id="createAnnotationButton" mnemonicParsing="false" onAction="#createLoinc2HpoAnnotation" stylesheets="@../css/loinc2hpo.css" text="Create annotation" />
                               <CheckBox fx:id="flagForAnnotation" mnemonicParsing="false" onAction="#handleFlagForAnnotation" stylesheets="@../css/loinc2hpo.css" text="Flag" textFill="#e40808">
@@ -214,11 +214,12 @@
                                     <Insets top="5.0" />
                                  </HBox.margin>
                               </Circle>
+                              <Button fx:id="clearButton" mnemonicParsing="false" onAction="#handleClear" stylesheets="@../css/loinc2hpo.css" text="Clear" />
                               <Button fx:id="allAnnotationsButton" mnemonicParsing="false" onAction="#showAllAnnotations" stylesheets="@../css/loinc2hpo.css" text="All annotations">
                                  <HBox.margin>
-                                    <Insets left="50.0" />
+                                    <Insets left="20.0" />
                                  </HBox.margin>
-                                  <fx:include source="currentAnnotation.fxml"/>
+                                  <fx:include source="currentAnnotation.fxml" />
                               </Button>
                            </children>
                            <VBox.margin>
@@ -278,6 +279,13 @@
                                     <TableColumn fx:id="advancedAnnotationCode" prefWidth="184.0" text="code" />
                                   <TableColumn fx:id="advancedAnnotationHpo" prefWidth="495.0" text="HPO term" />
                                 </columns>
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#handleDeleteCodedAnnotation" text="Delete" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu>
                               </TableView>
                            </children></AnchorPane>
                   </content>

@@ -8,8 +8,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javassist.CodeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -188,6 +190,11 @@ public class CurrentAnnotationController{
 
         logger.debug("user wants to edit current annotation");
         annotateTabController.editCurrentAnnotation(currentAnnotation);
+        mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
+
+        Node source = (Node)  event.getSource();
+        Stage stage  = (Stage) source.getScene().getWindow();
+        stage.close();
         event.consume();
     }
 
