@@ -103,11 +103,6 @@
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-structures-dstu3</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
             <version>3.2.0</version>
         </dependency>
@@ -150,6 +145,17 @@
             <version>1.1.1</version>
         </dependency>
 
+        <!--Add plugins required for building app docs which may not be installed in local Maven repo of all users-->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tomdz.maven</groupId>
+            <artifactId>sphinx-maven-plugin</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
     </dependencies>
     <dependencyManagement>
@@ -238,7 +244,7 @@
                     <skipTests>false</skipTests>
                     <forkCount>3</forkCount>
                     <reuseForks>true</reuseForks>
-                    <argLine>${argLine} -Xms512m -Xmx1024m
+                    <argLine>-Xms512m -Xmx1024m
                         -Duser.language=en -Duser.region=US</argLine>
                     <systemPropertyVariables>
                         <user.language>en</user.language>
