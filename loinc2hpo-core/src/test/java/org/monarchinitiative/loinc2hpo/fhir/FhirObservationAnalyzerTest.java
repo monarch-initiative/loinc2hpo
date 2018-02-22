@@ -50,6 +50,7 @@ public class FhirObservationAnalyzerTest {
             res.forEach( term -> termmap.put(term.getName(),term));
         }
         hpoTermMap = termmap.build();
+        assertNull(FhirObservationAnalyzer.getObservation());
     }
 
     @Test
