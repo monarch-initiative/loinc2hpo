@@ -105,5 +105,23 @@ public class LoincEntry {
 
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (this.LOINC_Number != null && obj instanceof LoincEntry) {
+            LoincEntry other = (LoincEntry) obj;
+            return this.LOINC_Number.equals(other.getLOINC_Number());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        if (this.LOINC_Number == null) {
+            return -9999;
+        }
+        return this.LOINC_Number.hashCode();
+
+    }
+
 
 }

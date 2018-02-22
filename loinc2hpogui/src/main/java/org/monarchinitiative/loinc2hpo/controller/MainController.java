@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -52,6 +53,7 @@ public class MainController {
     @FXML private MenuItem importAnnotationButton;
     @FXML private MenuItem newAnnotationFileButton;
     @FXML private Menu exportMenu;
+    @FXML private MenuItem clearMenu;
 
     @FXML private TabPane tabPane;
     @FXML private Tab annotateTabButton;
@@ -102,12 +104,14 @@ public class MainController {
             @Override
             public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
 
-                if(newValue.getText().equals(Loinc2HPOAnnotationsTabButton.getText())) {
+                if(newValue.equals(Loinc2HPOAnnotationsTabButton)) {
                     importAnnotationButton.setDisable(false);
                     exportMenu.setDisable(false);
+                    clearMenu.setDisable(false);
                 } else {
                     importAnnotationButton.setDisable(true);
                     exportMenu.setDisable(true);
+                    clearMenu.setDisable(true);
                 }
 
 
@@ -303,6 +307,19 @@ public class MainController {
         logger.info("usr wants to export annotations to a TSV file");
         loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
         event.consume();
+    }
+
+    @FXML private void clear(ActionEvent event) {
+        logger.trace("user wants to clear the contents");
+        event.consume();
+        boolean choice = PopUps.getBooleanFromUser("Are you sure you want to clear all annotations?", "Confirmation",
+                "Clear All Annotations");
+        if (!choice) {
+            return;
+        }
+
+        loinc2HpoAnnotationsTabController.clear();
+
     }
 
     public enum TabPaneTabs{

@@ -168,6 +168,7 @@ public class Loinc2HpoAnnotationsTabController {
     public void importLoincAnnotation() {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
         chooser.setTitle("Choose annotation file");
         File f = chooser.showOpenDialog(null);
         if (f != null) {
@@ -338,7 +339,7 @@ public class Loinc2HpoAnnotationsTabController {
             PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
             return;
         }
-        if (model.getTermMap() == null || model.getTempTerms().isEmpty()) {
+        if (model.getTermMap() == null || model.getTermMap().isEmpty()) {
             PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
             return;
         }
@@ -357,7 +358,7 @@ public class Loinc2HpoAnnotationsTabController {
             PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
             return;
         }
-        if (model.getTermMap() == null || model.getTempTerms().isEmpty()) {
+        if (model.getTermMap() == null || model.getTermMap().isEmpty()) {
             PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
             return;
         }
@@ -380,7 +381,7 @@ public class Loinc2HpoAnnotationsTabController {
                     .getSelectedItem();
             if (toDelete != null) {
                 loincAnnotationTableView.getItems().remove(toDelete);
-                model.removeLoincTest(String.valueOf(toDelete.getLoincId()));
+                model.getLoincAnnotationMap().remove(toDelete.getLoincId());
             }
         }
         event.consume();
@@ -391,6 +392,7 @@ public class Loinc2HpoAnnotationsTabController {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Specify file name");
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
         File f = chooser.showSaveDialog(null);
         if (f != null) {
             String path = f.getAbsolutePath();
@@ -419,6 +421,7 @@ public class Loinc2HpoAnnotationsTabController {
         if (path == null) {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Choose LOINC Core Table file");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
             File f = chooser.showSaveDialog(null);
             if (f != null) {
                 path = f.getAbsolutePath();
@@ -428,6 +431,8 @@ public class Loinc2HpoAnnotationsTabController {
             } else {
                 logger.error("Unable to obtain path to a new file to save " +
                         "annotation data to");
+                return;
+
             }
         } else {
             logger.info("path to destination file: " + path);
@@ -438,8 +443,8 @@ public class Loinc2HpoAnnotationsTabController {
         } catch (IOException e) {
             PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
         }
-
     }
+
 
     protected void newAppend() {
 
@@ -447,6 +452,7 @@ public class Loinc2HpoAnnotationsTabController {
         if (path == null) {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Choose LOINC Core Table file");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
             File f = chooser.showSaveDialog(null);
             if (f != null) {
                 path = f.getAbsolutePath();
@@ -455,6 +461,7 @@ public class Loinc2HpoAnnotationsTabController {
             } else {
                 logger.error("Unable to obtain path to a new file to save " +
                         "annotation data to");
+                return;
             }
         } else {
             logger.info("path to destination file: " + path);
@@ -466,6 +473,11 @@ public class Loinc2HpoAnnotationsTabController {
             PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
         }
 
+    }
+
+    protected void clear() {
+        model.loincAnnotationMap.clear();
+        loincAnnotationTableView.getItems().clear();
     }
 
 }

@@ -163,8 +163,10 @@ public class WriteToFile {
                         deserializedMap.put(loincId, annotation);
                     }
                     Code code = Code.getNewCode().setSystem(codeSystem).setCode(codeId);
-                    HpoTermId4LoincTest hpoTermId4LoincTest = new HpoTermId4LoincTest(hpoTerm.getId(), inverse);
-                    deserializedMap.get(loincId).addAnnotation(code, hpoTermId4LoincTest);
+                    HpoTermId4LoincTest hpoTermId4LoincTest = new HpoTermId4LoincTest(hpoTerm, inverse);
+                    if (hpoTerm != null) {
+                        deserializedMap.get(loincId).addAnnotation(code, hpoTermId4LoincTest);
+                    }
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
                 }

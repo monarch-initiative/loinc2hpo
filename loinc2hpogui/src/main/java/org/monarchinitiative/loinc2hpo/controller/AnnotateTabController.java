@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.loinc2hpo.exception.LoincCodeNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.NetPostException;
 import org.monarchinitiative.loinc2hpo.github.GitHubLabelRetriever;
@@ -206,14 +207,25 @@ public class AnnotateTabController {
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     LoincEntry rowData = row.getItem();
-                    initHpoTermListView(rowData);
-                    //clear text in abnormality text fields
-                    clearAbnormalityTextField();
-                    //inialize the flag field
-                    flagForAnnotation.setIndeterminate(false);
-                    flagForAnnotation.setSelected(false);
-                    createAnnotationSuccess.setFill(Color.WHITE);
-                    annotationNoteField.setText("");
+                    if (model.getLoincUnderEditing() == null || //not under Editing mode
+                            //or query the loinc code under editing
+                            (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData))) {
+                        initHpoTermListView(rowData);
+                    } else {
+                        PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
+                                        ". Save or cancel editing current loinc annotation before switching to others",
+                                "Under Editing mode");
+                    }
+
+                    //clear text in abnormality text fields if not currently editing a term
+                    if (!createAnnotationButton.getText().equals("Save")) { //under saving mode
+                        clearAbnormalityTextField();
+                        //inialize the flag field
+                        flagForAnnotation.setIndeterminate(false);
+                        flagForAnnotation.setSelected(false);
+                        createAnnotationSuccess.setFill(Color.WHITE);
+                        annotationNoteField.setText("");
+                    }
                 }
             });
             return row ;
@@ -266,14 +278,27 @@ public class AnnotateTabController {
             return;
         }
         logger.info(String.format("Start auto query for \"%s\"by pressing button",entry));
-        initHpoTermListView(entry);
-        //clear text in abnormality text fields
-        clearAbnormalityTextField();
-        //inialize the flag field
-        flagForAnnotation.setIndeterminate(false);
-        flagForAnnotation.setSelected(false);
-        createAnnotationSuccess.setFill(Color.WHITE);
-        annotationNoteField.setText("");
+        if (model.getLoincUnderEditing() == null || //not under Editing mode
+                //or query the loinc code under editing
+                (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(entry))) {
+            initHpoTermListView(entry);
+        } else {
+            PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
+                            ". Save or cancel editing current loinc annotation before switching to others",
+                    "Under Editing mode");
+            return;
+        }
+
+
+        //clear text in abnormality text fields if not currently editing a term
+        if (!createAnnotationButton.getText().equals("Save")) {
+            clearAbnormalityTextField();
+            //inialize the flag field
+            flagForAnnotation.setIndeterminate(false);
+            flagForAnnotation.setSelected(false);
+            createAnnotationSuccess.setFill(Color.WHITE);
+            annotationNoteField.setText("");
+        }
     }
 
     @FXML private void handleManualQueryButton(ActionEvent e) {
@@ -296,6 +321,17 @@ public class AnnotateTabController {
             noLoincEntryAlert();
             return;
         }
+
+
+        if (model.getLoincUnderEditing() != null && !model.getLoincUnderEditing().equals(entry)) {
+
+            PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
+                            ". Save or cancel editing current loinc annotation before switching to others",
+                    "Under Editing mode");
+            return;
+        }
+
+
         String userInput = userInputForManualQuery.getText();
         if (userInput == null || userInput.trim().length() < 2) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -334,13 +370,15 @@ public class AnnotateTabController {
                     "alternative keys (synonyms)");
             this.hpoListView.setItems(items);
         }
-        //clear text in abnormality text fields
-        clearAbnormalityTextField();
-        //inialize the flag field
-        flagForAnnotation.setIndeterminate(false);
-        flagForAnnotation.setSelected(false);
-        createAnnotationSuccess.setFill(Color.WHITE);
-        annotationNoteField.setText("");
+        //clear text in abnormality text fields if not currently editing a term
+        if (!createAnnotationButton.getText().equals("Save")) {
+            clearAbnormalityTextField();
+            //inialize the flag field
+            flagForAnnotation.setIndeterminate(false);
+            flagForAnnotation.setSelected(false);
+            createAnnotationSuccess.setFill(Color.WHITE);
+            annotationNoteField.setText("");
+        }
     }
 
     @FXML private void initLOINCtableButton(ActionEvent e) {
@@ -412,8 +450,12 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         try {
             LoincId loincId = new LoincId(query);
-            entrylist.add(this.loincmap.get(loincId));
-        } catch (MalformedLoincCodeException msg) {
+            if (this.loincmap.containsKey(loincId)) {
+                entrylist.add(this.loincmap.get(loincId));
+            } else { //correct loinc code form but not valid
+                throw new LoincCodeNotFoundException();
+            }
+        } catch (Exception msg) { //catch all kind of exception
             loincmap.values().stream()
                     .filter( loincEntry -> containedIn(query, loincEntry.getLongName()))
                     .forEach(loincEntry -> entrylist.add(loincEntry));
@@ -424,6 +466,7 @@ public class AnnotateTabController {
             return;
         } else {
             logger.trace(String.format("Searching table for:  %s",query));
+            logger.trace("# of loinc entries found: " + entrylist.size());
         }
         if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
         loincTableView.getItems().clear();
@@ -633,6 +676,10 @@ public class AnnotateTabController {
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
 
 
+        if (loincTableView.getSelectionModel().getSelectedItem() == null) {
+            PopUps.showInfoMessage("No loinc entry is selected. Try clicking \"Initialize Loinc Table\"", "No Loinc selection Error");
+            return;
+        }
         LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
         LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
 
@@ -752,6 +799,7 @@ public class AnnotateTabController {
             createAnnotationSuccess.setFill(Color.GREEN);
             if (createAnnotationButton.getText().equals("Save")) {
                 createAnnotationButton.setText("Create annotation");
+                model.setLoincUnderEditing(null);
             }
             changeColorLoincTableView();
         }
@@ -1336,7 +1384,7 @@ public class AnnotateTabController {
 
         LoincEntry loincEntry2Review = getLoincIdSelected();
         if (loincEntry2Review == null) {
-            PopUps.showInfoMessage("There is not annotation to review. Select a loinc entry and try again",
+            PopUps.showInfoMessage("There is no annotation to review. Select a loinc entry and try again",
                     "No content to show");
             return;
         }
@@ -1346,6 +1394,9 @@ public class AnnotateTabController {
             model.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
         } else {
             logger.debug("currently selected loinc has no annotation. A temporary annotation is being created for " + loincEntry2Review.getLOINC_Number());
+            PopUps.showInfoMessage("Currently selected loinc code has not been annotated.",
+                    "No content to show");
+            return;
             //currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
             //model.setCurrentAnnotation(createCurrentAnnotation());
         }
@@ -1390,6 +1441,7 @@ public class AnnotateTabController {
     protected void editCurrentAnnotation(UniversalLoinc2HPOAnnotation loincAnnotation) {
 
         setLoincIdSelected(loincAnnotation.getLoincId());
+        model.setLoincUnderEditing(model.getLoincEntryMap().get(loincAnnotation.getLoincId()));
 
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         Code codeLow = internalCode.get("L");
@@ -1439,7 +1491,10 @@ public class AnnotateTabController {
         annotationNoteField.clear();
         tempAdvancedAnnotations.clear();
         switchToBasicAnnotationMode();
-        clearButton.setText("Clear");
+        if (clearButton.getText().equals("Cancel")) {
+            clearButton.setText("Clear");
+            model.setLoincUnderEditing(null);
+        }
         createAnnotationButton.setText("Create annotation");
 
     }

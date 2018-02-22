@@ -66,6 +66,15 @@ public class Model {
     private ImmutableMap<String,HpoTerm> termmap=null;
     private ImmutableMap<TermId, HpoTerm> termmap2 = null;
 
+    private LoincEntry loincUnderEditing = null;
+
+    public LoincEntry getLoincUnderEditing() {
+        return loincUnderEditing;
+    }
+
+    public void setLoincUnderEditing(LoincEntry loincUnderEditing) {
+        this.loincUnderEditing = loincUnderEditing;
+    }
 
     /**
      * The following section handles github labels for HPO

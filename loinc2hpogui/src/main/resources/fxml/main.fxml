@@ -9,8 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
+<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
    <top>
       <HBox maxHeight="30.0" BorderPane.alignment="CENTER">
          <children>
@@ -29,6 +28,7 @@
                             <MenuItem mnemonicParsing="false" text=".json" />
                           </items>
                         </Menu>
+                        <MenuItem fx:id="clearMenu" mnemonicParsing="false" onAction="#clear" text="Clear" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
