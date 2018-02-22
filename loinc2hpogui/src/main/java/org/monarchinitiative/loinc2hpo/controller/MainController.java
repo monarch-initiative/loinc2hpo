@@ -279,7 +279,7 @@ public class MainController {
         e.consume();
         logger.info("user wants to save to a new file");
         //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-        loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
+        loinc2HpoAnnotationsTabController.newSaveAs();
     }
 
     /**

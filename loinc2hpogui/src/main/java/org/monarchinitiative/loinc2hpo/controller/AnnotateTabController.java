@@ -50,6 +50,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.jena.sparql.vocabulary.VocabTestQuery.query;
 
 
 @Singleton
@@ -486,33 +489,89 @@ public class AnnotateTabController {
 
     @FXML private void handleLoincFiltering(ActionEvent e){
 
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Choose File containing a list of interested Loinc " +
-                "codes");
-        File f = chooser.showOpenDialog(null);
+        /**
+        int malformedLoincCount = 0;
+        List<String> notFound = new ArrayList<>();
+        List<LoincEntry> entryOfInterest = new ArrayList<>();
         if (f != null) {
             String path = f.getAbsolutePath();
             try {
                 HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
-                List<LoincEntry> entryOfInterest = new ArrayList<>();
-                List<String> notFound = new ArrayList<>();
                 for (String loinc : loincOfInterest) {
-                    if (this.loincmap.containsKey(loinc)) {
-                        entryOfInterest.add(this.loincmap.get(loinc));
+                    LoincId loincId = new LoincId(loinc);
+                    if (model.getLoincEntryMap().containsKey(loincId)) {
+                        entryOfInterest.add(model.getLoincEntryMap().get(loinc));
                     } else {
                         notFound.add(loinc);
                     }
                 }
                 loincTableView.getItems().clear();
                 loincTableView.getItems().addAll(entryOfInterest);
+                loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
             } catch (FileNotFoundException excpt) {
                 logger.error("unable to find the file for loinc of interest");
+            } catch (MalformedLoincCodeException exception) {
+                malformedLoincCount++;
             }
+
+
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
+            return;
         }
         e.consume();
+**/
+
+        List<LoincEntry> entrylist=new ArrayList<>();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose File containing a list of interested Loinc " +
+                "codes");
+        File f = chooser.showOpenDialog(null);
+        List<String> notFound = new ArrayList<>();
+        int malformedLoincCount = 0;
+        if (f != null) {
+            String path = f.getAbsolutePath();
+            try {
+                HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
+                loincOfInterest.stream().forEach(System.out::print);
+                for (String loincString : loincOfInterest) {
+                    LoincId loincId = new LoincId(loincString);
+                    LoincEntry loincEntry = model.getLoincEntryMap().get(loincId);
+                    if (loincEntry != null) {
+                        entrylist.add(loincEntry);
+                    } else {
+                        notFound.add(loincString);
+                    }
+                }
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (MalformedLoincCodeException e2) {
+                logger.error("Malformed loinc");
+                malformedLoincCount++;
+            }
+
+            if (malformedLoincCount > 0 || !notFound.isEmpty()) {
+                PopUps.showInfoMessage(String.format("# malformed Loinc codes: %d\n# Loinc codes not found: %d",
+                        malformedLoincCount, notFound.size()), "Incomplete import of Loinc codes");
+            }
+            if (entrylist.isEmpty()) {
+                logger.error(String.format("Found 0 Loinc codes"));
+                PopUps.showWarningDialog("LOINC filtering", "No hits found", "Could not find any loinc codes");
+                return;
+            } else {
+                logger.trace("Loinc filtering result: ");
+                logger.trace("# of loinc entries found: " + entrylist.size());
+            }
+
+            if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(entrylist);
+            accordion.setExpandedPane(loincTableTitledpane);
+        } else {
+            logger.error("Unable to obtain path to LOINC of interest file");
+            return;
+        }
     }
 
 
@@ -784,6 +843,10 @@ public class AnnotateTabController {
                 loinc2HPOAnnotation.addAnnotation(annotation.getCode(), annotation.getHpoTermId4LoincTest());
             }
         }
+
+        loinc2HPOAnnotation.setFlag(flagForAnnotation.isSelected());
+        loinc2HPOAnnotation.setNote(annotationNoteField.getText());
+
         if (loinc2HPOAnnotation != null) {
             logger.info(loinc2HPOAnnotation.getCodes().size() + " annotations");
             this.model.addLoincTest(loinc2HPOAnnotation);
@@ -794,6 +857,8 @@ public class AnnotateTabController {
             model.setInversedAdvancedMode(false);
             tempAdvancedAnnotations.clear();
             switchToBasicAnnotationMode();
+            flagForAnnotation.setSelected(false);
+            annotationNoteField.clear();
 
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);

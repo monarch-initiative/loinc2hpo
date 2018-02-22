@@ -137,6 +137,7 @@ public class CurrentAnnotationController{
                 .map(p -> new Annotation(p.getKey(), p.getValue()))
                 .forEach(externalCodeAnnotations::add);
 
+        interpretationCodeAnnotations.clear();
         for (Map.Entry<Code, Code> entry: CodeSystemConvertor.getCodeConversionMap().entrySet()) {
             logger.debug("key: " + entry.getKey() + "\nvalue: " + entry.getValue());
             HpoTermId4LoincTest result = currentAnnotation.loincInterpretationToHPO(entry.getValue());

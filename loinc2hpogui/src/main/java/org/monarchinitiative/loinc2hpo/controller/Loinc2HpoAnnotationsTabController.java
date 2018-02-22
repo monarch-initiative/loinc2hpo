@@ -24,6 +24,7 @@ import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
 import java.nio.Buffer;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -449,14 +450,20 @@ public class Loinc2HpoAnnotationsTabController {
     protected void newAppend() {
 
         String path = model.getPathToAnnotationFile();
-        if (path == null) {
+        if (path == null) {//
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Choose LOINC Core Table file");
             chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
-            File f = chooser.showSaveDialog(null);
+
+            if (path != null && (new File(path).exists())) {
+                logger.trace("append to " + path);
+                chooser.setInitialDirectory(new File(path).getParentFile());
+            }
+
+            File f = chooser.showOpenDialog(null);
             if (f != null) {
                 path = f.getAbsolutePath();
-                model.setPathToAnnotationFile(path);
+                //model.setPathToAnnotationFile(path);
                 logger.trace("Save annotation data to new file: ",path);
             } else {
                 logger.error("Unable to obtain path to a new file to save " +
@@ -475,9 +482,35 @@ public class Loinc2HpoAnnotationsTabController {
 
     }
 
+    protected void newSaveAs() {
+
+        String path = null;
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose LOINC Core Table file");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
+        File f = chooser.showSaveDialog(null);
+        if (f != null) {
+            path = f.getAbsolutePath();
+            model.setPathToAnnotationFile(path);
+            logger.trace("Save annotation data to new file: ",path);
+        } else {
+            logger.error("Unable to obtain path to a new file to save " +
+                    "annotation data to");
+            return;
+
+        }
+
+        try {
+            WriteToFile.toTSV(path, model.getLoincAnnotationMap());
+        } catch (IOException e) {
+            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
+        }
+    }
+
     protected void clear() {
         model.loincAnnotationMap.clear();
         loincAnnotationTableView.getItems().clear();
+        model.setPathToAnnotationFile(null);
     }
 
 }

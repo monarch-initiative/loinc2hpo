@@ -24,7 +24,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
   <items>
       <SplitPane dividerPositions="0.6185308848080133">
          <items>
@@ -188,7 +188,7 @@
                               <Insets bottom="5.0" left="20.0" top="10.0" />
                            </HBox.margin>
                         </Button>
-                        <TextField fx:id="userInputForManualQuery" onAction="#handleManualQueryButton" prefHeight="37.0" prefWidth="330.0" promptText="comma seperated keys" stylesheets="@../css/loinc2hpo.css" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="userInputForManualQuery" onAction="#handleManualQueryButton" prefHeight="37.0" prefWidth="330.0" promptText="comma seperated keys" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="10.0" />
                            </HBox.margin>

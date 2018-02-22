@@ -57,7 +57,7 @@ public class Loinc2HpoConversionTabController {
             String name = model.termId2HpoName(id);
             String display = String.format("%s: %s [%s]",observation.getId(), name,id.getIdWithPrefix());
             if (res.isNegated()) {
-                display="NOT: "+display;
+                display = String.format("%s: NOT %s [%s]",observation.getId(), name,id.getIdWithPrefix());
             }
             items.add(display);
         }
