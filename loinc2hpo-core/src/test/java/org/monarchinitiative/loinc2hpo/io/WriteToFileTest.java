@@ -7,8 +7,10 @@ import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
 import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Categories;
 import org.junit.rules.TemporaryFolder;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
@@ -76,6 +78,7 @@ public class WriteToFileTest {
     }
 
     @Test
+    @Ignore("It will fail because one class in ontolib is not yet serializable")
     public void testSerializeAnnotation() throws Exception{
 
         Map<String, HpoTerm> hpoTermMap;
@@ -97,9 +100,9 @@ public class WriteToFileTest {
         Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
+        HpoTerm low = hpoTermMap.get("Hypoglycemia");
+        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
@@ -113,9 +116,9 @@ public class WriteToFileTest {
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
-        TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
-        TermId forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections").getId();
-        TermId positive = hpoTermMap.get("Recurrent bacterial infections").getId();
+        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
 
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
@@ -131,7 +134,7 @@ public class WriteToFileTest {
 
         //serialize
         String serializedFile = tempFolder.newFile("testAnnotations.ser").getAbsolutePath();
-        //WriteToFile.serialize(testmap, serializedFile);
+        WriteToFile.serialize(testmap, serializedFile);
 
         //deserialize
         Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedAnnotations = WriteToFile.deserialize(serializedFile);

@@ -32,7 +32,7 @@ public class SynsetTest {
 
     @Test
     public void test2(){
-        assertEquals("blood|plasma|serum", new Synset().getSynset("serum").convertToRe());
+        assertEquals("plasma|serum|blood", new Synset().getSynset("serum").convertToRe());
     }
 
     @Test
@@ -49,7 +49,7 @@ public class SynsetTest {
 
     @Test
     public void test5(){
-        assertEquals("blood|plasma|serum|brain", new Synset().getSynset("brain", "blood").convertToRe());
+        assertEquals("plasma|serum|brain|blood", new Synset().getSynset("brain", "blood").convertToRe());
     }
 
     @Test

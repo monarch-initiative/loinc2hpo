@@ -12,7 +12,7 @@ public class FhirObservationRetrieverTest {
         String path = getClass().getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
         Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         assertNotNull(observation);
-        assertEquals("Observation", observation.getResourceType());
+        assertEquals("Observation", observation.getResourceType().toString());
     }
 
     @Test

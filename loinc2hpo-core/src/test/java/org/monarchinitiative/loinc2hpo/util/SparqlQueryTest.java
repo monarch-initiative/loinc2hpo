@@ -22,15 +22,15 @@ public class SparqlQueryTest {
 
     @BeforeClass
     public static void initializeModel() {
-        String hpo = SparqlQueryTest.class.getResource("/obo/hp.obo").getPath();
+        String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
     }
 
     @Test
     public void testinitializeModel() {
         //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
-        String hpo = SparqlQuery.class.getResource("/obo/hp.obo").getPath();
-        model = SparqlQuery.getOntologyModel(hpo);
+        //String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
+        //model = SparqlQuery.getOntologyModel(hpo);
         assertNotNull(model);
     }
     @Test
@@ -85,7 +85,7 @@ public class SparqlQueryTest {
                                                             // while the same query finds 14 in command line
                                                             //reason: command line uses hp.owl; this program builds a model from hp.owl(?)
         System.out.println(results_standard.size()+ " HPO terms are found!");
-        assertEquals(13, results_standard.size());
+        assertEquals(9, results_standard.size());
     }
 
     @Test
@@ -100,10 +100,10 @@ public class SparqlQueryTest {
         List<HPO_Class_Found> itr_standard = SparqlQuery.query(standardQuery, model, null);
 
         System.out.println(itr_loose.size() + " HPO terms are found!");
-        //assertEquals(7, itr_loose.size());
+        assertEquals(7, itr_loose.size());
 
         System.out.println(itr_standard.size() + " HPO terms are found!");
-        //assertEquals(5, itr_standard.size());
+        assertEquals(5, itr_standard.size());
 
     }
 
