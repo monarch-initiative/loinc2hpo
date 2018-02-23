@@ -66,7 +66,7 @@
                      <children>
                         <Label stylesheets="@../css/loinc2hpo.css" text="Candidate HPO classes:">
                            <HBox.margin>
-                              <Insets bottom="10.0" left="20.0" top="20.0" />
+                              <Insets bottom="10.0" left="20.0" top="40.0" />
                            </HBox.margin>
                         </Label>
                         <GridPane alignment="CENTER" HBox.hgrow="SOMETIMES">
@@ -108,7 +108,7 @@
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin></TextField>
-                              <CheckBox fx:id="inverseChecker" mnemonicParsing="false" selected="true" text="inverse" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                              <CheckBox fx:id="inverseChecker" mnemonicParsing="false" selected="true" text="negate" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                                  <padding>
                                     <Insets left="9.0" />
                                  </padding>

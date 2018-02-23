@@ -779,7 +779,6 @@ public class AnnotateTabController {
         //We don't have to force every loinc code to have three phenotypes
         HpoTerm low = termmap.get(hpoLo);
         HpoTerm normal = termmap.get(hpoNormal);
-  logger.debug("normal: " + hpoNormal + " " + normal.getId());
         HpoTerm high = termmap.get(hpoHi);
 
         //Warning user that there is something wrong
