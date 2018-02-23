@@ -389,7 +389,7 @@ public class AnnotateTabController {
         initTableStructure();
         String loincCoreTableFile=model.getPathToLoincCoreTableFile();
         if (loincCoreTableFile==null) {
-            logger.error("Could not get path to LOINC Core Table file");
+            PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
             return;
         }
         this.loincmap = LoincEntry.getLoincEntryList(loincCoreTableFile);
@@ -439,6 +439,8 @@ public class AnnotateTabController {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Failured to create HPO model");
             alert.setContentText("Check whether hpo.owl is downloaded.");
+            IntializeHPOmodelbutton.setStyle("-fx-background-color: #ff0000");
+            IntializeHPOmodelbutton.setText("Retry");
             alert.showAndWait();
         });
         e.consume();

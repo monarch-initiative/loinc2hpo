@@ -30,6 +30,7 @@ public class OntologyModelBuilderForJena extends Task<Model> {
             InputStream in = FileManager.get().open(pathToOntology);
             try {
                 model.read(in, null);
+                logger.trace("read ontology for Jena correctly from: " + this.pathToOntology);
             } catch (Exception e) {
                 logger.error("cannot read in data to model");
             }

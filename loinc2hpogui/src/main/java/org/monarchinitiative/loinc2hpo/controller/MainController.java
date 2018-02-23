@@ -87,7 +87,11 @@ public class MainController {
             return;
         }
         currentAnnotationController.setModel(model);
-        logger.error("main controller model is null: " + (model == null));
+        if (model == null) {
+            logger.error("main controller model is null");
+            return;
+        }
+
 
 
         loinc2HpoAnnotationsTabController.setModel(model);
