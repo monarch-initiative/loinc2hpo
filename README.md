@@ -100,7 +100,7 @@ We can guess that the above lines indicate that the patient has *S. aureus* infe
   - Select Loinc `600-7` by using the "Search" function.
   - Annotate Loinc `600-7` at the Basic Mode as described in last section. You may also skip this step to next one.
   - Annotate at Advanced Mode. Click "advanced>>>" button and you will see three new textfields for **"system"**, **"code"**, and **"hpo term"**.
-  - Type in *""http://snomed.info/sct""* into **"system"**, *"3092008"* into **"code"**. (Note: the information in **"system"** and **"code"** is sufficient to encode a piece of information, **"display"** is only used for display purposes so we do not need it)
+  - Type in *"http://snomed.info/sct"* into **"system"**, *"3092008"* into **"code"**. (Note: the information in **"system"** and **"code"** is sufficient to encode a piece of information, **"display"** is only used for display purposes so we do not need it)
   - Now we have to choose a HPO term. As an example, we double-click on *"Recurrent bacterial infections"* and drag one of its children *"Recurrent staphylococcal infections"* to the **"hpo term"** field. Click the `+` button to add this annotation.
   - Repeat the above two steps if you have more codes to add. After we are done, click `Create annotation` button to complete.
   - Now if you review your annotations for 600-7, you can see annotation data in the left bottom table. (This is why we said the table in `Loinc2HpoAnnotations` does not show all the annotations information--because it does not show data that were created for **Advanced Mode curation**)
@@ -119,16 +119,14 @@ In the Basic Mode, the **"negate"** button only controls the term in the center 
 
 Sometimes you may not be able to find an appropriate HPO term for a Loinc code. You can request the authors of HPO to create new terms for you.
 
- - Create a new term for a Loinc code. Select a Loinc code and then click **"Suggest New HPO term"**. Provide the proposed term and your comment, type in your GitHub username and GitHub password, choose a label that best describes your request, e.g.
- > new term request
-    and click **"Create GitHub issue"**.
+ - Create a new term for a Loinc code. Select a Loinc code and then click **"Suggest New HPO term"**. Provide the proposed term and your comment, type in your GitHub username and GitHub password, choose a label that best describes your request, e.g. `new term request`, and click **"Create GitHub issue"**.
 
  - Create a new child term for a Loinc code. If a current HPO term is close to what you need but you need a new child beneath it, you can select both the Loinc code and the candidate HPO term, right-click, select **"Suggest child term"**, fill in relevant information and submit.
 
  Note:
- 1. If you do not have a GitHub account, you need to create one following their instructions ([GitHub website](https://github.com).
+ 1. If you do not have a GitHub account, you need to create one following their instructions ([GitHub website](https://github.com)).
 
- 2. The app currently does not support authentication with two-factor verifications[learn more](https://github.com/blog/1614-two-factor-authentication). If you implemented that feature, you may encounter issues during submission.
+ 2. The app currently does not support authentication with two-factor verifications [learn more](https://github.com/blog/1614-two-factor-authentication). If you enabled that feature on your account, you may encounter issues during submission.
 
 ## Application
 
