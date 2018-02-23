@@ -437,8 +437,8 @@ public class AnnotateTabController {
         });
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Failured to create HPO model");
-            alert.setContentText("Check whether hpo.owl is downloaded.");
+            alert.setTitle("Failed to create HPO model");
+            alert.setContentText("Check whether hpo.owl is downloaded. Path to hpo.owl is set to: " + pathToHPO);
             IntializeHPOmodelbutton.setStyle("-fx-background-color: #ff0000");
             IntializeHPOmodelbutton.setText("Retry");
             alert.showAndWait();

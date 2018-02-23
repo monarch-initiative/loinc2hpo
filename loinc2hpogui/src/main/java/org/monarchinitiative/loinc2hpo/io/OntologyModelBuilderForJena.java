@@ -24,6 +24,7 @@ public class OntologyModelBuilderForJena extends Task<Model> {
     @Override
     protected Model call() throws Exception {
 
+        logger.trace("enter function to build ontology model for Sparql query");
         //explicitely state that the model is Jena RDF model
         org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
         try {
@@ -35,8 +36,9 @@ public class OntologyModelBuilderForJena extends Task<Model> {
                 logger.error("cannot read in data to model");
             }
         } catch (JenaException je) {
-            logger.entry("cannot open hpo.owl");
+            logger.error("cannot open hpo.owl");
         }
+        logger.trace("exit function to build ontology model for Sparql query.");
         return model;
     }
 
