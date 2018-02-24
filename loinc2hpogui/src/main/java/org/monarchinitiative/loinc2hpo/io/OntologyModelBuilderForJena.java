@@ -26,8 +26,9 @@ public class OntologyModelBuilderForJena extends Task<Model> {
 
         logger.trace("enter function to build ontology model for Sparql query");
         //explicitely state that the model is Jena RDF model
-        org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
+        org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         try {
+            logger.trace("start reading hpo");
             InputStream in = FileManager.get().open(pathToOntology);
             try {
                 model.read(in, null);

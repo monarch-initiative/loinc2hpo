@@ -12,7 +12,9 @@ logs/
 .idea/codeStyleSettings.xml
 loinc2hpo-core/logs/
 loinc-hpoTermId4LoincTest-mapping.tsv
-loinc2hpo-core/src/main/resources
+loinc2hpo-core/src/main/resources/hp.owl
+loinc2hpo-core/src/main/resources/data_UNC_annotated.csv
+loinc2hpo-core/src/main/resources/loinc_most_frequent.csv
 loinc2hpo-core/src/resource/
 .idea/.name
 
