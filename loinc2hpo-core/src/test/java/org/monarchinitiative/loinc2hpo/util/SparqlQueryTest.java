@@ -5,11 +5,18 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.util.FileManager;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -18,12 +25,42 @@ import static org.junit.Assert.*;
 public class SparqlQueryTest {
 
     static Model model;
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
 
     @BeforeClass
     public static void initializeModel() {
         String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
+    }
+
+    @Test
+    @Ignore
+    public void testWriteRDF() throws IOException {
+        try {
+            String path = temporaryFolder.newFile("hp.rdf").getAbsolutePath();
+            OutputStream out = new FileOutputStream(path);
+            RDFDataMgr.write(out, model, RDFFormat.RDFXML);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    @Ignore
+    public void testLoadRDF() throws IOException {
+        String path = temporaryFolder.newFile("hp.rdf").getAbsolutePath();
+        //String path = getClass().getClassLoader().getResource("hp.rdfformat").getPath();
+        OutputStream out = new FileOutputStream(path);
+        RDFDataMgr.write(out, model, RDFFormat.RDF_THRIFT);
+        out.close();
+        //TODO: figure out how to load data from binary file
+        //InputStream in = new FileInputStream(path);
+        //org.apache.jena.rdf.model.Model modelFromRDF = FileManager.get().loadModel(path, null, "TURTLE");
+        //assertNotNull(modelFromRDF);
     }
 
     @Test
@@ -81,9 +118,10 @@ public class SparqlQueryTest {
         for(HPO_Class_Found hpo : results_loose) {
             System.out.println(hpo.getLabel() + "\t" + hpo.getId() + "\n" + hpo.getDefinition());
         }
-        assertEquals(16, results_loose.size()); //interesting that this program identifies 16 classes;
+        assertEquals(14, results_loose.size()); //interesting that this program identifies 16 classes;
                                                             // while the same query finds 14 in command line
                                                             //reason: command line uses hp.owl; this program builds a model from hp.owl(?)
+        //reason: more likely has something to do with what kind of model is generated from hp.owl
         System.out.println(results_standard.size()+ " HPO terms are found!");
         assertEquals(9, results_standard.size());
     }

@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -423,8 +424,12 @@ public class AnnotateTabController {
 
         String pathToHPO = this.model.getPathToHpoOwlFile();
         logger.info("pathToHPO: " + pathToHPO);
+        //org.apache.jena.rdf.model.Model hpoModel = SparqlQuery.getOntologyModel(pathToHPO);
+        //SparqlQuery.setHPOmodel(hpoModel);
+        // The following codes run nicely from IDE, but fails in Jar.
         //create a task to create HPO model
         Task<org.apache.jena.rdf.model.Model> task = new OntologyModelBuilderForJena(pathToHPO);
+        //Platform.runLater(new Thread(task)::start);
         new Thread(task).start();
         task.setOnSucceeded(x -> {
             SparqlQuery.setHPOmodel(task.getValue());
@@ -443,6 +448,7 @@ public class AnnotateTabController {
             IntializeHPOmodelbutton.setText("Retry");
             alert.showAndWait();
         });
+
         e.consume();
 
     }

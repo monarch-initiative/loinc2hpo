@@ -1,3 +1,4 @@
+loinc2hpo-core/src/test/resources/hp.rdfformat
 .idea/uiDesigner.xml
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/testresult/ValueQuantity.java
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/testresult/Interpretation.java
