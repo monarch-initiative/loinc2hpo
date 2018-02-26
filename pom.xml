@@ -210,7 +210,7 @@
         </dependency>
 
 
-        <dependency>
+        <!--dependency>
             <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-client</artifactId>
             <version>2.26</version>
@@ -221,7 +221,7 @@
             <version>2.26</version>
         </dependency>
 
-     <!--   <dependency>
+        <dependency>
             <groupId>com.jayway.restassured</groupId>
             <artifactId>rest-assured</artifactId>
             <version>2.4.0</version>
@@ -254,12 +254,226 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
             <version>2.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-sink-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-site-renderer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.wagon</groupId>
+                    <artifactId>wagon-provider-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-container-default</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-digester</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-digester</groupId>
+                    <artifactId>commons-digester</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-module-xhtml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.reporting</groupId>
+                    <artifactId>maven-reporting-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-artifact-manager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.tomdz.maven</groupId>
             <artifactId>sphinx-maven-plugin</artifactId>
             <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.reporting</groupId>
+                    <artifactId>maven-reporting-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-plugin-api -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>3.5.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-sink-api -->
+        <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-sink-api</artifactId>
+            <version>1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-site-renderer</artifactId>
+            <version>1.8</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-digester</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-digester</groupId>
+                    <artifactId>commons-digester</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.wagon/wagon-provider-api -->
+        <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-provider-api</artifactId>
+            <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-container-default -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-utils -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-digester3</artifactId>
+            <version>3.2</version>
+            <classifier>with-deps</classifier>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.reporting/maven-reporting-impl -->
+        <dependency>
+            <groupId>org.apache.maven.reporting</groupId>
+            <artifactId>maven-reporting-impl</artifactId>
+            <version>3.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-sink-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-site-renderer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-classworlds</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-artifact-manager -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact-manager</artifactId>
+            <version>2.2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.maven.wagon</groupId>
+                    <artifactId>wagon-provider-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.11.0</version>
+        </dependency>
+
+
+
+
+
+
+
 
     </dependencies>
     <dependencyManagement>
