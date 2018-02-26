@@ -36,25 +36,23 @@ public class OntologyModelBuilderForJena extends Task<Model> {
         logger.trace("enter function to build ontology model for Sparql query");
         //explicitely state that the model is Jena RDF model
         //org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        LocationMapper locationMapper = new LocationMapper(this.pathToOntology);
+        LocationMapper locationMapper = new LocationMapper();
         logger.trace("location map is set");
         FileManager.get().addLocatorClassLoader(OntologyModelBuilderForJena.class.getClassLoader());
         logger.trace("locator is set");
+        /**
         if (pathToOntologyInRDF != null && new File(pathToOntologyInRDF).exists()) {
             logger.trace("use rdf to create model");
             org.apache.jena.rdf.model.Model model = FileManager.get().loadModel(pathToOntologyInRDF);
             return model;
         }
+         **/
         org.apache.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+        logger.info("default ontology model created");
         try {
             logger.trace("start reading hpo");
             InputStream in = FileManager.get().open(pathToOntology);
-            try {
-                model.read(in, null);
-                logger.trace("read ontology for Jena correctly from: " + this.pathToOntology);
-            } catch (Exception e) {
-                logger.error("cannot read in data to model");
-            }
+            model.read(in, null);
         } catch (JenaException je) {
             logger.error("cannot open hpo.owl");
         }
