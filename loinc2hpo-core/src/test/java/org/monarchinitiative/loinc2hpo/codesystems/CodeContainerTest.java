@@ -10,7 +10,12 @@ import static org.junit.Assert.*;
 
 public class CodeContainerTest {
 
-    
+    @Before
+    public void resetSingleton() throws NoSuchFieldException, IllegalAccessException {
+        Field instance = CodeContainer.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
+    }
     @Test
     public void getInstance() throws Exception {
         CodeContainer codeContainer1 = CodeContainer.getInstance();
@@ -18,7 +23,7 @@ public class CodeContainerTest {
         assertEquals(codeContainer1, codeContainer2);
     }
 
-    @Test @Ignore
+    @Test
     public void add() throws Exception {
         CodeContainer codeContainer = CodeContainer.getInstance();
         Code code1 = Code.getNewCode().setSystem("http://test").setDisplay("testdisplay").setCode("testcode");
