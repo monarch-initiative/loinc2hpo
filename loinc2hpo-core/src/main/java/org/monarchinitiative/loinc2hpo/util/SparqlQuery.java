@@ -396,9 +396,9 @@ public class SparqlQuery {
         //none of the keys are good; such HPO classes either do not exist, or the user should try
         //some synomes.
         if (HPO_classes_found.size() == 0) {
-            System.out.println("NO HPO terms are found. Try some synonymes.");
+            logger.info("NO HPO terms are found. Try some synonymes.");
         }
-        System.out.println(HPO_classes_found.size() + " HPO classes are found!");
+        logger.info(HPO_classes_found.size() + " HPO classes are found!");
 
         return HPO_classes_found;
     }
@@ -475,7 +475,7 @@ public class SparqlQuery {
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         int count = 0;
         count = addFoundClasses(HPO_classes_found, results, null);
-        System.out.println(count + " results are found!");
+        logger.info(count + " results are found!");
         return HPO_classes_found;
     }
 
@@ -497,7 +497,7 @@ public class SparqlQuery {
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         int count = 0;
         count = addFoundClasses(HPO_classes_found, results, null);
-        System.out.println(count + " results are found!");
+        logger.info(count + " results are found!");
         return HPO_classes_found;
     }
 

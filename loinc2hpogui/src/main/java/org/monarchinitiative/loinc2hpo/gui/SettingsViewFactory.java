@@ -41,6 +41,7 @@ public class SettingsViewFactory {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("<li>Path to LOINC Core Table: %s</li>",model.getPathToLoincCoreTableFile()));
         sb.append(String.format("<li>Path to <tt>hp.obo</tt> file: %s</li>",model.getPathToHpoOboFile()));
+        sb.append(String.format("<li>Path to <tt>hp.owl</tt> file: %s</li>",model.getPathToHpoOwlFile()));
         sb.append(String.format("<li>Path to annotation file: %s</li>",model.getPathToAnnotationFile()));
         sb.append(String.format("<li>Biocurator ID: %s</li>",model.getBiocuratorID()));
         return String.format("<ul>%s</ul>",sb.toString());

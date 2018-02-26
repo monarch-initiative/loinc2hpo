@@ -72,9 +72,9 @@ public class AnnotateTabController {
 
 
     //private final Stage primarystage;
-
-    @FXML private Button IntializeHPOmodelbutton;
     @FXML private Button initLOINCtableButton;
+    @FXML private Button IntializeHPOmodelbutton;
+    @FXML private Button filterButton;
     @FXML private Button searchForLOINCIdButton;
     @FXML private Button createAnnotationButton;
     @FXML private TextField loincSearchTextField;
@@ -90,6 +90,7 @@ public class AnnotateTabController {
     @FXML private TextField annotationTextFieldMiddle;
     @FXML private TextField annotationTextFieldRight;
     @FXML private CheckBox inverseChecker;
+    @FXML private Button addCodedAnnotationButton;
     private HPO_Class_Found hpo_drag_and_drop;
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
@@ -133,10 +134,14 @@ public class AnnotateTabController {
     @FXML private Circle createAnnotationSuccess;
     @FXML private TextArea annotationNoteField;
     @FXML private Button clearButton;
+    @FXML private Button allAnnotationsButton;
 
 
     @FXML private Button suggestHPOButton;
     @FXML private ContextMenu contextMenu;
+
+    @FXML private Button autoQueryButton;
+    @FXML private Button manualQueryButton;
 
 
     @Inject private CurrentAnnotationController currentAnnotationController;
@@ -148,6 +153,18 @@ public class AnnotateTabController {
         }
         //currentAnnotationController.setModel(model); //let current annotation stage have access to model
         suggestHPOButton.setTooltip(new Tooltip("Suggest new HPO terms"));
+        filterButton.setTooltip(new Tooltip("Filter Loinc by providing a Loinc list in txt file"));
+        addCodedAnnotationButton.setTooltip(new Tooltip("Add current annotation"));
+        flagForAnnotation.setTooltip(new Tooltip("Check if you are not confident"));
+        clearButton.setTooltip(new Tooltip("Clear all textfields"));
+        allAnnotationsButton.setTooltip(new Tooltip("Display annotations for currently selected Loinc code"));
+        initLOINCtableButton.setTooltip(new Tooltip("Initialize Loinc Core Table. Download it first."));
+        IntializeHPOmodelbutton.setTooltip(new Tooltip("Load hp.owl as a RDF model for query"));
+        searchForLOINCIdButton.setTooltip(new Tooltip("Search Loinc with a Loinc code or name"));
+        modeButton.setTooltip(new Tooltip("Switch between basic and advanced annotation mode"));
+        autoQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with automatically generated keys"));
+        manualQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with manually typed keys"));
+
     }
 
 
@@ -385,7 +402,7 @@ public class AnnotateTabController {
         }
     }
 
-    @FXML private void initLOINCtableButton(ActionEvent e) {
+    @FXML private void initLOINCtable(ActionEvent e) {
         logger.trace("init LOINC table");
         initTableStructure();
         String loincCoreTableFile=model.getPathToLoincCoreTableFile();

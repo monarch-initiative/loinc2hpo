@@ -86,13 +86,24 @@ public class UniversalLoinc2HPOAnnotationTest {
 
         String path = temporaryFolder.newFile("testoutput.tsv").getPath();
         WriteToFile.writeToFile("", path);
-        testmap.forEach((k, v) -> WriteToFile.appendToFile(v.toString(), path));
+        testmap.forEach((k, v) -> {
+            WriteToFile.appendToFile(v.toString(), path);
+            WriteToFile.appendToFile("\n", path);
+        });
         //WriteToFile.appendToFile(glucoseAnnotation.toString(), path);
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
 
-        System.out.println(UniversalLoinc2HPOAnnotation.getHeader());
-        reader.lines().forEach(System.out::println);
+        //System.out.println(UniversalLoinc2HPOAnnotation.getHeader());
+        //reader.lines().forEach(System.out::println);
+        String content = "15074-8\tQn\thttp://jax.org/loinc2hpo\tL\tHP:0001943\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "15074-8\tQn\thttp://jax.org/loinc2hpo\tN\tHP:0011015\ttrue\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "15074-8\tQn\thttp://jax.org/loinc2hpo\tH\tHP:0003074\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "15074-8\tQn\thttp://jax.org/loinc2hpo\tA\tHP:0011015\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "600-7\tNom\thttp://snomed.info/sct\t112283007\tHP:0002740\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "600-7\tNom\thttp://jax.org/loinc2hpo\tP\tHP:0002718\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
+                "600-7\tNom\thttp://snomed.info/sct\t3092008\tHP:0002726\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull";
+        assertEquals(7, reader.lines().collect(Collectors.toList()).size());
     }
 
 }

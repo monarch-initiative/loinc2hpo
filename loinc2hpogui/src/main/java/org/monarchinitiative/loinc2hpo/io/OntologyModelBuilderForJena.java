@@ -29,13 +29,6 @@ public class OntologyModelBuilderForJena extends Task<Model> {
 
         logger.trace("enter function to build ontology model for Sparql query");
         logger.trace("PATH= is set "+pathToOntology);
-        /**
-        if (pathToOntologyInRDF != null && new File(pathToOntologyInRDF).exists()) {
-            logger.trace("use rdf to create model");
-            org.apache.jena.rdf.model.Model model = FileManager.get().loadModel(pathToOntologyInRDF);
-            return model;
-        }
-         **/
         //explicitely state that the model is Jena RDF model
         org.apache.jena.rdf.model.Model jenaModel = ModelFactory.createDefaultModel();
         //We can also create a more advanced model, but it is slower and not necessary since we are not editing the model

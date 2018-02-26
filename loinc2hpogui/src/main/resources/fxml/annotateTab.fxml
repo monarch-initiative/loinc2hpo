@@ -32,7 +32,7 @@
                <children>
                   <HBox VBox.vgrow="NEVER">
                      <children>
-                        <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtableButton" stylesheets="@../css/loinc2hpo.css" text="Inititialize LOINC Table">
+                        <Button fx:id="initLOINCtableButton" mnemonicParsing="false" onAction="#initLOINCtable" stylesheets="@../css/loinc2hpo.css" text="Inititialize LOINC Table">
                            <HBox.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </HBox.margin>
@@ -42,7 +42,7 @@
                               <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="handleLoincFiltering" mnemonicParsing="false" onAction="#handleLoincFiltering" stylesheets="@../css/loinc2hpo.css" text="Filter">
+                        <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleLoincFiltering" stylesheets="@../css/loinc2hpo.css" text="Filter">
                            <HBox.margin>
                               <Insets bottom="5.0" left="30.0" right="5.0" top="5.0" />
                            </HBox.margin>
@@ -118,7 +118,7 @@
                                     <Insets />
                                  </GridPane.margin>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#handleAnnotateCodedValue" stylesheets="@../css/loinc2hpo.css" text="+" GridPane.columnIndex="3">
+                              <Button fx:id="addCodedAnnotationButton" mnemonicParsing="false" onAction="#handleAnnotateCodedValue" stylesheets="@../css/loinc2hpo.css" text="+" GridPane.columnIndex="3">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin></Button>
@@ -178,12 +178,12 @@
                   </ListView>
                   <HBox prefHeight="0.0" prefWidth="737.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
+                        <Button fx:id="autoQueryButton" mnemonicParsing="false" onAction="#handleAutoQueryButton" stylesheets="@../css/loinc2hpo.css" text="Auto Query">
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="10.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#handleManualQueryButton" stylesheets="@../css/loinc2hpo.css" text="Manual Query">
+                        <Button fx:id="manualQueryButton" mnemonicParsing="false" onAction="#handleManualQueryButton" stylesheets="@../css/loinc2hpo.css" text="Manual Query">
                            <HBox.margin>
                               <Insets bottom="5.0" left="20.0" top="10.0" />
                            </HBox.margin>

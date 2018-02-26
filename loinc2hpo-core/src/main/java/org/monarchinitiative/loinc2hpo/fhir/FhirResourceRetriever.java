@@ -52,7 +52,7 @@ public class FhirResourceRetriever {
             byte[] bytes = new byte[(int)file.length()];
             FileInputStream fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytes);
-            logger.debug(new String(bytes));
+            //logger.debug(new String(bytes));
             observation = (Observation) jsonParser.parseResource(new String(bytes));
             fileInputStream.close();
 

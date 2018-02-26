@@ -16,6 +16,7 @@ public class CodeContainerTest {
         instance.setAccessible(true);
         instance.set(null, null);
     }
+
     @Test
     public void getInstance() throws Exception {
         CodeContainer codeContainer1 = CodeContainer.getInstance();
