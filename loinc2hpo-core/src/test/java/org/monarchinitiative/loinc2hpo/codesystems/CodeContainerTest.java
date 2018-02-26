@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,7 +13,7 @@ public class CodeContainerTest {
         assertEquals(codeContainer1, codeContainer2);
     }
 
-    @Test
+    @Test @Ignore
     public void add() throws Exception {
         CodeContainer codeContainer = CodeContainer.getInstance();
         Code code1 = Code.getNewCode().setSystem("http://test").setDisplay("testdisplay").setCode("testcode");

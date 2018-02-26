@@ -20,6 +20,8 @@ public class OntologyModelBuilderForJena extends Task<Model> {
     private String pathToOntologyInRDF;
     private static final Logger logger = LogManager.getLogger();
 
+    private org.apache.jena.rdf.model.Model jenaModel;
+
     public OntologyModelBuilderForJena(String pathToOntology) {
         this.pathToOntology = pathToOntology;
     }
@@ -36,10 +38,10 @@ public class OntologyModelBuilderForJena extends Task<Model> {
         logger.trace("enter function to build ontology model for Sparql query");
         //explicitely state that the model is Jena RDF model
         //org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        LocationMapper locationMapper = new LocationMapper();
+        //LocationMapper locationMapper = new LocationMapper();
         logger.trace("location map is set");
-        FileManager.get().addLocatorClassLoader(OntologyModelBuilderForJena.class.getClassLoader());
-        logger.trace("locator is set");
+        //FileManager.get().addLocatorClassLoader(OntologyModelBuilderForJena.class.getClassLoader());
+        logger.trace("PATH= is set "+pathToOntology);
         /**
         if (pathToOntologyInRDF != null && new File(pathToOntologyInRDF).exists()) {
             logger.trace("use rdf to create model");
@@ -47,18 +49,17 @@ public class OntologyModelBuilderForJena extends Task<Model> {
             return model;
         }
          **/
-        org.apache.jena.rdf.model.Model model = ModelFactory.createDefaultModel();
+        jenaModel = ModelFactory.createDefaultModel();
         logger.info("default ontology model created");
         try {
             logger.trace("start reading hpo");
             InputStream in = FileManager.get().open(pathToOntology);
-            model.read(in, null);
+            jenaModel.read(in, null);
         } catch (JenaException je) {
             logger.error("cannot open hpo.owl");
         }
         logger.trace("exit function to build ontology model for Sparql query.");
-        return model;
+        return jenaModel;
     }
-
 
 }
