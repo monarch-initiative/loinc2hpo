@@ -1,11 +1,16 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 
 public class CodeContainerTest {
+
+    
     @Test
     public void getInstance() throws Exception {
         CodeContainer codeContainer1 = CodeContainer.getInstance();

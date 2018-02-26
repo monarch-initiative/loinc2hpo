@@ -1,34 +1,26 @@
 package org.monarchinitiative.loinc2hpo.io;
 
 import javafx.concurrent.Task;
-import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.shared.JenaException;
 import org.apache.jena.util.FileManager;
-import org.apache.jena.util.LocationMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 public class OntologyModelBuilderForJena extends Task<Model> {
 
-    private String pathToOntology;
-    private String pathToOntologyInRDF;
     private static final Logger logger = LogManager.getLogger();
 
-    private org.apache.jena.rdf.model.Model jenaModel;
+    private String pathToOntology;
 
+    /**
+     * Load .owl to Jena model
+     * @param pathToOntology
+     */
     public OntologyModelBuilderForJena(String pathToOntology) {
         this.pathToOntology = pathToOntology;
-    }
-
-    public OntologyModelBuilderForJena(String pathToOntology, String pathToOntologyInRDF) {
-        this.pathToOntology = pathToOntology;
-        this.pathToOntologyInRDF = pathToOntologyInRDF;
     }
 
 
@@ -36,11 +28,6 @@ public class OntologyModelBuilderForJena extends Task<Model> {
     protected Model call() throws Exception {
 
         logger.trace("enter function to build ontology model for Sparql query");
-        //explicitely state that the model is Jena RDF model
-        //org.apache.jena.rdf.model.Model model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        //LocationMapper locationMapper = new LocationMapper();
-        logger.trace("location map is set");
-        //FileManager.get().addLocatorClassLoader(OntologyModelBuilderForJena.class.getClassLoader());
         logger.trace("PATH= is set "+pathToOntology);
         /**
         if (pathToOntologyInRDF != null && new File(pathToOntologyInRDF).exists()) {
@@ -49,7 +36,10 @@ public class OntologyModelBuilderForJena extends Task<Model> {
             return model;
         }
          **/
-        jenaModel = ModelFactory.createDefaultModel();
+        //explicitely state that the model is Jena RDF model
+        org.apache.jena.rdf.model.Model jenaModel = ModelFactory.createDefaultModel();
+        //We can also create a more advanced model, but it is slower and not necessary since we are not editing the model
+        //OntModel model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         logger.info("default ontology model created");
         try {
             logger.trace("start reading hpo");
