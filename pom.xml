@@ -957,14 +957,35 @@
 
 
     <build>
-        <!--  <sourceDirectory>src</sourceDirectory>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>CodeSystems/*.tsv</include>
+                    <include>external2internalCodeMap/*.tsv</include>
+                </includes>
+                <excludes>
+                    <exclude>hp.owl</exclude>
+                    <exclude>data_UNC_annotated.csv</exclude>
+                    <exclude>loinc_most_frequent.csv</exclude>
+                </excludes>
+            </resource>
+
+        </resources>
+
+        <!--sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
             <resource>
-                <directory>src/main/resources/data</directory>
+                <directory>src/main/resources/CodeSystems</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/external2internalCodeMap</directory>
             </resource>
 
             <resource>
@@ -972,7 +993,8 @@
                 <includes>
                     <include>**/*.properties</include>
                 </includes>
-            </resource>
+            <resource>
+
             <resource>
                 <directory>src/test/java</directory>
                 <includes>
@@ -985,9 +1007,9 @@
                     <include>**/*.properties</include>
                 </includes>
             </resource>
+
         </resources>
         <finalName>org.monarchinitiative.loinc2hpo-${project.version}</finalName>
-
 -->
 
 
