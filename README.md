@@ -3,7 +3,8 @@ Java library to map LOINC-encoded test results to Human Phenotype Ontology
 There are current two modules. loinc2hpogui is a JavaFX app that intends to help with biocuration of LOINC code to HPO term mappings. To build and run the GUI, use the following command.
 ```
 $ mvn clean package
-$ java -jar loinc2hpogui/target/Loinc2HpoGui.jar
+$ java -jar loinc2hpogui/target/Loinc2HpoGui-jar-with-dependencies.jar 
+
 ```
 To run the library code, enter the following
 ```
