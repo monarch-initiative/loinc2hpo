@@ -61,6 +61,12 @@ Follow the steps to start the curation process.
   779-9
   600-7
  ```
+   Alternatively, you can use the long common names of Loinc codes like below:
+ ```$xslt
+  Potassium [Moles/volume] in Serum or Plasma
+  Hemoglobin [Mass/volume] in Blood
+  Erythrocyte distribution width [Ratio] by Automated count
+```
 
  - Flag an annotation. If you are not certain about your annotation and wants to come back later, you can check the **"Flag"** checkerbox as a reminder.
 

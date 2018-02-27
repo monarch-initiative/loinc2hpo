@@ -45,6 +45,7 @@ public class Model {
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
+    private Map<String, LoincEntry> loincEntryMapFromName = null;
 
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
@@ -61,6 +62,13 @@ public class Model {
         return this.loincEntryMap;
     }
     public HashSet<LoincId> getLoincIds() { return this.loincIds; }
+    public Map<String, LoincEntry> getLoincEntryMapWithName() {
+        if (loincEntryMapFromName == null) {
+            loincEntryMapFromName = new HashMap<>();
+            loincEntryMap.values().forEach(p -> loincEntryMapFromName.put(p.getLongName(), p));
+        }
+        return loincEntryMapFromName;
+    }
 
     //hpo term maps from name or id to hpoterm
     private ImmutableMap<String,HpoTerm> termmap=null;

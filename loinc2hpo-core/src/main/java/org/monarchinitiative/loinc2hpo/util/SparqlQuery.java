@@ -2,13 +2,11 @@ package org.monarchinitiative.loinc2hpo.util;
 
 
 
-import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.shared.AddDeniedException;
 import org.apache.jena.shared.JenaException;
 import org.apache.jena.util.FileManager;
 

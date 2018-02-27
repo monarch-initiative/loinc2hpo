@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Let users provide a file containing their interested loinc codes, so that
@@ -16,12 +18,12 @@ import java.util.HashSet;
 public class LoincOfInterest {
 
     private String pathToLoincOfInterest;
-    private HashSet<String> LoincOfInterest;
+    private Set<String> LoincOfInterest;
     private static final Logger logger = LogManager.getLogger();
 
     public LoincOfInterest(String path) throws FileNotFoundException {
         this.pathToLoincOfInterest = path;
-        this.LoincOfInterest = new HashSet<>();
+        this.LoincOfInterest = new LinkedHashSet<>();
 
         readLoincFromFile();
     }
@@ -36,9 +38,7 @@ public class LoincOfInterest {
         try {
             newLine = reader.readLine();
             while (newLine != null) {
-                if (newLine.trim().length() > 0 && Character.isDigit(newLine
-                        .charAt
-                        (0))) {
+                if (newLine.trim().length() > 0 && !newLine.trim().toLowerCase().startsWith("loinc")) { //&& Character.isDigit(newLine.charAt(0))
                     this.LoincOfInterest.add(newLine);
                 }
                 newLine = reader.readLine();
@@ -49,7 +49,7 @@ public class LoincOfInterest {
         }
     }
 
-    public HashSet<String> getLoincOfInterest() {
-        return new HashSet<>(this.LoincOfInterest);
+    public Set<String> getLoincOfInterest() {
+        return new LinkedHashSet<>(this.LoincOfInterest);
     }
 }

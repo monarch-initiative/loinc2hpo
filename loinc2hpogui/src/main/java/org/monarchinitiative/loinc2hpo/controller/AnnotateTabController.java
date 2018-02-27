@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -480,21 +481,28 @@ public class AnnotateTabController {
             LoincId loincId = new LoincId(query);
             if (this.loincmap.containsKey(loincId)) {
                 entrylist.add(this.loincmap.get(loincId));
+                logger.debug(this.loincmap.get(loincId).getLOINC_Number() + " : " + this.loincmap.get(loincId).getLongName());
             } else { //correct loinc code form but not valid
                 throw new LoincCodeNotFoundException();
             }
         } catch (Exception msg) { //catch all kind of exception
             loincmap.values().stream()
                     .filter( loincEntry -> containedIn(query, loincEntry.getLongName()))
-                    .forEach(loincEntry -> entrylist.add(loincEntry));
+                    .forEach(loincEntry -> {
+                        entrylist.add(loincEntry);
+                        logger.debug(loincEntry.getLOINC_Number() + " : " + loincEntry.getLongName());
+                    });
+                    //.forEach(loincEntry -> entryListInOrder.add(loincEntry));
         }
         if (entrylist.isEmpty()) {
+        //if (entryListInOrder.isEmpty()){
             logger.error(String.format("Could not identify LOINC entry for \"%s\"",query));
             PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",query));
             return;
         } else {
             logger.trace(String.format("Searching table for:  %s",query));
             logger.trace("# of loinc entries found: " + entrylist.size());
+            //logger.trace("# of loinc entries found: " + entryListInOrder.size());
         }
         if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
         loincTableView.getItems().clear();
@@ -558,11 +566,23 @@ public class AnnotateTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
             try {
-                HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
-                loincOfInterest.stream().forEach(System.out::print);
+                Set<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
+                //loincOfInterest.stream().forEach(System.out::print);
                 for (String loincString : loincOfInterest) {
-                    LoincId loincId = new LoincId(loincString);
-                    LoincEntry loincEntry = model.getLoincEntryMap().get(loincId);
+                    LoincId loincId = null;
+                    LoincEntry loincEntry = null;
+                    try {
+                        loincId = new LoincId(loincString);
+                        loincEntry = model.getLoincEntryMap().get(loincId);
+                    } catch (MalformedLoincCodeException e2) {
+                        //try to see whether user provided Loinc long common name
+                        if (model.getLoincEntryMapWithName().get(loincString) != null) {
+                            loincEntry = model.getLoincEntryMapWithName().get(loincString);
+                        } else {
+                            logger.error("Malformed loinc");
+                            malformedLoincCount++;
+                        }
+                    }
                     if (loincEntry != null) {
                         entrylist.add(loincEntry);
                     } else {
@@ -571,9 +591,6 @@ public class AnnotateTabController {
                 }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
-            } catch (MalformedLoincCodeException e2) {
-                logger.error("Malformed loinc");
-                malformedLoincCount++;
             }
 
             if (malformedLoincCount > 0 || !notFound.isEmpty()) {
@@ -592,6 +609,8 @@ public class AnnotateTabController {
             if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
+            entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
+            //loincTableView.sort((p, q) -> entrylist.indexOf(p) - entrylist.indexOf(q));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
