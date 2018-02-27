@@ -1,3 +1,5 @@
+loinc2hpo-core/src/main/resources/hp.obo
+loinc2hpo-core/src/main/resources/catalog-v001.xml
 loinc2hpo-core/src/test/resources/hp.rdfformat
 .idea/uiDesigner.xml
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/testresult/ValueQuantity.java
