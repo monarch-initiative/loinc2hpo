@@ -37,6 +37,13 @@ Multiple features are added. This will be the baseline for future tracking.
     - if it fails, it will try to convert convert the interpretation code to the internal code and then find the corresponding HPO term. 
   
   - If the app fails the last step, it will try to use the raw value and interpret it with the reference ranges.  
+  
+## v1.0.2
+
+* Build Jar with all dependencies with maven-assembly-plugin
+
+* Add META-INF/services to Core module because it appears that is what Jar requires
+  
 
 
 

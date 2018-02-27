@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -883,38 +883,6 @@
         </dependency>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -972,6 +940,13 @@
                     <exclude>data_UNC_annotated.csv</exclude>
                     <exclude>loinc_most_frequent.csv</exclude>
                 </excludes>
+            </resource>
+            <resource>
+                <directory>loinc2hpogui/src/main/resources/META-INF/services</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>org.apache.jena.system.JenaSubsystemLifecycle</include>
+                </includes>
             </resource>
 
         </resources>
@@ -1139,6 +1114,35 @@
                 </configuration>
             </plugin>
 
+            <!-- Include all dependencies in Jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- MainClass in mainfest make a executable jar -->
+                    <archive>
+                        <manifest>
+                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                        </manifest>
+                    </archive>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
 
 <plugin>
