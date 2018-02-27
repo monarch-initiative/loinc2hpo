@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import javassist.CodeConverter;
+//import javassist.CodeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.*;
