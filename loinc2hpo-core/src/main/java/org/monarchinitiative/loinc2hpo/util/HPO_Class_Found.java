@@ -82,6 +82,13 @@ public class HPO_Class_Found implements Comparable {
                 matchScore += 20;
             }
         }
+
+        //penalize non-hpo terms
+        String[] id_string = this.id.split("/");
+        if (!id_string[id_string.length - 1].startsWith("HP_")) {
+            System.out.println(this.id);
+            matchScore = matchScore / 10;
+        }
         return matchScore;
     }
 

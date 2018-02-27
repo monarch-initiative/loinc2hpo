@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.io;
 
 import org.hl7.fhir.dstu3.model.Observation;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.io.ObservationDownloader;
 
@@ -10,6 +11,7 @@ import static org.junit.Assert.*;
 
 public class ObservationDownloaderTest {
     @Test
+    @Ignore("This test tries to fetch observation from hapi-fhir test server, so the returning observations various")
     public void retrieveObservation() throws Exception {
         String testLoinc = "1558-6";
         List<Observation> observations = ObservationDownloader.retrieveObservation( testLoinc);
@@ -23,6 +25,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
+    @Ignore("same as above, can fail when server changes")
     public void longestObservation() throws Exception {
         String testLoinc = "600-7";
         String longestObservation = ObservationDownloader.longestObservation(ObservationDownloader.retrieveObservation(testLoinc));

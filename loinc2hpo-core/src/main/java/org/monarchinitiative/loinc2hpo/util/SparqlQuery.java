@@ -52,18 +52,22 @@ public class SparqlQuery {
      * @return the ontology model for query
      */
     public static Model getOntologyModel(String path_to_ontology) {
-        model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
+        logger.trace("enter function to create ontology model");
+        //model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
+        model = ModelFactory.createDefaultModel();
         try {
+            logger.trace("start reading the ontology");
             InputStream in = FileManager.get().open(path_to_ontology);
             try {
                 model.read(in, null);
-                System.out.println("model created");
+                in.close();
+                logger.trace("model created");
                 modelCreated = true;
             } catch (Exception e) {
-                System.out.println("cannot read in data to model");
+                logger.error("cannot read in data to model");
             }
         } catch (JenaException je) {
-            System.out.println("cannot open hpo.owl");
+            logger.error("cannot open hpo.owl");
         }
         return model;
     }
@@ -392,9 +396,9 @@ public class SparqlQuery {
         //none of the keys are good; such HPO classes either do not exist, or the user should try
         //some synomes.
         if (HPO_classes_found.size() == 0) {
-            System.out.println("NO HPO terms are found. Try some synonymes.");
+            logger.info("NO HPO terms are found. Try some synonymes.");
         }
-        System.out.println(HPO_classes_found.size() + " HPO classes are found!");
+        logger.info(HPO_classes_found.size() + " HPO classes are found!");
 
         return HPO_classes_found;
     }
@@ -471,7 +475,7 @@ public class SparqlQuery {
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         int count = 0;
         count = addFoundClasses(HPO_classes_found, results, null);
-        System.out.println(count + " results are found!");
+        logger.info(count + " results are found!");
         return HPO_classes_found;
     }
 
@@ -493,7 +497,7 @@ public class SparqlQuery {
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         int count = 0;
         count = addFoundClasses(HPO_classes_found, results, null);
-        System.out.println(count + " results are found!");
+        logger.info(count + " results are found!");
         return HPO_classes_found;
     }
 

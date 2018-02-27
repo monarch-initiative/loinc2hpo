@@ -23,7 +23,7 @@ import java.util.List;
  *     <li>COMPONENT, e.g., "Potassium"</li>
  *     <li>PROPERTY, e.g., "SCnc"</li>
  *     <li>TIME_ASPCT, e.g., "Pt"</li>
- *     <li>SYSTEM, e.g., "Ser/Plas"</li>
+ *     <li>CODESYSTEM, e.g., "Ser/Plas"</li>
  *     <li>SCALE_TYP, e.g.,"Qn"</li>
  *     <li>METHOD_TYP, e.g., blank</li>
  *     <li>CLASS, e.g., "CHEM"</li>

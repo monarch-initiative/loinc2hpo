@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpo.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.io.FileDownloadException;
+import org.monarchinitiative.loinc2hpo.exception.FileDownloadException;
 import org.monarchinitiative.loinc2hpo.io.FileDownloader;
 
 import java.io.File;

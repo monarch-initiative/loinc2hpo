@@ -2,16 +2,17 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,8 +23,10 @@ import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.Downloader;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
+import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
+import java.awt.event.MouseEvent;
 import java.io.*;
 
 import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
@@ -43,12 +46,19 @@ public class MainController {
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
+    @Inject private CurrentAnnotationController currentAnnotationController;
 
     @FXML private MenuBar loincmenubar;
     @FXML private MenuItem closeMenuItem;
     @FXML private MenuItem importAnnotationButton;
     @FXML private MenuItem newAnnotationFileButton;
+    @FXML private Menu exportMenu;
+    @FXML private MenuItem clearMenu;
 
+    @FXML private TabPane tabPane;
+    @FXML private Tab annotateTabButton;
+    @FXML private Tab Loinc2HPOAnnotationsTabButton;
+    @FXML private Tab Loinc2HpoConversionTabButton;
 
 
     @FXML private void initialize() {
@@ -62,7 +72,7 @@ public class MainController {
             logger.error("setupTabController is null");
             return;
         }
-       setupTabController.setModel(model);
+        setupTabController.setModel(model);
         if (annotateTabController==null) {
             logger.error("annotate Controller is null");
             return;
@@ -76,11 +86,41 @@ public class MainController {
             logger.error("loinc2HPOConversionTabController is null");
             return;
         }
+        currentAnnotationController.setModel(model);
+        if (model == null) {
+            logger.error("main controller model is null");
+            return;
+        }
+
+
+
         loinc2HpoAnnotationsTabController.setModel(model);
         loinc2HPOConversionTabController.setModel(model);
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
+
+
+        //control how menu items should be shown
+        importAnnotationButton.setDisable(true);
+        exportMenu.setDisable(true);
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+
+                if(newValue.equals(Loinc2HPOAnnotationsTabButton)) {
+                    importAnnotationButton.setDisable(false);
+                    exportMenu.setDisable(false);
+                    clearMenu.setDisable(false);
+                } else {
+                    importAnnotationButton.setDisable(true);
+                    exportMenu.setDisable(true);
+                    clearMenu.setDisable(true);
+                }
+
+
+            }
+        });
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
@@ -182,7 +222,9 @@ public class MainController {
     }
 
     @FXML private void setBiocuratorID(ActionEvent e) {
-        String bcid=getStringFromUser("Biocurator ID", "e.g., MGM:rrabbit", "Enter biocurator ID");
+        String prompText = (model.getBiocuratorID() == null || model.getBiocuratorID().isEmpty())
+                ? "e.g., MGM:rrabbit" : model.getBiocuratorID();
+        String bcid=getStringFromUser("Biocurator ID", prompText, "Enter biocurator ID");
         if (bcid!=null && bcid.indexOf(":")>0) {
             model.setBiocuratorID(bcid);
             model.writeSettings();
@@ -226,7 +268,8 @@ public class MainController {
 
         e.consume();
         logger.info("usr wants to save file");
-        loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+        //loinc2HpoAnnotationsTabController.saveLoincAnnotation();
+        loinc2HpoAnnotationsTabController.newSave();
 
     }
 
@@ -239,8 +282,8 @@ public class MainController {
     @FXML private void handleSaveAsButton(ActionEvent e){
         e.consume();
         logger.info("user wants to save to a new file");
-        loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-
+        //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
+        loinc2HpoAnnotationsTabController.newSaveAs();
     }
 
     /**
@@ -251,7 +294,8 @@ public class MainController {
     @FXML private void handleAppendToButton(ActionEvent e){
         e.consume();
         logger.info("usr wants to append to a file");
-        loinc2HpoAnnotationsTabController.appendLoincAnnotation();
+        //loinc2HpoAnnotationsTabController.appendLoincAnnotation()
+        loinc2HpoAnnotationsTabController.newAppend();
 
 
     }
@@ -262,5 +306,48 @@ public class MainController {
         logger.info("usr wants to import an annotation file");
         event.consume();
     }
+
+    @FXML private void handleExportAsTSV(ActionEvent event) {
+        logger.info("usr wants to export annotations to a TSV file");
+        loinc2HpoAnnotationsTabController.exportAnnotationsAsTSV();
+        event.consume();
+    }
+
+    @FXML private void clear(ActionEvent event) {
+        logger.trace("user wants to clear the contents");
+        event.consume();
+        boolean choice = PopUps.getBooleanFromUser("Are you sure you want to clear all annotations?", "Confirmation",
+                "Clear All Annotations");
+        if (!choice) {
+            return;
+        }
+
+        loinc2HpoAnnotationsTabController.clear();
+
+    }
+
+    public enum TabPaneTabs{
+        AnnotateTabe,
+        Loinc2HpoAnnotationsTab,
+        Loinc2HpoConversionTab
+    }
+
+    public void switchTab(TabPaneTabs tab) {
+        switch (tab) {
+            case AnnotateTabe:
+                tabPane.getSelectionModel().select(annotateTabButton);
+            case Loinc2HpoAnnotationsTab:
+                tabPane.getSelectionModel().select(Loinc2HPOAnnotationsTabButton);
+            case Loinc2HpoConversionTab:
+                tabPane.getSelectionModel().select(Loinc2HpoConversionTabButton);
+            default:
+                    tabPane.getSelectionModel().select(annotateTabButton);
+        }
+
+    }
+
+
+
+
 }
 

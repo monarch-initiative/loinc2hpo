@@ -34,6 +34,7 @@ public class Main extends Application {
 
     private static final Logger logger = LogManager.getLogger();
 
+    private static Stage primarystage;
 
     private Parent rootNode;
 
@@ -57,6 +58,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception {
+        primarystage = window;
         window.setScene(new Scene(rootNode));
         Image image = new Image(Main.class.getResourceAsStream("/img/icon.jpg"));
         window.getIcons().add(image);
@@ -85,5 +87,8 @@ public class Main extends Application {
 
     }
 
+    public static Stage getPrimarystage(){
+        return primarystage;
+    }
 
 }

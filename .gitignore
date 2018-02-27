@@ -1,3 +1,7 @@
+loinc2hpo-core/src/main/resources/hp.obo
+loinc2hpo-core/src/main/resources/catalog-v001.xml
+loinc2hpo-core/src/test/resources/hp.rdfformat
+.idea/uiDesigner.xml
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/testresult/ValueQuantity.java
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/testresult/Interpretation.java
 loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/fhir/INTERPRETATION.java
@@ -10,8 +14,10 @@ loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/util/TST.java
 logs/
 .idea/codeStyleSettings.xml
 loinc2hpo-core/logs/
-loinc-hpo-mapping.tsv
-loinc2hpo-core/src/main/resources
+loinc-hpoTermId4LoincTest-mapping.tsv
+loinc2hpo-core/src/main/resources/hp.owl
+loinc2hpo-core/src/main/resources/data_UNC_annotated.csv
+loinc2hpo-core/src/main/resources/loinc_most_frequent.csv
 loinc2hpo-core/src/resource/
 .idea/.name
 

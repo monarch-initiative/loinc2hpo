@@ -8,6 +8,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
@@ -193,6 +194,33 @@ public class PopUps {
         // Set expandable Exception into the dialog pane.
         alert.getDialogPane().setExpandableContent(expContent);
 
+        alert.showAndWait();
+    }
+
+    public static void showException(String windowTitle, String header, Exception exception) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle(windowTitle);
+        alert.setHeaderText(header);
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+        String exceptionText = sw.toString();
+
+        Label label = new Label("The exception stacktrace was:");
+
+        TextArea textArea = new TextArea(exceptionText);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+        // Set expandable Exception into the dialog pane.
+        alert.getDialogPane().setExpandableContent(textArea);
+        alert.getDialogPane().setMinWidth(Region.USE_PREF_SIZE);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
     }
 

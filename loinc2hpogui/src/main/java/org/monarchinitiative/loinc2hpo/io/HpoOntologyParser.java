@@ -37,10 +37,14 @@ public class HpoOntologyParser {
     HpoOntology ontology;
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
+    private ImmutableMap<String, HpoTerm> termmap;
+    private ImmutableMap<TermId, HpoTerm> termmap2;
 
 
     public HpoOntologyParser(String path){
+
         hpoOntologyPath=path;
+
     }
 
     /**
@@ -52,13 +56,9 @@ public class HpoOntologyParser {
         this.ontology = hpoOboParser.parse();
     }
 
-    public Ontology<HpoTerm, HpoTermRelation> getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
-    public Ontology<HpoTerm, HpoTermRelation> getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
-    public HpoOntology getOntology() { return ontology; }
-
-    /** @return a map will all terms of the Hpo Phenotype subontology. */
-    public ImmutableMap<String,HpoTerm> getTermMap() {
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+    private void initTermMaps() {
+        ImmutableMap.Builder<String,HpoTerm> termmapBuilder = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,HpoTerm> termmap2Builder = new ImmutableMap.Builder<>();
         if (ontology !=null) {
 
             // ontology.getTermMap().values().  forEach(term -> termmap.put(term.getName(), term));
@@ -67,10 +67,31 @@ public class HpoOntologyParser {
             List<HpoTerm> res = ontology.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
 
-            res.forEach( term -> termmap.put(term.getName(),term));
+            res.forEach( term -> termmapBuilder.put(term.getName(),term));
+            termmap = termmapBuilder.build();
+            res.forEach( term -> termmap2Builder.put(term.getId(), term));
+            termmap2 = termmap2Builder.build();
             //res.forEach( term -> logger.info(term.getName()));
         }
-        return termmap.build();
+    }
+
+    public Ontology<HpoTerm, HpoTermRelation> getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
+    public Ontology<HpoTerm, HpoTermRelation> getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
+    public HpoOntology getOntology() { return ontology; }
+
+    /** @return a map will all terms of the Hpo Phenotype subontology. */
+    public ImmutableMap<String,HpoTerm> getTermMap() {
+        if (termmap == null) {
+            initTermMaps();
+        }
+        return termmap;
+    }
+
+    public ImmutableMap<TermId,HpoTerm> getTermMap2() {
+        if (termmap2 == null) {
+            initTermMaps();
+        }
+        return termmap2;
     }
 
 
