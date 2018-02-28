@@ -43,6 +43,12 @@ Multiple features are added. This will be the baseline for future tracking.
 * Build Jar with all dependencies with maven-assembly-plugin
 
 * Add META-INF/services to Core module because it appears that is what Jar requires
+
+## v1.0.3
+
+* Refactor pom files. 
+
+* Refactor gitignore file. 
   
 
 
