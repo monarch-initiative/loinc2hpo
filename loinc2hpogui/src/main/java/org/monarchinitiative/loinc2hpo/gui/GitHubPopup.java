@@ -199,8 +199,26 @@ public class GitHubPopup {
     }
 
 
+    //Method for UnitTest
+    public void setGithubIssueText(String githubIssueText) { this.githubIssueText = githubIssueText;}
+
     public String retrieveGitHubIssue() {
         return githubIssueText;
+    }
+
+    public String retrieveSuggestedTerm() {
+        String newTerm = "UNKNOWN";
+        try {
+            //The line contains the suggested new term looks like this: "New term label:\n"
+            String[] lineElements = githubIssueText.split("\n")[1].split(":");
+            if (lineElements.length == 2) {
+                newTerm = lineElements[1].trim();
+            }
+        } catch (Exception e) {
+            //do nothing
+        }
+
+        return newTerm;
     }
 
     public String getGitHubUserName() {

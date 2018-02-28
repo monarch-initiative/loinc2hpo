@@ -1365,7 +1365,7 @@ public class AnnotateTabController {
             return;
         }
         String label = popup.getGitHubLabel();
-        String title = String.format("%s:  \"%s\"", label, loincIdSelected);
+        String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
         postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
     }
 
@@ -1411,7 +1411,7 @@ public class AnnotateTabController {
             return;
         }
         String label = popup.getGitHubLabel();
-        String title = String.format("%s:  \"%s\"", label, loincIdSelected);
+        String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
         postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
     }
 
