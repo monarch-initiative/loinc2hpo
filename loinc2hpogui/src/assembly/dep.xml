@@ -32,6 +32,11 @@
 				<exclude>original*.jar</exclude>
 			</excludes>
 		</fileSet>
+		<fileSet>
+			<!-- Include Dependencies (JARs) -->
+			<directory>${project.build.directory}${file.separator}lib</directory>
+			<outputDirectory>${file.separator}lib</outputDirectory>
+		</fileSet>
 		<!-- 
 		<fileSet>
 			<directory>${project.build.directory}/site</directory>

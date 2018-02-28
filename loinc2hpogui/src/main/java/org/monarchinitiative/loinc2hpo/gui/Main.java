@@ -75,7 +75,6 @@ public class Main extends Application {
         }
 
         window.show();
-        window.setOnCloseRequest(e -> Platform.exit());
 
     }
 
