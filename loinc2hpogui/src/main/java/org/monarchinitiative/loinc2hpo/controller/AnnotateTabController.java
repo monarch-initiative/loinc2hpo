@@ -522,40 +522,6 @@ public class AnnotateTabController {
 
     @FXML private void handleLoincFiltering(ActionEvent e){
 
-        /**
-        int malformedLoincCount = 0;
-        List<String> notFound = new ArrayList<>();
-        List<LoincEntry> entryOfInterest = new ArrayList<>();
-        if (f != null) {
-            String path = f.getAbsolutePath();
-            try {
-                HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
-                for (String loinc : loincOfInterest) {
-                    LoincId loincId = new LoincId(loinc);
-                    if (model.getLoincEntryMap().containsKey(loincId)) {
-                        entryOfInterest.add(model.getLoincEntryMap().get(loinc));
-                    } else {
-                        notFound.add(loinc);
-                    }
-                }
-                loincTableView.getItems().clear();
-                loincTableView.getItems().addAll(entryOfInterest);
-                loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-            } catch (FileNotFoundException excpt) {
-                logger.error("unable to find the file for loinc of interest");
-            } catch (MalformedLoincCodeException exception) {
-                malformedLoincCount++;
-            }
-
-
-        } else {
-            logger.error("Unable to obtain path to LOINC of interest file");
-            return;
-        }
-        e.consume();
-**/
-
         List<LoincEntry> entrylist=new ArrayList<>();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose File containing a list of interested Loinc " +
@@ -610,7 +576,6 @@ public class AnnotateTabController {
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
             entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
-            //loincTableView.sort((p, q) -> entrylist.indexOf(p) - entrylist.indexOf(q));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
@@ -1399,8 +1364,9 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String title = String.format("Suggesting new term for Loinc:  \"%s\"", loincIdSelected);
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+        String label = popup.getGitHubLabel();
+        String title = String.format("%s:  \"%s\"", label, loincIdSelected);
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
     }
 
     @FXML
@@ -1444,15 +1410,19 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String title = String.format("Suggesting new term for Loinc:  \"%s\"", loincIdSelected);
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+        String label = popup.getGitHubLabel();
+        String title = String.format("%s:  \"%s\"", label, loincIdSelected);
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
     }
 
 
-    private void postGitHubIssue(String message, String title, String uname, String pword) {
+    private void postGitHubIssue(String message, String title, String uname, String pword, String chosenLabel) {
         GitHubPoster poster = new GitHubPoster(uname, pword, title, message);
         this.githubUsername = uname;
         this.githubPassword = pword;
+        if (chosenLabel != null) {
+            poster.setLabel(chosenLabel);
+        }
         try {
             poster.postIssue();
         } catch (NetPostException he) {
