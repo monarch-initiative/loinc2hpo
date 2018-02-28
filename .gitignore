@@ -1,4 +1,4 @@
-# Project-related
+# Project-related - adjust as necessary
 data/
 
 loinc2hpogui/src/main/java/org/monarchinitiative/loinc2hpo/gui/loinc2hpomain/org/
@@ -7,7 +7,6 @@ loinc2hpo-core/src/main/resources/catalog-v001.xml
 loinc2hpo-core/src/test/resources/hp.rdfformat
 
 
-/loinc2hpogui/dependency-reduced-pom.xml
 OLD/src/main/java/
 loinc2hpogui/dependency-reduced-pom.xml
 
