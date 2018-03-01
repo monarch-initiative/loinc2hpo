@@ -49,6 +49,12 @@ Multiple features are added. This will be the baseline for future tracking.
 * Refactor pom files. 
 
 * Refactor gitignore file. 
+
+## v1.0.4
+
+* Allow adding multiple labels to Github issues
+
+* Disable the function to clear annotation fields during manual query
   
 
 

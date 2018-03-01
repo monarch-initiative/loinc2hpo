@@ -394,7 +394,8 @@ public class AnnotateTabController {
         }
         //clear text in abnormality text fields if not currently editing a term
         if (!createAnnotationButton.getText().equals("Save")) {
-            clearAbnormalityTextField();
+            //Got user feedback that they do not want to clear the field when doing manual query
+            //clearAbnormalityTextField();
             //inialize the flag field
             flagForAnnotation.setIndeterminate(false);
             flagForAnnotation.setSelected(false);
