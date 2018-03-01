@@ -267,6 +267,15 @@
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="&lt;- back" />
+                                    <MenuItem mnemonicParsing="false" text="-&gt; forward" />
+                                    <MenuItem mnemonicParsing="false" text="filters" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
                         </TableView>
                      </children>
                   </AnchorPane>

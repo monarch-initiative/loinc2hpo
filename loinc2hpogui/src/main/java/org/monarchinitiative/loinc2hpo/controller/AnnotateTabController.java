@@ -1364,9 +1364,11 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String label = popup.getGitHubLabel();
-        String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
+        //String label = popup.getGitHubLabel();
+        List<String> labels = popup.getGitHubLabels();
+        //String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
+        String title = String.format("Loinc %s:  \"%s\"", loincIdSelected, loincEntrySelected.getLongName());
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), labels);
     }
 
     @FXML
@@ -1410,20 +1412,26 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String label = popup.getGitHubLabel();
-        String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), label);
+        List<String> labels = popup.getGitHubLabels();
+        //String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
+        String title = String.format("Loinc %s:  \"%s\"", loincIdSelected, loincEntrySelected.getLongName());
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), labels);
     }
 
 
-    private void postGitHubIssue(String message, String title, String uname, String pword, String chosenLabel) {
+    private void postGitHubIssue(String message, String title, String uname, String pword, List<String> chosenLabels) {
         GitHubPoster poster = new GitHubPoster(uname, pword, title, message);
         this.githubUsername = uname;
         this.githubPassword = pword;
-        if (chosenLabel != null) {
-            poster.setLabel(chosenLabel);
+        if (chosenLabels != null && !chosenLabels.isEmpty()) {
+            logger.trace("Labels being chosen: ");
+            chosenLabels.forEach(logger::trace);
+            poster.setLabel(chosenLabels);
+            logger.trace("Labels sent to poster: \t");
+            logger.trace(poster.debugLabelsArray4Json());
         }
         try {
+            logger.trace("Message sent to Github: \t" + poster.debugReformatpayloadWithLabel());
             poster.postIssue();
         } catch (NetPostException he) {
             PopUps.showException("GitHub error", "Bad Request (400): Could not post issue", he);
