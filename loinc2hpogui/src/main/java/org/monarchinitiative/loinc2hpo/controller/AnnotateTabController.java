@@ -498,7 +498,9 @@ public class AnnotateTabController {
         if (entrylist.isEmpty()) {
         //if (entryListInOrder.isEmpty()){
             logger.error(String.format("Could not identify LOINC entry for \"%s\"",query));
-            PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",query));
+            PopUps.showWarningDialog("LOINC Search",
+                    "No hits found",
+                    String.format("Could not identify LOINC entry for \"%s\"",query));
             return;
         } else {
             logger.trace(String.format("Searching table for:  %s",query));
@@ -528,7 +530,8 @@ public class AnnotateTabController {
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
         File f = chooser.showOpenDialog(null);
-        List<String> notFound = new ArrayList<>();
+        List<String> notFoundList = new ArrayList<>();
+        List<String> malformedList = new ArrayList<>();
         int malformedLoincCount = 0;
         if (f != null) {
             String path = f.getAbsolutePath();
@@ -547,26 +550,32 @@ public class AnnotateTabController {
                             loincEntry = model.getLoincEntryMapWithName().get(loincString);
                         } else {
                             logger.error("Malformed loinc");
-                            malformedLoincCount++;
+                            malformedList.add(loincString);
+                            continue;
                         }
                     }
                     if (loincEntry != null) {
                         entrylist.add(loincEntry);
                     } else {
-                        notFound.add(loincString);
+                        notFoundList.add(loincString);
                     }
                 }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }
 
-            if (malformedLoincCount > 0 || !notFound.isEmpty()) {
-                PopUps.showInfoMessage(String.format("# malformed Loinc codes: %d\n# Loinc codes not found: %d",
-                        malformedLoincCount, notFound.size()), "Incomplete import of Loinc codes");
+            if (!malformedList.isEmpty() || !notFoundList.isEmpty()) {
+                String malformed = String.join(",\n", malformedList);
+                String notfound = String.join(",\n", notFoundList);
+                String popupMessage = String.format("# malformed Loinc codes: %d\n %s\n\n# Loinc codes not found: %d\n%s",
+                        malformedList.size(), malformed, notFoundList.size(), notfound);
+                PopUps.showInfoMessage(popupMessage, "Incomplete import of Loinc codes");
             }
             if (entrylist.isEmpty()) {
                 logger.error(String.format("Found 0 Loinc codes"));
-                PopUps.showWarningDialog("LOINC filtering", "No hits found", "Could not find any loinc codes");
+                PopUps.showWarningDialog("LOINC filtering",
+                        "No hits found",
+                        "Could not find any loinc codes");
                 return;
             } else {
                 logger.trace("Loinc filtering result: ");
@@ -584,7 +593,7 @@ public class AnnotateTabController {
         }
     }
 
-    
+
     /**
      * private class for showing HPO class in treeview.
      * Another reason to have this is to facilitate drag and draw from treeview.
