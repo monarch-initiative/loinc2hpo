@@ -7,11 +7,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,9 +50,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.jena.sparql.vocabulary.VocabTestQuery.query;
 
 
 @Singleton
@@ -98,6 +93,7 @@ public class AnnotateTabController {
     private ImmutableMap<String,HpoTerm> termmap;
 
     @FXML private ListView hpoListView;
+    private ObservableList<String> sparqlQueryResult = FXCollections.observableArrayList();
 
 
 
@@ -225,14 +221,25 @@ public class AnnotateTabController {
         //hpoListView.setOrientation(Orientation.HORIZONTAL);
 
         loincTableView.setRowFactory( tv -> {
-            TableRow<LoincEntry> row = new TableRow<>();
+            TableRow<LoincEntry> row = new TableRow<LoincEntry>() {
+                @Override
+                public void updateItem(LoincEntry o, boolean empty) {
+                    super.updateItem(o, empty);
+                    ********
+                    o is null
+                    ********
+                    if (model.getLoincAnnotationMap().containsKey(o.getLOINC_Number())){
+                        setStyle("-fx-background-color: green;");
+                    }
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     LoincEntry rowData = row.getItem();
                     if (model.getLoincUnderEditing() == null || //not under Editing mode
                             //or query the loinc code under editing
                             (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData))) {
-                        initHpoTermListView(rowData);
+                        updateHpoTermListView(rowData);
                     } else {
                         PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
                                         ". Save or cancel editing current loinc annotation before switching to others",
@@ -258,7 +265,7 @@ public class AnnotateTabController {
 
 
 
-    private void initHpoTermListView(LoincEntry entry) {
+    private void updateHpoTermListView(LoincEntry entry) {
         if(SparqlQuery.model == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("HPO Model Undefined");
@@ -269,20 +276,15 @@ public class AnnotateTabController {
             return;
         }
         String name = entry.getLongName();
-        List<HPO_Class_Found> queryResults = SparqlQuery.query_auto(name);
-        if (queryResults.size() != 0) {
-            ObservableList<HPO_Class_Found> items = FXCollections.observableArrayList();
-            for (HPO_Class_Found candidate: queryResults) {
-                items.add(candidate);
-            }
-            this.hpoListView.setItems(items);
-            //items.add("0 result is found. Try manual search with synonyms.");
-        } else {
-            ObservableList<String> items = FXCollections.observableArrayList();
-            items.add("0 HPO class is found. Try manual search with " +
-                    "alternative keys (synonyms)");
-            this.hpoListView.setItems(items);
+        sparqlQueryResult.clear();
+        SparqlQuery.query_auto(name).stream().map(p -> p.toString()).forEach(sparqlQueryResult::add);
+        logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
+        if (sparqlQueryResult.size() == 0) {
+            String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +
+                    "alternative keys (synonyms)";
+            sparqlQueryResult.add(new String(noHPOfoundMessage));
         }
+        hpoListView.setItems(sparqlQueryResult);
     }
 
     @FXML private void handleAutoQueryButton(ActionEvent e){
@@ -303,7 +305,7 @@ public class AnnotateTabController {
         if (model.getLoincUnderEditing() == null || //not under Editing mode
                 //or query the loinc code under editing
                 (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(entry))) {
-            initHpoTermListView(entry);
+            updateHpoTermListView(entry);
         } else {
             PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
                             ". Save or cancel editing current loinc annotation before switching to others",
@@ -406,7 +408,6 @@ public class AnnotateTabController {
 
     @FXML private void initLOINCtable(ActionEvent e) {
         logger.trace("init LOINC table");
-        initTableStructure();
         String loincCoreTableFile=model.getPathToLoincCoreTableFile();
         if (loincCoreTableFile==null) {
             PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
@@ -419,6 +420,7 @@ public class AnnotateTabController {
         loincTableView.getItems().clear(); // remove any previous entries
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        initTableStructure();
 
         e.consume();
     }
