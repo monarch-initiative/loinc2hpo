@@ -657,6 +657,50 @@ public class AnnotateTabController {
         e.consume();
     }
 
+    @FXML private void doubleClickTreeView(MouseEvent e) {
+
+        if (e.getClickCount() == 2
+                && this.treeView.getRoot() != null
+                && this.treeView.getSelectionModel().getSelectedItem() != null ) {
+            logger.trace("a child item is double clicked. current selection is ");
+            TreeItem<HPO_TreeView> current = this.treeView.getSelectionModel().getSelectedItem();
+            List<HPO_Class_Found> parents = SparqlQuery.getParents
+                    (current.getValue().hpo_class_found.getId());
+            List<HPO_Class_Found> children = SparqlQuery.getChildren
+                    (current.getValue().hpo_class_found.getId());
+            logger.trace("current item: " + current.getValue().hpo_class_found.getLabel() + " Parents: " + parents.size() + " Children: " + children.size());
+
+            TreeItem<HPO_TreeView> rootItem = this.treeView.getRoot();
+            rootItem.setExpanded(true);
+
+            if (parents.size() > 0 || children.size() > 0) {
+                rootItem.getChildren().clear();
+            }
+
+            if (parents.size() > 0) {
+                for (HPO_Class_Found parent : parents) {
+                    TreeItem<HPO_TreeView> parentItem = new TreeItem<>(new
+                            HPO_TreeView(parent));
+                    rootItem.getChildren().add(parentItem);
+                    parentItem.getChildren().add(current);//all children of query item will be kept
+                    current.getChildren().clear(); //important if don't want to have a long list of grandchildren...
+                    parentItem.setExpanded(true);
+                    current.setExpanded(true);
+                    if (children.size() > 0) {
+                        for (HPO_Class_Found child : children) {
+                            TreeItem<HPO_TreeView> childItem = new TreeItem<>
+                                    (new HPO_TreeView(child));
+                            current.getChildren().add(childItem);
+                        }
+                    }
+                }
+            }
+            this.treeView.setRoot(rootItem);
+        }
+        e.consume();
+
+    }
+
     @FXML private void handleCandidateHPODragged(MouseEvent e) {
 
         System.out.println("Drag event detected");

@@ -237,7 +237,7 @@
                         <Insets left="20.0" right="20.0" top="20.0" />
                      </VBox.margin>
                   </TextArea>
-                  <TreeView fx:id="treeView" onContextMenuRequested="#getContextMenu4TreeView" onDragDetected="#handleDragInTreeView" VBox.vgrow="ALWAYS">
+                  <TreeView fx:id="treeView" onContextMenuRequested="#getContextMenu4TreeView" onDragDetected="#handleDragInTreeView" onMouseClicked="#doubleClickTreeView" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
                      </VBox.margin>
