@@ -20,6 +20,7 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WriteToFile {
@@ -132,7 +133,7 @@ public class WriteToFile {
      */
     public static Map<LoincId, UniversalLoinc2HPOAnnotation> fromTSV(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new HashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {
             String[] elements = serialized.split("\\t");
