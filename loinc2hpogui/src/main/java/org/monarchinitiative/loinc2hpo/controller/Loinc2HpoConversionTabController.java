@@ -62,36 +62,6 @@ public class Loinc2HpoConversionTabController {
             items.add(display);
         }
         patientPhenotypeTableView.setItems(items);
-        /**
-        ObjectMapper mapper = new ObjectMapper();
-        File f = new File(path);
-        try {
-            FileInputStream fis = new FileInputStream(f);
-            byte[] data = new byte[(int) f.length()];
-            fis.read(data);
-            fis.close();
-            JsonNode node = mapper.readTree(data);
-            Map<LoincId, Loinc2HPOAnnotation> loincAnnotationMap = model.getLoincAnnotationMap();
-           //estmap=loincparser.getLoincAnnotationMap();
-            LabTestResultInHPO res = FhirResourceRetriever.fhir2testrest(node,loincAnnotationMap);
-            ObservableList<String> items = FXCollections.observableArrayList ();
-            if (res==null) {
-                items.add("Could not find test");
-            } else {
-                TermId id = res.getTermId();
-                String name = model.termId2HpoName(id);
-                String display = String.format("%s [%s]",name,id.getIdWithPrefix());
-                if (res.isNegated()) {
-                    display="NOT: "+display;
-                }
-                items.add(display);
-            }
-            patientPhenotypeTableView.setItems(items);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-         **/
     }
 
     @FXML
@@ -104,7 +74,8 @@ public class Loinc2HpoConversionTabController {
              path = f.getAbsolutePath();
              model.setFhirFilePath(path);
         } else {
-            logger.error("Unable to obtain path to FHIR observation JSON file");
+            logger.trace("Unable to obtain path to FHIR observation JSON file");
+            return;
         }
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
@@ -115,10 +86,8 @@ public class Loinc2HpoConversionTabController {
             }
             patientRecordListView.setItems(items);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error happened during reading Json file: " + path);
         }
-        logger.debug("user wants to import patient data");
-
     }
 
 }
