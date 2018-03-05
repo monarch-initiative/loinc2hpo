@@ -584,9 +584,7 @@ public class AnnotateTabController {
         }
     }
 
-
-
-
+    
     /**
      * private class for showing HPO class in treeview.
      * Another reason to have this is to facilitate drag and draw from treeview.
@@ -632,26 +630,21 @@ public class AnnotateTabController {
 
             TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView());
             rootItem.setExpanded(true);
+            TreeItem<HPO_TreeView> current = new TreeItem<>
+                    (new HPO_TreeView(hpo_class_found));
 
-            if (parents.size() > 0) {
-                for (HPO_Class_Found parent : parents) {
-                    TreeItem<HPO_TreeView> parentItem = new TreeItem<>(new
-                            HPO_TreeView(parent));
-                    rootItem.getChildren().add(parentItem);
-                    TreeItem<HPO_TreeView> current = new TreeItem<>
-                            (new HPO_TreeView(hpo_class_found));
-                    parentItem.getChildren().add(current);
-                    parentItem.setExpanded(true);
-                    current.setExpanded(true);
-                    if (children.size() > 0) {
-                        for (HPO_Class_Found child : children) {
-                            TreeItem<HPO_TreeView> childItem = new TreeItem<>
-                                    (new HPO_TreeView(child));
-                            current.getChildren().add(childItem);
-                        }
-                    }
-                }
-            }
+            parents.stream() //add parent terms to root; add current to each parent term
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(p -> {
+                        rootItem.getChildren().add(p);
+                        p.getChildren().add(current);
+                        p.setExpanded(true);
+                    });
+            current.setExpanded(true);
+            children.stream() //add child terms to current
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(current.getChildren()::add);
+
             this.treeView.setRoot(rootItem);
         }
         e.consume();
@@ -660,15 +653,16 @@ public class AnnotateTabController {
     @FXML private void doubleClickTreeView(MouseEvent e) {
 
         if (e.getClickCount() == 2
-                && this.treeView.getRoot() != null
-                && this.treeView.getSelectionModel().getSelectedItem() != null ) {
-            logger.trace("a child item is double clicked. current selection is ");
+                && this.treeView.getRoot() != null) {
             TreeItem<HPO_TreeView> current = this.treeView.getSelectionModel().getSelectedItem();
+            if (current == null || current.getValue() == null
+                    || current.getValue().hpo_class_found == null) {
+                return;
+            }
             List<HPO_Class_Found> parents = SparqlQuery.getParents
                     (current.getValue().hpo_class_found.getId());
             List<HPO_Class_Found> children = SparqlQuery.getChildren
                     (current.getValue().hpo_class_found.getId());
-            logger.trace("current item: " + current.getValue().hpo_class_found.getLabel() + " Parents: " + parents.size() + " Children: " + children.size());
 
             TreeItem<HPO_TreeView> rootItem = this.treeView.getRoot();
             rootItem.setExpanded(true);
@@ -677,25 +671,18 @@ public class AnnotateTabController {
                 rootItem.getChildren().clear();
             }
 
-            if (parents.size() > 0) {
-                for (HPO_Class_Found parent : parents) {
-                    TreeItem<HPO_TreeView> parentItem = new TreeItem<>(new
-                            HPO_TreeView(parent));
-                    rootItem.getChildren().add(parentItem);
-                    parentItem.getChildren().add(current);//all children of query item will be kept
-                    current.getChildren().clear(); //important if don't want to have a long list of grandchildren...
-                    parentItem.setExpanded(true);
-                    current.setExpanded(true);
-                    if (children.size() > 0) {
-                        for (HPO_Class_Found child : children) {
-                            TreeItem<HPO_TreeView> childItem = new TreeItem<>
-                                    (new HPO_TreeView(child));
-                            current.getChildren().add(childItem);
-                        }
-                    }
-                }
-            }
-            this.treeView.setRoot(rootItem);
+            parents.stream()
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(p -> {
+                        rootItem.getChildren().add(p);
+                        p.getChildren().add(current);
+                        p.setExpanded(true);
+                    });
+            current.getChildren().clear();
+            current.setExpanded(true);
+            children.stream()
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(current.getChildren()::add);
         }
         e.consume();
 
