@@ -55,6 +55,8 @@ Multiple features are added. This will be the baseline for future tracking.
 * Allow adding multiple labels to Github issues
 
 * Disable the function to clear annotation fields during manual query
+
+* Loinc entries change color if they have been annotated
   
 
 

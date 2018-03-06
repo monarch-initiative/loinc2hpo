@@ -93,7 +93,7 @@ public class AnnotateTabController {
     private ImmutableMap<String,HpoTerm> termmap;
 
     @FXML private ListView hpoListView;
-    private ObservableList<String> sparqlQueryResult = FXCollections.observableArrayList();
+    private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
 
 
 
@@ -164,7 +164,6 @@ public class AnnotateTabController {
 
     }
 
-
     private void noLoincEntryAlert(){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("No Selection ERROR");
@@ -220,49 +219,39 @@ public class AnnotateTabController {
         nameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLongName()));
         //hpoListView.setOrientation(Orientation.HORIZONTAL);
 
-        loincTableView.setRowFactory( tv -> {
-            TableRow<LoincEntry> row = new TableRow<LoincEntry>() {
-                @Override
-                public void updateItem(LoincEntry o, boolean empty) {
-                    super.updateItem(o, empty);
-                    ********
-                    o is null
-                    ********
-                    if (model.getLoincAnnotationMap().containsKey(o.getLOINC_Number())){
-                        setStyle("-fx-background-color: green;");
-                    }
-                }
-            };
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    LoincEntry rowData = row.getItem();
-                    if (model.getLoincUnderEditing() == null || //not under Editing mode
-                            //or query the loinc code under editing
-                            (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData))) {
-                        updateHpoTermListView(rowData);
-                    } else {
-                        PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
-                                        ". Save or cancel editing current loinc annotation before switching to others",
-                                "Under Editing mode");
-                    }
-
-                    //clear text in abnormality text fields if not currently editing a term
-                    if (!createAnnotationButton.getText().equals("Save")) { //under saving mode
-                        clearAbnormalityTextField();
-                        //inialize the flag field
-                        flagForAnnotation.setIndeterminate(false);
-                        flagForAnnotation.setSelected(false);
-                        createAnnotationSuccess.setFill(Color.WHITE);
-                        annotationNoteField.setText("");
-                    }
-                }
-            });
-            return row ;
-        });
-
         accordion.setExpandedPane(loincTableTitledpane);
     }
 
+    @FXML
+    private void handleDoubleClickLoincTable(MouseEvent event) {
+        if (event.getClickCount() == 2 ) {
+            LoincEntry rowData = loincTableView.getSelectionModel().getSelectedItem();
+            if (rowData == null) {
+                return;
+            }
+
+            //disable further action if the user is not under Editing mode
+            if(model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData)){
+                PopUps.showInfoMessage("You are currently editing " + rowData.getLOINC_Number() +
+                                ". Save or cancel editing current loinc annotation before switching to others",
+                        "Under Editing mode");
+            } else {
+                updateHpoTermListView(rowData);
+            }
+
+        }
+
+        //clear text in abnormality text fields if not currently editing a term
+        if (!createAnnotationButton.getText().equals("Save")) { //under saving mode
+            clearAbnormalityTextField();
+            //inialize the flag field
+            flagForAnnotation.setIndeterminate(false);
+            flagForAnnotation.setSelected(false);
+            createAnnotationSuccess.setFill(Color.WHITE);
+            annotationNoteField.setText("");
+        }
+        event.consume();
+    }
 
 
     private void updateHpoTermListView(LoincEntry entry) {
@@ -277,12 +266,12 @@ public class AnnotateTabController {
         }
         String name = entry.getLongName();
         sparqlQueryResult.clear();
-        SparqlQuery.query_auto(name).stream().map(p -> p.toString()).forEach(sparqlQueryResult::add);
+        SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
         logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
         if (sparqlQueryResult.size() == 0) {
             String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +
                     "alternative keys (synonyms)";
-            sparqlQueryResult.add(new String(noHPOfoundMessage));
+            sparqlQueryResult.add(new HPO_Class_Found(noHPOfoundMessage, null, null, null));
         }
         hpoListView.setItems(sparqlQueryResult);
     }
@@ -1182,8 +1171,8 @@ public class AnnotateTabController {
     }
 
     //change the color of rows to green after the loinc code has been annotated
+    /**
     protected void changeColorLoincTableView(){
-/**
         loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
             @Override
             protected void updateItem(String item, boolean empty){
@@ -1201,36 +1190,61 @@ public class AnnotateTabController {
             }
 
         });
- **/
     }
+     **/
 
-/**
- * The program never go to setRowFactory. WHy?
+
+ // The program never go to setRowFactory. WHy?
     //change the color of rows to green after the loinc code has been annotated
     protected void changeColorLoincTableView(){
         logger.debug("enter changeColorLoincTableView");
         logger.info("model size: " + model.getLoincAnnotationMap().size());
-
+/**
         loincTableView.setRowFactory(x -> new TableRow<LoincEntry>() {
             @Override
-            protected void updateItem(LoincEntry item, boolean empty){
+            protected void updateItem(LoincEntry item, boolean empty) {
                 super.updateItem(item, empty);
                 logger.info("row loinc num: " + item.getLOINC_Number());
 
                 //if(item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
-                if(item != null && !empty) {
-                        logger.info("model contains " + item);
-                        logger.info("num of items in model " + model.getLoincAnnotationMap().size());
-                        //TableRow<LoincEntry> currentRow = getTableRow();
-                        setStyle("-fx-background-color: lightblue");
+                if (item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
+                    logger.info("model contains " + item);
+                    logger.info("num of items in model " + model.getLoincAnnotationMap().size());
+                    //TableRow<LoincEntry> currentRow = getTableRow();
+                    setStyle("-fx-background-color: lightblue");
+                } else {
+                    setStyle("-fx-background-color: white");
+                }
+            }
+        });
 
+**/
+        loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty){
+                super.updateItem(item, empty);
+                if(item != null && !empty) {
+                    setText(item);
+                    try {
+                        if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
+                            logger.info("model contains " + item);
+                            logger.info("num of items in model " + model.getLoincAnnotationMap().size());
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: lightblue");
+                            //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
+                        } else {//for reasons I don't understand, this else block is critical to make it work!!!
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("");
+                        }
+                    } catch (MalformedLoincCodeException e) {
+                        //do nothing
+                    }
                 }
             }
 
         });
         logger.debug("exit changeColorLoincTableView");
     }
-**/
 
 
 

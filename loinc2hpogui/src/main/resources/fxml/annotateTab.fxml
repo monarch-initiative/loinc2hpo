@@ -252,7 +252,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
-                        <TableView fx:id="loincTableView" layoutY="-7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="loincTableView" layoutY="-7.0" onMouseClicked="#handleDoubleClickLoincTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn fx:id="loincIdTableColumn" maxWidth="100.0" minWidth="60.0" prefWidth="60.0" text="LOINC" />
                               <TableColumn fx:id="nameTableColumn" prefWidth="140.0" text="Name" />

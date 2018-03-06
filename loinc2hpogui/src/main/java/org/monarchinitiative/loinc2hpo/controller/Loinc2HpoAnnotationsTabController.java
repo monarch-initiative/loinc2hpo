@@ -213,6 +213,8 @@ public class Loinc2HpoAnnotationsTabController {
         }
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
+
+        annotateTabController.changeColorLoincTableView();
     }
 
 
