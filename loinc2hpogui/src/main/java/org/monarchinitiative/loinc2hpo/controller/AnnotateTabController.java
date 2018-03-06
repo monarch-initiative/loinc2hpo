@@ -162,6 +162,24 @@ public class AnnotateTabController {
         autoQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with automatically generated keys"));
         manualQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with manually typed keys"));
 
+        hpoListView.setCellFactory(new Callback<ListView<HPO_Class_Found>, ListCell<HPO_Class_Found>>(){
+            @Override
+            public ListCell<HPO_Class_Found> call(ListView<HPO_Class_Found> param) {
+                return new ListCell<HPO_Class_Found>() {
+                    @Override
+                    public void updateItem(HPO_Class_Found hpo, boolean empty){
+                        super.updateItem(hpo, empty);
+                        if (hpo != null) {
+                            setText(hpo.toString());
+                            Tooltip tooltip = new Tooltip(hpo.getDefinition());
+                            tooltip.setPrefWidth(300);
+                            tooltip.setWrapText(true);
+                            setTooltip(tooltip);
+                        }
+                    }
+                };
+            }
+        });
     }
 
     private void noLoincEntryAlert(){
