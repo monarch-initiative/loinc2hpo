@@ -180,6 +180,37 @@ public class AnnotateTabController {
                 };
             }
         });
+
+
+        treeView.setCellFactory(new Callback<TreeView<HPO_TreeView>, TreeCell<HPO_TreeView>>() {
+            @Override
+            public TreeCell<HPO_TreeView> call(TreeView<HPO_TreeView> param) {
+                return new TreeCell<HPO_TreeView>() {
+                    @Override
+                    public void updateItem(HPO_TreeView hpo, boolean empty){
+                        super.updateItem(hpo, empty);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            if (hpo != null && hpo.hpo_class_found == null) {
+                                setText("root");
+                            }
+                            if (hpo != null && hpo.hpo_class_found != null) {
+                                setText(hpo.toString());
+                                if (hpo.hpo_class_found.getDefinition() != null) {
+                                    Tooltip tooltip = new Tooltip(hpo.hpo_class_found.getDefinition());
+                                    tooltip.setPrefWidth(300);
+                                    tooltip.setWrapText(true);
+                                    setTooltip(tooltip);
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
     }
 
     private void noLoincEntryAlert(){
@@ -646,7 +677,7 @@ public class AnnotateTabController {
             List<HPO_Class_Found> children = SparqlQuery.getChildren
                     (hpo_class_found.getId());
 
-            TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView());
+            TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView()); //dummy root node
             rootItem.setExpanded(true);
             TreeItem<HPO_TreeView> current = new TreeItem<>
                     (new HPO_TreeView(hpo_class_found));
