@@ -12,6 +12,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -139,6 +141,8 @@ public class AnnotateTabController {
 
     @FXML private Button autoQueryButton;
     @FXML private Button manualQueryButton;
+
+    @FXML private Menu loincListsButton;
 
 
     @Inject private CurrentAnnotationController currentAnnotationController;
@@ -462,23 +466,7 @@ public class AnnotateTabController {
 
         e.consume();
     }
-/**
-    @FXML private void initHPOmodelButton(ActionEvent e){
 
-        //Remind user that this is a time consuming process
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Time Consuming step");
-        alert.setHeaderText("Wait for the process to complete");
-        alert.setContentText("This step will take about 2 minutes. It needs " +
-                        "to be executed once for every session");
-        alert.showAndWait();
-
-        String pathToHPO = this.model.getPathToHpoOwlFile();
-        logger.info("pathToHPO: " + pathToHPO);
-        SparqlQuery.getOntologyModel(pathToHPO);
-
-    }
-**/
     @FXML private void initHPOmodelButton(ActionEvent e){
 
         String pathToHPO = this.model.getPathToHpoOwlFile();
@@ -511,7 +499,6 @@ public class AnnotateTabController {
         e.consume();
 
     }
-
 
     @FXML private void search(ActionEvent e) {
         e.consume();
@@ -566,6 +553,7 @@ public class AnnotateTabController {
     @FXML private void handleLoincFiltering(ActionEvent e){
 
         List<LoincEntry> entrylist=new ArrayList<>();
+        String enlistName = null;
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
@@ -575,6 +563,7 @@ public class AnnotateTabController {
         int malformedLoincCount = 0;
         if (f != null) {
             String path = f.getAbsolutePath();
+            enlistName = f.getName();
             try {
                 Set<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
                 //loincOfInterest.stream().forEach(System.out::print);
@@ -625,12 +614,66 @@ public class AnnotateTabController {
             if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
+            model.addFilteredList(enlistName, new ArrayList<>(entrylist)); //keep a record in model
             entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
             return;
         }
+    }
+
+    @FXML
+    private void lastLoincList(ActionEvent e) {
+
+        e.consume();
+        List<LoincEntry> lastLoincList = model.previousLoincList();
+        if (lastLoincList != null && !lastLoincList.isEmpty()) {
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(lastLoincList);
+        }
+    }
+
+    @FXML
+    private void nextLoincList(ActionEvent e) {
+        e.consume();
+
+        List<LoincEntry> nextLoincList = model.nextLoincList();
+        if (nextLoincList != null && !nextLoincList.isEmpty()) {
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(nextLoincList);
+        }
+    }
+
+    @FXML
+    private void buildContextMenuForLoinc(Event e) {
+        e.consume();
+        logger.trace("context memu for loinc table requested");
+        if (!model.getFilteredLoincListsMap().isEmpty()) {
+            loincListsButton.setDisable(false);
+            loincListsButton.getItems().clear();
+            List<MenuItem> menuItems = new ArrayList<>();
+            model.getFilteredLoincListsMap().keySet().stream().forEach(p -> {
+                MenuItem menuItem = new MenuItem(p);
+                menuItems.add(menuItem);
+            });
+            loincListsButton.getItems().addAll(menuItems);
+            logger.trace("menu items added");
+            //loincListsButton.getItems().forEach(p -> logger.trace("current: " + p.getText()));
+            loincListsButton.getItems().forEach(p -> p.setOnAction((event) -> {
+                logger.trace(p.getText());
+                List<LoincEntry> loincList = model.getLoincList(p.getText());
+                if (loincList != null && !loincList.isEmpty()) {
+                    loincTableView.getItems().clear();
+                    loincTableView.getItems().addAll(loincList);
+                }
+            } ));
+
+        } else {
+            loincListsButton.setDisable(true);
+            loincListsButton.hide();
+        }
+        logger.trace("exit buildContextMenuForLoinc()");
     }
 
 

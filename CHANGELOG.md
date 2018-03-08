@@ -57,6 +57,10 @@ Multiple features are added. This will be the baseline for future tracking.
 * Disable the function to clear annotation fields during manual query
 
 * Loinc entries change color if they have been annotated
+
+* Add tooltips to HPO listview and treeview
+
+* Allow user to switch to previously selected Loinc list
   
 
 
