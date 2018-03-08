@@ -9,11 +9,11 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,6 +39,7 @@ import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
+import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -48,9 +49,7 @@ import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 
@@ -142,7 +141,16 @@ public class AnnotateTabController {
     @FXML private Button autoQueryButton;
     @FXML private Button manualQueryButton;
 
+    @FXML private ContextMenu loincTableContextMenu;
     @FXML private Menu loincListsButton;
+    @FXML private MenuItem backMenuItem;
+    @FXML private MenuItem forwardMenuItem;
+    @FXML private Menu userCreatedLoincListsButton;
+    @FXML private Menu exportLoincListButton;
+    @FXML private Menu importLoincGroupButton;
+    final private ObservableList<String> userCreatedLoincLists = FXCollections.observableArrayList();
+    final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
+    final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
 
 
     @Inject private CurrentAnnotationController currentAnnotationController;
@@ -212,6 +220,119 @@ public class AnnotateTabController {
                         }
                     }
                 };
+            }
+        });
+
+        //if user creates a new Loinc group, add two menuitems for it, and specify the actions when those menuitems are
+        //clicked
+        userCreatedLoincLists.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        logger.trace(c + " was added");
+                        c.getAddedSubList()
+                            .stream()
+                            .filter(p -> !model.getUserCreatedLoincLists().containsKey(p))
+                            .forEach(p -> {
+
+                                model.addUserCreatedLoincList(p, new LinkedHashSet<>());
+
+                                MenuItem newListMenuItem = new MenuItem(p);
+                                userCreatedLoincListsButton.getItems().add(newListMenuItem);
+                                newListMenuItem.setOnAction((event -> {
+                                    logger.trace("action detected");
+                                    if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
+                                        LoincId loincId = loincTableView.getSelectionModel()
+                                                .getSelectedItem().getLOINC_Number();
+                                        if (model.getUserCreatedLoincLists().get(p).contains(loincId)) {
+                                            model.getUserCreatedLoincLists().get(p)
+                                                    .remove(loincId);
+                                        } else {
+                                            model.getUserCreatedLoincLists().get(p)
+                                                    .add(loincId);
+                                        }
+
+                                        changeColorLoincTableView();
+                                    }
+                                }));
+
+                                MenuItem newExportMenuItem = new MenuItem(p);
+                                exportLoincListButton.getItems().add(newExportMenuItem);
+                                newExportMenuItem.setOnAction((event -> {
+                                    logger.trace("action detected");
+                                    if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
+                                        Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p);
+                                        if (loincIds.isEmpty()) {
+                                            return;
+                                        }
+                                        FileChooser chooser = new FileChooser();
+                                        chooser.setTitle("Save Loinc List: ");
+                                        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.txt"));
+                                        chooser.setInitialFileName(p);
+                                        File f = chooser.showSaveDialog(null);
+                                        String filepath;
+                                        if (f == null) {
+                                            return;
+                                        } else {
+                                          filepath = f.getAbsolutePath();
+                                        }
+
+                                        StringBuilder builder = new StringBuilder();
+                                        loincIds.forEach(l -> {
+                                            builder.append (l);
+                                            builder.append("\n");
+                                        });
+
+                                        WriteToFile.writeToFile(builder.toString().trim(), filepath);
+                                    }
+                                }));
+
+                                MenuItem newImportMenuItem = new MenuItem(p);
+                                importLoincGroupButton.getItems().add(newImportMenuItem);
+                                newImportMenuItem.setOnAction((event) -> {
+                                    logger.trace("user wants to import " + p);
+                                    FileChooser chooser = new FileChooser();
+                                    chooser.setTitle("Select file to import from");
+                                    File f = chooser.showOpenDialog(null);
+                                    if (f == null) {
+                                        return;
+                                    }
+                                    List<String> malformed = new ArrayList<>();
+                                    List<String> notFound = new ArrayList<>();
+                                    try {
+                                        LoincOfInterest loincSet = new LoincOfInterest(f.getAbsolutePath());
+                                        Set<String> loincIds = loincSet.getLoincOfInterest();
+                                        loincIds.forEach(l -> {
+                                            LoincId loincId = null;
+                                            try {
+                                                loincId = new LoincId(l);
+                                            } catch (MalformedLoincCodeException e) {
+                                                malformed.add(l);
+                                            }
+                                            if (model.getLoincEntryMap().containsKey(loincId)) {
+                                                model.getUserCreatedLoincLists().get(p).add(loincId);
+                                            } else {
+                                                notFound.add(l);
+                                            }
+                                            changeColorLoincTableView();
+
+                                        });
+                                    } catch (FileNotFoundException e) {
+                                        logger.error("File not found. Should never happen");
+                                    }
+                                    if (!malformed.isEmpty() || !notFound.isEmpty()) {
+                                        String malformedString = String.join("\n", malformed);
+                                        String notFoundString = String.join("\n", notFound);
+                                        PopUps.showInfoMessage(String.format("Malformed Loinc: %d\n%s\nNot Found: %d\n%s", malformed.size(), malformedString, notFound.size(), notFoundString), "Error during importing");
+                                    }
+
+                                });
+                        });
+                    } else {
+                        logger.error("This should never happen");
+                    }
+                }
             }
         });
 
@@ -646,9 +767,55 @@ public class AnnotateTabController {
     }
 
     @FXML
-    private void buildContextMenuForLoinc(Event e) {
+    private void newLoincList(ActionEvent e) {
+
         e.consume();
-        logger.trace("context memu for loinc table requested");
+        String nameOfList= PopUps.getStringFromUser("New Loinc List", "Type in the name", "name");
+        if (nameOfList == null) {
+            return;
+        }
+        /**
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose file to save new Loinc list");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
+        File f = chooser.showSaveDialog(null);
+        if (f == null) {
+            return;
+        } else {
+            String path = f.getAbsolutePath();
+            logger.trace("path for new loinc list: " + f);
+        }
+         **/
+        model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
+        userCreatedLoincListsButton.getItems().add(new MenuItem(nameOfList));
+        exportLoincListButton.getItems().add(new MenuItem(nameOfList));
+
+    }
+
+    private void initializeUserCreatedLoincListsIfNecessary(){
+        //execute the functionalities only once in each secession
+        if (!model.getUserCreatedLoincLists().isEmpty()) {
+            return;
+        }
+        //by default, there will be two user created lists
+        List<String> initialListNames = new ArrayList<>();
+        initialListNames.add(LOINCWAITING4NEWHPO);
+        initialListNames.add(LOINCUNABLE2ANNOTATE);
+        userCreatedLoincLists.addAll(initialListNames);
+        /**
+        //create a menuitem for each and add to two menus; also create a list to record data
+        userCreatedLoincListsButton.getItems().clear();
+        exportLoincListButton.getItems().clear();
+        initialListNames.forEach(p -> {
+            userCreatedLoincListsButton.getItems().add(new MenuItem(p));
+            exportLoincListButton.getItems().add(new MenuItem(p));
+            model.addUserCreatedLoincList(p, new ArrayList<>());
+        });
+         **/
+    }
+
+
+    private void initializeMenuItemsForFilteredLists() {
         if (!model.getFilteredLoincListsMap().isEmpty()) {
             loincListsButton.setDisable(false);
             loincListsButton.getItems().clear();
@@ -671,8 +838,15 @@ public class AnnotateTabController {
 
         } else {
             loincListsButton.setDisable(true);
-            loincListsButton.hide();
         }
+    }
+
+    @FXML
+    private void buildContextMenuForLoinc(Event e) {
+        e.consume();
+        logger.trace("context memu for loinc table requested");
+        initializeMenuItemsForFilteredLists();
+        initializeUserCreatedLoincListsIfNecessary();
         logger.trace("exit buildContextMenuForLoinc()");
     }
 
@@ -1322,9 +1496,19 @@ public class AnnotateTabController {
                             logger.info("model contains " + item);
                             logger.info("num of items in model " + model.getLoincAnnotationMap().size());
                             TableRow<LoincEntry> currentRow = getTableRow();
-                            currentRow.setStyle("-fx-background-color: lightblue");
+                            currentRow.setStyle("-fx-background-color: cyan");
                             //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
-                        } else {//for reasons I don't understand, this else block is critical to make it work!!!
+                        } else if (model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO) != null
+                                && model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).contains(new LoincId(item))) {
+                            logger.info("model usercreated list for LoincWaiting4NewHPO # items: " +
+                                    model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).size());
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: deeppink");
+                        } else if (model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE) != null
+                                && model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE).contains(new LoincId(item))) {
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: lightcoral");
+                        } else{//for reasons I don't understand, this else block is critical to make it work!!!
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("");
                         }

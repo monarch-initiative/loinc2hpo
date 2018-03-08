@@ -269,15 +269,15 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                            <contextMenu>
-                              <ContextMenu onShowing="#buildContextMenuForLoinc">
+                              <ContextMenu fx:id="loincTableContextMenu" onShowing="#buildContextMenuForLoinc">
                                 <items>
-                                  <MenuItem mnemonicParsing="false" onAction="#lastLoincList" text="&lt;- back" />
-                                    <MenuItem mnemonicParsing="false" onAction="#nextLoincList" text="-&gt; forward" />
-                                    <Menu fx:id="loincListsButton" mnemonicParsing="false" text="lists">
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" text="Action 1" />
-                                      </items>
-                                    </Menu>
+                                  <MenuItem fx:id="backMemuItem" mnemonicParsing="false" onAction="#lastLoincList" text="&lt;- back" />
+                                    <MenuItem fx:id="forwardMenuItem" mnemonicParsing="false" onAction="#nextLoincList" text="-&gt; forward" />
+                                    <Menu fx:id="loincListsButton" mnemonicParsing="false" text="lists" />
+                                    <MenuItem mnemonicParsing="false" onAction="#newLoincList" text="New Group" />
+                                    <Menu fx:id="userCreatedLoincListsButton" mnemonicParsing="false" text="Group/Ungroup..." />
+                                    <Menu fx:id="exportLoincListButton" mnemonicParsing="false" text="Export..." />
+                                    <Menu fx:id="importLoincGroupButton" mnemonicParsing="false" text="Import..." />
                                 </items>
                               </ContextMenu>
                            </contextMenu>

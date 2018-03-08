@@ -61,6 +61,8 @@ Multiple features are added. This will be the baseline for future tracking.
 * Add tooltips to HPO listview and treeview
 
 * Allow user to switch to previously selected Loinc list
+
+* Allow user to categorize Loinc entries
   
 
 

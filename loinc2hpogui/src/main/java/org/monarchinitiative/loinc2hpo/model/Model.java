@@ -42,6 +42,7 @@ public class Model {
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
     public Map<LoincId,UniversalLoinc2HPOAnnotation> loincAnnotationMap =new LinkedHashMap<>();
+    private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
@@ -72,6 +73,9 @@ public class Model {
     }
 
     public List<LoincEntry> previousLoincList(){
+        if (filteredLoincLists.isEmpty()) {
+            return null;
+        }
         int current_i = filteredLoincLists.indexOf(currentLoincList);
         if (current_i - 1 >= 0) {
             currentLoincList = filteredLoincLists.get(current_i - 1);
@@ -82,6 +86,9 @@ public class Model {
     }
 
     public List<LoincEntry> nextLoincList() {
+        if (filteredLoincLists.isEmpty()) {
+            return null;
+        }
         int current_i = filteredLoincLists.indexOf(currentLoincList);
         if (current_i + 1 <= filteredLoincLists.size() - 1) {
             currentLoincList = filteredLoincLists.get(current_i + 1);
@@ -256,6 +263,13 @@ public class Model {
 
     public Map<LoincId,UniversalLoinc2HPOAnnotation> getLoincAnnotationMap(){ return loincAnnotationMap; }
 
+    public Map<String, Set<LoincId>> getUserCreatedLoincLists() {
+        return userCreatedLoincLists;
+    }
+
+    public void addUserCreatedLoincList(String listName, Set<LoincId> list) {
+        this.userCreatedLoincLists.put(listName, list);
+    }
 
     private void init() {
     }
