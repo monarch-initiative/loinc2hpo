@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.CheckComboBox;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
@@ -42,6 +43,7 @@ public class GitHubPopup {
     private List<String> labels=new ArrayList<>();
 
     private String chosenLabel=null;
+    private List<String> chosenLabels = new ArrayList<>(); //allow chosen multiple labels
 
     /**
      * True if our new GitHub issue is to suggest a new child term for an existing HPO Term.
@@ -90,7 +92,9 @@ public class GitHubPopup {
         window.initModality(Modality.APPLICATION_MODAL);
 
         ObservableList<String> options = FXCollections.observableArrayList(labels);
-        final ComboBox comboBox = new ComboBox(options);
+        //final ComboBox comboBox = new ComboBox(options);
+        final CheckComboBox<String> checkComboBox = new CheckComboBox<>(options);
+        checkComboBox.getCheckModel().check(options.indexOf("loinc"));
 
         VBox root = new VBox();
         root.setPadding(new Insets(10));
@@ -134,17 +138,14 @@ public class GitHubPopup {
         grid.add(pwBox, 1, 1);
         Label ghlabel = new Label("Label:");
         grid.add(ghlabel,0,2);
-        grid.add(comboBox,1,2);
+        grid.add(checkComboBox,1,2);
 
         okButton.setOnAction(e -> {
             githubIssueText = textArea.getText();
             uname = userTextField.getText();
             pword = pwBox.getText();
-            if (comboBox.getSelectionModel().getSelectedItem()!=null) {
-                String item = comboBox.getSelectionModel().getSelectedItem().toString();
-                if (item!=null && !item.isEmpty()) {
-                    this.chosenLabel=item;
-                }
+            if (checkComboBox.getCheckModel().getCheckedItems()!=null) {
+                this.chosenLabels = checkComboBox.getCheckModel().getCheckedItems();
             }
             window.close();
         });
@@ -199,8 +200,26 @@ public class GitHubPopup {
     }
 
 
+    //Method for UnitTest
+    public void setGithubIssueText(String githubIssueText) { this.githubIssueText = githubIssueText;}
+
     public String retrieveGitHubIssue() {
         return githubIssueText;
+    }
+
+    public String retrieveSuggestedTerm() {
+        String newTerm = "UNKNOWN";
+        try {
+            //The line contains the suggested new term looks like this: "New term label:\n"
+            String[] lineElements = githubIssueText.split("\n")[1].split(":");
+            if (lineElements.length == 2) {
+                newTerm = lineElements[1].trim();
+            }
+        } catch (Exception e) {
+            //do nothing
+        }
+
+        return newTerm;
     }
 
     public String getGitHubUserName() {
@@ -211,7 +230,10 @@ public class GitHubPopup {
         return pword;
     }
 
+    @Deprecated
     public String getGitHubLabel() { return chosenLabel; }
+
+    public List<String> getGitHubLabels() { return this.chosenLabels; }
 
     public void setBiocuratorId(String id) {
 

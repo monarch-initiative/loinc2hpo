@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>0.0.3</version>
+    <version>1.0.3</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -817,10 +817,11 @@
             </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/xml-apis/xml-apis -->
+        <!-- !!!HAVE TO use 1.4.01 , do not use higher version!!! -->
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>2.0.2</version>
+            <version>1.4.01</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-model -->
         <dependency>
@@ -880,38 +881,11 @@
             <artifactId>plexus-classworlds</artifactId>
             <version>2.5.2</version>
         </dependency>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>9.0.0</version>
+        </dependency>
 
 
     </dependencies>
@@ -957,14 +931,42 @@
 
 
     <build>
-        <!--  <sourceDirectory>src</sourceDirectory>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>CodeSystems/*.tsv</include>
+                    <include>external2internalCodeMap/*.tsv</include>
+                </includes>
+                <excludes>
+                    <exclude>hp.owl</exclude>
+                    <exclude>data_UNC_annotated.csv</exclude>
+                    <exclude>loinc_most_frequent.csv</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>loinc2hpogui/src/main/resources/META-INF/services</directory>
+                <filtering>false</filtering>
+                <includes>
+                    <include>org.apache.jena.system.JenaSubsystemLifecycle</include>
+                </includes>
+            </resource>
+
+        </resources>
+
+        <!--sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
             <resource>
-                <directory>src/main/resources/data</directory>
+                <directory>src/main/resources/CodeSystems</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources/external2internalCodeMap</directory>
             </resource>
 
             <resource>
@@ -972,7 +974,8 @@
                 <includes>
                     <include>**/*.properties</include>
                 </includes>
-            </resource>
+            <resource>
+
             <resource>
                 <directory>src/test/java</directory>
                 <includes>
@@ -985,9 +988,9 @@
                     <include>**/*.properties</include>
                 </includes>
             </resource>
+
         </resources>
         <finalName>org.monarchinitiative.loinc2hpo-${project.version}</finalName>
-
 -->
 
 
@@ -1088,47 +1091,79 @@
             </plugin>
 
             <!-- Compilation -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                <!--<version>3.3</version>-->
+                <!--<configuration>-->
+                    <!--<compilerArgument>-Xlint:all</compilerArgument>-->
+                    <!--<showWarnings>true</showWarnings>-->
+                    <!--<showDeprecation>true</showDeprecation>-->
+                    <!--<source>1.8</source>-->
+                    <!--<target>1.8</target>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
             <!-- Set versions into JAR -->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<version>3.0.2</version>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<addDefaultImplementationEntries>true</addDefaultImplementationEntries>-->
+                            <!--<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
+            <!-- Include all dependencies in Jar -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
+                    <!-- get all project dependencies -->
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
                         </manifest>
                     </archive>
+
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <!-- bind to the packaging phase -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
 
+<!--<plugin>-->
+    <!--<groupId>org.apache.maven.plugins</groupId>-->
+    <!--<artifactId>maven-shade-plugin</artifactId>-->
+    <!--<version>2.4.1</version>-->
+    <!--<configuration>-->
+        <!--<shadedArtifactAttached>false</shadedArtifactAttached>-->
+        <!--<transformers>-->
+            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>-->
+        <!--</transformers>-->
 
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-shade-plugin</artifactId>
-    <configuration>
-        <shadedArtifactAttached>false</shadedArtifactAttached>
-        <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-        </transformers>
+    <!--</configuration>-->
+<!--</plugin>-->
 
-    </configuration>
-</plugin>
 
 
 

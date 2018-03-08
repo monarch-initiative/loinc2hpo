@@ -31,6 +31,7 @@ public class SparqlQueryTest {
 
     @BeforeClass
     public static void initializeModel() {
+
         String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
         model = SparqlQuery.getOntologyModel(hpo);
     }

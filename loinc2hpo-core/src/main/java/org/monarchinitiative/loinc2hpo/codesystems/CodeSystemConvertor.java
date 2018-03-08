@@ -41,8 +41,8 @@ public class CodeSystemConvertor {
         }
 
         //add HL7 V2 0078 interpretation values
-        String path = CodeSystemConvertor.class.getClassLoader().getResource("CodeSystems/HL7_V2_table0078.tsv").getPath();
-        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(path), Charset.forName("UTF-8")))) {
+        InputStream path = CodeSystemConvertor.class.getClassLoader().getResourceAsStream("CodeSystems/HL7_V2_table0078.tsv");
+        try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(path, Charset.forName("UTF-8")))) {
             String line = bufferedReader.readLine();
             if (line == null || line.trim().isEmpty()) {
                 logger.error("File is empty or first line is empty. First line should be code system");
@@ -81,8 +81,8 @@ public class CodeSystemConvertor {
     static void initV2toInternalCodeMap(){
         final String v2System = "http://hl7.org/fhir/v2/0078";
         final String internalSystem = Loinc2HPOCodedValue.CODESYSTEM;
-        String mappath = CodeSystemConvertor.class.getClassLoader().getResource("external2internalCodeMap/HL7_v2_table0078_to_internal.tsv").getPath();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(mappath))){
+        InputStream mappath = CodeSystemConvertor.class.getClassLoader().getResourceAsStream("external2internalCodeMap/HL7_v2_table0078_to_internal.tsv");
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mappath, Charset.forName("UTF-8")))){
             String line = bufferedReader.readLine();
             if (line == null || line.split("\\t").length != 3) {
                 logger.error("The first line does not have 3 tab-separated elements");

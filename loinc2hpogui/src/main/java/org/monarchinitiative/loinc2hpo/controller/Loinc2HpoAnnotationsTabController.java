@@ -141,17 +141,12 @@ public class Loinc2HpoAnnotationsTabController {
                 "  </style></head>";
     }
 
-
-
     public void setData(String html) {
         WebView wview = new WebView();
         WebEngine contentWebEngine = wview.getEngine();
         contentWebEngine.loadContent(html);
         this.vbox4wv.getChildren().addAll(wview);
     }
-
-
-
 
 
     public void refreshTable() {
@@ -208,11 +203,11 @@ public class Loinc2HpoAnnotationsTabController {
                 model.getLoincAnnotationMap().putAll(annotationMap);
             }
 
-
-
         }
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
+
+        annotateTabController.changeColorLoincTableView();
     }
 
 

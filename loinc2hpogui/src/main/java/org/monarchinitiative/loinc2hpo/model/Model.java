@@ -45,6 +45,7 @@ public class Model {
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
+    private Map<String, LoincEntry> loincEntryMapFromName = null;
 
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
@@ -52,6 +53,60 @@ public class Model {
     //private boolean tempInversed= false;
     private boolean inversedBasicMode = false; //whether inverse is checked for basic mode
     private boolean inversedAdvancedMode = false; //whether inverse is checked for advanced mode
+
+    //keep a record of Loinc lists that user searched or filtered so that user can switch back and forth
+    //key: file name used for filtering; value: a list of Loinc entries
+    private Map<String, List<LoincEntry>> filteredLoincListsMap = new LinkedHashMap<>();
+    private LinkedList<List<LoincEntry>> filteredLoincLists = new LinkedList<>();
+    private List<LoincEntry> currentLoincList;
+
+    public void addFilteredList(String filename, List<LoincEntry> list) {
+        if (filteredLoincListsMap.containsKey(filename)) { //update sequence in map and list
+            filteredLoincListsMap.remove(filename);
+            filteredLoincLists = new LinkedList<>();
+            filteredLoincLists.addAll(filteredLoincListsMap.values());
+        }
+        filteredLoincListsMap.put(filename, list);
+        filteredLoincLists.add(list);
+        currentLoincList = list;
+    }
+
+    public List<LoincEntry> previousLoincList(){
+        int current_i = filteredLoincLists.indexOf(currentLoincList);
+        if (current_i - 1 >= 0) {
+            currentLoincList = filteredLoincLists.get(current_i - 1);
+        } else {
+            currentLoincList = filteredLoincLists.getLast();
+        }
+        return currentLoincList;
+    }
+
+    public List<LoincEntry> nextLoincList() {
+        int current_i = filteredLoincLists.indexOf(currentLoincList);
+        if (current_i + 1 <= filteredLoincLists.size() - 1) {
+            currentLoincList = filteredLoincLists.get(current_i + 1);
+        } else {
+            currentLoincList = filteredLoincLists.getFirst();
+        }
+        return currentLoincList;
+    }
+
+    public List<LoincEntry> getLoincList(String listFileName) {
+        if (filteredLoincListsMap.containsKey(listFileName)) {
+            currentLoincList = filteredLoincListsMap.get(listFileName);
+            filteredLoincListsMap.remove(listFileName);//remove and add to keep order
+            filteredLoincListsMap.put(listFileName, currentLoincList);
+            filteredLoincLists.clear();
+            filteredLoincLists.addAll(filteredLoincListsMap.values());
+            return currentLoincList;
+        } else {
+            return null;
+        }
+    }
+
+    public Map<String, List<LoincEntry>> getFilteredLoincListsMap() {
+        return this.filteredLoincListsMap;
+    }
 
     public void setLoincEntryMap(Map<LoincId, LoincEntry> map) {
         this.loincEntryMap = map;
@@ -61,6 +116,13 @@ public class Model {
         return this.loincEntryMap;
     }
     public HashSet<LoincId> getLoincIds() { return this.loincIds; }
+    public Map<String, LoincEntry> getLoincEntryMapWithName() {
+        if (loincEntryMapFromName == null) {
+            loincEntryMapFromName = new HashMap<>();
+            loincEntryMap.values().forEach(p -> loincEntryMapFromName.put(p.getLongName(), p));
+        }
+        return loincEntryMapFromName;
+    }
 
     //hpo term maps from name or id to hpoterm
     private ImmutableMap<String,HpoTerm> termmap=null;

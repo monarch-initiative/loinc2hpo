@@ -5,14 +5,14 @@
     <parent>
         <artifactId>Loinc2Hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
-        <version>0.0.2</version>
+        <version>1.0.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>loinc2hpo-core</artifactId>
     <packaging>jar</packaging>
 
-    <name>${project.groupId}:${project.artifactId}</name>
+    <name>Loinc2Hpo Core</name>
     <description>loin2hpo-core is a library for mapping LOINC codes to HPO terms</description>
     <!-- TODO   <url>http://jacksonlaboratory.github.io/loinc2hpo/</url> -->
 
@@ -74,6 +74,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                </configuration>
+            </plugin>
+
             <!-- Specify the resources which need to be made accessible to the user -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
