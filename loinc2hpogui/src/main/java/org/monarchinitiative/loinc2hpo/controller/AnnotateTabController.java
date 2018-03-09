@@ -1508,6 +1508,7 @@ public class AnnotateTabController {
                                 && model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE).contains(new LoincId(item))) {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: lightcoral");
+                            //@TODO: change color of other groups. tip: allow user to pick a color
                         } else{//for reasons I don't understand, this else block is critical to make it work!!!
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("");

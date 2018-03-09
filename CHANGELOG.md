@@ -63,6 +63,17 @@ Multiple features are added. This will be the baseline for future tracking.
 * Allow user to switch to previously selected Loinc list
 
 * Allow user to categorize Loinc entries
+
+## v1.1.0 
+
+* New develop version
+
+Additional changes for this version
+
+* Change menu `Edit` to `Configuration`
+- [ ] update tutorial
+
+* Create new features that allow user to manipulate a session
   
 
 

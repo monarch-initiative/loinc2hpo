@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -17,6 +18,10 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleNewSession" text="New Session" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenSession" text="Open Session" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveSession" text="Save Session" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save As" />
                         <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
@@ -31,8 +36,9 @@
                         <MenuItem fx:id="clearMenu" mnemonicParsing="false" onAction="#clear" text="Clear" />
                   </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Configuration">
                   <items>
+                        <MenuItem mnemonicParsing="false" onAction="#setPathToAutoSavedData" text="Set path to Autosaved Data" />
                     <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
                         <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
                         <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />

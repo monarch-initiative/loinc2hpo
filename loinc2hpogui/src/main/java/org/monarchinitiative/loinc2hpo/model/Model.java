@@ -36,6 +36,9 @@ public class Model {
 
     private String pathToJsonFhirFile=null;
 
+    private String pathToAutoSavedFolder = null;
+
+    private String pathToLastSession = null;
 
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
@@ -172,6 +175,22 @@ public class Model {
     public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
     }
     public void setBiocuratorID(String id){biocuratorID=id;}
+
+    public String getPathToAutoSavedFolder() {
+        return pathToAutoSavedFolder;
+    }
+
+    public void setPathToAutoSavedFolder(String pathToAutoSavedFolder) {
+        this.pathToAutoSavedFolder = pathToAutoSavedFolder;
+    }
+
+    public String getPathToLastSession() {
+        return pathToLastSession;
+    }
+
+    public void setPathToLastSession(String pathToLastSession) {
+        this.pathToLastSession = pathToLastSession;
+    }
 
     public String getPathToLoincCoreTableFile() {
         return pathToLoincCoreTableFile;
@@ -322,6 +341,12 @@ public class Model {
             if (pathToHpoOwlFile!= null) {
                 bw.write(String.format("hp-owl:%s\n", pathToHpoOwlFile));
             }
+            if (pathToAutoSavedFolder != null) {
+                bw.write(String.format("autosave to:%s\n", pathToAutoSavedFolder));
+            }
+            if (pathToLastSession != null) {
+                bw.write(String.format("last session:%s\n", pathToLastSession));
+            }
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -351,6 +376,8 @@ public class Model {
                 else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
                 else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
                 else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
+                else if (key.equals("autosave to")) this.pathToAutoSavedFolder = value;
+                else if (key.equals("last session")) this.pathToLastSession = value;
             }
             br.close();
         } catch (IOException e) {

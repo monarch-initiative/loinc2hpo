@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +29,13 @@ import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
 
 import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
 
@@ -121,6 +129,39 @@ public class MainController {
 
             }
         });
+    }
+
+    @FXML private void setPathToAutoSavedData(ActionEvent e) {
+        e.consume();
+        String path2DEFAULTDIRECTORY = Loinc2HpoPlatform.getLOINC2HPODir() + File.separator + "Data";
+        File DEFAULTDIRECTORY = new File(path2DEFAULTDIRECTORY);
+
+        String[] choices = new String[] {"Yes", "No"};
+        Optional<String> choice = PopUps.getToggleChoiceFromUser(choices,
+                "Default path: " + path2DEFAULTDIRECTORY, "Set Path to Auto-saved Data");
+        if (choice.isPresent() && choice.get().equals("No")) { //manually create a directory for autosaved data
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Choose a directory to save session data");
+            directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            DEFAULTDIRECTORY  = directoryChooser.showDialog(null);
+        }
+
+        if (DEFAULTDIRECTORY == null) {
+            return;
+        }
+
+        if (!DEFAULTDIRECTORY.exists()) {
+            DEFAULTDIRECTORY.mkdir();
+        }
+        //Warn user if the above settings failed
+        if (!DEFAULTDIRECTORY.exists()){
+            PopUps.showWarningDialog("Error", "Failure to set the default folder",
+                    "Try again, or manually set one");
+            return;
+        }
+        model.setPathToAutoSavedFolder(DEFAULTDIRECTORY.getAbsolutePath());
+        model.writeSettings();
+
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
@@ -255,6 +296,44 @@ public class MainController {
     @FXML private void openSettingsDialog() {
         SettingsViewFactory.openSettingsDialog(this.model);
     }
+
+
+    private String autogenerateFileName() {
+
+        String filename = null;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        filename = format.format(date);
+        //Calendar cal = Calendar.getInstance();
+        //filename = format.format(cal);
+
+        return filename;
+    }
+
+    @FXML
+    private void handleNewSession(ActionEvent e) {
+
+        logger.trace(autogenerateFileName());
+        String sessionFileName = autogenerateFileName();
+        File sessionFolder = new File(model.getPathToAutoSavedFolder() + File.separator + sessionFileName);
+        sessionFolder.mkdir();
+
+        e.consume();
+    }
+
+    @FXML
+    private void handleOpenSession(ActionEvent e){
+        e.consume();
+    }
+
+    @FXML
+    private void handleSaveSession(ActionEvent e) {
+
+        e.consume();
+    }
+
+
+
 
     //TODO: change this to handleSaveToNewFile
 
