@@ -143,11 +143,12 @@ public class MainController {
 
             }
         });
-        initializeAllDataSettings();
+
+       initializeAllDataSettings();
 
 
 
-        boardPane.getScene().getWindow().setOnCloseRequest(event -> {System.out.println("Closing request");});
+        //boardPane.getScene().getWindow().setOnCloseRequest(event -> {System.out.println("Closing request");});
 
     }
 
@@ -156,12 +157,15 @@ public class MainController {
                 || model.getPathToHpoOboFile() == null
                 || model.getPathToHpoOwlFile() == null
                 || model.getPathToAutoSavedFolder() == null) {
-            PopUps.showWarningDialog("Warning",
-                    "Incomplete configuration settings",
-                    "Complete your configuration settings under the \"Configuration\" menu");
-            return;
+            logger.trace("1 About to initialize settings");
+            Platform.runLater( () -> {
+                PopUps.showWarningDialog("Warning",
+                        "Incomplete configuration settings",
+                        "Complete your configuration settings under the \"Configuration\" menu");
+                return;
+            });
         }
-
+        logger.trace("3 About to initialize settings");
         annotateTabController.defaultStartUp();
         this.defaultStartup();
     }

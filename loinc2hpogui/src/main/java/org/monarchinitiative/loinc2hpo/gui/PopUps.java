@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
