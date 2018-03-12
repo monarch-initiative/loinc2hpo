@@ -157,7 +157,6 @@ public class MainController {
                 || model.getPathToHpoOboFile() == null
                 || model.getPathToHpoOwlFile() == null
                 || model.getPathToAutoSavedFolder() == null) {
-            logger.trace("1 About to initialize settings");
             Platform.runLater( () -> {
                 PopUps.showWarningDialog("Warning",
                         "Incomplete configuration settings",
@@ -165,7 +164,6 @@ public class MainController {
                 return;
             });
         }
-        logger.trace("3 About to initialize settings");
         annotateTabController.defaultStartUp();
         this.defaultStartup();
     }
