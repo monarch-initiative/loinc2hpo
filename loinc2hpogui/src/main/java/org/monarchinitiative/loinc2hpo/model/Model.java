@@ -64,6 +64,19 @@ public class Model {
     private LinkedList<List<LoincEntry>> filteredLoincLists = new LinkedList<>();
     private List<LoincEntry> currentLoincList;
 
+    //session changes whenever one of the following functions are called:
+    //
+    private boolean sessionChanged = false;
+
+
+    public boolean isSessionChanged() {
+        return sessionChanged;
+    }
+
+    public void setSessionChanged(boolean sessionChanged) {
+        this.sessionChanged = sessionChanged;
+    }
+
     public void addFilteredList(String filename, List<LoincEntry> list) {
         if (filteredLoincListsMap.containsKey(filename)) { //update sequence in map and list
             filteredLoincListsMap.remove(filename);

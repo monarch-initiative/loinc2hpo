@@ -248,12 +248,15 @@ public class AnnotateTabController {
                                         if (model.getUserCreatedLoincLists().get(p).contains(loincId)) {
                                             model.getUserCreatedLoincLists().get(p)
                                                     .remove(loincId);
+                                            logger.trace(String.format("LOINC: %s removed from %s", loincId, p));
                                         } else {
                                             model.getUserCreatedLoincLists().get(p)
                                                     .add(loincId);
+                                            logger.trace(String.format("LOINC: %s added to %s", loincId, p));
                                         }
 
                                         changeColorLoincTableView();
+                                        model.setSessionChanged(true);
                                     }
                                 }));
 
@@ -336,6 +339,11 @@ public class AnnotateTabController {
             }
         });
 
+    }
+
+    protected void defaultStartUp() {
+        initLOINCtable(null);
+        //initHPOmodelButton(null);
     }
 
     private void noLoincEntryAlert(){
@@ -584,8 +592,10 @@ public class AnnotateTabController {
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         initTableStructure();
+        if (e != null) {
+            e.consume();
+        }
 
-        e.consume();
     }
 
     @FXML private void initHPOmodelButton(ActionEvent e){
@@ -774,21 +784,8 @@ public class AnnotateTabController {
         if (nameOfList == null) {
             return;
         }
-        /**
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Choose file to save new Loinc list");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
-        File f = chooser.showSaveDialog(null);
-        if (f == null) {
-            return;
-        } else {
-            String path = f.getAbsolutePath();
-            logger.trace("path for new loinc list: " + f);
-        }
-         **/
-        model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
-        userCreatedLoincListsButton.getItems().add(new MenuItem(nameOfList));
-        exportLoincListButton.getItems().add(new MenuItem(nameOfList));
+        //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
+        userCreatedLoincLists.add(nameOfList);
 
     }
 
@@ -1165,6 +1162,7 @@ public class AnnotateTabController {
             switchToBasicAnnotationMode();
             flagForAnnotation.setSelected(false);
             annotationNoteField.clear();
+            model.setSessionChanged(true);
 
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);

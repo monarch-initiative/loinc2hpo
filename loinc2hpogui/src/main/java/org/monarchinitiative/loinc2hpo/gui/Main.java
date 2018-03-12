@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.gui;
 
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.controller.MainController;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 
 import javax.swing.*;
@@ -42,6 +44,9 @@ public class Main extends Application {
         launch(args);
     }
 
+    @Inject
+    private MainController mainController;
+
     @Override
     public void init() throws IOException {
         final Injector injector = Guice.createInjector(new DepInjectionModule());
@@ -52,6 +57,7 @@ public class Main extends Application {
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
+
     }
 
 
@@ -76,6 +82,12 @@ public class Main extends Application {
 
         window.show();
 
+/**
+        window.setOnCloseRequest(event -> {
+            //MainController mainController = loader.getController();
+            mainController.saveBeforeExit();
+        });
+**/
     }
 
     /**
