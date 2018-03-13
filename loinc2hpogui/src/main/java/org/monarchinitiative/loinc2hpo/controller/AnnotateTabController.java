@@ -64,6 +64,7 @@ public class AnnotateTabController {
 
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
+    @Inject private MainController mainController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
@@ -148,7 +149,8 @@ public class AnnotateTabController {
     @FXML private Menu userCreatedLoincListsButton;
     @FXML private Menu exportLoincListButton;
     @FXML private Menu importLoincGroupButton;
-    final private ObservableList<String> userCreatedLoincLists = FXCollections.observableArrayList();
+    final protected ObservableList<String> userCreatedLoincLists = FXCollections
+            .observableArrayList();
     final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
     final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
 
@@ -248,12 +250,15 @@ public class AnnotateTabController {
                                         if (model.getUserCreatedLoincLists().get(p).contains(loincId)) {
                                             model.getUserCreatedLoincLists().get(p)
                                                     .remove(loincId);
+                                            logger.trace(String.format("LOINC: %s removed from %s", loincId, p));
                                         } else {
                                             model.getUserCreatedLoincLists().get(p)
                                                     .add(loincId);
+                                            logger.trace(String.format("LOINC: %s added to %s", loincId, p));
                                         }
 
                                         changeColorLoincTableView();
+                                        model.setSessionChanged(true);
                                     }
                                 }));
 
@@ -336,6 +341,11 @@ public class AnnotateTabController {
             }
         });
 
+    }
+
+    protected void defaultStartUp() {
+        initLOINCtable(null);
+        //initHPOmodelButton(null);
     }
 
     private void noLoincEntryAlert(){
@@ -584,8 +594,10 @@ public class AnnotateTabController {
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         initTableStructure();
+        if (e != null) {
+            e.consume();
+        }
 
-        e.consume();
     }
 
     @FXML private void initHPOmodelButton(ActionEvent e){
@@ -774,27 +786,15 @@ public class AnnotateTabController {
         if (nameOfList == null) {
             return;
         }
-        /**
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Choose file to save new Loinc list");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
-        File f = chooser.showSaveDialog(null);
-        if (f == null) {
-            return;
-        } else {
-            String path = f.getAbsolutePath();
-            logger.trace("path for new loinc list: " + f);
-        }
-         **/
-        model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
-        userCreatedLoincListsButton.getItems().add(new MenuItem(nameOfList));
-        exportLoincListButton.getItems().add(new MenuItem(nameOfList));
+        //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
+        userCreatedLoincLists.add(nameOfList);
 
     }
 
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
         if (!model.getUserCreatedLoincLists().isEmpty()) {
+            logger.trace("initializeUserCreatedLoincListsIfNecessary(): 1111");
             return;
         }
         //by default, there will be two user created lists
@@ -802,6 +802,7 @@ public class AnnotateTabController {
         initialListNames.add(LOINCWAITING4NEWHPO);
         initialListNames.add(LOINCUNABLE2ANNOTATE);
         userCreatedLoincLists.addAll(initialListNames);
+        logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
         /**
         //create a menuitem for each and add to two menus; also create a list to record data
         userCreatedLoincListsButton.getItems().clear();
@@ -1165,6 +1166,7 @@ public class AnnotateTabController {
             switchToBasicAnnotationMode();
             flagForAnnotation.setSelected(false);
             annotationNoteField.clear();
+            model.setSessionChanged(true);
 
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);
@@ -1508,6 +1510,7 @@ public class AnnotateTabController {
                                 && model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE).contains(new LoincId(item))) {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: lightcoral");
+                            //@TODO: change color of other groups. tip: allow user to pick a color
                         } else{//for reasons I don't understand, this else block is critical to make it work!!!
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("");

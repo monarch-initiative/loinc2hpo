@@ -210,6 +210,47 @@ public class Loinc2HpoAnnotationsTabController {
         annotateTabController.changeColorLoincTableView();
     }
 
+    public void importLoincAnnotation(String path) {
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+
+        String header = null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            header = reader.readLine();
+            reader.close();
+        } catch (FileNotFoundException e) {
+            PopUps.showInfoMessage("File is not found", "Error: missing file");
+            return;
+        } catch (IOException e) {
+            PopUps.showInfoMessage("An error occurred during importing", "Error: importing is not completed");
+        }
+
+        //handles my old annotation
+        if (header != null && header.equals(LoincEntry.getHeaderLine())) {
+            FromFile parser = new FromFile(path, model.getOntology());
+            Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
+            for (UniversalLoinc2HPOAnnotation test : testset) {
+                model.addLoincTest(test);
+            }
+        }
+
+        //handles my current TSV annotation
+        if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeader())) {
+            Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
+            try {
+                annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
+            } catch (FileNotFoundException e) {
+                //already handled
+            }
+            model.getLoincAnnotationMap().putAll(annotationMap);
+        }
+
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        refreshTable();
+
+        annotateTabController.changeColorLoincTableView();
+    }
 
     @Deprecated
     /**
@@ -410,6 +451,7 @@ public class Loinc2HpoAnnotationsTabController {
             }
         }
     }
+
 
     protected void newSave() {
         boolean saveToNewFile = false;
