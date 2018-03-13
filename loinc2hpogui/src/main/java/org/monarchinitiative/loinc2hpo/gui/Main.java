@@ -59,8 +59,9 @@ public class Main extends Application {
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
-        mainController = injector.getInstance(Key.get(MainController.class));
-        //mainController = injector.getInstance(MainController.class);
+        //the following two lines both works; not sure what the first line is
+        //mainController = injector.getInstance(Key.get(MainController.class));
+        mainController = injector.getInstance(MainController.class);
         logger.debug("mainController is null: " + mainController == null);
 
     }
