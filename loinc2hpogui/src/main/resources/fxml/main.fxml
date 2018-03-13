@@ -22,26 +22,32 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleOpenSession" text="Open Session" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSaveSession" text="Save Session" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save As" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append To" />
-                    <MenuItem mnemonicParsing="false" onAction="#close" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save Annotations" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save Annotations As" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append Annotations To" />
                         <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
-                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export As...">
+                        <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export Annotations As...">
                           <items>
                               <MenuItem mnemonicParsing="false" onAction="#handleExportAsTSV" text=".tsv" />
                             <MenuItem mnemonicParsing="false" text=".json" />
                           </items>
                         </Menu>
                         <MenuItem fx:id="clearMenu" mnemonicParsing="false" onAction="#clear" text="Clear" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu fx:id="importLoincCategory" mnemonicParsing="false" text="Import Loinc Category..." />
+                        <Menu fx:id="exportLoincCategory" mnemonicParsing="false" text="Export Loinc Category..." />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#close" text="Exit" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Configuration">
                   <items>
-                        <MenuItem mnemonicParsing="false" onAction="#setPathToAutoSavedData" text="Set path to Autosaved Data" />
                     <MenuItem mnemonicParsing="false" onAction="#setPathToLoincCoreTableFile" text="Set path to LOINC Core Table file" />
                         <MenuItem mnemonicParsing="false" onAction="#downloadHPO" text="Download HPO file" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#setPathToAutoSavedData" text="Set path to Autosaved Data" />
                         <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
                   </items>
                 </Menu>

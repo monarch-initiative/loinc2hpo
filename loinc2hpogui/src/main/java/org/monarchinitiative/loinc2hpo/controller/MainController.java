@@ -6,8 +6,12 @@ import com.sun.javafx.runtime.SystemProperties;
 import com.sun.javafx.stage.WindowCloseRequestHandler;
 import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableMapValue;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -21,6 +25,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
@@ -58,6 +63,15 @@ public class MainController {
     private Model model=null;
     private final String LOINC_CATEGORY_folder = "LOINC CATEGORY";
 
+    //use it to track whether configurations are complete
+    //4 essential settings:
+    //  path to Loinc Core Table
+    //  path to HPO files
+    //  path to auto-saved folder
+    private ObservableMapValue<String, Boolean> configurationsState;
+    private BooleanProperty configurationComplete = new SimpleBooleanProperty
+            (false);
+
     //The following is the data that needs to be tracked
     private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap_Copy;
     private Map<String, Set<LoincId>> loincCategories_Copy;
@@ -76,6 +90,8 @@ public class MainController {
     @FXML private MenuItem newAnnotationFileButton;
     @FXML private Menu exportMenu;
     @FXML private MenuItem clearMenu;
+    @FXML public Menu importLoincCategory;
+    @FXML public Menu exportLoincCategory;
 
     @FXML private TabPane tabPane;
     @FXML private Tab annotateTabButton;
@@ -84,12 +100,43 @@ public class MainController {
 
 
     @FXML private void initialize() {
+        Platform.runLater(() -> {
+            annotateTabButton.setDisable(true);
+            Loinc2HPOAnnotationsTabButton.setDisable(true);
+            Loinc2HpoConversionTabButton.setDisable(true);
+        });
+
+        configurationComplete.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue.booleanValue()) {
+                    Platform.runLater(() -> {
+                        annotateTabButton.setDisable(false);
+                        Loinc2HPOAnnotationsTabButton.setDisable(false);
+                        Loinc2HpoConversionTabButton.setDisable(false);
+                    });
+                }
+            }
+        });
+
         this.model = new Model();
+        //read in settings from file
         File settings = getPathToSettingsFileAndEnsurePathExists();
         model.setPathToSettingsFile(settings.getAbsolutePath());
         if (settings.exists()) {
             model.inputSettings(settings.getAbsolutePath());
+            configurationComplete.setValue(isConfigurationCompleted());
         }
+        //set auto-save file path if it is not specified
+        //set it to the default path. user can still change it
+        if (model.getPathToAutoSavedFolder() == null) {
+            model.setPathToAutoSavedFolder(Loinc2HpoPlatform.getLOINC2HPODir()
+                    + File.separator + "Data");
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+
         if (setupTabController==null) {
             logger.error("setupTabController is null");
             return;
@@ -113,8 +160,6 @@ public class MainController {
             logger.error("main controller model is null");
             return;
         }
-
-
 
         loinc2HpoAnnotationsTabController.setModel(model);
         loinc2HPOConversionTabController.setModel(model);
@@ -144,12 +189,25 @@ public class MainController {
             }
         });
 
-        initializeAllDataSettings();
+        if (configurationComplete.get()) {
+            annotateTabController.defaultStartUp();
+            defaultStartup();
 
-        if (model.getPathToLastSession() != null) {
-            openSession(model.getPathToLastSession());
+            if (model.getPathToLastSession() != null) {
+                openSession(model.getPathToLastSession());
+            }
         }
 
+        //@TODO: implement in future if necessary
+        importLoincCategory.setVisible(false);
+        exportLoincCategory.setVisible(false);
+    }
+
+    private boolean isConfigurationCompleted() {
+        return model.getPathToLoincCoreTableFile() != null
+                && model.getPathToHpoOwlFile() != null
+                && model.getPathToHpoOboFile() != null
+                && model.getPathToAutoSavedFolder() != null;
     }
 
     private void initializeAllDataSettings() {
@@ -158,9 +216,9 @@ public class MainController {
                 || model.getPathToHpoOwlFile() == null
                 || model.getPathToAutoSavedFolder() == null) {
             Platform.runLater( () -> {
-                PopUps.showWarningDialog("Warning",
-                        "Incomplete configuration settings",
-                        "Complete your configuration settings under the \"Configuration\" menu");
+                annotateTabButton.setDisable(true);
+                Loinc2HPOAnnotationsTabButton.setDisable(true);
+                Loinc2HpoConversionTabButton.setDisable(true);
                 return;
             });
         }
@@ -234,6 +292,7 @@ public class MainController {
         }
         model.setPathToAutoSavedFolder(DEFAULTDIRECTORY.getAbsolutePath());
         model.writeSettings();
+        configurationComplete.set(isConfigurationCompleted());
 
     }
 
@@ -272,6 +331,7 @@ public class MainController {
             model.setPathToHpOboFile(fullpath);
             model.setPathToHpOwlFile(fullpath_owl);
             model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
         });
         hpodownload.setOnFailed(event -> {
             window.close();
@@ -295,23 +355,38 @@ public class MainController {
             logger.error("Unable to obtain path to LOINC Core Table file");
         }
         model.writeSettings();
+        configurationComplete.set(isConfigurationCompleted());
         e.consume();
     }
 
     @FXML public void close(ActionEvent e) {
-        //Should give user a warning if there is new annotation data
-        //TODO: implement warning
-        if (true) {
-            boolean choice = PopUps.getBooleanFromUser("Exit without saving " +
-                    "annotation data? You new annotation will be lost if you " +
-                            "choose cancel",
-                    "Data Unsaved", "Data Unsaved");
-            if (!choice) {
-                return;
-            } else {
+
+        e.consume(); //important to consume it first; otherwise,
+        //window will always close
+        if (isSessionDataChanged()) {
+
+            String[] choices = new String[] {"Yes", "No"};
+            Optional<String> choice = PopUps.getToggleChoiceFromUser(choices,
+                    "Session has been changed. Save changes? ", "Exit " +
+                            "Confirmation");
+
+
+            if (choice.isPresent() && choice.get().equals("Yes")) {
+                saveBeforeExit();
                 Platform.exit();
                 System.exit(0);
+                //window.close();
+            } else if (choice.isPresent() && choice.get().equals("No")) {
+                Platform.exit();
+                System.exit(0);
+                //window.close();
+            } else {
+                //hang on. No action required
             }
+        } else {
+            Platform.exit();
+            System.exit(0);
+            //window.close();
         }
     }
 

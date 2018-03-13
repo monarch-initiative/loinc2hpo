@@ -64,6 +64,7 @@ public class AnnotateTabController {
 
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
+    @Inject private MainController mainController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 

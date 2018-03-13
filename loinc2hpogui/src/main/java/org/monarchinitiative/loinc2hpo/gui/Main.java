@@ -62,7 +62,6 @@ public class Main extends Application {
         //the following two lines both works; not sure what the first line is
         //mainController = injector.getInstance(Key.get(MainController.class));
         mainController = injector.getInstance(MainController.class);
-        logger.debug("mainController is null: " + mainController == null);
 
     }
 
@@ -103,13 +102,19 @@ public class Main extends Application {
                 if (choice.isPresent() && choice.get().equals("Yes")) {
                     mainController.saveBeforeExit();
                     window.close();
+                    Platform.exit();
+                    System.exit(0);
                 } else if (choice.isPresent() && choice.get().equals("No")) {
                     window.close();
+                    Platform.exit();
+                    System.exit(0);
                 } else {
                     //hang on. No action required
                 }
             } else {
                 window.close();
+                Platform.exit();
+                System.exit(0);
             }
 
         });
