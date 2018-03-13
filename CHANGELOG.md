@@ -75,6 +75,7 @@ Additional changes for this version
 
 * Create new features that allow user to manipulate a session
   
+* Automatically retrieve information from auto-saved data for last session
 
 
 
