@@ -4,6 +4,7 @@ package org.monarchinitiative.loinc2hpo.gui;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,7 @@ import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 
 /**
@@ -57,6 +59,9 @@ public class Main extends Application {
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
+        mainController = injector.getInstance(Key.get(MainController.class));
+        //mainController = injector.getInstance(MainController.class);
+        logger.debug("mainController is null: " + mainController == null);
 
     }
 
@@ -82,12 +87,32 @@ public class Main extends Application {
 
         window.show();
 
-/**
+
         window.setOnCloseRequest(event -> {
-            //MainController mainController = loader.getController();
-            mainController.saveBeforeExit();
+            event.consume(); //important to consume it first; otherwise,
+            //window will always close
+            if (mainController.isSessionDataChanged()) {
+
+                String[] choices = new String[] {"Yes", "No"};
+                Optional<String> choice = PopUps.getToggleChoiceFromUser(choices,
+                        "Session has been changed. Save changes? ", "Exit " +
+                                "Confirmation");
+
+
+                if (choice.isPresent() && choice.get().equals("Yes")) {
+                    mainController.saveBeforeExit();
+                    window.close();
+                } else if (choice.isPresent() && choice.get().equals("No")) {
+                    window.close();
+                } else {
+                    //hang on. No action required
+                }
+            } else {
+                window.close();
+            }
+
         });
-**/
+
     }
 
     /**

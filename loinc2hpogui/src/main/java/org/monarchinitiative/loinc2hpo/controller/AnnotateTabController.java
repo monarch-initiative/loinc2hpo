@@ -148,7 +148,8 @@ public class AnnotateTabController {
     @FXML private Menu userCreatedLoincListsButton;
     @FXML private Menu exportLoincListButton;
     @FXML private Menu importLoincGroupButton;
-    final private ObservableList<String> userCreatedLoincLists = FXCollections.observableArrayList();
+    final protected ObservableList<String> userCreatedLoincLists = FXCollections
+            .observableArrayList();
     final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
     final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
 
@@ -792,6 +793,7 @@ public class AnnotateTabController {
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
         if (!model.getUserCreatedLoincLists().isEmpty()) {
+            logger.trace("initializeUserCreatedLoincListsIfNecessary(): 1111");
             return;
         }
         //by default, there will be two user created lists
@@ -799,6 +801,7 @@ public class AnnotateTabController {
         initialListNames.add(LOINCWAITING4NEWHPO);
         initialListNames.add(LOINCUNABLE2ANNOTATE);
         userCreatedLoincLists.addAll(initialListNames);
+        logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
         /**
         //create a menuitem for each and add to two menus; also create a list to record data
         userCreatedLoincListsButton.getItems().clear();
