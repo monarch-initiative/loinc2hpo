@@ -49,90 +49,90 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 +-------+---------------------------+--------+------------------+
 |Code   | Meaning                   |Code    | Meaning          |
 +=======+===========================+========+==================+
-|<	    |Off scale low	            |L       |low               |
+|<      |Off scale low              |L       |low               |
 +-------+---------------------------+--------+------------------+
-|>	    |Off scale high             |H       |high              |
+|>      |Off scale high             |H       |high              |
 +-------+---------------------------+--------+------------------+
-|A      |Abnormal	                |A       |abnormal          |
+|A      |Abnormal                   |A       |abnormal          |
 +-------+---------------------------+--------+------------------+
-|AA	    |Critically abnormal	    |A       |abnormal          |
+|AA     |Critically abnormal        |A       |abnormal          |
 +-------+---------------------------+--------+------------------+
-|AC	    |Anti-complementary         |P       |present           |
-|       |substances present	        |        |                  |
+|AC     |Anti-complementary         |P       |present           |
+|       |substances present         |        |                  |
 +-------+---------------------------+--------+------------------+
-|B	    |Better	                    |N       |normal            |
+|B      |Better                     |N       |normal            |
 +-------+---------------------------+--------+------------------+
-|D	    |Significant change down	|L       |low               |
+|D      |Significant change down    |L       |low               |
 +-------+---------------------------+--------+------------------+
-|DET	|Detected	                |P       |present           |
+|DET    |Detected                   |P       |present           |
 +-------+---------------------------+--------+------------------+
-|H	    |High	                    |H       |high              |
+|H      |High                       |H       |high              |
 +-------+---------------------------+--------+------------------+
-|HH	    |Critically high	        |H       |high              |
+|HH     |Critically high            |H       |high              |
 +-------+---------------------------+--------+------------------+
-|HM	    |Hold for Medical Review	|U       |unknown           |
+|HM     |Hold for Medical Review    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|HU	    |Very high	                |H       |high              |
+|HU     |Very high                  |H       |high              |
 +-------+---------------------------+--------+------------------+
-|I	    |Intermediate	            |N       |normal            |
+|I      |Intermediate               |N       |normal            |
 +-------+---------------------------+--------+------------------+
-|IE	    |Insufficient evidence	    |U       |unknown           |
+|IE     |Insufficient evidence      |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|IND	|Indeterminate	            |U       |unknown           |
+|IND    |Indeterminate              |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|L	    |Low	                    |L       |low               |
+|L      |Low                        |L       |low               |
 +-------+---------------------------+--------+------------------+
-|LL	    |Critically low	            |L       |low               |
+|LL     |Critically low             |L       |low               |
 +-------+---------------------------+--------+------------------+
-|LU	    |Very low	                |L       |low               |
+|LU     |Very low                   |L       |low               |
 +-------+---------------------------+--------+------------------+
-|MS	    |Moderately susceptible.    |U       |unknown           |
+|MS     |Moderately susceptible.    |U       |unknown           |
 |       |Indicates for microbiology |        |                  |
-|       |susceptibilities only.	    |        |                  |
+|       |susceptibilities only.     |        |                  |
 +-------+---------------------------+--------+------------------+
-|N      |Normal	                    |N       |normal            |
+|N      |Normal                     |N       |normal            |
 +-------+---------------------------+--------+------------------+
-|ND	    |Not Detected	            |NP      |not present       |
+|ND     |Not Detected               |NP      |not present       |
 +-------+---------------------------+--------+------------------+
-|NEG	|Negative	                |NP      |not present       |
+|NEG    |Negative                   |NP      |not present       |
 +-------+---------------------------+--------+------------------+
-|NR	    |Non-reactive	            |NP      |not present       |
+|NR     |Non-reactive               |NP      |not present       |
 +-------+---------------------------+--------+------------------+
-|NS	    |Non-susceptible	        |U       |unknown           |
+|NS     |Non-susceptible            |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|null	|No range defined, or normal|U       |unknown           |
+|null   |No range defined or normal |U       |unknown           |
 |       |ranges don't apply         |        |                  |
 +-------+---------------------------+--------+------------------+
-|OBX	|Interpretation qualifiers  |U       |unknown           |
-|       |in separate OBX segments	|        |                  |
+|OBX    |Interpretation qualifiers  |U       |unknown           |
+|       |in separate OBX segments   |        |                  |
 +-------+---------------------------+--------+------------------+
-|POS	|Positive	                |P       |positive          |
+|POS    |Positive                   |P       |positive          |
 +-------+---------------------------+--------+------------------+
-|QCF	|Quality Control Failure	|U       |unknown           |
+|QCF    |Quality Control Failure    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|R	    |Resistant	                |U       |unknown           |
+|R      |Resistant                  |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|RR	    |Reactive	                |P       |present           |
+|RR     |Reactive                   |P       |present           |
 +-------+---------------------------+--------+------------------+
-|S	    |Susceptible	            |U       |unknown           |
+|S      |Susceptible                |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|SDD	|Susceptible-dose dependent	|U       |unknown           |
+|SDD    |Susceptible-dose dependent |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|SYN-R	|Synergy - resistant	    |U       |unknown           |
+|SYN-R  |Synergy - resistant	    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|SYN-S	|Synergy - susceptible	    |U       |unknown           |
+|SYN-S  |Synergy - susceptible	    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|TOX	|Cytotoxic substance present|P       |present           |
+|TOX    |Cytotoxic substance present|P       |present           |
 +-------+---------------------------+--------+------------------+
-|U	    |Significant change up	    |H       |high              |
+|U      |Significant change up      |H       |high              |
 +-------+---------------------------+--------+------------------+
-|VS	    |Very susceptible.          |U       |unknown           |
+|VS     |Very susceptible.          |U       |unknown           |
 |       |Indicates for microbiology |        |                  |
 |       |susceptibilities only.	    |        |                  |
 +-------+---------------------------+--------+------------------+
-|W	    |Worse	                    |A       |abnormal          |
+|W      |Worse                      |A       |abnormal          |
 +-------+---------------------------+--------+------------------+
-|WR	    |Weakly reactive	        |P       |present           |
+|WR     |Weakly reactive            |P       |present           |
 +-------+---------------------------+--------+------------------+
 
 We can make the annotation task even easier. If we analyze our internal codes carefully, ``NP`` ("not present"), resenting an outcome that the measured value is below a certain threshold, is actually the same as ``L`` ("low"), while ``P`` ("present") is the opposite and actually the same as ``H`` ("high"). Obviously, ``A`` ("abnormal") is simply the reverse of ``N``("normal"). So actually, we only need to map three HPO terms for each LOINC code, representing the outcomes of low value, intermediate value, and high value. The above rules should apply to the majority of LOINC codes, although we cannot rule out the possibility that they do not apply, so we will allow mapping different terms to ``NP`` and ``L``, ``P`` and ``H``, or ``A`` and ``N``.
