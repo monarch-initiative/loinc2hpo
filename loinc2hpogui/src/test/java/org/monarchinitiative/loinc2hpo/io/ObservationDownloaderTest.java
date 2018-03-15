@@ -35,6 +35,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
+    @Ignore
     public void firstComplete() throws Exception{
         String testLoinc = "600-7";
         List<Observation> observations = ObservationDownloader.retrieveObservation(testLoinc);
@@ -47,6 +48,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
+    @Ignore
     public void firstAccetable() throws Exception {
         String testLoinc = "600-7";
         List<Observation> observations = ObservationDownloader.retrieveObservation(testLoinc);
@@ -60,6 +62,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
+    @Ignore
     public void retrievePatient() throws Exception {
     }
 
