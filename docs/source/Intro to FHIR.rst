@@ -114,7 +114,7 @@ Interpretation from physicians: ::
 
 ``Patient``
 
-``Patient`` manages all relevant information about the patient, such as name, address, sex, etc. The following snippet is an example in JSon (ref: `hl7.org <https://www.hl7.org/fhir/patient-example-f001-pieter.json>`_. The code is pretty self-explanatory.
+``Patient`` manages all relevant information about the patient, such as name, address, sex, etc. The following snippet is an example in JSon (ref: `hl7.org <https://www.hl7.org/fhir/patient-example-f001-pieter.json>`_). The code is pretty self-explanatory.
 
 ::
 
