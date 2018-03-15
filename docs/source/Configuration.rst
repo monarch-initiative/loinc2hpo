@@ -4,7 +4,7 @@ Configuration
 The app requires the following configurations the first time you run it.
 
 Mandatory Settings
-~~~~~~~~~~~~~~~~~~
+------------------
 
 * Download the Loinc Core Table from `loinc.org <https://loinc.org/downloads/loinc/>`_. Follow instructions from the loinc.org website. You need to register before you can download the document. The current version is *Loinc Version 2.63* (2017/12/15 release).
 
@@ -14,7 +14,7 @@ Mandatory Settings
 
 
 Optional Settings
-~~~~~~~~~~~~~~~~~
+-----------------
 The following setting are recommended. Not specifying them will not
 affect the operation of the app. 
 
@@ -26,6 +26,6 @@ affect the operation of the app.
 
 
 Change Settings
-~~~~~~~~~~~~~~~
+---------------
 The settings will be saved to a local file so that you do not need to repeat the above steps every time you run the app. Should you want to change the settings, follow the above steps accordingly and your new setting will overwrite the old ones.
 
