@@ -1,7 +1,7 @@
 Introduction to LOINC
 
 LOINC stands for Logical Observation Identifiers Names and Codes (LOINC). According to Regensrief, who developed and maintains LOINC:
-::
+
 
   `"LOINC provides a set of universal names and ID codes for identifying laboratory and clinical test results. LOINC facilitates the exchange and pooling of results, such as blood hemoglobin, serum potassium, or vital signs, for clinical care, outcomes management, and research."  <https://loinc.org/file-access/download-id/9031/>`_ .
 
