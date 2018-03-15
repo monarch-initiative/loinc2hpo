@@ -1518,6 +1518,9 @@ public class AnnotateTabController {
                     } catch (MalformedLoincCodeException e) {
                         //do nothing
                     }
+                } else {
+                    setText(null);
+                    getTableRow().setStyle("");
                 }
             }
 
