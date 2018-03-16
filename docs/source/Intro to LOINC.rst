@@ -77,7 +77,7 @@ Aside from the three main types, ``Nar`` are reported as free texts.
 Common LOINC codes
 ------------------
 
-The entire LOINC table has ~86,000 entries. Regenstrief also provides a subset of it containing commonly used top 2000 LOINC. According to Regenstrief, those top 2000 LOINC represent about 98% of all tests in real world applications (`ref <https://loinc.org/usage/obs/>`_).
+The entire LOINC table has ~85,000 entries. Regenstrief also provides a subset of it containing commonly used top 2000 LOINC. According to Regenstrief, those top 2000 LOINC represent about 98% of all tests in real world applications (`ref <https://loinc.org/usage/obs/>`_).
 
 
 

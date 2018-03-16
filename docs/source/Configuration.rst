@@ -27,5 +27,5 @@ affect the operation of the app.
 
 Change Settings
 ---------------
-The settings will be saved to a local file so that you do not need to repeat the above steps every time you run the app. Should you want to change the settings, follow the above steps accordingly and your new setting will overwrite the old ones.
+The settings will be saved to a local file so that you do not need to repeat the above steps every time you run the app. Should you want to change the settings, follow the above steps accordingly to overwrite the original settings.
 
