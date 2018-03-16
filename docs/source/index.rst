@@ -8,12 +8,14 @@ Loinc2hpo Tutorial
 Indices and tables
 ==================
 
-* :ref:`Install & running`
-* :ref:`Configuration`
+
 * :ref:`Intro to LOINC`
 * :ref:`Intro to FHIR`
+* :ref:`Our Mission`
 * :ref:`Working logic`
 * :ref:`Annotation logic`
+* :ref:`Install & running`
+* :ref:`Configuration`
 * :ref:`Tutorial`
 * :ref:`Contact`
 * :ref:`search`
