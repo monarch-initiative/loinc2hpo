@@ -1,5 +1,5 @@
-Loinc2hpo Tutorial
-==================
+Loinc2hpo Documentation
+=======================
 
 .. toctree::
    :maxdepth: 2
@@ -9,15 +9,15 @@ Indices and tables
 ------------------
 
 
-* :ref:`Intro to LOINC`
-* :ref:`Intro to FHIR`
-* :ref:`Our Mission`
-* :ref:`Working logic`
-* :ref:`Annotation logic`
-* :ref:`Install & running`
-* :ref:`Configuration`
-* :ref:`Tutorial`
-* :ref:`Contact`
+:doc: `Intro to LOINC`
+:doc:`Intro to FHIR`
+:doc:`Our Mission`
+:doc:`Working logic`
+:doc:`Annotation logic`
+:doc:`Install & running`
+:doc:`Configuration`
+:doc:`Tutorial`
+:doc:`Contact`
 * :ref:`search`
 
 Loinc2hpo
