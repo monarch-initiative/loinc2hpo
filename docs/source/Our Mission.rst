@@ -3,7 +3,7 @@ Our Mission
 
 Our goal with this app is to extract patient phenotypes in HPO terms from Electronic Health Records that complies with the FHIR standards: As illustrated below, each patient may have dozens or hundreds of associated medical observations. We hope our app will be able to analyze them and output a "phenopacket", a list of HPO terms, that describes the patient.
 
-    .. image::images/mission.png
+  .. image::images/mission.png
 
 To achieve our goal, we need to achieve the following:
 
