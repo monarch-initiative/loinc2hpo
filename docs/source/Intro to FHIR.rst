@@ -110,7 +110,7 @@ Interpretation from physicians: ::
       }
     ]
   },
-}
+  }
 
 ``Patient``
 
@@ -233,6 +233,6 @@ Interpretation from physicians: ::
     "reference": "Organization\/f001",
     "display": "Burgers University Medical Centre"
   }
-}
+  }
 
-``Patient`` resource is critical in cases when the interpretation of an observation, e.g. height or weight, dependents on the sex, age or other relevant information. In this case, the link to subject in ``Observation`` become critical as it allows retrieval of the related ``Patient`` resource.
+``Patient`` is essential in cases when the interpretation of an observation, e.g. height or weight, dependents on the sex, age or other relevant information of the patient. In this case, one can retrieve ``Patient`` with the link in the "subject" field of ``Observation``.

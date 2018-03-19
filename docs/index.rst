@@ -11,6 +11,7 @@ Mapping LOINC to HPO terms requires a significant effort from biocurators. Loinc
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
    Intro to LOINC
    Intro to FHIR

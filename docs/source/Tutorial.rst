@@ -75,12 +75,16 @@ Consider this Loinc test: `Loinc 600-7` or `Bacteria identified in Blood by Cult
 
 1. Whether there are bacteria identified in the blood or not (alternatively, we say whether the patient is "positive" or "negative" for bacterial infection). In this case, we choose "Recurrent bacterial infections" for positive and the same term in negated form for negative result and annotate in the Basic Mode as described above.
 
-2. What type of bacteria is identified in the patient's blood. Here is from a real-world example:::
+2. What type of bacteria is identified in the patient's blood. Here is from a real-world example.
+::
 
-   "coding":[{
-   "system": "http://snomed.info/sct",
-   "code": "3092008",
-   "display": "Staphylococcus aureus"}]
+    "coding":[
+    {
+      "system": "http://snomed.info/sct",
+      "code": "3092008",
+      "display": "Staphylococcus aureus"
+    }
+    ]
 
 We can guess that the above lines indicate that the patient has *S. aureus* infection in his/her blood. In this case, our Basic Mode does not work well anymore because it only handles values that are too high, too low and intermediate. This is when Advanced Mode comes into play. To allow our app recognize this result, we need to assign a HPO term for **Snomed** code `3092008`. To do this,
 
