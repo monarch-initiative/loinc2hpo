@@ -1,5 +1,5 @@
-org.monarchinitiative.loinc2hpo
-===============================
+Install & running
+=================
 Java library to map LOINC-encoded test results to Human Phenotype Ontology
 
 To build and run the GUI, use the following command.::
