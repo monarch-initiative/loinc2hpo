@@ -7,13 +7,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,6 +39,7 @@ import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
+import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -48,13 +49,8 @@ import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.apache.jena.sparql.vocabulary.VocabTestQuery.query;
 
 
 @Singleton
@@ -68,6 +64,7 @@ public class AnnotateTabController {
 
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
+    @Inject private MainController mainController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
 
@@ -98,6 +95,7 @@ public class AnnotateTabController {
     private ImmutableMap<String,HpoTerm> termmap;
 
     @FXML private ListView hpoListView;
+    private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
 
 
 
@@ -144,6 +142,18 @@ public class AnnotateTabController {
     @FXML private Button autoQueryButton;
     @FXML private Button manualQueryButton;
 
+    @FXML private ContextMenu loincTableContextMenu;
+    @FXML private Menu loincListsButton;
+    @FXML private MenuItem backMenuItem;
+    @FXML private MenuItem forwardMenuItem;
+    @FXML private Menu userCreatedLoincListsButton;
+    @FXML private Menu exportLoincListButton;
+    @FXML private Menu importLoincGroupButton;
+    final protected ObservableList<String> userCreatedLoincLists = FXCollections
+            .observableArrayList();
+    final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
+    final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
+
 
     @Inject private CurrentAnnotationController currentAnnotationController;
 
@@ -166,8 +176,177 @@ public class AnnotateTabController {
         autoQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with automatically generated keys"));
         manualQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with manually typed keys"));
 
+        hpoListView.setCellFactory(new Callback<ListView<HPO_Class_Found>, ListCell<HPO_Class_Found>>(){
+            @Override
+            public ListCell<HPO_Class_Found> call(ListView<HPO_Class_Found> param) {
+                return new ListCell<HPO_Class_Found>() {
+                    @Override
+                    public void updateItem(HPO_Class_Found hpo, boolean empty){
+                        super.updateItem(hpo, empty);
+                        if (hpo != null) {
+                            setText(hpo.toString());
+                            Tooltip tooltip = new Tooltip(hpo.getDefinition());
+                            tooltip.setPrefWidth(300);
+                            tooltip.setWrapText(true);
+                            setTooltip(tooltip);
+                        }
+                    }
+                };
+            }
+        });
+
+
+        treeView.setCellFactory(new Callback<TreeView<HPO_TreeView>, TreeCell<HPO_TreeView>>() {
+            @Override
+            public TreeCell<HPO_TreeView> call(TreeView<HPO_TreeView> param) {
+                return new TreeCell<HPO_TreeView>() {
+                    @Override
+                    public void updateItem(HPO_TreeView hpo, boolean empty){
+                        super.updateItem(hpo, empty);
+                        if (empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            if (hpo != null && hpo.hpo_class_found == null) {
+                                setText("root");
+                            }
+                            if (hpo != null && hpo.hpo_class_found != null) {
+                                setText(hpo.toString());
+                                if (hpo.hpo_class_found.getDefinition() != null) {
+                                    Tooltip tooltip = new Tooltip(hpo.hpo_class_found.getDefinition());
+                                    tooltip.setPrefWidth(300);
+                                    tooltip.setWrapText(true);
+                                    setTooltip(tooltip);
+                                }
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        //if user creates a new Loinc group, add two menuitems for it, and specify the actions when those menuitems are
+        //clicked
+        userCreatedLoincLists.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        logger.trace(c + " was added");
+                        c.getAddedSubList()
+                            .stream()
+                            .filter(p -> !model.getUserCreatedLoincLists().containsKey(p))
+                            .forEach(p -> {
+
+                                model.addUserCreatedLoincList(p, new LinkedHashSet<>());
+
+                                MenuItem newListMenuItem = new MenuItem(p);
+                                userCreatedLoincListsButton.getItems().add(newListMenuItem);
+                                newListMenuItem.setOnAction((event -> {
+                                    logger.trace("action detected");
+                                    if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
+                                        LoincId loincId = loincTableView.getSelectionModel()
+                                                .getSelectedItem().getLOINC_Number();
+                                        if (model.getUserCreatedLoincLists().get(p).contains(loincId)) {
+                                            model.getUserCreatedLoincLists().get(p)
+                                                    .remove(loincId);
+                                            logger.trace(String.format("LOINC: %s removed from %s", loincId, p));
+                                        } else {
+                                            model.getUserCreatedLoincLists().get(p)
+                                                    .add(loincId);
+                                            logger.trace(String.format("LOINC: %s added to %s", loincId, p));
+                                        }
+
+                                        changeColorLoincTableView();
+                                        model.setSessionChanged(true);
+                                    }
+                                }));
+
+                                MenuItem newExportMenuItem = new MenuItem(p);
+                                exportLoincListButton.getItems().add(newExportMenuItem);
+                                newExportMenuItem.setOnAction((event -> {
+                                    logger.trace("action detected");
+                                    if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
+                                        Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p);
+                                        if (loincIds.isEmpty()) {
+                                            return;
+                                        }
+                                        FileChooser chooser = new FileChooser();
+                                        chooser.setTitle("Save Loinc List: ");
+                                        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.txt"));
+                                        chooser.setInitialFileName(p);
+                                        File f = chooser.showSaveDialog(null);
+                                        String filepath;
+                                        if (f == null) {
+                                            return;
+                                        } else {
+                                          filepath = f.getAbsolutePath();
+                                        }
+
+                                        StringBuilder builder = new StringBuilder();
+                                        loincIds.forEach(l -> {
+                                            builder.append (l);
+                                            builder.append("\n");
+                                        });
+
+                                        WriteToFile.writeToFile(builder.toString().trim(), filepath);
+                                    }
+                                }));
+
+                                MenuItem newImportMenuItem = new MenuItem(p);
+                                importLoincGroupButton.getItems().add(newImportMenuItem);
+                                newImportMenuItem.setOnAction((event) -> {
+                                    logger.trace("user wants to import " + p);
+                                    FileChooser chooser = new FileChooser();
+                                    chooser.setTitle("Select file to import from");
+                                    File f = chooser.showOpenDialog(null);
+                                    if (f == null) {
+                                        return;
+                                    }
+                                    List<String> malformed = new ArrayList<>();
+                                    List<String> notFound = new ArrayList<>();
+                                    try {
+                                        LoincOfInterest loincSet = new LoincOfInterest(f.getAbsolutePath());
+                                        Set<String> loincIds = loincSet.getLoincOfInterest();
+                                        loincIds.forEach(l -> {
+                                            LoincId loincId = null;
+                                            try {
+                                                loincId = new LoincId(l);
+                                            } catch (MalformedLoincCodeException e) {
+                                                malformed.add(l);
+                                            }
+                                            if (model.getLoincEntryMap().containsKey(loincId)) {
+                                                model.getUserCreatedLoincLists().get(p).add(loincId);
+                                            } else {
+                                                notFound.add(l);
+                                            }
+                                            changeColorLoincTableView();
+
+                                        });
+                                    } catch (FileNotFoundException e) {
+                                        logger.error("File not found. Should never happen");
+                                    }
+                                    if (!malformed.isEmpty() || !notFound.isEmpty()) {
+                                        String malformedString = String.join("\n", malformed);
+                                        String notFoundString = String.join("\n", notFound);
+                                        PopUps.showInfoMessage(String.format("Malformed Loinc: %d\n%s\nNot Found: %d\n%s", malformed.size(), malformedString, notFound.size(), notFoundString), "Error during importing");
+                                    }
+
+                                });
+                        });
+                    } else {
+                        logger.error("This should never happen");
+                    }
+                }
+            }
+        });
+
     }
 
+    protected void defaultStartUp() {
+        initLOINCtable(null);
+        //initHPOmodelButton(null);
+    }
 
     private void noLoincEntryAlert(){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -224,41 +403,42 @@ public class AnnotateTabController {
         nameTableColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLongName()));
         //hpoListView.setOrientation(Orientation.HORIZONTAL);
 
-        loincTableView.setRowFactory( tv -> {
-            TableRow<LoincEntry> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    LoincEntry rowData = row.getItem();
-                    if (model.getLoincUnderEditing() == null || //not under Editing mode
-                            //or query the loinc code under editing
-                            (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData))) {
-                        initHpoTermListView(rowData);
-                    } else {
-                        PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
-                                        ". Save or cancel editing current loinc annotation before switching to others",
-                                "Under Editing mode");
-                    }
-
-                    //clear text in abnormality text fields if not currently editing a term
-                    if (!createAnnotationButton.getText().equals("Save")) { //under saving mode
-                        clearAbnormalityTextField();
-                        //inialize the flag field
-                        flagForAnnotation.setIndeterminate(false);
-                        flagForAnnotation.setSelected(false);
-                        createAnnotationSuccess.setFill(Color.WHITE);
-                        annotationNoteField.setText("");
-                    }
-                }
-            });
-            return row ;
-        });
-
         accordion.setExpandedPane(loincTableTitledpane);
     }
 
+    @FXML
+    private void handleDoubleClickLoincTable(MouseEvent event) {
+        if (event.getClickCount() == 2 ) {
+            LoincEntry rowData = loincTableView.getSelectionModel().getSelectedItem();
+            if (rowData == null) {
+                return;
+            }
+
+            //disable further action if the user is not under Editing mode
+            if(model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(rowData)){
+                PopUps.showInfoMessage("You are currently editing " + rowData.getLOINC_Number() +
+                                ". Save or cancel editing current loinc annotation before switching to others",
+                        "Under Editing mode");
+            } else {
+                updateHpoTermListView(rowData);
+            }
+
+        }
+
+        //clear text in abnormality text fields if not currently editing a term
+        if (!createAnnotationButton.getText().equals("Save")) { //under saving mode
+            clearAbnormalityTextField();
+            //inialize the flag field
+            flagForAnnotation.setIndeterminate(false);
+            flagForAnnotation.setSelected(false);
+            createAnnotationSuccess.setFill(Color.WHITE);
+            annotationNoteField.setText("");
+        }
+        event.consume();
+    }
 
 
-    private void initHpoTermListView(LoincEntry entry) {
+    private void updateHpoTermListView(LoincEntry entry) {
         if(SparqlQuery.model == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("HPO Model Undefined");
@@ -269,20 +449,15 @@ public class AnnotateTabController {
             return;
         }
         String name = entry.getLongName();
-        List<HPO_Class_Found> queryResults = SparqlQuery.query_auto(name);
-        if (queryResults.size() != 0) {
-            ObservableList<HPO_Class_Found> items = FXCollections.observableArrayList();
-            for (HPO_Class_Found candidate: queryResults) {
-                items.add(candidate);
-            }
-            this.hpoListView.setItems(items);
-            //items.add("0 result is found. Try manual search with synonyms.");
-        } else {
-            ObservableList<String> items = FXCollections.observableArrayList();
-            items.add("0 HPO class is found. Try manual search with " +
-                    "alternative keys (synonyms)");
-            this.hpoListView.setItems(items);
+        sparqlQueryResult.clear();
+        SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
+        logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
+        if (sparqlQueryResult.size() == 0) {
+            String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +
+                    "alternative keys (synonyms)";
+            sparqlQueryResult.add(new HPO_Class_Found(noHPOfoundMessage, null, null, null));
         }
+        hpoListView.setItems(sparqlQueryResult);
     }
 
     @FXML private void handleAutoQueryButton(ActionEvent e){
@@ -303,7 +478,7 @@ public class AnnotateTabController {
         if (model.getLoincUnderEditing() == null || //not under Editing mode
                 //or query the loinc code under editing
                 (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(entry))) {
-            initHpoTermListView(entry);
+            updateHpoTermListView(entry);
         } else {
             PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
                             ". Save or cancel editing current loinc annotation before switching to others",
@@ -394,7 +569,8 @@ public class AnnotateTabController {
         }
         //clear text in abnormality text fields if not currently editing a term
         if (!createAnnotationButton.getText().equals("Save")) {
-            clearAbnormalityTextField();
+            //Got user feedback that they do not want to clear the field when doing manual query
+            //clearAbnormalityTextField();
             //inialize the flag field
             flagForAnnotation.setIndeterminate(false);
             flagForAnnotation.setSelected(false);
@@ -405,7 +581,6 @@ public class AnnotateTabController {
 
     @FXML private void initLOINCtable(ActionEvent e) {
         logger.trace("init LOINC table");
-        initTableStructure();
         String loincCoreTableFile=model.getPathToLoincCoreTableFile();
         if (loincCoreTableFile==null) {
             PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
@@ -418,26 +593,13 @@ public class AnnotateTabController {
         loincTableView.getItems().clear(); // remove any previous entries
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-        e.consume();
-    }
-/**
-    @FXML private void initHPOmodelButton(ActionEvent e){
-
-        //Remind user that this is a time consuming process
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Time Consuming step");
-        alert.setHeaderText("Wait for the process to complete");
-        alert.setContentText("This step will take about 2 minutes. It needs " +
-                        "to be executed once for every session");
-        alert.showAndWait();
-
-        String pathToHPO = this.model.getPathToHpoOwlFile();
-        logger.info("pathToHPO: " + pathToHPO);
-        SparqlQuery.getOntologyModel(pathToHPO);
+        initTableStructure();
+        if (e != null) {
+            e.consume();
+        }
 
     }
-**/
+
     @FXML private void initHPOmodelButton(ActionEvent e){
 
         String pathToHPO = this.model.getPathToHpoOwlFile();
@@ -471,7 +633,6 @@ public class AnnotateTabController {
 
     }
 
-
     @FXML private void search(ActionEvent e) {
         e.consume();
         String query = this.loincSearchTextField.getText().trim();
@@ -497,7 +658,9 @@ public class AnnotateTabController {
         if (entrylist.isEmpty()) {
         //if (entryListInOrder.isEmpty()){
             logger.error(String.format("Could not identify LOINC entry for \"%s\"",query));
-            PopUps.showWarningDialog("LOINC Search", "No hits found", String.format("Could not identify LOINC entry for \"%s\"",query));
+            PopUps.showWarningDialog("LOINC Search",
+                    "No hits found",
+                    String.format("Could not identify LOINC entry for \"%s\"",query));
             return;
         } else {
             logger.trace(String.format("Searching table for:  %s",query));
@@ -522,49 +685,18 @@ public class AnnotateTabController {
 
     @FXML private void handleLoincFiltering(ActionEvent e){
 
-        /**
-        int malformedLoincCount = 0;
-        List<String> notFound = new ArrayList<>();
-        List<LoincEntry> entryOfInterest = new ArrayList<>();
-        if (f != null) {
-            String path = f.getAbsolutePath();
-            try {
-                HashSet<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
-                for (String loinc : loincOfInterest) {
-                    LoincId loincId = new LoincId(loinc);
-                    if (model.getLoincEntryMap().containsKey(loincId)) {
-                        entryOfInterest.add(model.getLoincEntryMap().get(loinc));
-                    } else {
-                        notFound.add(loinc);
-                    }
-                }
-                loincTableView.getItems().clear();
-                loincTableView.getItems().addAll(entryOfInterest);
-                loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-            } catch (FileNotFoundException excpt) {
-                logger.error("unable to find the file for loinc of interest");
-            } catch (MalformedLoincCodeException exception) {
-                malformedLoincCount++;
-            }
-
-
-        } else {
-            logger.error("Unable to obtain path to LOINC of interest file");
-            return;
-        }
-        e.consume();
-**/
-
         List<LoincEntry> entrylist=new ArrayList<>();
+        String enlistName = null;
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
         File f = chooser.showOpenDialog(null);
-        List<String> notFound = new ArrayList<>();
+        List<String> notFoundList = new ArrayList<>();
+        List<String> malformedList = new ArrayList<>();
         int malformedLoincCount = 0;
         if (f != null) {
             String path = f.getAbsolutePath();
+            enlistName = f.getName();
             try {
                 Set<String> loincOfInterest = new LoincOfInterest(path).getLoincOfInterest();
                 //loincOfInterest.stream().forEach(System.out::print);
@@ -580,26 +712,32 @@ public class AnnotateTabController {
                             loincEntry = model.getLoincEntryMapWithName().get(loincString);
                         } else {
                             logger.error("Malformed loinc");
-                            malformedLoincCount++;
+                            malformedList.add(loincString);
+                            continue;
                         }
                     }
                     if (loincEntry != null) {
                         entrylist.add(loincEntry);
                     } else {
-                        notFound.add(loincString);
+                        notFoundList.add(loincString);
                     }
                 }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }
 
-            if (malformedLoincCount > 0 || !notFound.isEmpty()) {
-                PopUps.showInfoMessage(String.format("# malformed Loinc codes: %d\n# Loinc codes not found: %d",
-                        malformedLoincCount, notFound.size()), "Incomplete import of Loinc codes");
+            if (!malformedList.isEmpty() || !notFoundList.isEmpty()) {
+                String malformed = String.join(",\n", malformedList);
+                String notfound = String.join(",\n", notFoundList);
+                String popupMessage = String.format("# malformed Loinc codes: %d\n %s\n\n# Loinc codes not found: %d\n%s",
+                        malformedList.size(), malformed, notFoundList.size(), notfound);
+                PopUps.showInfoMessage(popupMessage, "Incomplete import of Loinc codes");
             }
             if (entrylist.isEmpty()) {
                 logger.error(String.format("Found 0 Loinc codes"));
-                PopUps.showWarningDialog("LOINC filtering", "No hits found", "Could not find any loinc codes");
+                PopUps.showWarningDialog("LOINC filtering",
+                        "No hits found",
+                        "Could not find any loinc codes");
                 return;
             } else {
                 logger.trace("Loinc filtering result: ");
@@ -609,8 +747,8 @@ public class AnnotateTabController {
             if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
+            model.addFilteredList(enlistName, new ArrayList<>(entrylist)); //keep a record in model
             entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
-            //loincTableView.sort((p, q) -> entrylist.indexOf(p) - entrylist.indexOf(q));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
@@ -618,7 +756,100 @@ public class AnnotateTabController {
         }
     }
 
+    @FXML
+    private void lastLoincList(ActionEvent e) {
 
+        e.consume();
+        List<LoincEntry> lastLoincList = model.previousLoincList();
+        if (lastLoincList != null && !lastLoincList.isEmpty()) {
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(lastLoincList);
+        }
+    }
+
+    @FXML
+    private void nextLoincList(ActionEvent e) {
+        e.consume();
+
+        List<LoincEntry> nextLoincList = model.nextLoincList();
+        if (nextLoincList != null && !nextLoincList.isEmpty()) {
+            loincTableView.getItems().clear();
+            loincTableView.getItems().addAll(nextLoincList);
+        }
+    }
+
+    @FXML
+    private void newLoincList(ActionEvent e) {
+
+        e.consume();
+        String nameOfList= PopUps.getStringFromUser("New Loinc List", "Type in the name", "name");
+        if (nameOfList == null) {
+            return;
+        }
+        //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
+        userCreatedLoincLists.add(nameOfList);
+
+    }
+
+    private void initializeUserCreatedLoincListsIfNecessary(){
+        //execute the functionalities only once in each secession
+        if (!model.getUserCreatedLoincLists().isEmpty()) {
+            logger.trace("initializeUserCreatedLoincListsIfNecessary(): 1111");
+            return;
+        }
+        //by default, there will be two user created lists
+        List<String> initialListNames = new ArrayList<>();
+        initialListNames.add(LOINCWAITING4NEWHPO);
+        initialListNames.add(LOINCUNABLE2ANNOTATE);
+        userCreatedLoincLists.addAll(initialListNames);
+        logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
+        /**
+        //create a menuitem for each and add to two menus; also create a list to record data
+        userCreatedLoincListsButton.getItems().clear();
+        exportLoincListButton.getItems().clear();
+        initialListNames.forEach(p -> {
+            userCreatedLoincListsButton.getItems().add(new MenuItem(p));
+            exportLoincListButton.getItems().add(new MenuItem(p));
+            model.addUserCreatedLoincList(p, new ArrayList<>());
+        });
+         **/
+    }
+
+
+    private void initializeMenuItemsForFilteredLists() {
+        if (!model.getFilteredLoincListsMap().isEmpty()) {
+            loincListsButton.setDisable(false);
+            loincListsButton.getItems().clear();
+            List<MenuItem> menuItems = new ArrayList<>();
+            model.getFilteredLoincListsMap().keySet().stream().forEach(p -> {
+                MenuItem menuItem = new MenuItem(p);
+                menuItems.add(menuItem);
+            });
+            loincListsButton.getItems().addAll(menuItems);
+            logger.trace("menu items added");
+            //loincListsButton.getItems().forEach(p -> logger.trace("current: " + p.getText()));
+            loincListsButton.getItems().forEach(p -> p.setOnAction((event) -> {
+                logger.trace(p.getText());
+                List<LoincEntry> loincList = model.getLoincList(p.getText());
+                if (loincList != null && !loincList.isEmpty()) {
+                    loincTableView.getItems().clear();
+                    loincTableView.getItems().addAll(loincList);
+                }
+            } ));
+
+        } else {
+            loincListsButton.setDisable(true);
+        }
+    }
+
+    @FXML
+    private void buildContextMenuForLoinc(Event e) {
+        e.consume();
+        logger.trace("context memu for loinc table requested");
+        initializeMenuItemsForFilteredLists();
+        initializeUserCreatedLoincListsIfNecessary();
+        logger.trace("exit buildContextMenuForLoinc()");
+    }
 
 
     /**
@@ -664,31 +895,64 @@ public class AnnotateTabController {
             List<HPO_Class_Found> children = SparqlQuery.getChildren
                     (hpo_class_found.getId());
 
-            TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView());
+            TreeItem<HPO_TreeView> rootItem = new TreeItem<>(new HPO_TreeView()); //dummy root node
             rootItem.setExpanded(true);
+            TreeItem<HPO_TreeView> current = new TreeItem<>
+                    (new HPO_TreeView(hpo_class_found));
 
-            if (parents.size() > 0) {
-                for (HPO_Class_Found parent : parents) {
-                    TreeItem<HPO_TreeView> parentItem = new TreeItem<>(new
-                            HPO_TreeView(parent));
-                    rootItem.getChildren().add(parentItem);
-                    TreeItem<HPO_TreeView> current = new TreeItem<>
-                            (new HPO_TreeView(hpo_class_found));
-                    parentItem.getChildren().add(current);
-                    parentItem.setExpanded(true);
-                    current.setExpanded(true);
-                    if (children.size() > 0) {
-                        for (HPO_Class_Found child : children) {
-                            TreeItem<HPO_TreeView> childItem = new TreeItem<>
-                                    (new HPO_TreeView(child));
-                            current.getChildren().add(childItem);
-                        }
-                    }
-                }
-            }
+            parents.stream() //add parent terms to root; add current to each parent term
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(p -> {
+                        rootItem.getChildren().add(p);
+                        p.getChildren().add(current);
+                        p.setExpanded(true);
+                    });
+            current.setExpanded(true);
+            children.stream() //add child terms to current
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(current.getChildren()::add);
+
             this.treeView.setRoot(rootItem);
         }
         e.consume();
+    }
+
+    @FXML private void doubleClickTreeView(MouseEvent e) {
+
+        if (e.getClickCount() == 2
+                && this.treeView.getRoot() != null) {
+            TreeItem<HPO_TreeView> current = this.treeView.getSelectionModel().getSelectedItem();
+            if (current == null || current.getValue() == null
+                    || current.getValue().hpo_class_found == null) {
+                return;
+            }
+            List<HPO_Class_Found> parents = SparqlQuery.getParents
+                    (current.getValue().hpo_class_found.getId());
+            List<HPO_Class_Found> children = SparqlQuery.getChildren
+                    (current.getValue().hpo_class_found.getId());
+
+            TreeItem<HPO_TreeView> rootItem = this.treeView.getRoot();
+            rootItem.setExpanded(true);
+
+            if (parents.size() > 0 || children.size() > 0) {
+                rootItem.getChildren().clear();
+            }
+
+            parents.stream()
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(p -> {
+                        rootItem.getChildren().add(p);
+                        p.getChildren().add(current);
+                        p.setExpanded(true);
+                    });
+            current.getChildren().clear();
+            current.setExpanded(true);
+            children.stream()
+                    .map(p -> new TreeItem<>(new HPO_TreeView(p)))
+                    .forEach(current.getChildren()::add);
+        }
+        e.consume();
+
     }
 
     @FXML private void handleCandidateHPODragged(MouseEvent e) {
@@ -902,6 +1166,7 @@ public class AnnotateTabController {
             switchToBasicAnnotationMode();
             flagForAnnotation.setSelected(false);
             annotationNoteField.clear();
+            model.setSessionChanged(true);
 
             loinc2HpoAnnotationsTabController.refreshTable();
             createAnnotationSuccess.setFill(Color.GREEN);
@@ -1174,8 +1439,8 @@ public class AnnotateTabController {
     }
 
     //change the color of rows to green after the loinc code has been annotated
+    /**
     protected void changeColorLoincTableView(){
-/**
         loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
             @Override
             protected void updateItem(String item, boolean empty){
@@ -1193,36 +1458,75 @@ public class AnnotateTabController {
             }
 
         });
- **/
     }
+     **/
 
-/**
- * The program never go to setRowFactory. WHy?
+
+ // The program never go to setRowFactory. WHy?
     //change the color of rows to green after the loinc code has been annotated
     protected void changeColorLoincTableView(){
         logger.debug("enter changeColorLoincTableView");
         logger.info("model size: " + model.getLoincAnnotationMap().size());
-
+/**
         loincTableView.setRowFactory(x -> new TableRow<LoincEntry>() {
             @Override
-            protected void updateItem(LoincEntry item, boolean empty){
+            protected void updateItem(LoincEntry item, boolean empty) {
                 super.updateItem(item, empty);
                 logger.info("row loinc num: " + item.getLOINC_Number());
 
                 //if(item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
-                if(item != null && !empty) {
-                        logger.info("model contains " + item);
-                        logger.info("num of items in model " + model.getLoincAnnotationMap().size());
-                        //TableRow<LoincEntry> currentRow = getTableRow();
-                        setStyle("-fx-background-color: lightblue");
+                if (item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
+                    logger.info("model contains " + item);
+                    logger.info("num of items in model " + model.getLoincAnnotationMap().size());
+                    //TableRow<LoincEntry> currentRow = getTableRow();
+                    setStyle("-fx-background-color: lightblue");
+                } else {
+                    setStyle("-fx-background-color: white");
+                }
+            }
+        });
 
+**/
+        loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty){
+                super.updateItem(item, empty);
+                if(item != null && !empty) {
+                    setText(item);
+                    try {
+                        if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
+                            logger.info("model contains " + item);
+                            logger.info("num of items in model " + model.getLoincAnnotationMap().size());
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: cyan");
+                            //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
+                        } else if (model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO) != null
+                                && model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).contains(new LoincId(item))) {
+                            logger.info("model usercreated list for LoincWaiting4NewHPO # items: " +
+                                    model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).size());
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: deeppink");
+                        } else if (model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE) != null
+                                && model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE).contains(new LoincId(item))) {
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: lightcoral");
+                            //@TODO: change color of other groups. tip: allow user to pick a color
+                        } else{//for reasons I don't understand, this else block is critical to make it work!!!
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("");
+                        }
+                    } catch (MalformedLoincCodeException e) {
+                        //do nothing
+                    }
+                } else {
+                    setText(null);
+                    getTableRow().setStyle("");
                 }
             }
 
         });
         logger.debug("exit changeColorLoincTableView");
     }
-**/
 
 
 
@@ -1399,8 +1703,11 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String title = String.format("Suggesting new term for Loinc:  \"%s\"", loincIdSelected);
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+        //String label = popup.getGitHubLabel();
+        List<String> labels = popup.getGitHubLabels();
+        //String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
+        String title = String.format("Loinc %s:  \"%s\"", loincIdSelected, loincEntrySelected.getLongName());
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), labels);
     }
 
     @FXML
@@ -1444,16 +1751,26 @@ public class AnnotateTabController {
             logger.trace("got back null github issue");
             return;
         }
-        String title = String.format("Suggesting new term for Loinc:  \"%s\"", loincIdSelected);
-        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord());
+        List<String> labels = popup.getGitHubLabels();
+        //String title = String.format("NTR for Loinc %s:  \"%s\"", loincIdSelected, popup.retrieveSuggestedTerm());
+        String title = String.format("Loinc %s:  \"%s\"", loincIdSelected, loincEntrySelected.getLongName());
+        postGitHubIssue(githubissue, title, popup.getGitHubUserName(), popup.getGitHubPassWord(), labels);
     }
 
 
-    private void postGitHubIssue(String message, String title, String uname, String pword) {
+    private void postGitHubIssue(String message, String title, String uname, String pword, List<String> chosenLabels) {
         GitHubPoster poster = new GitHubPoster(uname, pword, title, message);
         this.githubUsername = uname;
         this.githubPassword = pword;
+        if (chosenLabels != null && !chosenLabels.isEmpty()) {
+            logger.trace("Labels being chosen: ");
+            chosenLabels.forEach(logger::trace);
+            poster.setLabel(chosenLabels);
+            logger.trace("Labels sent to poster: \t");
+            logger.trace(poster.debugLabelsArray4Json());
+        }
         try {
+            logger.trace("Message sent to Github: \t" + poster.debugReformatpayloadWithLabel());
             poster.postIssue();
         } catch (NetPostException he) {
             PopUps.showException("GitHub error", "Bad Request (400): Could not post issue", he);

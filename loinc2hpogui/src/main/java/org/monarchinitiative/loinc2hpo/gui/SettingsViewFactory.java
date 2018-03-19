@@ -39,10 +39,15 @@ public class SettingsViewFactory {
 
     private static String setup(Model model) {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n\nMandatory Settings:\n");
         sb.append(String.format("<li>Path to LOINC Core Table: %s</li>",model.getPathToLoincCoreTableFile()));
         sb.append(String.format("<li>Path to <tt>hp.obo</tt> file: %s</li>",model.getPathToHpoOboFile()));
         sb.append(String.format("<li>Path to <tt>hp.owl</tt> file: %s</li>",model.getPathToHpoOwlFile()));
+        sb.append(String.format("<li>Path to auto-saved file: %s</li>",model.getPathToAutoSavedFolder()));
+
+        sb.append("\n\nOptional Settings:\n");
         sb.append(String.format("<li>Path to annotation file: %s</li>",model.getPathToAnnotationFile()));
+        sb.append(String.format("<li>Path to last session: %s</li>",model.getPathToLastSession()));
         sb.append(String.format("<li>Biocurator ID: %s</li>",model.getBiocuratorID()));
         return String.format("<ul>%s</ul>",sb.toString());
 

@@ -2,7 +2,9 @@ package org.monarchinitiative.loinc2hpo.gui;
 
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,11 +16,13 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.controller.MainController;
 import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 
 /**
@@ -42,6 +46,9 @@ public class Main extends Application {
         launch(args);
     }
 
+    @Inject
+    private MainController mainController;
+
     @Override
     public void init() throws IOException {
         final Injector injector = Guice.createInjector(new DepInjectionModule());
@@ -52,6 +59,10 @@ public class Main extends Application {
                 // The controller factory that will be a Guice factory:
                 // this Guice factory will manage the instantiation of the controllers and their dependency injections.
                 guiceFactory);
+        //the following two lines both works; not sure what the first line is
+        //mainController = injector.getInstance(Key.get(MainController.class));
+        mainController = injector.getInstance(MainController.class);
+
     }
 
 
@@ -75,6 +86,38 @@ public class Main extends Application {
         }
 
         window.show();
+
+
+        window.setOnCloseRequest(event -> {
+            event.consume(); //important to consume it first; otherwise,
+            //window will always close
+            if (mainController.isSessionDataChanged()) {
+
+                String[] choices = new String[] {"Yes", "No"};
+                Optional<String> choice = PopUps.getToggleChoiceFromUser(choices,
+                        "Session has been changed. Save changes? ", "Exit " +
+                                "Confirmation");
+
+
+                if (choice.isPresent() && choice.get().equals("Yes")) {
+                    mainController.saveBeforeExit();
+                    window.close();
+                    Platform.exit();
+                    System.exit(0);
+                } else if (choice.isPresent() && choice.get().equals("No")) {
+                    window.close();
+                    Platform.exit();
+                    System.exit(0);
+                } else {
+                    //hang on. No action required
+                }
+            } else {
+                window.close();
+                Platform.exit();
+                System.exit(0);
+            }
+
+        });
 
     }
 

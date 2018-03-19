@@ -28,7 +28,8 @@ loinc2hpo-core/src/main/resources/data_UNC_annotated.csv
 loinc2hpo-core/src/main/resources/loinc_most_frequent.csv
 loinc2hpo-core/src/resource/
 
-
+docs/build/*
+docs/source/images/figures.pptx
 # Maven
 target/
 
