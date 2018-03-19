@@ -132,7 +132,14 @@ public class MainController {
         if (model.getPathToAutoSavedFolder() == null) {
             model.setPathToAutoSavedFolder(Loinc2HpoPlatform.getLOINC2HPODir()
                     + File.separator + "Data");
-            model.writeSettings();
+            File folder = new File(model.getPathToAutoSavedFolder());
+            boolean created = false;
+            if (!folder.exists()) {
+                created = folder.mkdir();
+            }
+            if (created) {
+                model.writeSettings();
+            }
             configurationComplete.set(isConfigurationCompleted());
         }
 
