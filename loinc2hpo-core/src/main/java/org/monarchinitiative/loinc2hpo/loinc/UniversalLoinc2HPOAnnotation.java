@@ -14,6 +14,7 @@ import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,9 +49,9 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     @JsonProperty("version")
     private double version = 0.0;
-    private LocalDate createdOn = null;
+    private LocalDateTime createdOn = null;
     private String createdBy = null;
-    private LocalDate lastEditedOn = null;
+    private LocalDateTime lastEditedOn = null;
     private String lastEditedBy = null;
 
     @JsonProperty("loinc id")
@@ -227,7 +228,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + this.note);
             stringBuilder.append("\t" + this.flag);
-            stringBuilder.append("\t" + this.version);
+            stringBuilder.append("\t" + String.format("%.1f", this.version));
             stringBuilder.append("\t" + this.createdOn);
             stringBuilder.append("\t" + this.createdBy);
             stringBuilder.append("\t" + this.lastEditedOn);
@@ -247,11 +248,11 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         return this;
     }
 
-    public LocalDate getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public UniversalLoinc2HPOAnnotation setCreatedOn(LocalDate createdOn) {
+    public UniversalLoinc2HPOAnnotation setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
@@ -265,11 +266,11 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         return this;
     }
 
-    public LocalDate getLastEditedOn() {
+    public LocalDateTime getLastEditedOn() {
         return lastEditedOn;
     }
 
-    public UniversalLoinc2HPOAnnotation setLastEditedOn(LocalDate lastEditedOn) {
+    public UniversalLoinc2HPOAnnotation setLastEditedOn(LocalDateTime lastEditedOn) {
         this.lastEditedOn = lastEditedOn;
         return this;
     }

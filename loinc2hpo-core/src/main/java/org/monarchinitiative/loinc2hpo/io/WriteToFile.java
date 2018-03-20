@@ -19,6 +19,7 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -150,9 +151,9 @@ public class WriteToFile {
                     String note = elements[6].equals("null") ? null : elements[6];
                     boolean flag = Boolean.parseBoolean(elements[7]);
                     double version = Double.parseDouble(elements[8]);
-                    LocalDate createdOn = elements[9].equals("null") ? null : LocalDate.parse(elements[9]);
+                    LocalDateTime createdOn = elements[9].equals("null") ? null : LocalDateTime.parse(elements[9]);
                     String createdBy = elements[10].equals("null")? null : elements[10];
-                    LocalDate lastEditedOn = elements[11].equals("null")? null : LocalDate.parse(elements[11]);
+                    LocalDateTime lastEditedOn = elements[11].equals("null")? null : LocalDateTime.parse(elements[11]);
                     String lastEditedBy = elements[12].equals("null")? null : elements[12];
 
                     if (!deserializedMap.containsKey(loincId)) {
