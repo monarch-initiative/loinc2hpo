@@ -7,7 +7,7 @@ Loinc2hpo is a JavaFX app designed to convert FHIR observations into HPO terms. 
 - help retrieve patient observations
 - convert patient observations into HPO terms
 
-Mapping LOINC to HPO terms requires a significant effort from biocurators. Loinc2hpo tries to simply the process by automatically finding the best matching terms using Sparql query. With this app, collaborators can easily split LOINC codes of interest into smaller tasks and share their annotations.
+Mapping LOINC to HPO terms requires significant efforts from biocurators. Loinc2hpo tries to simplify the process by automatically finding the best matching terms using Sparql query. With this app, collaborators can easily split LOINC codes of interest into smaller tasks and share their annotations.
 
 .. toctree::
    :maxdepth: 2

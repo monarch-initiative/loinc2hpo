@@ -296,6 +296,13 @@
                               <TableColumn fx:id="advancedAnnotationCode" prefWidth="184.0" text="code" />
                             <TableColumn fx:id="advancedAnnotationHpo" prefWidth="495.0" text="HPO term" />
                           </columns>
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" onAction="#handleDeleteCodedAnnotation" text="Delete" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
                         </TableView>
                      </children>
                   </AnchorPane>

@@ -517,6 +517,18 @@ public class MainController {
     @FXML
     private void handleOpenSession(ActionEvent e){
         e.consume();
+
+        if (model.getLoincEntryMap() == null) {
+            PopUps.showWarningDialog("NO LOINC", "LOINC table Not Initialized",
+                    "click init Loinc button to import Loinc table");
+            return;
+        }
+        if (model.getTermMap() == null) {
+            PopUps.showWarningDialog("NO HPO", "HPO Not Initialized",
+                    "click init HPO button to import HPO");
+            return;
+        }
+
         String pathToOpen = model.getPathToAutoSavedFolder();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
