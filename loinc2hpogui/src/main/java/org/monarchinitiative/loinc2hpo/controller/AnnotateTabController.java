@@ -192,6 +192,8 @@ public class AnnotateTabController {
                             tooltip.setPrefWidth(300);
                             tooltip.setWrapText(true);
                             setTooltip(tooltip);
+                        } else {
+                            setText(null);
                         }
                     }
                 };
@@ -454,8 +456,11 @@ public class AnnotateTabController {
             return;
         }
         String name = entry.getLongName();
+        hpoListView.getItems().clear();
         sparqlQueryResult.clear();
-        SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
+        sparqlQueryResult.addAll(SparqlQuery.query_auto(name));
+        sparqlQueryResult.sort((o1, o2) -> o2.getScore() - o1.getScore());
+        //SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
         logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
         if (sparqlQueryResult.size() == 0) {
             String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +

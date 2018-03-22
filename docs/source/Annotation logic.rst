@@ -1,7 +1,7 @@
 Annotation Logic
 ================
 
-The key to successful annotation is to anticipate what kind of outcome is for a LOINC code. Since the outcome is strongly associated with the ``Scale`` parameter of LOINC, we will describe three main types separately. For more detailed description of LOINC, refer to ``Intro to LOINC``.
+The key to successful annotation is to anticipate what kinds of outcome are for a LOINC code. Since the outcome is strongly associated with the ``Scale`` parameter of LOINC, we will describe three main types separately. For more detailed description of LOINC, refer to ``Intro to LOINC``.
 
 
 ``Qn``
@@ -10,6 +10,9 @@ The key to successful annotation is to anticipate what kind of outcome is for a 
 ``Qn`` or "quantitative" is the largest category of all LOINC codes, accounting for >80% in real world applications. Observations of this type have a numeric value as its outcome, such as the number of blood cells or the concentration of a substance. Annotating ``Qn`` is relatively straightforward: pick three HPO terms corresponding to the outcome of the observation when the measured value is low, intermediate or high. Here is an example for LOINC ``2823-3`` ("Potassium in Serum or Plasma"):
 
     .. image:: images/annotation_example1.png
+
+**Term Negation**
+As you can see from the above example, we assigned the negated form of "HP:0011015 Abnormality of blood glucose concentration" to the intermediate value. Intermediate value usually means "normal", e.g. in this case, so by default the term that you choose for intermediate value is always negated. However, there are cases when this is not true, e.g. LOINC 9269-2 Glasgow coma score total, where the intermediate value is not interpreted as "no coma" but instead "mild coma". So you will need to uncheck the "negate" checkbox in this case.
 
 ``Ord``
 -------
