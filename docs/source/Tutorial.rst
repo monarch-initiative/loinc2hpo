@@ -3,8 +3,8 @@ Tutorial
 
 This tutorial is for loinc2hpo V1.1.0.
 
-Tabs
-----
+Overview
+--------
 The app has three tabs.
 
 ``Annotate``: contains functions for annotating LOINC codes (mapping LOINC codes to HPO terms);
@@ -26,7 +26,7 @@ Follow the steps to start the curation process.
 
 - Import LOINC codes. If you have configured the app properly, you should be able to see there are contents in the LOINC table. You can always click **"Initialize Loinc Table"** on the left upper corner to import Loinc codes from the Loinc Core Table file. Try using the "Search" function to select some Loinc codes, e.g. try searching for "10449-7" and then "glucose" (You will get one result for "10449-7" and many results for "glucose").
 
-- Import HPO. Click "Initialize HPO model" on the left upper corner to import all HPO terms to the app.
+- Import HPO. Click "Initialize HPO model" on the left upper corner to import all HPO terms to the app. If you configured the app properly, this will automatically run when you start the app.
 
 - After completing the above steps, you should be able to start annotating LOINC codes!
   - Go to the Loinc Table in the bottom half of the tab, and choose the LOINC code that you want to annotate. When you click the **"Auto Query"** button or double click on the LOINC code, the app will automatically find candidate HPO terms for you, listed from the most likely term to the least likely.
@@ -58,6 +58,8 @@ Follow the steps to start the curation process.
 - Find parent and child for an HPO term. When you double-click on a candidate HPO term, the app will find its parent(s) and child(ren) and display it in the right box. Sometimes this can be helpful in determining whether a HPO term should be chosen or not. (Tip: it can save time, too. e.g. If you double-click on "Abnormality of blood glucose concentration", you will find "Hyperglycemia" and "Hypoglycemia" as its two children. Drag the children to fill the correct textfields, without needing to go through the long list of candidate terms looking for "Hyperglycemia" and "Hypoglycemia"!)
 
 - Manually search for candidate HPO terms. If `Auto Query` does not give you the HPO terms that you need, try using the `Manual Query` button with comma-separated keys. Tip: *try synonyms*; words without comma will be taken as one key and the app will try to find a exact match to it.
+
+- Group LOINC. Sometimes you may not be able to annotate a LOINC code because you are waiting for new HPO terms (see below: ``Suggest new HPO terms``) or you simply do not know how to annotate it. You can group LOINC into a list so that your collaborators can help. Right click on the LOINC code, choose `Group/ungroup` and select a list. By default there will be two groups, "require_new_HPO_terms" and "unable_to_annotate". You can create more groups but the app does not display their colors very well yet (working on it!).
 
 
 **Review/Edit your annotations**
@@ -109,9 +111,9 @@ In the Basic Mode, the **"negate"** button only controls the term in the center 
 Suggest new HPO terms
 ~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes you may not be able to find an appropriate HPO term for a LOINC code. You can send a request for new terms to the authors of HPO directly from the app.
+Sometimes you may not be able to find an appropriate HPO term for a LOINC code. You can send a request to the authors of HPO directly from the app to ask for new terms.
 
-- Create a new term for a Loinc code. Select a Loinc code and then click **"Suggest New HPO term"**. Provide the proposed term and your comment, type in your GitHub username and GitHub password, choose a label that best describes your request, e.g. `new term request`, and click **"Create GitHub issue"**.
+- Create a new term for a Loinc code. Select a Loinc code and then click **"Suggest New HPO term"**. Provide the proposed term and your comment, type in your GitHub username and GitHub password, choose a label that best describes your request, e.g. `LOINC`, and click **"Create GitHub issue"**.
 
 - Create a new child term for a Loinc code. If a current HPO term is close to what you need but you need a new child beneath it, you can select both the Loinc code and the candidate HPO term, right-click, select **"Suggest child term"**, fill in relevant information and submit.
 

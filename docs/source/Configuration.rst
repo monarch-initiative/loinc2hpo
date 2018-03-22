@@ -17,12 +17,12 @@ Mandatory Settings
 
 Optional Settings
 -----------------
-The following setting are recommended. Not specifying them will not
+The following setting are strongly recommended. Not specifying them will not
 affect the operation of the app. 
 
-* Change the directory for auto-saved data. The default directory for auto-saved data is located at ~/.loinc2hpo/Data. If you want to change this setting,  from the menu bar, click **Configuration** - **Set path to Autosaved Data** to change the directory for autosaved data.
+* Change the directory for auto-saved data. The default directory for auto-saved data is located at ~/.loinc2hpo/Data. If you want to change this setting, click **Configuration** - **Set path to Autosaved Data** to select your desired directory.
 
-  note: this step is mandatory if you want to use and push your annotation to `loinc2hpoAnnotation <https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation>`_. Follow instructions there to set up the path properly.
+  **Note:** this step is mandatory if you want to use and push your annotations to `loinc2hpoAnnotation <https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation>`_. Follow instructions there to set up the path properly.
 
 * Set biocurator ID. From the menu bar, click **"Configuration"** - **"Set biocurator ID"**, specify your biocurator ID. If you are not assigned one, create one for yourself with the following format: organization name first, then `:`, then your name/id.
 
