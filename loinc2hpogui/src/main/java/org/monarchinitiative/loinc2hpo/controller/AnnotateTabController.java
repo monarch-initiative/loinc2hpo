@@ -639,7 +639,10 @@ public class AnnotateTabController {
             alert.showAndWait();
         });
 
-        e.consume();
+        if (e != null) {
+            e.consume();
+        }
+
 
     }
 

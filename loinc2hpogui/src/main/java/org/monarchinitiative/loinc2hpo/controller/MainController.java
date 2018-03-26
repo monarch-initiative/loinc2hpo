@@ -205,7 +205,6 @@ public class MainController {
             }
         }
 
-        //@TODO: implement in future if necessary
         importLoincCategory.setVisible(false);
         exportLoincCategory.setVisible(false);
     }
@@ -549,12 +548,16 @@ public class MainController {
 
     protected void openSession(String pathToOpen) {
 
+        //This is deprecated. keep this only temperoly
         //there should be one default file, "annotations.tsv",
         //one default folder "LOINC category", which should have two files "require_new_HPO_terms.txt", "unable_to_annotate.txt" by default (and possibility others)
+        /**
         String annotationsFilePath = pathToOpen + File.separator + "annotations.tsv";
         if (new File(annotationsFilePath).exists()) {
-            loinc2HpoAnnotationsTabController.importLoincAnnotation(annotationsFilePath);
+            loinc2HpoAnnotationsTabController.tempimportLoincAnnotation(annotationsFilePath);
         }
+         **/
+        loinc2HpoAnnotationsTabController.importLoincAnnotation(pathToOpen);
 
         File loinc_category_folder = new File(pathToOpen + File.separator + LOINC_CATEGORY_folder);
         if (!loinc_category_folder.exists() || !loinc_category_folder.isDirectory()) {
@@ -597,6 +600,7 @@ public class MainController {
 
     }
 
+    /**
     @FXML
     private void handleSaveSession(ActionEvent e) {
 
@@ -636,7 +640,57 @@ public class MainController {
         }
 
     }
+     **/
 
+    @FXML
+    private void handleSaveSession(ActionEvent e) {
+
+        logger.trace("user wants to save a session");
+        //Create a session if it is saved for the first time
+        if (model.getPathToLastSession() == null) {
+            createNewSession();
+        }
+        //save annotations to "basic_annotations" and "advanced_annotations"
+        String pathToAnnotations = model.getPathToLastSession() + File.separator + "basic_annotations.tsv";
+        try {
+            WriteToFile.toTSVbasicAnnotations(pathToAnnotations, model.getLoincAnnotationMap());
+        } catch (IOException e1) {
+            PopUps.showWarningDialog("Error message",
+                    "Failure to save basic annotations data",
+                    "An error occurred. Try again!");
+        }
+
+        String pathToAnnotations2 = model.getPathToLastSession() + File.separator + "advanced_annotations.tsv";
+        try {
+            WriteToFile.toTSVadvancedAnnotations(pathToAnnotations2, model.getLoincAnnotationMap());
+        } catch (IOException e1) {
+            PopUps.showWarningDialog("Error message",
+                    "Failure to save advanced annotations data",
+                    "An error occurred. Try again!");
+        }
+
+
+        String pathToLoincCategory = model.getPathToLastSession() + File.separator + LOINC_CATEGORY_folder;
+        if (!new File(pathToLoincCategory).exists()) {
+            new File(pathToLoincCategory).mkdir();
+        }
+        model.getUserCreatedLoincLists().entrySet()
+                .forEach(p -> {
+                    String path = pathToLoincCategory + File.separator + p.getKey() + ".txt";
+                    Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p.getKey());
+                    StringBuilder builder = new StringBuilder();
+                    loincIds.forEach(l -> {
+                        builder.append (l);
+                        builder.append("\n");
+                    });
+                    WriteToFile.writeToFile(builder.toString().trim(), path);
+                });
+
+        if (e != null) {
+            e.consume();
+        }
+
+    }
 
 
 

@@ -18,15 +18,14 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WriteToFile {
 
     private static final Logger logger = LogManager.getLogger();
+    private final static String MISSINGVALUE = "NA";
 
     public static void writeToFile(String content, String pathToFile) {
 
@@ -104,11 +103,51 @@ public class WriteToFile {
     public static void toTSV(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-        writer.write(UniversalLoinc2HPOAnnotation.getHeader());
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
 
         for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
             writer.newLine();
             writer.write(annotation.toString());
+        }
+
+        writer.close();
+    }
+
+    /**
+     * Serialize the annotations in basic mode
+     * @param path
+     * @param annotationMap
+     * @throws IOException
+     */
+    public static void toTSVbasicAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderBasic());
+
+        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+            writer.newLine();
+            writer.write(annotation.getBasicAnnotationsString());
+        }
+
+        writer.close();
+    }
+
+    /**
+     * Serialize the annotations in advanced mode
+     * @param path
+     * @param annotationMap
+     * @throws IOException
+     */
+    public static void toTSVadvancedAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
+
+        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+            if (!annotation.getAdvancedAnnotationsString().isEmpty()) {
+                writer.newLine();
+                writer.write(annotation.getAdvancedAnnotationsString());
+            }
         }
 
         writer.close();
@@ -189,5 +228,115 @@ public class WriteToFile {
             e.printStackTrace();
         }
         return deserializedMap;
+    }
+
+    public static Map<LoincId, UniversalLoinc2HPOAnnotation> fromTSVBasic(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+
+        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        reader.lines().forEach(serialized -> {
+            String[] elements = serialized.split("\\t");
+            if (elements.length == 13 && !serialized.startsWith("loincId")) {
+                try {
+                    LoincId loincId = new LoincId(elements[0]);
+                    LoincScale loincScale = LoincScale.string2enum(elements[1]);
+                    TermId low = convertToTermID(elements[2]);
+                    TermId intermediate = convertToTermID(elements[3]);
+                    TermId high = convertToTermID(elements[4]);
+                    boolean inverse = Boolean.parseBoolean(elements[5]);
+                    String note = elements[6].equals(MISSINGVALUE) ? null : elements[6];
+                    boolean flag = Boolean.parseBoolean(elements[7]);
+                    double version = Double.parseDouble(elements[8]);
+                    LocalDateTime createdOn = elements[9].equals(MISSINGVALUE) ? null : LocalDateTime.parse(elements[9]);
+                    String createdBy = elements[10].equals(MISSINGVALUE)? null : elements[10];
+                    LocalDateTime lastEditedOn = elements[11].equals(MISSINGVALUE)? null : LocalDateTime.parse(elements[11]);
+                    String lastEditedBy = elements[12].equals(MISSINGVALUE)? null : elements[12];
+
+                    if (!deserializedMap.containsKey(loincId)) {
+                        UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder builder = new UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder();
+                        builder.setLoincId(loincId)
+                                .setLoincScale(loincScale)
+                                .setLowValueHpoTerm(hpoTermMap.get(low))
+                                .setIntermediateValueHpoTerm(hpoTermMap.get(intermediate))
+                                .setHighValueHpoTerm(hpoTermMap.get(high))
+                                .setIntermediateNegated(inverse)
+                                .setCreatedOn(createdOn)
+                                .setCreatedBy(createdBy)
+                                .setLastEditedOn(lastEditedOn)
+                                .setLastEditedBy(lastEditedBy)
+                                .setVersion(version)
+                                .setNote(note)
+                                .setFlag(flag);
+
+                        deserializedMap.put(loincId, builder.build());
+                    }
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code line: " + serialized);
+                }
+            } else {
+                if (elements.length != 13) {
+                    logger.error(String.format("line does not have 13 elements, but has %d elements. Line: %s",
+                            elements.length,  serialized));
+                } else {
+                    logger.info("line is header: " + serialized);
+                }
+
+            }
+        });
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return deserializedMap;
+    }
+
+
+    public static void fromTSVAdvanced(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        reader.lines().forEach(serialized -> {
+            String[] elements = serialized.split("\\t");
+            if (elements.length == 13 && !serialized.startsWith("loincId")) {
+                try {
+                    LoincId loincId = new LoincId(elements[0]);
+                    String system = elements[2];
+                    String codeString = elements[3];
+                    TermId termId = convertToTermID(elements[4]);
+                    boolean inverse = Boolean.parseBoolean(elements[5]);
+                    UniversalLoinc2HPOAnnotation annotation = deserializedMap.get(loincId);
+                    Code code = Code.getNewCode().setSystem(system).setCode(codeString);
+                    annotation.addAdvancedAnnotation(code, new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse));
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code line: " + serialized);
+                }
+            } else {
+                if (elements.length != 13) {
+                    logger.error(String.format("line does not have 13 elements, but has %d elements. Line: %s",
+                            elements.length,  serialized));
+                } else {
+                    logger.info("line is header: " + serialized);
+                }
+
+            }
+        });
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static TermId convertToTermID(String record) {
+        TermPrefix prefix = new ImmutableTermPrefix("HP");
+        if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
+            logger.error("Non HPO termId is detected from TSV");
+            return null;
+        }
+        String id = record.substring(3);
+        return new ImmutableTermId(prefix, id);
     }
 }

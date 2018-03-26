@@ -46,6 +46,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     @JsonIgnore
     private static final long serialVersionUID = 1L;
+    private static final String MISSINGVALUE = "NA";
 
     @JsonProperty("version")
     private double version = 0.0;
@@ -58,6 +59,21 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     private LoincId loincId = null;
     @JsonProperty("loinc scale")
     private LoincScale loincScale = null;
+    //The following fields record three terms for basic annotations
+    private HpoTerm low = null;
+    private HpoTerm intermediate = null;
+    private boolean intermediateNegated = false;
+    private HpoTerm high = null;
+
+    //The following hashmap stores all manually created advanced annotations
+    private Map<Code, HpoTermId4LoincTest> advancedAnnotationTerms = null;
+
+    //The following hashmap combines terms for internal codes and advanced annotations.
+    //We convert basic annotations to internal codes by a default rule:
+    //internal "L" -- low
+    //internal "N", "NP" -- intermediate
+    //internal "H", "P" -- high
+    //internal "A" --intermediate
     //the keys are internal codes; each one should correspond to one HpoTerm4LoincTest
     //alternatively, the codes can be external codes, if it is for a Ord or Nom loinc test
     //access the codes from the CodeSystemConvertor.getCodeContainer
@@ -73,6 +89,64 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     //private UniversalLoinc2HPOAnnotation(){ }
 
+    public UniversalLoinc2HPOAnnotation(LoincId loincId,  LoincScale loincScale,
+            HpoTerm low,  HpoTerm intermediate,  boolean intermediateNegated,  HpoTerm high,  Map<Code, HpoTermId4LoincTest> advancedAnnotationTerms,  LocalDateTime createdOn,  String createdBy,  LocalDateTime lastEditedOn,  String lastEditedBy,  String note,  boolean flag, double version) {
+
+        this.loincId = loincId;
+        this.loincScale = loincScale;
+        this.low = low;
+        this.intermediate = intermediate;
+        this.intermediateNegated = intermediateNegated;
+        this.high = high;
+        this.advancedAnnotationTerms = advancedAnnotationTerms;
+        this.createdOn = createdOn;
+        this.createdBy = createdBy;
+        this.lastEditedOn = lastEditedOn;
+        this.lastEditedBy = lastEditedBy;
+        this.note = note;
+        this.flag = flag;
+        this.version = version;
+
+        //map basic annotations to internal codes;
+        //combine with advanced annotations
+        mapToInternalCodes();
+        //put all advanced codes into the combined map
+        //if an internal code is manually annotated, it will overwrite default map
+        this.candidateHpoTerms.putAll(advancedAnnotationTerms);
+    }
+
+    //map basic annotations to internal codes;
+    //combine with advanced annotations
+    private void mapToInternalCodes(){
+
+        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        //We convert basic annotations to internal codes by a default rule:
+        //internal "L" -- low
+        //internal "N", "NP" -- intermediate
+        //internal "H", "P" -- high
+        //internal "A" --intermediate
+        if (low != null) {
+            candidateHpoTerms.put(internalCode.get("L"),
+                    new HpoTermId4LoincTest(low, false));
+        }
+        if (intermediate != null) {
+            candidateHpoTerms.put(internalCode.get("N"),
+                    new HpoTermId4LoincTest(intermediate, intermediateNegated));
+            candidateHpoTerms.put(internalCode.get("NP"),
+                    new HpoTermId4LoincTest(intermediate, intermediateNegated));
+            candidateHpoTerms.put(internalCode.get("A"),
+                    new HpoTermId4LoincTest(intermediate, !intermediateNegated));
+        }
+        if (high != null) {
+            candidateHpoTerms.put(internalCode.get("H"),
+                    new HpoTermId4LoincTest(high, false));
+            candidateHpoTerms.put(internalCode.get("P"),
+                    new HpoTermId4LoincTest(high, false));
+        }
+
+    }
+
+    @Deprecated
     public UniversalLoinc2HPOAnnotation(LoincId lid, LoincScale lsc){
 
         //super(lid, lsc);
@@ -81,17 +155,23 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     }
 
+    @Deprecated
     public UniversalLoinc2HPOAnnotation(LoincId lid) {
         this.loincId = lid;
         //loincScale can be found from the loinc map
     }
 
+    private UniversalLoinc2HPOAnnotation() {
+
+    }
     /**
      * Add annotations
      * @param code a coded value in a coding system
      * @param hpoTermId4LoincTest a hpo term wrapped in the HpoTermId4LoincTest class
      * @return the annotation object
      */
+    @Deprecated
+    //use addAdvancedAnnotation instead
     public UniversalLoinc2HPOAnnotation addAnnotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
         this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
         return this;
@@ -105,6 +185,11 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     public UniversalLoinc2HPOAnnotation addAnnotation(Map<Code, HpoTermId4LoincTest> annotation){
         this.candidateHpoTerms.putAll(annotation);
         return this;
+    }
+
+    public void addAdvancedAnnotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
+        this.advancedAnnotationTerms.put(code, hpoTermId4LoincTest);
+        this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
     }
 
 
@@ -200,10 +285,16 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     }
 
 
-    public static String getHeader() {
+    public static String getHeaderAdvanced() {
         String header = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 "loincId", "loincScale", "system", "code", "hpoTermId", "inversed", "note", "flag",
                 "version", "createdOn", "createdBy", "lastEditedOn", "lastEditedBy");
+        return header;
+    }
+
+    public static String getHeaderBasic() {
+        String header = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
+                "loincId", "loincScale", "hpoLo", "hpoN", "hpoHi", "inversed", "note", "flag", "version", "createdOn", "createdBy", "lastEditedOn", "lastEditedBy");
         return header;
     }
 
@@ -216,6 +307,9 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     }
 
     @Override
+    /**
+     * The default toString method will serialize all the annotations to a string, including basic and advanced annotations.
+     */
     public String toString(){
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -233,6 +327,50 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
             stringBuilder.append("\t" + this.createdBy);
             stringBuilder.append("\t" + this.lastEditedOn);
             stringBuilder.append("\t" + this.lastEditedBy);
+            stringBuilder.append("\n");
+        });
+
+        return stringBuilder.toString().trim();
+    }
+
+    public String getBasicAnnotationsString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(this.loincId);
+        stringBuilder.append("\t" + this.loincScale.toString());
+        stringBuilder.append("\t" + (low == null ? MISSINGVALUE : low.getId().getIdWithPrefix()));
+        stringBuilder.append("\t" + (intermediate == null ? MISSINGVALUE : intermediate.getId().getIdWithPrefix()));
+        stringBuilder.append("\t" + (high == null ? MISSINGVALUE : high.getId().getIdWithPrefix()));
+        stringBuilder.append("\t" + intermediateNegated);
+        stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
+        stringBuilder.append("\t" + this.flag);
+        stringBuilder.append("\t" + String.format("%.1f", this.version));
+        stringBuilder.append("\t" + (this.createdOn == null ? MISSINGVALUE : this.createdOn));
+        stringBuilder.append("\t" + (this.createdBy == null ? MISSINGVALUE : this.createdBy));
+        stringBuilder.append("\t" + (this.lastEditedOn == null ? MISSINGVALUE: this.lastEditedOn));
+        stringBuilder.append("\t" + (this.lastEditedBy == null ? MISSINGVALUE : this.lastEditedBy));
+        //stringBuilder.append("\n");
+
+        return stringBuilder.toString();
+    }
+
+    public String getAdvancedAnnotationsString() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        advancedAnnotationTerms.forEach((code, hpoTermId4LoincTest) -> {
+            stringBuilder.append(this.loincId);
+            stringBuilder.append("\t" + this.loincScale.toString());
+            stringBuilder.append("\t" + code.getSystem());
+            stringBuilder.append("\t" + code.getCode());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
+            stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
+            stringBuilder.append("\t" + this.flag);
+            stringBuilder.append("\t" + String.format("%.1f", this.version));
+            stringBuilder.append("\t" + (this.createdOn == null ? MISSINGVALUE : this.createdOn));
+            stringBuilder.append("\t" + (this.createdBy == null ? MISSINGVALUE : this.createdBy));
+            stringBuilder.append("\t" + (this.lastEditedOn == null ? MISSINGVALUE : this.lastEditedOn));
+            stringBuilder.append("\t" + (this.lastEditedBy == null ? MISSINGVALUE : this.lastEditedBy));
             stringBuilder.append("\n");
         });
 
@@ -294,15 +432,36 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     }
 
+    public void setLowValueTermId(HpoTerm low) {
+
+        this.low = low;
+        //@TODO: convert to internal code here; same for below
+
+    }
+
+    public void setIntermediateValueHpoTermId(HpoTerm intermediate) {
+
+        this.intermediate = intermediate;
+    }
+
+    public void setHighValueHpoTermId(HpoTerm high) {
+
+        this.high = high;
+
+    }
     //@Override
     @Deprecated
     public  TermId getBelowNormalHpoTermId(){
-        return getHpoTermIdForInternalCode("L");
+
+        //return getHpoTermIdForInternalCode("L");
+        return this.low == null ? null : this.low.getId();
     }
     //@Override
     @Deprecated
     public  TermId getNotAbnormalHpoTermName(){
-        return getHpoTermIdForInternalCode("N");
+
+        //return getHpoTermIdForInternalCode("N");
+        return this.intermediate == null ? null : this.intermediate.getId();
     }
     //@Override
     @Deprecated
@@ -313,12 +472,155 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     @Deprecated
     public  TermId getAboveNormalHpoTermName(){
 
-        return getHpoTermIdForInternalCode("H");
+        //return getHpoTermIdForInternalCode("H");
+        return this.high == null ? null : this.high.getId();
     }
 
     @Deprecated
     public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs){
         return null;
+    }
+
+
+
+    public static class Loinc2HpoAnnotationBuilder{
+
+        private LoincId loincId = null;
+        private LoincScale loincScale = null;
+        private HpoTerm low = null;
+        private HpoTerm intermediate = null;
+        private boolean intermediateNegated = false;
+        private HpoTerm high = null;
+        private Map<Code, HpoTermId4LoincTest> advancedAnnotationTerms = new HashMap<>();
+        private LocalDateTime createdOn = null;
+        private String createdBy = null;
+        private LocalDateTime lastEditedOn = null;
+        private String lastEditedBy = null;
+        private String note = null;
+        private boolean flag = false;
+        private double version = 0.0;
+
+        //constructor
+        public Loinc2HpoAnnotationBuilder () {
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setLoincId(LoincId loincId) {
+
+            this.loincId = loincId;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setLoincScale(LoincScale loincScale) {
+
+            this.loincScale = loincScale;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setLowValueHpoTerm(HpoTerm low) {
+
+            this.low = low;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setIntermediateValueHpoTerm(HpoTerm intermediate) {
+
+            this.intermediate = intermediate;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setIntermediateNegated(boolean negated) {
+
+            this.intermediateNegated = negated;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setHighValueHpoTerm(HpoTerm high) {
+
+            this.high = high;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder addAdvancedAnnotation(Code code, HpoTermId4LoincTest annotation) {
+
+            this.advancedAnnotationTerms.put(code, annotation);
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setCreatedOn(LocalDateTime createdOn) {
+
+            this.createdOn = createdOn;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setCreatedBy(String biocurator) {
+
+            this.createdBy = biocurator;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setLastEditedOn(LocalDateTime lastEditedOn) {
+
+            this.lastEditedOn = lastEditedOn;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setLastEditedBy(String biocurator) {
+
+            this.lastEditedBy = biocurator;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setNote(String note) {
+
+            this.note = note;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setFlag(boolean flag) {
+
+            this.flag = flag;
+            return this;
+
+        }
+
+        public Loinc2HpoAnnotationBuilder setVersion(double version) {
+
+            this.version = version;
+            return this;
+
+        }
+
+        public UniversalLoinc2HPOAnnotation build() {
+
+            return new UniversalLoinc2HPOAnnotation(loincId,
+                    loincScale,
+                    low,
+                    intermediate,
+                    intermediateNegated,
+                    high,
+                    advancedAnnotationTerms,
+                    createdOn,
+                    createdBy,
+                    lastEditedOn,
+                    lastEditedBy,
+                    note,
+                    flag,
+                    version);
+
+        }
     }
 
 }

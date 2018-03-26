@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
+import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
@@ -14,17 +16,19 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.FromFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import sun.util.resources.LocaleData;
 
 import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -193,7 +197,7 @@ public class Loinc2HpoAnnotationsTabController {
             }
 
             //handles my current TSV annotation
-            if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeader())) {
+            if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeaderAdvanced())) {
                 Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
                 try {
                     annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
@@ -210,7 +214,63 @@ public class Loinc2HpoAnnotationsTabController {
         annotateTabController.changeColorLoincTableView();
     }
 
-    public void importLoincAnnotation(String path) {
+    public void importLoincAnnotation(String pathToOpen) {
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+
+        /**
+        String header = null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            header = reader.readLine();
+            reader.close();
+        } catch (FileNotFoundException e) {
+            PopUps.showInfoMessage("File is not found", "Error: missing file");
+            return;
+        } catch (IOException e) {
+            PopUps.showInfoMessage("An error occurred during importing", "Error: importing is not completed");
+        }
+
+        //handles my old annotation
+        if (header != null && header.equals(LoincEntry.getHeaderLine())) {
+            FromFile parser = new FromFile(path, model.getOntology());
+            Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
+            for (UniversalLoinc2HPOAnnotation test : testset) {
+                model.addLoincTest(test);
+            }
+        }
+
+        //handles my current TSV annotation
+        if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeaderAdvanced())) {
+            Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
+            try {
+                annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
+            } catch (FileNotFoundException e) {
+                //already handled
+            }
+            model.getLoincAnnotationMap().putAll(annotationMap);
+        }
+
+         **/
+        String basicAnnotationsFilePath = pathToOpen + File.separator + "basic_annotations.tsv";
+        String advancedAnnotationsFilePath = pathToOpen + File.separator + "advanced_annotations.tsv";
+        if (new File(basicAnnotationsFilePath).exists()) {
+            try {
+                model.getLoincAnnotationMap().putAll(WriteToFile.fromTSVBasic(basicAnnotationsFilePath, model.getTermMap2()));
+                WriteToFile.fromTSVAdvanced(advancedAnnotationsFilePath, model.getLoincAnnotationMap(), model.getTermMap2());
+            } catch (FileNotFoundException e) {
+                logger.error("Should not happen");
+            }
+
+        }
+
+        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        refreshTable();
+
+        annotateTabController.changeColorLoincTableView();
+    }
+
+    public void tempimportLoincAnnotation(String path) {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
 
         String header = null;
@@ -236,7 +296,7 @@ public class Loinc2HpoAnnotationsTabController {
         }
 
         //handles my current TSV annotation
-        if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeader())) {
+        if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeaderAdvanced())) {
             Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
             try {
                 annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
@@ -250,8 +310,45 @@ public class Loinc2HpoAnnotationsTabController {
         refreshTable();
 
         annotateTabController.changeColorLoincTableView();
-    }
 
+        Map<LoincId, UniversalLoinc2HPOAnnotation> tempcopy = new LinkedHashMap<>();
+        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        model.getLoincAnnotationMap().values()
+                .forEach(annotation -> {
+                    LoincId loincId = annotation.getLoincId();
+                    LoincScale loincScale = annotation.getLoincScale();
+                    Code codeLow = internalCodes.get("L");
+                    Code codeNormal = internalCodes.get("N");
+                    Code codeHigh = internalCodes.get("H");
+                    HpoTermId4LoincTest forLow = annotation.getCandidateHpoTerms().get(codeLow);
+                    HpoTermId4LoincTest forNormal = annotation.getCandidateHpoTerms().get(codeNormal);
+                    HpoTermId4LoincTest forHigh = annotation.getCandidateHpoTerms().get(codeHigh);
+                    //logger.trace("forLow: " + forLow.getHpoTerm().getName());
+
+                    UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder builder = new UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder();
+                    builder.setLoincId(loincId)
+                            .setLoincScale(loincScale)
+                            .setLowValueHpoTerm(forLow == null? null : forLow.getHpoTerm())
+                            .setIntermediateValueHpoTerm(forNormal == null ? null : forNormal.getHpoTerm())
+                            .setHighValueHpoTerm(forHigh == null ? null : forHigh.getHpoTerm())
+                            .setIntermediateNegated(forNormal == null ? false : forNormal.isNegated())
+                            .setFlag(annotation.getFlag())
+                            .setNote(annotation.getNote())
+                            .setCreatedOn(annotation.getCreatedOn())
+                            .setCreatedBy(annotation.getCreatedBy())
+                            .setLastEditedOn(annotation.getLastEditedOn())
+                            .setLastEditedBy(annotation.getLastEditedBy())
+                            .setVersion(annotation.getVersion());
+                    annotation.getCandidateHpoTerms().entrySet().stream()
+                            .filter(p -> !p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
+                            .forEach(p -> builder.addAdvancedAnnotation(p.getKey(), p.getValue()));
+                    tempcopy.put(loincId, builder.build());
+                });
+        model.getLoincAnnotationMap().clear();
+        model.getLoincAnnotationMap().putAll(tempcopy);
+
+
+    }
     @Deprecated
     /**
      * This is the old stype, too simple to handle all cases
