@@ -124,3 +124,10 @@ Note:
 2. The app currently does not support authentication with two-factor verifications [learn more](https://github.com/blog/1614-two-factor-authentication). If you enabled that feature on your account, you may encounter issues during submission.
 
 
+Save & Export data
+~~~~~~~~~~~~~~~~~~
+
+To save data, you can click `File` - `Save Session`. This will save your annotations to two files: basic_annotations.tsv and advanced_annotations.tsv, and save your categories of LOINC codes into separated text files. All those files are located at the folder that you specified for auto-saved data.
+
+To export data, you can click `File` - `Export annotations as`. Currently the app only supports .tsv files.
+

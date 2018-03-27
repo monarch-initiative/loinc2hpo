@@ -67,7 +67,9 @@ public class FromFile {
 
     public Map<LoincId, UniversalLoinc2HPOAnnotation> getTestmap() { return testmap; }
 
+
     private void parseLoinc2Hpo(String path) {
+        /**
         logger.trace("Parsing at " + path);
         try {
             BufferedReader br = new BufferedReader(new FileReader(path));
@@ -116,8 +118,9 @@ public class FromFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+**/
     }
+
 
     LoincScale getScale(String sc) {
         return LoincScale.string2enum(sc);

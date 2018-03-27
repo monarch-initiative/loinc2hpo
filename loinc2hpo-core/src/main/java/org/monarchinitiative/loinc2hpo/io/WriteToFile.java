@@ -10,6 +10,8 @@ import com.github.phenomics.ontolib.ontology.data.TermPrefix;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -18,7 +20,6 @@ import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class WriteToFile {
 
     private static final Logger logger = LogManager.getLogger();
+    private final static String MISSINGVALUE = "NA";
 
     public static void writeToFile(String content, String pathToFile) {
 
@@ -104,11 +106,52 @@ public class WriteToFile {
     public static void toTSV(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-        writer.write(UniversalLoinc2HPOAnnotation.getHeader());
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
 
         for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
             writer.newLine();
             writer.write(annotation.toString());
+        }
+
+        writer.close();
+    }
+
+    /**
+     * Serialize the annotations in basic mode
+     * @param path
+     * @param annotationMap
+     * @throws IOException
+     */
+    public static void toTSVbasicAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderBasic());
+
+        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+            writer.newLine();
+            writer.write(annotation.getBasicAnnotationsString());
+        }
+
+        writer.close();
+    }
+
+    /**
+     * Serialize the annotations in advanced mode
+     * @param path
+     * @param annotationMap
+     * @throws IOException
+     */
+    public static void toTSVadvancedAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        writer.write(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
+
+        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+            if (annotation.getAdvancedAnnotationsString() != null
+                    && !annotation.getAdvancedAnnotationsString().isEmpty()) {
+                writer.newLine();
+                writer.write(annotation.getAdvancedAnnotationsString());
+            }
         }
 
         writer.close();
@@ -132,9 +175,12 @@ public class WriteToFile {
      * @return an annotation map
      * @throws FileNotFoundException
      */
+
     public static Map<LoincId, UniversalLoinc2HPOAnnotation> fromTSV(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
 
         Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation.Builder> builderMap = new HashMap<>();
+        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {
             String[] elements = serialized.split("\\t");
@@ -148,26 +194,110 @@ public class WriteToFile {
                     String id = elements[4].substring(3);
                     HpoTerm hpoTerm = hpoTermMap.get(new ImmutableTermId(prefix, id));
                     boolean inverse = Boolean.parseBoolean(elements[5]);
-                    String note = elements[6].equals("null") ? null : elements[6];
+                    String note = elements[6].equals(MISSINGVALUE) ? null : elements[6];
                     boolean flag = Boolean.parseBoolean(elements[7]);
                     double version = Double.parseDouble(elements[8]);
-                    LocalDateTime createdOn = elements[9].equals("null") ? null : LocalDateTime.parse(elements[9]);
-                    String createdBy = elements[10].equals("null")? null : elements[10];
-                    LocalDateTime lastEditedOn = elements[11].equals("null")? null : LocalDateTime.parse(elements[11]);
-                    String lastEditedBy = elements[12].equals("null")? null : elements[12];
+                    LocalDateTime createdOn = elements[9].equals(MISSINGVALUE) ? null : LocalDateTime.parse(elements[9]);
+                    String createdBy = elements[10].equals(MISSINGVALUE)? null : elements[10];
+                    LocalDateTime lastEditedOn = elements[11].equals(MISSINGVALUE)? null : LocalDateTime.parse(elements[11]);
+                    String lastEditedBy = elements[12].equals(MISSINGVALUE)? null : elements[12];
 
-                    if (!deserializedMap.containsKey(loincId)) {
-                        UniversalLoinc2HPOAnnotation annotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
+                    if (!builderMap.containsKey(loincId)) {
+                        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder()
+                                .setLoincId(loincId)
+                                .setLoincScale(loincScale)
                                 .setNote(note).setFlag(flag)
                                 .setVersion(version)
                                 .setCreatedOn(createdOn).setCreatedBy(createdBy)
                                 .setLastEditedOn(lastEditedOn).setLastEditedBy(lastEditedBy);
-                        deserializedMap.put(loincId, annotation);
+                        builderMap.put(loincId, builder);
                     }
                     Code code = Code.getNewCode().setSystem(codeSystem).setCode(codeId);
                     HpoTermId4LoincTest hpoTermId4LoincTest = new HpoTermId4LoincTest(hpoTerm, inverse);
-                    if (hpoTerm != null) {
-                        deserializedMap.get(loincId).addAnnotation(code, hpoTermId4LoincTest);
+                    if (code.equals(internalCode.get("L"))) {
+                        builderMap.get(loincId).setLowValueHpoTerm(hpoTermId4LoincTest.getHpoTerm());
+                    }
+                    if (code.equals(internalCode.get("N"))) {
+                        builderMap.get(loincId).setIntermediateValueHpoTerm(hpoTermId4LoincTest.getHpoTerm());
+                        builderMap.get(loincId).setIntermediateNegated(hpoTermId4LoincTest.isNegated());
+                    }
+                    if (code.equals(internalCode.get("H"))) {
+                        builderMap.get(loincId).setHighValueHpoTerm(hpoTermId4LoincTest.getHpoTerm());
+                    }
+                    if (code.equals(internalCode.get("A"))
+                            || code.equals(internalCode.get("P"))
+                            || code.equals(internalCode.get("NP"))) {
+                        //currently, we neglect those codes
+                        //it will be wrong to do so if the user has manually changed what map to them
+                        logger.info("!!!!!!!!!!!annotation neglected. MAY BE WRONG!!!!!!!!!!!!!!!");
+                    }  else {
+                        builderMap.get(loincId).addAdvancedAnnotation(code, hpoTermId4LoincTest);
+                    }
+
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code line: " + serialized);
+                }
+            } else {
+                if (elements.length != 13) {
+                    logger.error(String.format("line does not have 13 elements, but has %d elements. Line: %s",
+                            elements.length,  serialized));
+                } else {
+                    logger.info("line is header: " + serialized);
+                }
+
+            }
+        });
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        builderMap.entrySet().forEach(b -> deserializedMap.put(b.getKey(), b.getValue().build()));
+        return deserializedMap;
+    }
+
+
+    public static Map<LoincId, UniversalLoinc2HPOAnnotation> fromTSVBasic(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+
+        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        reader.lines().forEach(serialized -> {
+            String[] elements = serialized.split("\\t");
+            if (elements.length == 13 && !serialized.startsWith("loincId")) {
+                try {
+                    LoincId loincId = new LoincId(elements[0]);
+                    LoincScale loincScale = LoincScale.string2enum(elements[1]);
+                    TermId low = convertToTermID(elements[2]);
+                    TermId intermediate = convertToTermID(elements[3]);
+                    TermId high = convertToTermID(elements[4]);
+                    boolean inverse = Boolean.parseBoolean(elements[5]);
+                    String note = elements[6].equals(MISSINGVALUE) ? null : elements[6];
+                    boolean flag = Boolean.parseBoolean(elements[7]);
+                    double version = Double.parseDouble(elements[8]);
+                    LocalDateTime createdOn = elements[9].equals(MISSINGVALUE) ? null : LocalDateTime.parse(elements[9]);
+                    String createdBy = elements[10].equals(MISSINGVALUE)? null : elements[10];
+                    LocalDateTime lastEditedOn = elements[11].equals(MISSINGVALUE)? null : LocalDateTime.parse(elements[11]);
+                    String lastEditedBy = elements[12].equals(MISSINGVALUE)? null : elements[12];
+
+                    if (!deserializedMap.containsKey(loincId)) {
+                        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
+                        builder.setLoincId(loincId)
+                                .setLoincScale(loincScale)
+                                .setLowValueHpoTerm(hpoTermMap.get(low))
+                                .setIntermediateValueHpoTerm(hpoTermMap.get(intermediate))
+                                .setHighValueHpoTerm(hpoTermMap.get(high))
+                                .setIntermediateNegated(inverse)
+                                .setCreatedOn(createdOn)
+                                .setCreatedBy(createdBy)
+                                .setLastEditedOn(lastEditedOn)
+                                .setLastEditedBy(lastEditedBy)
+                                .setVersion(version)
+                                .setNote(note)
+                                .setFlag(flag);
+
+                        deserializedMap.put(loincId, builder.build());
                     }
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -189,5 +319,53 @@ public class WriteToFile {
             e.printStackTrace();
         }
         return deserializedMap;
+    }
+
+
+    public static void fromTSVAdvanced(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        reader.lines().forEach(serialized -> {
+            String[] elements = serialized.split("\\t");
+            if (elements.length == 13 && !serialized.startsWith("loincId")) {
+                try {
+                    LoincId loincId = new LoincId(elements[0]);
+                    String system = elements[2];
+                    String codeString = elements[3];
+                    TermId termId = convertToTermID(elements[4]);
+                    boolean inverse = Boolean.parseBoolean(elements[5]);
+                    UniversalLoinc2HPOAnnotation annotation = deserializedMap.get(loincId);
+                    Code code = Code.getNewCode().setSystem(system).setCode(codeString);
+                    annotation.addAdvancedAnnotation(code, new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse));
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code line: " + serialized);
+                }
+            } else {
+                if (elements.length != 13) {
+                    logger.error(String.format("line does not have 13 elements, but has %d elements. Line: %s",
+                            elements.length,  serialized));
+                } else {
+                    logger.info("line is header: " + serialized);
+                }
+
+            }
+        });
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static TermId convertToTermID(String record) {
+        TermPrefix prefix = new ImmutableTermPrefix("HP");
+        if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
+            logger.error("Non HPO termId is detected from TSV");
+            return null;
+        }
+        String id = record.substring(3);
+        return new ImmutableTermId(prefix, id);
     }
 }
