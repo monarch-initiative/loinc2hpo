@@ -24,7 +24,7 @@ affect the operation of the app.
 
   note: this step is mandatory if you want to use and push your annotation to `loinc2hpoAnnotation <https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation>`_. Follow instructions there to set up the path properly.
 
-* Set biocurator ID. From the menu bar, click **"Configuration"** - **"Set biocurator ID"**, specify your biocurator ID. If you are not assigned one, create one for yourself with the following format: organization name first, then `:`, then your name/id.
+* Set biocurator ID. From the menu bar, click **"Configuration"** - **"Set biocurator ID"**, specify your biocurator ID. If you are not assigned one, create one for yourself with the following format: organization name first followed by `:`, then your name/id.
 
 * Once you are done, click **"Edit"** - **"Show settings"** to view all your settings. The first two settings should **NOT** be null in order for the app to work correctly.
 

@@ -51,7 +51,6 @@ import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -61,6 +60,7 @@ public class AnnotateTabController {
     private static final Logger logger = LogManager.getLogger();
 
     private Model model=null;
+    private final String MISSINGVALUE = "NA";
 
     @Inject
     private Injector injector;
@@ -1130,187 +1130,64 @@ public class AnnotateTabController {
             return;
         }
 
+        //start building the annotation
+        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
+        builder.setLoincId(loincCode)
+                .setLoincScale(loincScale)
+                //add the basic annotations
+                .setLowValueHpoTerm(low)
+                .setIntermediateValueHpoTerm(normal)
+                .setHighValueHpoTerm(high)
+                .setIntermediateNegated(model.isInversedBasicMode())
+                .setNote(annotationNoteField.getText())
+                .setFlag(flagForAnnotation.isSelected());
 
-
-        UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = new UniversalLoinc2HPOAnnotation(loincCode, loincScale);
-        //logger.debug("step 11: \n" + loinc2HPOAnnotation.toString() );
-
-        Map<String, Boolean> qcresult = qcAnnotation(hpoLo, hpoNormal, hpoHi);
-        if (qcresult.get("issueDetected") && !qcresult.get("userconfirmed")) {
-            createAnnotationSuccess.setFill(Color.RED);
-            return;
-        } else {
-            //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
-            try {
-                Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-                if (hpoLo != null && low != null) {
-                    loinc2HPOAnnotation.addAnnotation(internalCode.get("L"), new HpoTermId4LoincTest(low, false));
-                    //logger.debug("step 22: \n" + loinc2HPOAnnotation.toString() );
-                }
-                if (hpoNormal != null && normal != null) {
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(normal, false));
-                    //logger.debug("step 33: \n" + loinc2HPOAnnotation.toString() );
-                }
-                if (hpoNormal != null && normal != null && model.isInversedBasicMode()) {
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("N"),  new HpoTermId4LoincTest(normal, true))
-                            .addAnnotation(internalCode.get("NP"), new HpoTermId4LoincTest(normal, true));
-                    //logger.debug("step 44: \n" + loinc2HPOAnnotation.toString() );
-
-                }
-                if (hpoHi != null && high != null) {
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("H"), new HpoTermId4LoincTest(high, false))
-                            .addAnnotation(internalCode.get("P"), new HpoTermId4LoincTest(high, false));
-                    //logger.debug("step 55: \n" + loinc2HPOAnnotation.toString() );
-
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        //add the advanced annotations
+        if (!tempAdvancedAnnotations.isEmpty()) {
+            tempAdvancedAnnotations.forEach(p ->
+                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTermId4LoincTest()));
         }
 
-
-        if (loinc2HPOAnnotation != null && !tempAdvancedAnnotations.isEmpty()) {
-            for (Annotation annotation : tempAdvancedAnnotations) {
-                loinc2HPOAnnotation.addAnnotation(annotation.getCode(), annotation.getHpoTermId4LoincTest());
-            }
-            //logger.debug("step 66: \n" + loinc2HPOAnnotation.toString() );
-        }
-
-        loinc2HPOAnnotation.setFlag(flagForAnnotation.isSelected());
-        loinc2HPOAnnotation.setNote(annotationNoteField.getText());
+        //add some meta data, such as date, created by, and version
         if (createAnnotationButton.getText().equals("Create annotation")) { //create for the first time
-            loinc2HPOAnnotation.setCreatedBy(model.getBiocuratorID() == null? "?":model.getBiocuratorID());
-            loinc2HPOAnnotation.setCreatedOn(LocalDateTime.now().withNano(0));
-            //logger.debug("step 77: \n" + loinc2HPOAnnotation.toString() );
-            loinc2HPOAnnotation.setVersion(0.1);
+            builder.setCreatedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+                .setCreatedOn(LocalDateTime.now().withNano(0))
+                .setVersion(0.1);
         } else { //editing mode
-            loinc2HPOAnnotation.setLastEditedBy(model.getBiocuratorID() == null? "?":model.getBiocuratorID());
-            loinc2HPOAnnotation.setLastEditedOn(LocalDateTime.now().withNano(0));
-            loinc2HPOAnnotation.setCreatedBy(model.getLoincAnnotationMap().get(loincCode).getCreatedBy());
-            loinc2HPOAnnotation.setCreatedOn(model.getLoincAnnotationMap().get(loincCode).getCreatedOn());
-            loinc2HPOAnnotation.setVersion(model.getLoincAnnotationMap().get(loincCode).getVersion() + 0.1);
-            //logger.debug("step 88: \n" + loinc2HPOAnnotation.toString() );
+            builder.setLastEditedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+                    .setLastEditedOn(LocalDateTime.now().withNano(0))
+                    .setCreatedBy(model.getLoincAnnotationMap().get(loincCode).getCreatedBy())
+                    .setCreatedOn(model.getLoincAnnotationMap().get(loincCode).getCreatedOn())
+                    .setVersion(model.getLoincAnnotationMap().get(loincCode).getVersion() + 0.1);
+
         }
 
+        //complete the building process, build the object
+        UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = builder.build();
+        model.addLoincTest(loinc2HPOAnnotation);
 
-        if (loinc2HPOAnnotation != null) {
-            logger.info(loinc2HPOAnnotation.getCodes().size() + " annotations");
-            //logger.debug("step 99: \n" + loinc2HPOAnnotation.toString() );
-            this.model.addLoincTest(loinc2HPOAnnotation);
-            advancedAnnotationModeSelected = false;
-            model.setTempTerms(new HashMap<>());//clear the temp term in model
-            model.setInversedBasicMode(false);
-            model.setTempAdvancedAnnotation(new HashMap<>());
-            model.setInversedAdvancedMode(false);
-            tempAdvancedAnnotations.clear();
-            switchToBasicAnnotationMode();
-            flagForAnnotation.setSelected(false);
-            annotationNoteField.clear();
-            model.setSessionChanged(true);
+        //reset many settings
+        advancedAnnotationModeSelected = false;
+        model.setTempTerms(new HashMap<>());//clear the temp term in model
+        model.setInversedBasicMode(false);
+        model.setTempAdvancedAnnotation(new HashMap<>());
+        model.setInversedAdvancedMode(false);
+        tempAdvancedAnnotations.clear();
+        switchToBasicAnnotationMode();
+        flagForAnnotation.setSelected(false);
+        annotationNoteField.clear();
+        model.setSessionChanged(true);
 
-            loinc2HpoAnnotationsTabController.refreshTable();
-            createAnnotationSuccess.setFill(Color.GREEN);
-            if (createAnnotationButton.getText().equals("Save")) {
-                createAnnotationButton.setText("Create annotation");
-                model.setLoincUnderEditing(null);
-            }
-            changeColorLoincTableView();
+        loinc2HpoAnnotationsTabController.refreshTable();
+        createAnnotationSuccess.setFill(Color.GREEN);
+        if (createAnnotationButton.getText().equals("Save")) {
+            createAnnotationButton.setText("Create annotation");
+            model.setLoincUnderEditing(null);
         }
-        //showSuccessOfMapping("Go to next loinc code!");
+        changeColorLoincTableView();
 
         e.consume();
     }
-
-    /**
-    protected UniversalLoinc2HPOAnnotation createCurrentAnnotation() {
-        logger.trace("enter createCurrentAnnotation() ");
-        if(!advancedAnnotationModeSelected) {
-            model.setTempTerms(recordTempTerms()); //update terms for basic annotation
-            model.setTempInversed(recordInversed());
-        }
-        //if this function is called at advanced annotation mode, the terms for basic annotation was already saved
-        Map<String, String> tempTerms = model.getTempTerms();
-        String hpoLo = tempTerms.get("hpoLo");
-        String hpoNormal = tempTerms.get("hpoNormal");
-        String hpoHi = tempTerms.get("hpoHi");
-
-        //We don't have to force every loinc code to have three phenotypes
-        HpoTerm low = termmap.get(hpoLo);
-        HpoTerm normal = termmap.get(hpoNormal);
-        HpoTerm high = termmap.get(hpoHi);
-
-        //Warning user that there is something wrong
-        //it happens when something is wrong with hpo termmap (a name could not be mapped)
-        if (hpoLo != null && low==null) {
-            logger.error(hpoLo + " cannot be mapped to a term");
-            createAnnotationSuccess.setFill(Color.RED);
-            showErrorOfMapping(hpoLo);
-            return null;
-        }
-
-        if (hpoHi != null && high==null) {
-            logger.error(hpoHi + " cannot be mapped to a term");
-            createAnnotationSuccess.setFill(Color.RED);
-            showErrorOfMapping(hpoHi);
-            return null;
-        }
-
-        if (hpoNormal !=null && normal==null) {
-            logger.error(hpoNormal + " cannot be mapped to a term");
-            createAnnotationSuccess.setFill(Color.RED);
-            showErrorOfMapping(hpoNormal);
-            return null;
-        }
-
-        LoincId loincCode = loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number();
-        LoincScale loincScale = LoincScale.string2enum(loincTableView.getSelectionModel().getSelectedItem().getScale());
-
-        UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = new UniversalLoinc2HPOAnnotation(loincCode, loincScale);
-
-        Map<String, Boolean> qcresult = qcAnnotation(hpoLo, hpoNormal, hpoHi);
-        if (qcresult.get("issueDetected") && !qcresult.get("userconfirmed")) {
-            createAnnotationSuccess.setFill(Color.RED);
-            return null;
-        } else {
-            //String note = annotationNoteField.getText().isEmpty()? "\"\"":annotationNoteField.getText();
-            try {
-                Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-                if (hpoLo != null && low != null) {
-                    loinc2HPOAnnotation.addAnnotation(internalCode.get("L"), new HpoTermId4LoincTest(low, false));
-                }
-                if (hpoNormal != null && normal != null) {
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("A"), new HpoTermId4LoincTest(normal, false));
-                }
-                if (hpoNormal != null && normal != null && inverseChecker.isSelected()) {
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("N"),  new HpoTermId4LoincTest(normal, true))
-                            .addAnnotation(internalCode.get("NP"), new HpoTermId4LoincTest(normal, true));
-
-                }
-                if (hpoHi != null && high != null)
-                    loinc2HPOAnnotation
-                            .addAnnotation(internalCode.get("H"),  new HpoTermId4LoincTest(high, false))
-                            .addAnnotation(internalCode.get("P"),  new HpoTermId4LoincTest(high, false));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        if (!tempAdvancedAnnotations.isEmpty()) {
-            for (Annotation annotation : tempAdvancedAnnotations) {
-                loinc2HPOAnnotation.addAnnotation(annotation.getCode(), annotation.getHpoTermId4LoincTest());
-            }
-        }
-
-        //this.model.setCurrentAnnotation(loinc2HPOAnnotation);
-        logger.trace("exit createCurrentAnnotation() for: " + loinc2HPOAnnotation.getLoincId() + " with success.");
-        return loinc2HPOAnnotation;
-    }
-**/
 
 
     /**
@@ -1483,55 +1360,11 @@ public class AnnotateTabController {
 
     }
 
-    //change the color of rows to green after the loinc code has been annotated
-    /**
-    protected void changeColorLoincTableView(){
-        loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty){
-                super.updateItem(item, empty);
-                if(item != null && !empty) {
-                    setText(item);
-                    if(model.getLoincAnnotationMap().containsKey(item)) {
-                        logger.info("model contains " + item);
-                        logger.info("num of items in model " + model.getLoincAnnotationMap().size());
-                        TableRow<LoincEntry> currentRow = getTableRow();
-                        currentRow.setStyle("-fx-background-color: lightblue");
-                        //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
-                    }
-                }
-            }
 
-        });
-    }
-     **/
-
-
- // The program never go to setRowFactory. WHy?
     //change the color of rows to green after the loinc code has been annotated
     protected void changeColorLoincTableView(){
         logger.debug("enter changeColorLoincTableView");
         logger.info("model size: " + model.getLoincAnnotationMap().size());
-/**
-        loincTableView.setRowFactory(x -> new TableRow<LoincEntry>() {
-            @Override
-            protected void updateItem(LoincEntry item, boolean empty) {
-                super.updateItem(item, empty);
-                logger.info("row loinc num: " + item.getLOINC_Number());
-
-                //if(item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
-                if (item != null && !empty && model.getLoincAnnotationMap().containsKey(item.getLOINC_Number())) {
-                    logger.info("model contains " + item);
-                    logger.info("num of items in model " + model.getLoincAnnotationMap().size());
-                    //TableRow<LoincEntry> currentRow = getTableRow();
-                    setStyle("-fx-background-color: lightblue");
-                } else {
-                    setStyle("-fx-background-color: white");
-                }
-            }
-        });
-
-**/
         loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
             @Override
             protected void updateItem(String item, boolean empty){
@@ -1572,9 +1405,6 @@ public class AnnotateTabController {
         });
         logger.debug("exit changeColorLoincTableView");
     }
-
-
-
 
 
     @FXML

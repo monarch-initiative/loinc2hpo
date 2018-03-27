@@ -92,6 +92,9 @@ public class MainController {
     @FXML private MenuItem clearMenu;
     @FXML public Menu importLoincCategory;
     @FXML public Menu exportLoincCategory;
+    @FXML private MenuItem saveAnnotationsMenuItem;
+    @FXML private MenuItem saveAnnotationsAsMenuItem;
+    @FXML private MenuItem appendAnnotationsToMenuItem;
 
     @FXML private TabPane tabPane;
     @FXML private Tab annotateTabButton;
@@ -205,8 +208,13 @@ public class MainController {
             }
         }
 
+        //@TODO: to decide whether to remove the following menuitems
         importLoincCategory.setVisible(false);
         exportLoincCategory.setVisible(false);
+        saveAnnotationsMenuItem.setVisible(false);
+        saveAnnotationsAsMenuItem.setVisible(false);
+        appendAnnotationsToMenuItem.setVisible(false);
+        clearMenu.setVisible(false);
     }
 
     private boolean isConfigurationCompleted() {
@@ -600,47 +608,6 @@ public class MainController {
 
     }
 
-    /**
-    @FXML
-    private void handleSaveSession(ActionEvent e) {
-
-        logger.trace("user wants to save a session");
-        //Create a session if it is saved for the first time
-        if (model.getPathToLastSession() == null) {
-            createNewSession();
-        }
-        //save annotations to "annotations"
-        String pathToAnnotations = model.getPathToLastSession() + File.separator + "annotations.tsv";
-        try {
-            WriteToFile.toTSV(pathToAnnotations, model.getLoincAnnotationMap());
-        } catch (IOException e1) {
-            PopUps.showWarningDialog("Error message",
-                    "Failure to save annotations data",
-                    "An error occurred. Try again!");
-        }
-        //@TODO: save all Loinc categories to a folder
-        String pathToLoincCategory = model.getPathToLastSession() + File.separator + LOINC_CATEGORY_folder;
-        if (!new File(pathToLoincCategory).exists()) {
-            new File(pathToLoincCategory).mkdir();
-        }
-        model.getUserCreatedLoincLists().entrySet()
-                .forEach(p -> {
-                    String path = pathToLoincCategory + File.separator + p.getKey() + ".txt";
-                    Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p.getKey());
-                    StringBuilder builder = new StringBuilder();
-                    loincIds.forEach(l -> {
-                        builder.append (l);
-                        builder.append("\n");
-                    });
-                    WriteToFile.writeToFile(builder.toString().trim(), path);
-        });
-
-        if (e != null) {
-            e.consume();
-        }
-
-    }
-     **/
 
     @FXML
     private void handleSaveSession(ActionEvent e) {
@@ -685,6 +652,9 @@ public class MainController {
                     });
                     WriteToFile.writeToFile(builder.toString().trim(), path);
                 });
+
+        //reset the session change tracker
+        model.setSessionChanged(false);
 
         if (e != null) {
             e.consume();

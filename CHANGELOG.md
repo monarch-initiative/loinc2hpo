@@ -77,5 +77,8 @@ Additional changes for this version
   
 * Automatically retrieve information from auto-saved data for last session
 
+## v1.1.1
+
+* Session data now only saves terms for low, intermediate, and high value, instead for all 6 internal codes
 
 

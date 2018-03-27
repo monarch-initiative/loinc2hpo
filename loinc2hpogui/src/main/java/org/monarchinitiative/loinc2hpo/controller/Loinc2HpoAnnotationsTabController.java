@@ -1,13 +1,12 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
@@ -24,10 +23,8 @@ import org.monarchinitiative.loinc2hpo.io.FromFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import sun.util.resources.LocaleData;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +48,6 @@ public class Loinc2HpoAnnotationsTabController {
    // private WebEngine contentWebEngine;
 
     @FXML private VBox vbox4wv;
-
-
-
 
     @FXML
     private TableView<UniversalLoinc2HPOAnnotation> loincAnnotationTableView;
@@ -167,6 +161,7 @@ public class Loinc2HpoAnnotationsTabController {
      */
     public void importLoincAnnotation() {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
         chooser.setTitle("Choose annotation file");
@@ -212,51 +207,19 @@ public class Loinc2HpoAnnotationsTabController {
         refreshTable();
 
         annotateTabController.changeColorLoincTableView();
+
     }
 
     public void importLoincAnnotation(String pathToOpen) {
+
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
-
-        /**
-        String header = null;
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(path));
-            header = reader.readLine();
-            reader.close();
-        } catch (FileNotFoundException e) {
-            PopUps.showInfoMessage("File is not found", "Error: missing file");
-            return;
-        } catch (IOException e) {
-            PopUps.showInfoMessage("An error occurred during importing", "Error: importing is not completed");
-        }
-
-        //handles my old annotation
-        if (header != null && header.equals(LoincEntry.getHeaderLine())) {
-            FromFile parser = new FromFile(path, model.getOntology());
-            Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
-            for (UniversalLoinc2HPOAnnotation test : testset) {
-                model.addLoincTest(test);
-            }
-        }
-
-        //handles my current TSV annotation
-        if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeaderAdvanced())) {
-            Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
-            try {
-                annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
-            } catch (FileNotFoundException e) {
-                //already handled
-            }
-            model.getLoincAnnotationMap().putAll(annotationMap);
-        }
-
-         **/
         String basicAnnotationsFilePath = pathToOpen + File.separator + "basic_annotations.tsv";
         String advancedAnnotationsFilePath = pathToOpen + File.separator + "advanced_annotations.tsv";
         if (new File(basicAnnotationsFilePath).exists()) {
             try {
+                //import basic annotations
                 model.getLoincAnnotationMap().putAll(WriteToFile.fromTSVBasic(basicAnnotationsFilePath, model.getTermMap2()));
+                //import advanced annotations
                 WriteToFile.fromTSVAdvanced(advancedAnnotationsFilePath, model.getLoincAnnotationMap(), model.getTermMap2());
             } catch (FileNotFoundException e) {
                 logger.error("Should not happen");
@@ -266,10 +229,10 @@ public class Loinc2HpoAnnotationsTabController {
 
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
-
         annotateTabController.changeColorLoincTableView();
     }
 
+    /**
     public void tempimportLoincAnnotation(String path) {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
 
@@ -325,7 +288,7 @@ public class Loinc2HpoAnnotationsTabController {
                     HpoTermId4LoincTest forHigh = annotation.getCandidateHpoTerms().get(codeHigh);
                     //logger.trace("forLow: " + forLow.getHpoTerm().getName());
 
-                    UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder builder = new UniversalLoinc2HPOAnnotation.Loinc2HpoAnnotationBuilder();
+                    UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
                     builder.setLoincId(loincId)
                             .setLoincScale(loincScale)
                             .setLowValueHpoTerm(forLow == null? null : forLow.getHpoTerm())
@@ -349,10 +312,13 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     }
-    @Deprecated
+     **/
+
     /**
      * This is the old stype, too simple to handle all cases
      */
+    /**
+     * @Deprecated
     public void appendLoincAnnotation() {
 
         FileChooser chooser = new FileChooser();
@@ -370,11 +336,14 @@ public class Loinc2HpoAnnotationsTabController {
         WriteToFile.appendToFile(annotationData, path);
 
     }
+     **/
 
-    @Deprecated
+
     /**
      * This is the old stype, too simple to handle all cases
      */
+    /**
+     *  @Deprecated
     public void saveLoincAnnotation() {
 
         String path = model.getPathToAnnotationFile();
@@ -401,9 +370,11 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     @Deprecated
+    **/
     /**
      * This is the old stype, too simple to handle all cases
      */
+    /**
     public void saveAsLoincAnnotation(){
 
         FileChooser chooser = new FileChooser();
@@ -429,12 +400,14 @@ public class Loinc2HpoAnnotationsTabController {
         WriteToFile.appendToFile(annotationData, path);
     }
 
+**/
 
 
-    @Deprecated
     /**
+     *  @Deprecated
      * This is the old stype, too simple to handle all cases
      */
+    /**
     public String annotationDataToString() {
 
         StringBuilder builder = new StringBuilder();
@@ -464,6 +437,7 @@ public class Loinc2HpoAnnotationsTabController {
 
         return builder.toString();
     }
+     **/
     
 
     @FXML
@@ -516,6 +490,7 @@ public class Loinc2HpoAnnotationsTabController {
             if (toDelete != null) {
                 loincAnnotationTableView.getItems().remove(toDelete);
                 model.getLoincAnnotationMap().remove(toDelete.getLoincId());
+                model.setSessionChanged(true);
             }
         }
         event.consume();
