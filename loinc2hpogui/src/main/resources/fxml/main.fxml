@@ -22,9 +22,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleOpenSession" text="Open Session" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSaveSession" text="Save Session" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save Annotations" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save Annotations As" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleAppendToButton" text="Append Annotations To" />
+                        <MenuItem fx:id="saveAnnotationsMenuItem" mnemonicParsing="false" onAction="#handleSave" text="Save Annotations" />
+                        <MenuItem fx:id="saveAnnotationsAsMenuItem" mnemonicParsing="false" onAction="#handleSaveAsButton" text="Save Annotations As" />
+                        <MenuItem fx:id="appendAnnotationsToMenuItem" mnemonicParsing="false" onAction="#handleAppendToButton" text="Append Annotations To" />
                         <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
                         <Menu fx:id="exportMenu" mnemonicParsing="false" text="Export Annotations As...">
                           <items>

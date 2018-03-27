@@ -28,6 +28,9 @@ import static org.junit.Assert.*;
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
     private static Map<String, HpoTerm> hpoTermMap;
+    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+
 
     @BeforeClass
     public static void setup() throws MalformedLoincCodeException {
@@ -45,6 +48,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         observations[2] = observation3;
         observations[3] = observation4;
 
+
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -54,35 +58,65 @@ public class ObservationAnalysisFromCodedValuesTest {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,HpoTerm> termmap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
             List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
+            res.forEach( term -> {
+                termmap.put(term.getName(),term);
+                termmap2.put(term.getId(), term);
+            });
         }
         hpoTermMap = termmap.build();
-    }
-    @Test
-    public void testNom1() throws Exception {
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
-        LoincId loincId = new LoincId("600-7");
-        LoincScale loincScale = LoincScale.string2enum("Nom");
-        TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
-        TermId forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections").getId();
+        hpoTermMap2 = termmap2.build();
 
-        TermId positive = hpoTermMap.get("Recurrent bacterial infections").getId();
+
+        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+
+        LoincId loincId = new LoincId("15074-8");
+        LoincScale loincScale = LoincScale.string2enum("Qn");
+        HpoTerm low = hpoTermMap.get("Hypoglycemia");
+        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
+
+        loinc2HpoAnnotationBuilder.setLoincId(loincId)
+                .setLoincScale(loincScale)
+                .setLowValueHpoTerm(low)
+                .setIntermediateValueHpoTerm(normal)
+                .setIntermediateNegated(true)
+                .setHighValueHpoTerm(hi);
+
+        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
+
+
+        testmap.put(loincId, annotation15074);
+
+        loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+
+        loincId = new LoincId("600-7");
+        loincScale = LoincScale.string2enum("Nom");
+        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
 
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        loinc2HpoAnnotationBuilder.setLoincId(loincId)
+                .setLoincScale(loincScale)
+                .setHighValueHpoTerm(positive)
+                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
 
+        UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
-                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+        testmap.put(loincId, annotation600);
+    }
 
-        testmap.put(loincId, bacterialAnnotation);
+    @Test
+    public void testNom1() throws Exception {
+        LoincId loincId = new LoincId("600-7");
+
         ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[0].getValueCodeableConcept(), testmap);
         assertNotNull(analyzer.getHPOforObservation());
         assertEquals("0002726", analyzer.getHPOforObservation().getId().getId());
@@ -91,27 +125,9 @@ public class ObservationAnalysisFromCodedValuesTest {
 
     @Test (expected = UnrecognizedCodeException.class)
     public void testGetInterpretationCodes2() throws Exception {
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("600-7");
-        LoincScale loincScale = LoincScale.string2enum("Nom");
-        TermId forCode1 = hpoTermMap.get("Recurrent E. coli infections").getId();
-        TermId forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections").getId();
-
-        TermId positive = hpoTermMap.get("Recurrent bacterial infections").getId();
-
-        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
-
-        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-
-
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
-                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
-
-        testmap.put(loincId, bacterialAnnotation);
         ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[3].getValueCodeableConcept(), testmap);
         analyzer.getHPOforObservation();
     }
+
 }

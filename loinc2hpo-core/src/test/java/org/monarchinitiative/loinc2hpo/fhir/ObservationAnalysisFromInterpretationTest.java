@@ -28,6 +28,8 @@ public class ObservationAnalysisFromInterpretationTest {
 
     private static Observation[] observations = new Observation[2];
     private static Map<String, HpoTerm> hpoTermMap;
+    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
 
     @BeforeClass
     public static void setup() throws MalformedLoincCodeException {
@@ -47,29 +49,67 @@ public class ObservationAnalysisFromInterpretationTest {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,HpoTerm> termmap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
             List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
+            res.forEach( term -> {
+                termmap.put(term.getName(),term);
+                termmap2.put(term.getId(), term);
+            });
         }
         hpoTermMap = termmap.build();
-    }
-    @Test
-    public void testGetInterpretationCodes() throws Exception{
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        hpoTermMap2 = termmap2.build();
+
+
+        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
+        HpoTerm low = hpoTermMap.get("Hypoglycemia");
+        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
 
-        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
-        testmap.put(loincId, glucoseAnnotation);
+        loinc2HpoAnnotationBuilder.setLoincId(loincId)
+                .setLoincScale(loincScale)
+                .setLowValueHpoTerm(low)
+                .setIntermediateValueHpoTerm(normal)
+                .setIntermediateNegated(true)
+                .setHighValueHpoTerm(hi);
+
+        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
+
+
+        testmap.put(loincId, annotation15074);
+
+        loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+
+        loincId = new LoincId("600-7");
+        loincScale = LoincScale.string2enum("Nom");
+        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
+
+        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
+        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+
+        loinc2HpoAnnotationBuilder.setLoincId(loincId)
+                .setLoincScale(loincScale)
+                .setHighValueHpoTerm(positive)
+                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
+
+        UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
+
+        testmap.put(loincId, annotation600);
+    }
+
+
+    @Test
+    public void testGetInterpretationCodes() throws Exception{
+
+        LoincId loincId = new LoincId("15074-8");
+
         ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[0].getInterpretation(), testmap);
         assertNotNull(analyzer.getInterpretationCodes());
         assertEquals(1, analyzer.getInterpretationCodes().size());
@@ -83,21 +123,7 @@ public class ObservationAnalysisFromInterpretationTest {
     @Test
     public void getHPOforObservation() throws Exception {
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
-
-        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
-        testmap.put(loincId, glucoseAnnotation);
-
         ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[0].getInterpretation(), testmap);
 
         assertNotNull(analyzer.getHPOforObservation());
@@ -111,24 +137,11 @@ public class ObservationAnalysisFromInterpretationTest {
     @Test (expected = AmbiguousResultsFoundException.class)
     public void getHPOforObservationTestException() throws Exception {
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
-
-        Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
-        testmap.put(loincId, glucoseAnnotation);
-
 
         ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[1].getInterpretation(), testmap);
         HpoTermId4LoincTest hpoterm = analyzer.getHPOforObservation();
 
     }
+
 }

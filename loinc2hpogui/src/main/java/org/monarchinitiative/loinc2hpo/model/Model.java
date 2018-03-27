@@ -256,11 +256,11 @@ public class Model {
 
     public String termId2HpoName(TermId id ) {
         if (id ==null) {
-            logger.error("Could not find id "+id);
+            logger.info("Could not find id "+id);
             return "?";
         }
         if (ontology.getTermMap().get(id)==null) {
-            logger.error("id not in mapp");
+            logger.error(String.format("%s not in map", id.getIdWithPrefix()));
             return "?";
         }
         return ontology.getTermMap().get(id).getName();
