@@ -190,32 +190,6 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         }
 
     }
-    /**
-     * Add annotations
-     * @param code a coded value in a coding system
-     * @param hpoTermId4LoincTest a hpo term wrapped in the HpoTermId4LoincTest class
-     * @return the annotation object
-     */
-    /**
-    @Deprecated
-    //use addAdvancedAnnotation instead
-    public UniversalLoinc2HPOAnnotation addAnnotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
-        this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
-        return this;
-    }
-    **/
-
-    /**
-     * Add multiple annotation at once
-     * @param annotation a map of <Code, HpoTermId4LoincTest> annotations
-     * @return the annotation object
-     */
-    /**
-    public UniversalLoinc2HPOAnnotation addAnnotation(Map<Code, HpoTermId4LoincTest> annotation){
-        this.candidateHpoTerms.putAll(annotation);
-        return this;
-    }
-     **/
 
 
     /**
@@ -228,53 +202,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
     }
 
-/**
-    public UniversalLoinc2HPOAnnotation setLoincId(LoincId loincId){
-        this.loincId = loincId;
-        return this;
-    }
 
- public UniversalLoinc2HPOAnnotation setLoincScale(LoincScale scale){
- this.loincScale = scale;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setNote(String note){
- this.note = note;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setFlag(boolean flag) {
- this.flag = flag;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setCreatedOn(LocalDateTime createdOn) {
- this.createdOn = createdOn;
- return this;
- }
- public void setLowValueTermId(HpoTerm low) {
-
- this.low = low;
- //@TODO: convert to internal code here; same for below
-
- }
-
- public void setIntermediateValueHpoTermId(HpoTerm intermediate) {
-
- this.intermediate = intermediate;
- }
-
- public void setHighValueHpoTermId(HpoTerm high) {
-
- this.high = high;
-
- }
- public void setCandidateHpoTerms(HashMap<Code, HpoTermId4LoincTest> candidateHpoTerms) {
- this.candidateHpoTerms = candidateHpoTerms;
- }
- @Deprecated
- public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs){
- return null;
- }
- **/
     public LoincId getLoincId(){ return this.loincId; }
 
 
@@ -312,28 +240,16 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         return createdBy;
     }
 
-    public UniversalLoinc2HPOAnnotation setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
 
     public LocalDateTime getLastEditedOn() {
         return lastEditedOn;
     }
 
-    public UniversalLoinc2HPOAnnotation setLastEditedOn(LocalDateTime lastEditedOn) {
-        this.lastEditedOn = lastEditedOn;
-        return this;
-    }
 
     public String getLastEditedBy() {
         return lastEditedBy;
     }
 
-    public UniversalLoinc2HPOAnnotation setLastEditedBy(String lastEditedBy) {
-        this.lastEditedBy = lastEditedBy;
-        return this;
-    }
 
     private TermId getHpoTermIdForInternalCode(String internalCode){
         Code code = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get(internalCode);
