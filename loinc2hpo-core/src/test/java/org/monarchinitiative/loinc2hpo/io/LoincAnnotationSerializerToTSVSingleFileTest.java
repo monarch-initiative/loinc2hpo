@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.io;
 import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
+import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -28,12 +29,14 @@ import static org.junit.Assert.*;
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     private static Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+    private static Map<String, HpoTerm> hpoTermMap;
+    private static Map<TermId, HpoTerm> hpoTermMap2;
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
     @BeforeClass
     public static void setup() throws Exception {
-        Map<String, HpoTerm> hpoTermMap;
+
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -43,12 +46,17 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId, HpoTerm> termMap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
             List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
+            res.forEach( term -> {
+                termmap.put(term.getName(),term);
+                termMap2.put(term.getId(), term);
+            });
         }
         hpoTermMap = termmap.build();
+        hpoTermMap2 = termMap2.build();
 
 
         LoincId loincId = new LoincId("15074-8");
@@ -105,6 +113,20 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     @Test
     public void parse() throws Exception {
+
+        String tempFile = folder.newFile().getAbsolutePath();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        serializer.serialize(testmap, tempFile);
+
+        LoincAnnotationSerializerToTSVSingleFile serilizer = new LoincAnnotationSerializerToTSVSingleFile(hpoTermMap2);
+        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = serilizer.parse(tempFile);
+        assertNotNull(annotationMap);
+        assertEquals(2, annotationMap.size());
+        annotationMap.values().forEach(System.out::println);
+
+
+
+
     }
 
 }

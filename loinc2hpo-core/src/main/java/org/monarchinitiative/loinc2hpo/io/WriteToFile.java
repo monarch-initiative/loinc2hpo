@@ -359,7 +359,7 @@ public class WriteToFile {
     }
 
 
-    private static TermId convertToTermID(String record) {
+    public static TermId convertToTermID(String record) {
         TermPrefix prefix = new ImmutableTermPrefix("HP");
         if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
             logger.error("Non HPO termId is detected from TSV");

@@ -2,15 +2,22 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.github.phenomics.ontolib.ontology.data.TermId;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.loinc2hpo.codesystems.CodeSystem;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotationSerializer {
@@ -22,6 +29,8 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     final String MISSINGVALUE = "NA";
 
     private Map<TermId, HpoTerm> hpoTermMap = null;
+
+    private static final Logger logger = LogManager.getLogger();
 
     public LoincAnnotationSerializerToTSVSingleFile() {
 
@@ -50,15 +59,132 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
     @Override
-    public Map<LoincId, UniversalLoinc2HPOAnnotation> parse(String filepath) {
+    public Map<LoincId, UniversalLoinc2HPOAnnotation> parse(String filepath) throws FileNotFoundException {
 
         if (hpoTermMap == null) {
             throw new NullPointerException("hpoTermMap is not provided yet");
         }
 
+        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
+        Map<LoincId, UniversalLoinc2HPOAnnotation.Builder> builders = new HashMap<>();
+        BufferedReader reader = new BufferedReader(new FileReader(filepath));
+        reader.lines().forEach(serialized -> {
+            String[] elements = serialized.split("\\t");
+            if (elements.length == 13 && !serialized.startsWith("loincId")) {
+                try {
+                    LoincId loincId = new LoincId(elements[0]);
+                    LoincScale loincScale = LoincScale.string2enum(elements[1]);
+                    String system = elements[2];
+                    String code = elements[3];
+                    TermId termId = WriteToFile.convertToTermID(elements[4]);
+                    boolean inverse = Boolean.parseBoolean(elements[5]);
+                    LocalDateTime createdOn = elements[6].equals(MISSINGVALUE) ?
+                            null : LocalDateTime.parse(elements[6]);
+                    String createdBy = elements[7].equals(MISSINGVALUE)?
+                            null : elements[7];
+                    LocalDateTime lastEditedOn = elements[8].equals(MISSINGVALUE)?
+                            null : LocalDateTime.parse(elements[11]);
+                    String lastEditedBy = elements[9].equals(MISSINGVALUE) ?
+                            null : elements[9];
+                    double version = Double.parseDouble(elements[10]);
+                    boolean flag;
+                    try {
+                        flag = ! Boolean.parseBoolean(elements[11]);
+                    } catch (Exception e) {
+                        flag = false;
+                    }
 
+                    String comment = elements[12].equals(MISSINGVALUE) ?
+                            null : elements[12];
 
-        return null;
+                    if (!builders.containsKey(loincId)) {
+                        builders.put(loincId, new UniversalLoinc2HPOAnnotation.Builder());
+                        builders.get(loincId)
+                                .setLoincId(loincId)
+                                .setLoincScale(loincScale)
+                                .setCreatedOn(createdOn)
+                                .setCreatedBy(createdBy)
+                                .setLastEditedOn(lastEditedOn)
+                                .setLastEditedBy(lastEditedBy)
+                                .setVersion(version)
+                                .setFlag(flag)
+                                .setNote(comment);
+                    }
+
+                    Code coding;
+                    if (CodeSystemConvertor.getCodeContainer().getCodeSystemMap().containsKey(system)
+                            && CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(system).containsKey(code)) {
+                        coding = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(system).get(code);
+                    } else {
+                        coding = Code.getNewCode().setCode(code).setSystem(system);
+                    }
+                    HpoTermId4LoincTest annotate = new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse);
+                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
+                    /**
+                    if (system.equals(Loinc2HPOCodedValue.CODESYSTEM)) {
+                        if (loincScale == LoincScale.Qn) {
+                            switch (code) {
+                                case "L":
+                                    builders.get(loincId).setLowValueHpoTerm(hpoTermMap.get(termId));
+                                    break;
+                                case "N":
+                                    builders.get(loincId).setIntermediateValueHpoTerm(hpoTermMap.get(termId));
+                                    builders.get(loincId).setIntermediateNegated(inverse);
+                                    break;
+                                case "H":
+                                    builders.get(loincId).setHighValueHpoTerm(hpoTermMap.get(termId));
+                                    break;
+                                default:
+                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
+                            }
+                        }
+                        if (loincScale == LoincScale.Ord) {
+                            switch (code) {
+                                case "P":
+                                    builders.get(loincId).setHighValueHpoTerm(hpoTermMap.get(termId));
+                                    break;
+                                case "NP":
+                                    builders.get(loincId).setIntermediateValueHpoTerm(hpoTermMap.get(termId));
+                                    builders.get(loincId).setIntermediateNegated(inverse);
+                                    break;
+                                case "N": //just in case N is manually changed
+                                    annotate =
+                                            new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse);
+                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
+                                    break;
+                                default:
+                                    annotate =
+                                            new HpoTermId4LoincTest(hpoTermMap.get(termId), false);
+                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
+                            }
+                        }
+
+                    } else {
+
+                    }
+                     **/
+                } catch (MalformedLoincCodeException e) {
+                    logger.error("Malformed loinc code line: " + serialized);
+                }
+            } else {
+                if (elements.length != 13) {
+                    logger.error(String.format("line does not have 13 elements, but has %d elements. Line: %s",
+                            elements.length,  serialized));
+                } else {
+                    logger.info("line is header: " + serialized);
+                }
+
+            }
+        });
+
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        builders.entrySet().forEach(p -> deserializedMap.put(p.getKey(), p.getValue().build()));
+        return deserializedMap;
     }
 
 
