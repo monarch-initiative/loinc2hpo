@@ -11,10 +11,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * TODO: implement Json serialization
@@ -202,6 +199,12 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
     }
 
+    public Map<Code, HpoTermId4LoincTest> getAdvancedAnnotationTerms() {
+
+        return new LinkedHashMap<>(this.advancedAnnotationTerms);
+
+    }
+
 
     public LoincId getLoincId(){ return this.loincId; }
 
@@ -233,7 +236,6 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     public LocalDateTime getCreatedOn() {
         return createdOn;
     }
-
 
 
     public String getCreatedBy() {
@@ -288,6 +290,37 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         //return getHpoTermIdForInternalCode("H");
         return this.high == null ? null : this.high.getId();
     }
+
+    public boolean hasCreatedOn() {
+
+        return this.createdOn != null;
+
+    }
+
+    public boolean hasCreatedBy() {
+
+        return this.createdBy != null;
+
+    }
+
+    public boolean hasLastEditedOn() {
+
+        return this.lastEditedOn != null;
+
+    }
+
+    public boolean hasLastEditedBy() {
+
+        return this.lastEditedBy != null;
+
+    }
+
+    public boolean hasComment() {
+
+        return this.note != null;
+
+    }
+
 
     /**
      * When we run the software to parse patient information, if we cannot interpret the observation result due to the
