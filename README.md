@@ -18,3 +18,6 @@ $ java -jar loinc2hpo-core/target/Loinc2HpoLib.jar demo
 # documentation
 Please refer to http://loinc2hpo.readthedocs.io/en/latest/.
 
+# funding
+We gratefully acknowledge funding by NCATS (CD2H project), 1U24TR002306
+A NATIONAL CENTER FOR DIGITAL HEALTH INFORMATICS INNOVATION
