@@ -33,10 +33,7 @@ import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
-import org.monarchinitiative.loinc2hpo.io.Downloader;
-import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
-import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
-import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.loinc2hpo.io.*;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -556,17 +553,10 @@ public class MainController {
 
     protected void openSession(String pathToOpen) {
 
-        //This is deprecated. keep this only temperoly
-        //there should be one default file, "annotations.tsv",
-        //one default folder "LOINC category", which should have two files "require_new_HPO_terms.txt", "unable_to_annotate.txt" by default (and possibility others)
-        /**
-        String annotationsFilePath = pathToOpen + File.separator + "annotations.tsv";
-        if (new File(annotationsFilePath).exists()) {
-            loinc2HpoAnnotationsTabController.tempimportLoincAnnotation(annotationsFilePath);
-        }
-         **/
+        //import annotations
         loinc2HpoAnnotationsTabController.importLoincAnnotation(pathToOpen);
 
+        //import the LOINC categories
         File loinc_category_folder = new File(pathToOpen + File.separator + LOINC_CATEGORY_folder);
         if (!loinc_category_folder.exists() || !loinc_category_folder.isDirectory()) {
             return;
@@ -617,6 +607,7 @@ public class MainController {
         if (model.getPathToLastSession() == null) {
             createNewSession();
         }
+        /**
         //save annotations to "basic_annotations" and "advanced_annotations"
         String pathToAnnotations = model.getPathToLastSession() + File.separator + "basic_annotations.tsv";
         try {
@@ -635,7 +626,29 @@ public class MainController {
                     "Failure to save advanced annotations data",
                     "An error occurred. Try again!");
         }
+         **/
 
+        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + "TSVSingleFile");
+        if (!Files.exists(folderTSVSingle)) {
+            try {
+                Files.createDirectory(folderTSVSingle);
+            } catch (IOException e1) {
+                PopUps.showWarningDialog("Error message",
+                        "Failure to create folder" ,
+                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSingle));
+                return;
+            }
+        }
+
+        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + "annotations.tsv";
+        try {
+            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
+        } catch (Exception e1) {
+            PopUps.showWarningDialog("Error message",
+                    "Failure to Save Session Data" ,
+                    String.format("An error occurred when trying to save data to %s. Try again!", annotationTSVSingleFile));
+            return;
+        }
 
         String pathToLoincCategory = model.getPathToLastSession() + File.separator + LOINC_CATEGORY_folder;
         if (!new File(pathToLoincCategory).exists()) {

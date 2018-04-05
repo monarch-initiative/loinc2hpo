@@ -26,6 +26,7 @@ public class HpoTermId4LoincTest implements Serializable {
 
     //this is the prefered constructor
     public HpoTermId4LoincTest(HpoTerm hpoTerm, boolean negated) {
+
         this.tid = hpoTerm.getId();
         this.hpoTerm = hpoTerm;
         this.isNegated = negated;

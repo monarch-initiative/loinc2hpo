@@ -272,6 +272,7 @@ public class WriteToFile {
                     TermId low = convertToTermID(elements[2]);
                     TermId intermediate = convertToTermID(elements[3]);
                     TermId high = convertToTermID(elements[4]);
+                    logger.trace(String.format("low: %s; normal: %s; high: %s", low, intermediate, high));
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     String note = elements[6].equals(MISSINGVALUE) ? null : elements[6];
                     boolean flag = Boolean.parseBoolean(elements[7]);
@@ -298,6 +299,7 @@ public class WriteToFile {
                                 .setFlag(flag);
 
                         deserializedMap.put(loincId, builder.build());
+                        logger.trace(deserializedMap.get(loincId));
                     }
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -362,7 +364,7 @@ public class WriteToFile {
     public static TermId convertToTermID(String record) {
         TermPrefix prefix = new ImmutableTermPrefix("HP");
         if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
-            logger.error("Non HPO termId is detected from TSV");
+            logger.error("Non HPO termId is detected from TSV: " + record);
             return null;
         }
         String id = record.substring(3);

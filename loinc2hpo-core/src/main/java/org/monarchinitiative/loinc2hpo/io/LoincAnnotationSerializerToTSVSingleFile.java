@@ -43,7 +43,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
     @Override
-    public void serialize(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationmap, String filepath) throws Exception {
+    public void serialize(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationmap, String filepath) throws IOException {
 
 
 
@@ -83,7 +83,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     String createdBy = elements[7].equals(MISSINGVALUE)?
                             null : elements[7];
                     LocalDateTime lastEditedOn = elements[8].equals(MISSINGVALUE)?
-                            null : LocalDateTime.parse(elements[11]);
+                            null : LocalDateTime.parse(elements[8]);
                     String lastEditedBy = elements[9].equals(MISSINGVALUE) ?
                             null : elements[9];
                     double version = Double.parseDouble(elements[10]);
@@ -120,49 +120,6 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     }
                     HpoTermId4LoincTest annotate = new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse);
                     builders.get(loincId).addAdvancedAnnotation(coding, annotate);
-                    /**
-                    if (system.equals(Loinc2HPOCodedValue.CODESYSTEM)) {
-                        if (loincScale == LoincScale.Qn) {
-                            switch (code) {
-                                case "L":
-                                    builders.get(loincId).setLowValueHpoTerm(hpoTermMap.get(termId));
-                                    break;
-                                case "N":
-                                    builders.get(loincId).setIntermediateValueHpoTerm(hpoTermMap.get(termId));
-                                    builders.get(loincId).setIntermediateNegated(inverse);
-                                    break;
-                                case "H":
-                                    builders.get(loincId).setHighValueHpoTerm(hpoTermMap.get(termId));
-                                    break;
-                                default:
-                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
-                            }
-                        }
-                        if (loincScale == LoincScale.Ord) {
-                            switch (code) {
-                                case "P":
-                                    builders.get(loincId).setHighValueHpoTerm(hpoTermMap.get(termId));
-                                    break;
-                                case "NP":
-                                    builders.get(loincId).setIntermediateValueHpoTerm(hpoTermMap.get(termId));
-                                    builders.get(loincId).setIntermediateNegated(inverse);
-                                    break;
-                                case "N": //just in case N is manually changed
-                                    annotate =
-                                            new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse);
-                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
-                                    break;
-                                default:
-                                    annotate =
-                                            new HpoTermId4LoincTest(hpoTermMap.get(termId), false);
-                                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
-                            }
-                        }
-
-                    } else {
-
-                    }
-                     **/
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
                 }
@@ -192,10 +149,13 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         StringBuilder builder = new StringBuilder();
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
+
         //first put basic annotations there
         annotation.getCandidateHpoTerms().entrySet()
                 .stream()
                 .filter(p -> p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
+                //"A" is the same as "N" except that they have opposite negation, so no need to save both
+                .filter(p -> !p.getKey().getCode().equals("A"))
                 .forEach(p -> {
                     builder.append(annotation.getLoincId());
                     builder.append("\t");
@@ -264,5 +224,11 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                 });
 
         return builder.toString().trim();
+    }
+
+    private boolean isAandNdifferent(UniversalLoinc2HPOAnnotation annotation) {
+
+        return annotation.getAbnormalHpoTermName().equals(annotation.getNotAbnormalHpoTermName());
+
     }
 }

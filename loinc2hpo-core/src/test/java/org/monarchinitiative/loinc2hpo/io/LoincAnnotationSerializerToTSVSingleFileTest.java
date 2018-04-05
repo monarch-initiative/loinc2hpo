@@ -124,8 +124,20 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         assertEquals(2, annotationMap.size());
         annotationMap.values().forEach(System.out::println);
 
+    }
+
+    @Test
+    public void testFactory() throws Exception {
+
+        String tempFile = folder.newFile().getAbsolutePath();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        serializer.serialize(testmap, tempFile);
 
 
+        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tempFile, hpoTermMap2, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+        assertNotNull(annotationMap);
+        assertEquals(2, annotationMap.size());
+        annotationMap.values().forEach(System.out::println);
 
     }
 

@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 //import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
+import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -761,7 +762,7 @@ public class AnnotateTabController {
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
             model.addFilteredList(enlistName, new ArrayList<>(entrylist)); //keep a record in model
-            entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
+            //entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
             logger.error("Unable to obtain path to LOINC of interest file");
@@ -1052,6 +1053,15 @@ public class AnnotateTabController {
         return inverseChecker.isSelected();
     }
 
+    /**
+     * Method to check that a LOINC is Ord and the outcome is either "Presence" or "Absence"
+     * @param longCommonName
+     * @return
+     */
+    private boolean isPresentOrd(String longCommonName) {
+        LoincCodeClass loinc = LoincLongNameParser.parse(longCommonName);
+        return loinc.getLoincType().startsWith("Presen");
+    }
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
 
@@ -1134,13 +1144,29 @@ public class AnnotateTabController {
         UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
         builder.setLoincId(loincCode)
                 .setLoincScale(loincScale)
-                //add the basic annotations
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
-                .setHighValueHpoTerm(high)
-                .setIntermediateNegated(model.isInversedBasicMode())
                 .setNote(annotationNoteField.getText())
                 .setFlag(flagForAnnotation.isSelected());
+        //add the basic annotations
+        if (loincScale == LoincScale.Qn) {
+            builder.setLowValueHpoTerm(low)
+                    .setIntermediateValueHpoTerm(normal)
+                    .setHighValueHpoTerm(high)
+                    .setIntermediateNegated(model.isInversedBasicMode());
+        } else if (loincScale == LoincScale.Ord && isPresentOrd(model.getLoincEntryMap().get(loincCode).getLongName())) {
+            builder.setNegValueHpoTerm(normal, model.isInversedBasicMode())
+                    .setPosValueHpoTerm(high);
+        } else { //
+            boolean choice = PopUps.getBooleanFromUser("Current Loinc should be annotated in advanced mode. Click Yes if you still want to keep current annotations?", "LOINC type mismatch", "Warning");
+            if (choice) {
+                builder.setLowValueHpoTerm(low)
+                        .setIntermediateValueHpoTerm(normal)
+                        .setHighValueHpoTerm(high)
+                        .setIntermediateNegated(model.isInversedBasicMode())
+                        .setNegValueHpoTerm(normal, model.isInversedBasicMode())
+                        .setPosValueHpoTerm(high);
+            }
+        }
+
 
         //add the advanced annotations
         if (!tempAdvancedAnnotations.isEmpty()) {
@@ -1750,9 +1776,18 @@ public class AnnotateTabController {
         Code codeLow = internalCode.get("L");
         Code codeHigh = internalCode.get("H");
         Code codeNormal = internalCode.get("N");
+        Code codePos = internalCode.get("P");
+        Code codeNeg = internalCode.get("NP");
         HpoTermId4LoincTest hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
         HpoTermId4LoincTest hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
+        if (hpoHigh == null) {
+            hpoHigh = loincAnnotation.loincInterpretationToHPO(codePos);
+        }
         HpoTermId4LoincTest hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
+        if (hpoNormal == null) {
+            hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNeg);
+        }
+
         if (hpoLow != null) {
             String hpoLowTermName = hpoLow.getHpoTerm().getName();
             annotationTextFieldLeft.setText(hpoLowTermName);
