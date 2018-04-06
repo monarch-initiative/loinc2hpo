@@ -1,9 +1,5 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -14,6 +10,10 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
 import java.io.File;

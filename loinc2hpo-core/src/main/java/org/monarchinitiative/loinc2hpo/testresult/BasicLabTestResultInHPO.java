@@ -1,8 +1,9 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.ObservationResultInInternalCode;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 /**
  * This class represents the final outcome for a lab test.

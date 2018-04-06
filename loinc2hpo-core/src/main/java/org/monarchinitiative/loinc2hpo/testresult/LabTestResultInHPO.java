@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public interface LabTestResultInHPO {
 

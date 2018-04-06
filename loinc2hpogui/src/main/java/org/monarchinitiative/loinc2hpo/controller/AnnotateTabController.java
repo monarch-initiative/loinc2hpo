@@ -1,8 +1,6 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
 
-//import apple.laf.JRSUIUtils;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -53,6 +51,7 @@ import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 
 import java.io.*;
