@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpo.util;
 
 /**
- * The class parses a loinc long common name and return a LoincCodeClass
+ * The class parses a loinc long common name and return a LoincLongNameComponents
  */
 
 public class LoincLongNameParser {
@@ -9,11 +9,11 @@ public class LoincLongNameParser {
 
     /**
      * A static method to parse a loinc long common name and return a
-     * LoincCodeClass
+     * LoincLongNameComponents
      * @param loincLongName
-     * @return a LoincCodeClass
+     * @return a LoincLongNameComponents
      */
-    public static LoincCodeClass parse(String loincLongName) {
+    public static LoincLongNameComponents parse(String loincLongName) {
 
         String parameter = "";
         String tissue = "";
@@ -73,6 +73,6 @@ public class LoincLongNameParser {
             }
         }
 
-        return new LoincCodeClass(parameter, tissue, assayMethod, assayType);
+        return new LoincLongNameComponents(parameter, tissue, assayMethod, assayType);
     }
 }

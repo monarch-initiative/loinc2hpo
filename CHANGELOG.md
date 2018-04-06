@@ -81,4 +81,21 @@ Additional changes for this version
 
 * Session data now only saves terms for low, intermediate, and high value, instead for all 6 internal codes
 
+* Basic and Advanced data are stored separately
+
+## v1.1.2
+
+* Session data now saves to a universal TSV file
+
+* Restrict internal mappings
+
+  Qn will not be mapped to "Presence" or "Absence" and Ord (of "Presence" type) will not be mapped to "high", "low", "normal"
+  
+* Internal codes changed match FHIR
+
+  "system" is renamed to "FHIR";
+  Code for "presence" changed from "P" to "POS", code for "not presence" changed from "NP" to "NEG" to be consistent with FHIR
+  
+
+
 

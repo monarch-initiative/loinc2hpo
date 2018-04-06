@@ -3,13 +3,17 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 //import apple.laf.JRSUIUtils;
 import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -46,7 +50,7 @@ import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Annotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
-import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
 
@@ -157,6 +161,8 @@ public class AnnotateTabController {
             .observableArrayList();
     final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
     final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
+
+    private BooleanProperty isPresentOrd = new SimpleBooleanProperty(false);
 
 
     @Inject private CurrentAnnotationController currentAnnotationController;
@@ -348,6 +354,15 @@ public class AnnotateTabController {
         });
 
         initadvancedAnnotationTable();
+        loincTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> isPresentOrd.setValue(newValue.isPresentOrd()));
+
+        isPresentOrd.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                switchToBasicAnnotationMode();
+            }
+        });
+
 
     }
 
@@ -561,9 +576,9 @@ public class AnnotateTabController {
         }
 
         String name = entry.getLongName();
-        LoincCodeClass loincCodeClass = LoincLongNameParser.parse(name);
+        LoincLongNameComponents loincLongNameComponents = LoincLongNameParser.parse(name);
         List<HPO_Class_Found> queryResults = SparqlQuery.query_manual
-                (keysInList, loincCodeClass);
+                (keysInList, loincLongNameComponents);
         if (queryResults.size() != 0) {
             ObservableList<HPO_Class_Found> items = FXCollections.observableArrayList();
             for (HPO_Class_Found candidate: queryResults) {
@@ -1053,15 +1068,6 @@ public class AnnotateTabController {
         return inverseChecker.isSelected();
     }
 
-    /**
-     * Method to check that a LOINC is Ord and the outcome is either "Presence" or "Absence"
-     * @param longCommonName
-     * @return
-     */
-    private boolean isPresentOrd(String longCommonName) {
-        LoincCodeClass loinc = LoincLongNameParser.parse(longCommonName);
-        return loinc.getLoincType().startsWith("Presen");
-    }
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
 
@@ -1152,7 +1158,7 @@ public class AnnotateTabController {
                     .setIntermediateValueHpoTerm(normal)
                     .setHighValueHpoTerm(high)
                     .setIntermediateNegated(model.isInversedBasicMode());
-        } else if (loincScale == LoincScale.Ord && isPresentOrd(model.getLoincEntryMap().get(loincCode).getLongName())) {
+        } else if (loincScale == LoincScale.Ord && loincTableView.getSelectionModel().getSelectedItem().isPresentOrd()) {
             builder.setNegValueHpoTerm(normal, model.isInversedBasicMode())
                     .setPosValueHpoTerm(high);
         } else { //
@@ -1459,6 +1465,8 @@ public class AnnotateTabController {
     private void switchToAdvancedAnnotationMode(){
         //before switching to advanced mode, save any data in the basic mode
 
+        annotationTextFieldLeft.setVisible(true);
+        annotationLeftLabel.setVisible(true);
         annotationLeftLabel.setText("system");
         annotationMiddleLabel.setText("code");
         annotationRightLabel.setText("hpo term");
@@ -1479,14 +1487,24 @@ public class AnnotateTabController {
     }
 
     private void switchToBasicAnnotationMode(){
-        annotationLeftLabel.setText("<Low threshold");
-        annotationMiddleLabel.setText("intermediate");
-        annotationRightLabel.setText(">High threshold");
+        if (isPresentOrd.get()) {
+            annotationLeftLabel.setVisible(false);
+            annotationTextFieldLeft.setVisible(false);
+            annotationMiddleLabel.setText("Absence");
+            annotationRightLabel.setText("Presence");
+        } else {
+            annotationLeftLabel.setVisible(true);
+            annotationTextFieldLeft.setVisible(true);
+            annotationLeftLabel.setText("<Low threshold");
+            annotationMiddleLabel.setText("Normal");
+            annotationRightLabel.setText(">High threshold");
+        }
+
         annotationTextFieldLeft.clear();
         annotationTextFieldMiddle.clear();
         annotationTextFieldRight.clear();
         annotationTextFieldLeft.setPromptText("hpo for low value");
-        annotationTextFieldMiddle.setPromptText("hpo for mid value");
+        annotationTextFieldMiddle.setPromptText("hpo for normal value");
         annotationTextFieldRight.setPromptText("hpo for high value");
         modeButton.setText("advanced>>>");
         inverseChecker.setSelected(true);
@@ -1776,8 +1794,8 @@ public class AnnotateTabController {
         Code codeLow = internalCode.get("L");
         Code codeHigh = internalCode.get("H");
         Code codeNormal = internalCode.get("N");
-        Code codePos = internalCode.get("P");
-        Code codeNeg = internalCode.get("NP");
+        Code codePos = internalCode.get("POS");
+        Code codeNeg = internalCode.get("NEG");
         HpoTermId4LoincTest hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
         HpoTermId4LoincTest hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
         if (hpoHigh == null) {

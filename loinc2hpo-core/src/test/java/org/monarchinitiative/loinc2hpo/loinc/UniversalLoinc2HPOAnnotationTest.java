@@ -86,7 +86,7 @@ public class UniversalLoinc2HPOAnnotationTest {
                 .setLoincScale(loincScale)
                 .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                 .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTermId4LoincTest(positive, false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);
@@ -170,13 +170,11 @@ public class UniversalLoinc2HPOAnnotationTest {
         assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4normal).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
 
-        Code code4Pos = internalCodes.get("P");
-        assertEquals(hi.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4Pos).isNegated());
+        Code code4Pos = internalCodes.get("POS");
+        assertNull(annotation15074.getCandidateHpoTerms().get(code4Pos));
 
-        Code code4NP = internalCodes.get("NP");
-        assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4NP).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4NP).isNegated());
+        Code code4NP = internalCodes.get("NEG");
+        assertNull(annotation15074.getCandidateHpoTerms().get(code4NP));
 
     }
 
@@ -213,7 +211,7 @@ public class UniversalLoinc2HPOAnnotationTest {
 
          loinc2HpoAnnotationBuilder.setLoincId(loincId)
                  .setLoincScale(loincScale)
-                 .setHighValueHpoTerm(positive)
+                 .setPosValueHpoTerm(positive)
                  .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                  .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
 
@@ -221,13 +219,12 @@ public class UniversalLoinc2HPOAnnotationTest {
          assertEquals("600-7", annotation600.getLoincId().toString());
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        Code code4Pos = internalCodes.get("P");
+        Code code4Pos = internalCodes.get("POS");
         assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
 
         Code code4high = internalCodes.get("H");
-        assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4high).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
+        assertNull(annotation600.getCandidateHpoTerms().get(code4high));
 
         assertEquals(forCode1.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code1).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code1).isNegated());

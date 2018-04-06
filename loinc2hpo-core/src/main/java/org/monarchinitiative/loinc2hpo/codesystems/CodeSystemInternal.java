@@ -8,7 +8,7 @@ import java.util.Map;
 @Deprecated
 public class CodeSystemInternal extends CodeSystem {
 
-    private final String INTERNALSYSTEM = "http://jax.org/loinc2hpo";;
+    private final String INTERNALSYSTEM = "FHIR";;
     private HashMap<String, Coding> codes;
 
     public CodeSystemInternal(){

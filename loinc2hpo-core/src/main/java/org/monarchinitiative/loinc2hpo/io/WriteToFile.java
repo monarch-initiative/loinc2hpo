@@ -225,8 +225,8 @@ public class WriteToFile {
                         builderMap.get(loincId).setHighValueHpoTerm(hpoTermId4LoincTest.getHpoTerm());
                     }
                     if (code.equals(internalCode.get("A"))
-                            || code.equals(internalCode.get("P"))
-                            || code.equals(internalCode.get("NP"))) {
+                            || code.equals(internalCode.get("POS"))
+                            || code.equals(internalCode.get("NEG"))) {
                         //currently, we neglect those codes
                         //it will be wrong to do so if the user has manually changed what map to them
                         logger.info("!!!!!!!!!!!annotation neglected. MAY BE WRONG!!!!!!!!!!!!!!!");

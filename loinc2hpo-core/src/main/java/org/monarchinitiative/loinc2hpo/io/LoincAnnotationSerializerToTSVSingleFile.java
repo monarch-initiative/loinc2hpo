@@ -141,6 +141,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         }
 
         builders.entrySet().forEach(p -> deserializedMap.put(p.getKey(), p.getValue().build()));
+ //deserializedMap.values().forEach(System.out::println);
         return deserializedMap;
     }
 
@@ -179,7 +180,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append(annotation.hasLastEditedBy() ?
                             annotation.getLastEditedBy() : MISSINGVALUE);
                     builder.append("\t");
-                    builder.append(annotation.getVersion());
+                    builder.append(String.format("%.1f", annotation.getVersion()));
                     builder.append("\t");
                     builder.append(!annotation.getFlag());
                     builder.append("\t");

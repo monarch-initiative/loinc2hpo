@@ -190,14 +190,14 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         if (intermediate != null) {
             candidateHpoTerms.put(internalCode.get("N"),
                     new HpoTermId4LoincTest(intermediate, intermediateNegated));
-            candidateHpoTerms.put(internalCode.get("NP"),
+            candidateHpoTerms.put(internalCode.get("NEG"),
                     new HpoTermId4LoincTest(intermediate, intermediateNegated));
             candidateHpoTerms.put(internalCode.get("A"),
                     new HpoTermId4LoincTest(intermediate, !intermediateNegated));
         }
         if (high != null) {
             if (loincScale == LoincScale.Ord) {
-                candidateHpoTerms.put(internalCode.get("P"),
+                candidateHpoTerms.put(internalCode.get("POS"),
                         new HpoTermId4LoincTest(high, false));
             }
             candidateHpoTerms.put(internalCode.get("H"),
@@ -314,13 +314,13 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     public TermId getNegativeHpoTermName() {
 
-        return getHpoTermIdForInternalCode("NP");
+        return getHpoTermIdForInternalCode("NEG");
 
     }
 
     public TermId getPositiveHpoTermName() {
 
-        return getHpoTermIdForInternalCode("P");
+        return getHpoTermIdForInternalCode("POS");
 
     }
 
@@ -347,8 +347,8 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
         if (loincInterpretationToHPO(internalCode.get("N")) != null) {
             return loincInterpretationToHPO(internalCode.get("N")).getHpoTerm();
-        } else if (loincInterpretationToHPO(internalCode.get("NP")) != null) {
-            return loincInterpretationToHPO(internalCode.get("NP")).getHpoTerm();
+        } else if (loincInterpretationToHPO(internalCode.get("NEG")) != null) {
+            return loincInterpretationToHPO(internalCode.get("NEG")).getHpoTerm();
         } else {
             return null;
         }
@@ -363,8 +363,8 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
         if (loincInterpretationToHPO(internalCode.get("H")) != null) {
             return loincInterpretationToHPO(internalCode.get("H")).getHpoTerm();
-        } else if (loincInterpretationToHPO(internalCode.get("P")) != null) {
-            return loincInterpretationToHPO(internalCode.get("P")).getHpoTerm();
+        } else if (loincInterpretationToHPO(internalCode.get("POS")) != null) {
+            return loincInterpretationToHPO(internalCode.get("POS")).getHpoTerm();
         } else {
             return null;
         }
@@ -674,7 +674,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
                 return this;
             }
 
-            advancedAnnotationTerms.put(internalCode.get("P"),
+            advancedAnnotationTerms.put(internalCode.get("POS"),
                     new HpoTermId4LoincTest(pos, false));
             return this;
         }
@@ -685,7 +685,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
                 return this;
             }
 
-            advancedAnnotationTerms.put(internalCode.get("NP"),
+            advancedAnnotationTerms.put(internalCode.get("NEG"),
                     new HpoTermId4LoincTest(neg, inverse));
             return this;
         }
