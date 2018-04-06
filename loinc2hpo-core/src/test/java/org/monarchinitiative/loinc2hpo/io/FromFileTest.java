@@ -1,10 +1,11 @@
 package org.monarchinitiative.loinc2hpo.io;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
+
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 
 import java.io.IOException;
 import java.util.Set;

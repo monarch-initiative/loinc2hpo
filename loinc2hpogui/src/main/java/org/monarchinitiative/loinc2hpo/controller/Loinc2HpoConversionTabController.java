@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +16,7 @@ import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
 

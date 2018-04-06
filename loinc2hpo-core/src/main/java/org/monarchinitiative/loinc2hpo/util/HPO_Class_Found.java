@@ -16,11 +16,11 @@ public class HPO_Class_Found implements Comparable {
     private String id; //uri of HPO class
     private String label; //all classes should have a non-null label
     private String definition; //some classes do not have a definition
-    private LoincCodeClass loinc; //We found this HPO class with this loinc query
+    private LoincLongNameComponents loinc; //We found this HPO class with this loinc query
     private int score; //how well the HPO class matches the loinc code (long
                         // common name)
 
-    public HPO_Class_Found(String id, String label, String definition, LoincCodeClass loinc) {
+    public HPO_Class_Found(String id, String label, String definition, LoincLongNameComponents loinc) {
         this.id = id;
         this.label = label;
         this.definition = definition;
@@ -120,7 +120,7 @@ public class HPO_Class_Found implements Comparable {
         return this.definition;
     }
 
-    public LoincCodeClass getLoinc() {
+    public LoincLongNameComponents getLoinc() {
         return loinc;
     }
 

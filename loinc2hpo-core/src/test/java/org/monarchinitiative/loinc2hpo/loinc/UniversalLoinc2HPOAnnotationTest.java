@@ -1,9 +1,5 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
-import com.github.phenomics.ontolib.ontology.data.TermId;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -14,6 +10,10 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -86,7 +86,7 @@ public class UniversalLoinc2HPOAnnotationTest {
                 .setLoincScale(loincScale)
                 .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                 .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTermId4LoincTest(positive, false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);
@@ -105,14 +105,14 @@ public class UniversalLoinc2HPOAnnotationTest {
 
         //System.out.println(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
         //reader.lines().forEach(System.out::println);
-        String content = "15074-8\tQn\thttp://jax.org/loinc2hpo\tL\tHP:0001943\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "15074-8\tQn\thttp://jax.org/loinc2hpo\tN\tHP:0011015\ttrue\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "15074-8\tQn\thttp://jax.org/loinc2hpo\tH\tHP:0003074\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "15074-8\tQn\thttp://jax.org/loinc2hpo\tA\tHP:0011015\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "600-7\tNom\thttp://snomed.info/sct\t112283007\tHP:0002740\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "600-7\tNom\thttp://jax.org/loinc2hpo\tP\tHP:0002718\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull\n" +
-                "600-7\tNom\thttp://snomed.info/sct\t3092008\tHP:0002726\tfalse\tnull\tfalse\t0.0\tnull\tnull\tnull\tnull";
-        assertEquals(9, reader.lines().collect(Collectors.toList()).size());
+        String content = "15074-8\tQn\tFHIR\tA\tHP:0011015\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "15074-8\tQn\tFHIR\tN\tHP:0011015\ttrue\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "15074-8\tQn\tFHIR\tH\tHP:0003074\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "15074-8\tQn\tFHIR\tL\tHP:0001943\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "600-7\tNom\thttp://snomed.info/sct\t112283007\tHP:0002740\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "600-7\tNom\tFHIR\tPOS\tHP:0002718\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
+                "600-7\tNom\thttp://snomed.info/sct\t3092008\tHP:0002726\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA";
+        assertEquals(7, reader.lines().collect(Collectors.toList()).size());
     }
 
     @Test
@@ -170,13 +170,11 @@ public class UniversalLoinc2HPOAnnotationTest {
         assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4normal).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
 
-        Code code4Pos = internalCodes.get("P");
-        assertEquals(hi.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4Pos).isNegated());
+        Code code4Pos = internalCodes.get("POS");
+        assertNull(annotation15074.getCandidateHpoTerms().get(code4Pos));
 
-        Code code4NP = internalCodes.get("NP");
-        assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4NP).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4NP).isNegated());
+        Code code4NP = internalCodes.get("NEG");
+        assertNull(annotation15074.getCandidateHpoTerms().get(code4NP));
 
     }
 
@@ -213,7 +211,7 @@ public class UniversalLoinc2HPOAnnotationTest {
 
          loinc2HpoAnnotationBuilder.setLoincId(loincId)
                  .setLoincScale(loincScale)
-                 .setHighValueHpoTerm(positive)
+                 .setPosValueHpoTerm(positive)
                  .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                  .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
 
@@ -221,13 +219,12 @@ public class UniversalLoinc2HPOAnnotationTest {
          assertEquals("600-7", annotation600.getLoincId().toString());
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        Code code4Pos = internalCodes.get("P");
+        Code code4Pos = internalCodes.get("POS");
         assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
 
         Code code4high = internalCodes.get("H");
-        assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4high).getHpoTerm().getId().getIdWithPrefix());
-        assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
+        assertNull(annotation600.getCandidateHpoTerms().get(code4high));
 
         assertEquals(forCode1.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code1).getHpoTerm().getId().getIdWithPrefix());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code1).isNegated());

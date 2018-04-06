@@ -1,10 +1,10 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import org.hl7.fhir.dstu3.model.Coding;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.Serializable;
 import java.util.HashMap;

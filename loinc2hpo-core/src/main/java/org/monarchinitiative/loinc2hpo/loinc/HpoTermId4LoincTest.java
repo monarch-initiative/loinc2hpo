@@ -1,8 +1,9 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.Serializable;
 
@@ -26,6 +27,7 @@ public class HpoTermId4LoincTest implements Serializable {
 
     //this is the prefered constructor
     public HpoTermId4LoincTest(HpoTerm hpoTerm, boolean negated) {
+
         this.tid = hpoTerm.getId();
         this.hpoTerm = hpoTerm;
         this.isNegated = negated;

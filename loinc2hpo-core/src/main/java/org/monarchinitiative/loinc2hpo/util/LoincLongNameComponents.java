@@ -19,7 +19,7 @@ import java.util.*;
  * keysInLoincTissue() besides standard getters. Those methods will return
  * valid keys in loinc parameter and tissue for Sparql query
  */
-public class LoincCodeClass {
+public class LoincLongNameComponents {
 
     private String parameter;
     private String tissue;
@@ -29,13 +29,14 @@ public class LoincCodeClass {
             {"mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
                     "normal", "on", "total", "identified"};
 
-    public LoincCodeClass(String parameter, String tissue, String method, String type) {
+    public LoincLongNameComponents(String parameter, String tissue, String method, String type) {
         this.parameter = parameter;
         this.tissue = tissue;
         this.assayMethod = method;
         this.assayType = type;
 
     }
+
 
     /**
      * Extract and return the parameter from a Loinc long common name.

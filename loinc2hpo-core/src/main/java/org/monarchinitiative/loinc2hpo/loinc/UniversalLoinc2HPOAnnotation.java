@@ -3,18 +3,16 @@ package org.monarchinitiative.loinc2hpo.loinc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * TODO: implement Json serialization
@@ -39,6 +37,8 @@ import java.util.Set;
 @JsonIgnoreProperties({"codeSystems", "unrecognizedCodes"})
 //@JsonInclude(JsonInclude.Include.NON_NULL.NON_EMPTY)
 public class UniversalLoinc2HPOAnnotation implements Serializable {
+
+    private static Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
     @JsonIgnore
     private static final long serialVersionUID = 1L;
@@ -120,12 +120,21 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
         //map basic annotations to internal codes;
         //combine with advanced annotations
-        mapToInternalCodes();
+        //mapToInternalCodes();
         //put all advanced codes into the combined map
         //if an internal code is manually annotated, it will overwrite default map
         this.candidateHpoTerms.putAll(advancedAnnotationTerms);
-    }
 
+
+
+        //if "A" is not specified, use "N" but negation should be reversed
+        //e.g. "N" is NOT abnormal glucose concentration, "A" should be abnormal glucose concentration
+        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+        if (getAbnormalHpoTermName() == null && getNotAbnormalHpoTermName() != null) {
+            HpoTermId4LoincTest normal = candidateHpoTerms.get(internalCode.get("N"));
+            candidateHpoTerms.put(internalCode.get("A"), new HpoTermId4LoincTest(normal.getHpoTerm(), !normal.isNegated()));
+        }
+    }
 
 
     @Deprecated
@@ -164,12 +173,16 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     //combine with advanced annotations
     private void mapToInternalCodes(){
 
-        Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+
         //We convert basic annotations to internal codes by a default rule:
+        //for Qn:
         //internal "L" -- low
-        //internal "N", "NP" -- intermediate
-        //internal "H", "P" -- high
+        //internal "N" -- intermediate
+        //internal "H" -- high
         //internal "A" --intermediate
+        //for Ord:
+        //internal "NP" -- intermediate
+        //internal "P" -- high
         if (low != null) {
             candidateHpoTerms.put(internalCode.get("L"),
                     new HpoTermId4LoincTest(low, false));
@@ -177,45 +190,22 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         if (intermediate != null) {
             candidateHpoTerms.put(internalCode.get("N"),
                     new HpoTermId4LoincTest(intermediate, intermediateNegated));
-            candidateHpoTerms.put(internalCode.get("NP"),
+            candidateHpoTerms.put(internalCode.get("NEG"),
                     new HpoTermId4LoincTest(intermediate, intermediateNegated));
             candidateHpoTerms.put(internalCode.get("A"),
                     new HpoTermId4LoincTest(intermediate, !intermediateNegated));
         }
         if (high != null) {
+            if (loincScale == LoincScale.Ord) {
+                candidateHpoTerms.put(internalCode.get("POS"),
+                        new HpoTermId4LoincTest(high, false));
+            }
             candidateHpoTerms.put(internalCode.get("H"),
                     new HpoTermId4LoincTest(high, false));
-            candidateHpoTerms.put(internalCode.get("P"),
-                    new HpoTermId4LoincTest(high, false));
+
         }
 
     }
-    /**
-     * Add annotations
-     * @param code a coded value in a coding system
-     * @param hpoTermId4LoincTest a hpo term wrapped in the HpoTermId4LoincTest class
-     * @return the annotation object
-     */
-    /**
-    @Deprecated
-    //use addAdvancedAnnotation instead
-    public UniversalLoinc2HPOAnnotation addAnnotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
-        this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
-        return this;
-    }
-    **/
-
-    /**
-     * Add multiple annotation at once
-     * @param annotation a map of <Code, HpoTermId4LoincTest> annotations
-     * @return the annotation object
-     */
-    /**
-    public UniversalLoinc2HPOAnnotation addAnnotation(Map<Code, HpoTermId4LoincTest> annotation){
-        this.candidateHpoTerms.putAll(annotation);
-        return this;
-    }
-     **/
 
 
     /**
@@ -226,55 +216,16 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     public void addAdvancedAnnotation(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
         this.advancedAnnotationTerms.put(code, hpoTermId4LoincTest);
         this.candidateHpoTerms.put(code, hpoTermId4LoincTest);
+
     }
 
-/**
-    public UniversalLoinc2HPOAnnotation setLoincId(LoincId loincId){
-        this.loincId = loincId;
-        return this;
+    public Map<Code, HpoTermId4LoincTest> getAdvancedAnnotationTerms() {
+
+        return new LinkedHashMap<>(this.advancedAnnotationTerms);
+
     }
 
- public UniversalLoinc2HPOAnnotation setLoincScale(LoincScale scale){
- this.loincScale = scale;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setNote(String note){
- this.note = note;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setFlag(boolean flag) {
- this.flag = flag;
- return this;
- }
- public UniversalLoinc2HPOAnnotation setCreatedOn(LocalDateTime createdOn) {
- this.createdOn = createdOn;
- return this;
- }
- public void setLowValueTermId(HpoTerm low) {
 
- this.low = low;
- //@TODO: convert to internal code here; same for below
-
- }
-
- public void setIntermediateValueHpoTermId(HpoTerm intermediate) {
-
- this.intermediate = intermediate;
- }
-
- public void setHighValueHpoTermId(HpoTerm high) {
-
- this.high = high;
-
- }
- public void setCandidateHpoTerms(HashMap<Code, HpoTermId4LoincTest> candidateHpoTerms) {
- this.candidateHpoTerms = candidateHpoTerms;
- }
- @Deprecated
- public HpoTermId4LoincTest loincInterpretationToHpo(ObservationResultInInternalCode obs){
- return null;
- }
- **/
     public LoincId getLoincId(){ return this.loincId; }
 
 
@@ -307,33 +258,20 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
     }
 
 
-
     public String getCreatedBy() {
         return createdBy;
     }
 
-    public UniversalLoinc2HPOAnnotation setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-        return this;
-    }
 
     public LocalDateTime getLastEditedOn() {
         return lastEditedOn;
     }
 
-    public UniversalLoinc2HPOAnnotation setLastEditedOn(LocalDateTime lastEditedOn) {
-        this.lastEditedOn = lastEditedOn;
-        return this;
-    }
 
     public String getLastEditedBy() {
         return lastEditedBy;
     }
 
-    public UniversalLoinc2HPOAnnotation setLastEditedBy(String lastEditedBy) {
-        this.lastEditedBy = lastEditedBy;
-        return this;
-    }
 
     private TermId getHpoTermIdForInternalCode(String internalCode){
         Code code = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get(internalCode);
@@ -350,28 +288,119 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     public  TermId getBelowNormalHpoTermId(){
 
-        //return getHpoTermIdForInternalCode("L");
-        return this.low == null ? null : this.low.getId();
+        return getHpoTermIdForInternalCode("L");
+        //return this.low == null ? null : this.low.getId();
     }
     //@Override
 
     public  TermId getNotAbnormalHpoTermName(){
 
-        //return getHpoTermIdForInternalCode("N");
-        return this.intermediate == null ? null : this.intermediate.getId();
+        return getHpoTermIdForInternalCode("N");
+        //return this.intermediate == null ? null : this.intermediate.getId();
     }
     //@Override
-    @Deprecated
+
     public TermId getAbnormalHpoTermName() {
+
         return getHpoTermIdForInternalCode("A");
     }
     //@Override
 
     public  TermId getAboveNormalHpoTermName(){
 
-        //return getHpoTermIdForInternalCode("H");
-        return this.high == null ? null : this.high.getId();
+        return getHpoTermIdForInternalCode("H");
+        //return this.high == null ? null : this.high.getId();
     }
+
+    public TermId getNegativeHpoTermName() {
+
+        return getHpoTermIdForInternalCode("NEG");
+
+    }
+
+    public TermId getPositiveHpoTermName() {
+
+        return getHpoTermIdForInternalCode("POS");
+
+    }
+
+    /**
+     * A convenient method to show hpo term for low
+     * @return
+     */
+    public HpoTerm displayLow() {
+
+        if (loincInterpretationToHPO(internalCode.get("L")) != null) {
+            return loincInterpretationToHPO(internalCode.get("L")).getHpoTerm();
+        } else {
+            return null;
+        }
+
+
+    }
+
+    /**
+     * A convenient method to show hpo term for normal (Qn) or negative (Ord)
+     * @return
+     */
+    public HpoTerm displayNormal() {
+
+        if (loincInterpretationToHPO(internalCode.get("N")) != null) {
+            return loincInterpretationToHPO(internalCode.get("N")).getHpoTerm();
+        } else if (loincInterpretationToHPO(internalCode.get("NEG")) != null) {
+            return loincInterpretationToHPO(internalCode.get("NEG")).getHpoTerm();
+        } else {
+            return null;
+        }
+
+    }
+
+    /**
+     * A convenient method to show hpo term for high (Qn) or positive (Ord)
+     * @return
+     */
+    public HpoTerm displayHigh() {
+
+        if (loincInterpretationToHPO(internalCode.get("H")) != null) {
+            return loincInterpretationToHPO(internalCode.get("H")).getHpoTerm();
+        } else if (loincInterpretationToHPO(internalCode.get("POS")) != null) {
+            return loincInterpretationToHPO(internalCode.get("POS")).getHpoTerm();
+        } else {
+            return null;
+        }
+
+    }
+
+    public boolean hasCreatedOn() {
+
+        return this.createdOn != null;
+
+    }
+
+    public boolean hasCreatedBy() {
+
+        return this.createdBy != null;
+
+    }
+
+    public boolean hasLastEditedOn() {
+
+        return this.lastEditedOn != null;
+
+    }
+
+    public boolean hasLastEditedBy() {
+
+        return this.lastEditedBy != null;
+
+    }
+
+    public boolean hasComment() {
+
+        return this.note != null && !this.note.trim().isEmpty();
+
+    }
+
 
     /**
      * When we run the software to parse patient information, if we cannot interpret the observation result due to the
@@ -527,6 +556,8 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         private boolean flag = false;
         private double version = 0.0;
 
+        private Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
+
         //constructor
         public Builder() {
 
@@ -561,6 +592,11 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         public Builder setLowValueHpoTerm(HpoTerm low) {
 
             this.low = low;
+            if (low == null) {
+                return this;
+            }
+            advancedAnnotationTerms.put(internalCode.get("L"),
+                        new HpoTermId4LoincTest(low, false));
             return this;
 
         }
@@ -572,6 +608,29 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         public Builder setIntermediateValueHpoTerm(HpoTerm intermediate) {
 
             this.intermediate = intermediate;
+            if (intermediate == null) {
+                return this;
+            }
+            //use the default value for negated, which will be overwritten when user provides real value
+            advancedAnnotationTerms.put(internalCode.get("N"),
+                    new HpoTermId4LoincTest(intermediate, true));
+            advancedAnnotationTerms.put(internalCode.get("A"),
+                    new HpoTermId4LoincTest(intermediate, false));
+            return this;
+
+        }
+
+        public Builder setIntermediateValueHpoTerm(HpoTerm intermediate, boolean isNegated) {
+
+            this.intermediate = intermediate;
+            if (intermediate == null) {
+                return this;
+            }
+            //use the default value for negated, which will be overwritten when user provides real value
+            advancedAnnotationTerms.put(internalCode.get("N"),
+                    new HpoTermId4LoincTest(intermediate, isNegated));
+            advancedAnnotationTerms.put(internalCode.get("A"),
+                    new HpoTermId4LoincTest(intermediate, !isNegated));
             return this;
 
         }
@@ -583,9 +642,15 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         public Builder setIntermediateNegated(boolean negated) {
 
             this.intermediateNegated = negated;
+            if (intermediate != null) {
+                advancedAnnotationTerms.put(internalCode.get("N"),
+                        new HpoTermId4LoincTest(intermediate, intermediateNegated));
+            }
             return this;
 
         }
+
+
 
         /**
          * Specify the HPO term when the measured value is high.
@@ -594,8 +659,35 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
         public Builder setHighValueHpoTerm(HpoTerm high) {
 
             this.high = high;
+            if (high == null) {
+                return this;
+            }
+            advancedAnnotationTerms.put(internalCode.get("H"),
+                    new HpoTermId4LoincTest(high, false));
             return this;
 
+        }
+
+        public Builder setPosValueHpoTerm(HpoTerm pos) {
+
+            if (pos == null) {
+                return this;
+            }
+
+            advancedAnnotationTerms.put(internalCode.get("POS"),
+                    new HpoTermId4LoincTest(pos, false));
+            return this;
+        }
+
+        public Builder setNegValueHpoTerm(HpoTerm neg, boolean inverse) {
+
+            if (neg == null) {
+                return this;
+            }
+
+            advancedAnnotationTerms.put(internalCode.get("NEG"),
+                    new HpoTermId4LoincTest(neg, inverse));
+            return this;
         }
 
         /**

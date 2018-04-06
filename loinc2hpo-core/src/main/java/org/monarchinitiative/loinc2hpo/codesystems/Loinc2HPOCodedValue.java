@@ -10,9 +10,11 @@ public enum Loinc2HPOCodedValue {
     H,
     NP,
     P,
-    U;
+    U,
+    NEG,
+    POS;
 
-    public static final String CODESYSTEM = "http://jax.org/loinc2hpo";
+    public static final String CODESYSTEM = "FHIR";
     public String getSystem(){
         return CODESYSTEM;
     }
@@ -34,13 +36,19 @@ public enum Loinc2HPOCodedValue {
             return H;
         }
         if (codeString.equals("NP")) {
-            return NP;
+            return NEG;
         }
         if (codeString.equals("P")) {
-            return P;
+            return POS;
         }
         if (codeString.equals("U")) {
             return U;
+        }
+        if (codeString.equals("POS")) {
+            return POS;
+        }
+        if (codeString.equals("NEG")) {
+            return NEG;
         }
         throw new UnrecognizedCodeException("Cannot recognize the code: " + codeString);
     }
@@ -51,9 +59,11 @@ public enum Loinc2HPOCodedValue {
             case L: return "L";
             case N: return "N";
             case H: return "H";
-            case NP: return "NP";
-            case P: return "P";
+            case NP: return "NEG";
+            case P: return "POS";
             case U: return "U";
+            case NEG: return "NEG";
+            case POS: return "POS";
             default: return "?";
         }
     }
@@ -67,6 +77,8 @@ public enum Loinc2HPOCodedValue {
             case NP: return "not present";
             case P: return "present";
             case U: return "unknown code";
+            case NEG: return "not present";
+            case POS: return "present";
             default: return "?";
         }
     }

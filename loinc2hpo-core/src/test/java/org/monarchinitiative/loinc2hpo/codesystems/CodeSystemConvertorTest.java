@@ -12,7 +12,7 @@ public class CodeSystemConvertorTest {
         assertNotNull(CodeSystemConvertor.getCodeContainer());
         assertNotNull(CodeSystemConvertor.getCodeContainer().getCodeSystemMap());
         assertEquals(2, CodeSystemConvertor.getCodeContainer().getCodeSystemMap().size());
-        assertEquals(7, CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get("http://jax.org/loinc2hpo").size());
+        assertEquals(7, CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).size());
         assertEquals(39, CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get("http://hl7.org/fhir/v2/0078").size());
 
     }
@@ -27,25 +27,25 @@ public class CodeSystemConvertorTest {
 
         Code v2 = Code.getNewCode().setSystem("http://hl7.org/fhir/v2/0078").setCode("POS");
         Code internal = CodeSystemConvertor.convertToInternalCode(v2);
-        assertEquals("http://jax.org/loinc2hpo", internal.getSystem());
-        assertEquals("P", internal.getCode());
+        assertEquals(Loinc2HPOCodedValue.CODESYSTEM, internal.getSystem());
+        assertEquals("POS", internal.getCode());
         assertEquals("present", internal.getDisplay());
 
         Code v2_1 = Code.getNewCode().setSystem("http://hl7.org/fhir/v2/0078").setCode("W");
         Code internal2 = CodeSystemConvertor.convertToInternalCode(v2_1);
-        assertEquals("http://jax.org/loinc2hpo", internal2.getSystem());
+        assertEquals(Loinc2HPOCodedValue.CODESYSTEM, internal2.getSystem());
         assertNotEquals("N", internal2.getCode());
         assertNotEquals("normal", internal2.getDisplay());
 
         Code v2_2 = Code.getNewCode().setSystem("http://hl7.org/fhir/v2/0078").setCode("WR");
         Code internal3 = CodeSystemConvertor.convertToInternalCode(v2_2);
-        assertEquals("http://jax.org/loinc2hpo", internal2.getSystem());
-        assertNotEquals("P", internal2.getCode());
+        assertEquals(Loinc2HPOCodedValue.CODESYSTEM, internal2.getSystem());
+        assertNotEquals("POS", internal2.getCode());
         assertNotEquals("present", internal2.getDisplay());
 
         Code v2_3 = Code.getNewCode().setSystem("http://hl7.org/fhir/v2/0078").setCode("AA");
         Code internal4 = CodeSystemConvertor.convertToInternalCode(v2_3);
-        assertEquals("http://jax.org/loinc2hpo", internal2.getSystem());
+        assertEquals(Loinc2HPOCodedValue.CODESYSTEM, internal2.getSystem());
         assertEquals("A", internal2.getCode());
         assertEquals("abnormal", internal2.getDisplay());
 

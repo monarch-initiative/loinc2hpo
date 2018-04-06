@@ -226,14 +226,14 @@ public class SparqlQuery {
      * A general method for query. Provide a Query instance and RDF model, return an iterator for the results
      * @param query: created from key(s) by QueryFactory
      * @param hpomodel: RDF model
-     * @param loincCodeClass the loinc code class used to provide keys
+     * @param loincLongNameComponents the loinc code class used to provide keys
      * @return an iterator of query results
      */
-    public static List<HPO_Class_Found> query(Query query, Model hpomodel, LoincCodeClass loincCodeClass) {
+    public static List<HPO_Class_Found> query(Query query, Model hpomodel, LoincLongNameComponents loincLongNameComponents) {
         QueryExecution qexec = QueryExecutionFactory.create(query, hpomodel);
         Iterator<QuerySolution> results = qexec.execSelect();
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
-        addFoundClasses(HPO_classes_found, results, loincCodeClass);
+        addFoundClasses(HPO_classes_found, results, loincLongNameComponents);
         if(HPO_classes_found.size() > 1)
             Collections.sort(HPO_classes_found);
             Collections.reverse(HPO_classes_found);
@@ -244,13 +244,13 @@ public class SparqlQuery {
      * A method to do manual query with provided keys (literally)
      */
     public static List<HPO_Class_Found> query_manual(List<String> keys,
-                                                     LoincCodeClass loincCodeClass) {
+                                                     LoincLongNameComponents loincLongNameComponents) {
         if (keys == null || keys.isEmpty()) {
             throw new IllegalArgumentException();
         } else {
             String looseQueryString = buildLooseQueryWithMultiKeys(keys);
             Query query = QueryFactory.create(looseQueryString);
-            return query(query, model, loincCodeClass);
+            return query(query, model, loincLongNameComponents);
         }
     }
 
@@ -266,7 +266,7 @@ public class SparqlQuery {
         }
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
 
-        LoincCodeClass loincClass = LoincLongNameParser.parse(loincLongCommonName);
+        LoincLongNameComponents loincClass = LoincLongNameParser.parse(loincLongCommonName);
         Queue<String> keys_in_parameter = loincClass.keysInLoinParameter();
         Queue<String> keys_in_tissue = loincClass.keysInLoincTissue();
         Stack<String> keys_in_use = new Stack<>();
@@ -411,7 +411,7 @@ public class SparqlQuery {
         }
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
         //first parse the loinc long common name
-        LoincCodeClass loincClass = LoincLongNameParser.parse(loincLongCommonName);
+        LoincLongNameComponents loincClass = LoincLongNameParser.parse(loincLongCommonName);
         String[] parameters = parameters(loincClass.getLoincParameter());
         //the parameter could be more than one word
         //use the first word to do initial search
@@ -500,7 +500,7 @@ public class SparqlQuery {
     }
 
 
-    public static int addFoundClasses (List<HPO_Class_Found> HPO_classes_found, Iterator<QuerySolution> results, LoincCodeClass loincClass) {
+    public static int addFoundClasses (List<HPO_Class_Found> HPO_classes_found, Iterator<QuerySolution> results, LoincLongNameComponents loincClass) {
         int count = 0;
         while (results.hasNext()) {
             count++;
