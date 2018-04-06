@@ -92,7 +92,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
                 .setLoincScale(loincScale)
                 .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
                 .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTermId4LoincTest(positive, false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);

@@ -152,6 +152,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
 
         //first put basic annotations there
+        //annotation.getCandidateHpoTerms().keySet().forEach(System.out::println);
         annotation.getCandidateHpoTerms().entrySet()
                 .stream()
                 .filter(p -> p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))

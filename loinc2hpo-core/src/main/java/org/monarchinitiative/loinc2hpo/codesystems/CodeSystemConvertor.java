@@ -101,8 +101,8 @@ public class CodeSystemConvertor {
                 if (elements.length == 3) {
                     Code v2Code = codeContainer.getCodeSystemMap().get(v2System).get(elements[0]);
                     Code internalCode = codeContainer.getCodeSystemMap().get(internalSystem).get(elements[2]);
-                    logger.trace("v2Code: " + v2Code);
-                    logger.trace("internalCode: " + internalCode);
+                    //logger.trace("v2Code: " + v2Code);
+                    //logger.trace("internalCode: " + internalCode);
                     if (v2Code != null && internalCode != null){
                         codeConversionmap.put(v2Code, internalCode);
                     }
