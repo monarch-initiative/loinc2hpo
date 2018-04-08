@@ -20,6 +20,8 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.FromFile;
+import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
+import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializerToTSVSingleFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -76,14 +78,13 @@ public class Loinc2HpoAnnotationsTabController {
         loincScaleColumn.setSortable(true);
         loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale().toString()));
         belowNormalHpoColumn.setSortable(true);
-        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue()==null ? new ReadOnlyStringWrapper("\" \"") :
-        new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getBelowNormalHpoTermId())));
+        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayLow() == null ? new ReadOnlyStringWrapper("\" \"") : new ReadOnlyStringWrapper(cdf.getValue().displayLow().getName()));
         notAbnormalHpoColumn.setSortable(true);
-        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
-                : new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getNotAbnormalHpoTermName())));
+        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayNormal() == null ? new ReadOnlyStringWrapper("\" \"")
+                : new ReadOnlyStringWrapper(cdf.getValue().displayNormal().getName()));
         aboveNormalHpoColumn.setSortable(true);
-        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue() == null ? new ReadOnlyStringWrapper("\" \"")
-        : new ReadOnlyStringWrapper(model.termId2HpoName(cdf.getValue().getAboveNormalHpoTermName())));
+        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayHigh() == null ? new ReadOnlyStringWrapper("\" \"")
+        : new ReadOnlyStringWrapper(cdf.getValue().displayHigh().getName()));
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
@@ -213,18 +214,39 @@ public class Loinc2HpoAnnotationsTabController {
     public void importLoincAnnotation(String pathToOpen) {
 
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
-        String basicAnnotationsFilePath = pathToOpen + File.separator + "basic_annotations.tsv";
-        String advancedAnnotationsFilePath = pathToOpen + File.separator + "advanced_annotations.tsv";
-        if (new File(basicAnnotationsFilePath).exists()) {
+
+        //if using the LoincAnnotationSerializerTSVSingleFile for serialization
+        String tsvSingleFile = pathToOpen + File.separator + "TSVSingleFile" + File.separator + "annotations.tsv";
+        logger.trace(tsvSingleFile);
+        if (new File(tsvSingleFile).exists()) {
+        //if (false){
+
+            logger.trace("open session from " + pathToOpen);
             try {
-                //import basic annotations
-                model.getLoincAnnotationMap().putAll(WriteToFile.fromTSVBasic(basicAnnotationsFilePath, model.getTermMap2()));
-                //import advanced annotations
-                WriteToFile.fromTSVAdvanced(advancedAnnotationsFilePath, model.getLoincAnnotationMap(), model.getTermMap2());
-            } catch (FileNotFoundException e) {
-                logger.error("Should not happen");
+                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, model.getTermMap2(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+                logger.trace("annotationMap size (111111): " + annotationMap.size());
+                model.getLoincAnnotationMap().putAll(annotationMap);
+            } catch (Exception e) {
+                logger.error("ERROR!!!!!!!!");
+                return;
             }
 
+        } else {
+            //if using the LoincAnnotationSerializerToTSVSingleFile for serialization
+            String basicAnnotationsFilePath = pathToOpen + File.separator + "basic_annotations.tsv";
+            String advancedAnnotationsFilePath = pathToOpen + File.separator + "advanced_annotations.tsv";
+
+            if (new File(basicAnnotationsFilePath).exists()) {
+                try {
+                    //import basic annotations
+                    model.getLoincAnnotationMap().putAll(WriteToFile.fromTSVBasic(basicAnnotationsFilePath, model.getTermMap2()));
+                    //import advanced annotations
+                    WriteToFile.fromTSVAdvanced(advancedAnnotationsFilePath, model.getLoincAnnotationMap(), model.getTermMap2());
+                } catch (FileNotFoundException e) {
+                    logger.error("Should not happen");
+                }
+
+            }
         }
 
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());

@@ -1,9 +1,6 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.BeforeClass;
@@ -14,6 +11,10 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.ReferenceNotFoundException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
 import java.io.IOException;

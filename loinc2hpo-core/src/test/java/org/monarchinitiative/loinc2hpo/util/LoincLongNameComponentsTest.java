@@ -3,20 +3,17 @@ package org.monarchinitiative.loinc2hpo.util;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.util.LoincCodeClass;
-import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 
-import java.util.List;
 import java.util.Queue;
 
 import static org.junit.Assert.*;
 
-public class LoincCodeClassTest {
-    static LoincCodeClass testclass;
+public class LoincLongNameComponentsTest {
+    static LoincLongNameComponents testclass;
 
     @BeforeClass
     public static void init() {
-        testclass = new LoincCodeClass("Erythrocytes distribution width", "blood or serum", "Automated Count", "Ratio");
+        testclass = new LoincLongNameComponents("Erythrocytes distribution width", "blood or serum", "Automated Count", "Ratio");
     }
 
     @Test

@@ -1,7 +1,8 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.github.phenomics.ontolib.ontology.data.TermId;
+
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Set;
 @Deprecated

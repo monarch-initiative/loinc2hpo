@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.TermSynonym;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 import java.util.ArrayList;
 import java.util.List;

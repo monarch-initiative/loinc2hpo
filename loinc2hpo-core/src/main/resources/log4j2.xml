@@ -4,7 +4,7 @@
         <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpo.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
-                <Pattern>%d [%t] %p %c - %m%n</Pattern>
+                <Pattern>[%t] %-5level (%F:%L) - %msg%n</Pattern>
             </PatternLayout>
             <Policies>
                 <OnStartupTriggeringPolicy />

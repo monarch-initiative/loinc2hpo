@@ -1,14 +1,15 @@
 package org.monarchinitiative.loinc2hpo.io;
 
 
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.formats.hpo.HpoTermRelation;
-import com.github.phenomics.ontolib.io.obo.hpo.HpoOboParser;
-import com.github.phenomics.ontolib.ontology.data.*;
+
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.formats.hpo.HpoRelationship;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class HpoOntologyParser {
     private String hpoOntologyPath=null;
 
     private TermPrefix pref = new ImmutableTermPrefix("HP");
-    private final  TermId INHERITANCE = new ImmutableTermId(pref,"0000005");
+    private final TermId INHERITANCE = new ImmutableTermId(pref,"0000005");
     HpoOntology ontology;
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
@@ -75,8 +76,8 @@ public class HpoOntologyParser {
         }
     }
 
-    public Ontology<HpoTerm, HpoTermRelation> getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
-    public Ontology<HpoTerm, HpoTermRelation> getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
+    public Ontology<HpoTerm, HpoRelationship> getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
+    public Ontology<HpoTerm, HpoRelationship> getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
     public HpoOntology getOntology() { return ontology; }
 
     /** @return a map will all terms of the Hpo Phenotype subontology. */

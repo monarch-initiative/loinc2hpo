@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.util.LoincImporter;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
+import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -30,6 +32,9 @@ public class LoincEntry {
 
     private String longName=null;
 
+    //parse long name into single components
+    private LoincLongNameComponents longNameComponents = null;
+
     private static final int MIN_FIELDS_LOINC=10;
 
     private static final String HEADER_LINE="FLAG\t#LOINC.id\tLOINC.scale\tHPO.low\tHPO.wnl\tHPO.high\tnote";
@@ -54,6 +59,8 @@ public class LoincEntry {
         method=F.get(6);
         longName=F.get(9);
 
+        this.longNameComponents = LoincLongNameParser.parse(longName);
+
     }
 
 
@@ -65,6 +72,17 @@ public class LoincEntry {
     public String getScale() { return scale; }
     public String getSystem() { return system; }
     public String getLongName() { return longName; }
+    public LoincLongNameComponents getLongNameComponents() {
+        return this.longNameComponents;
+    }
+
+    /**
+     * Method to check that a LOINC is Ord and the outcome is either "Presence" or "Absence"
+     * @return true if the LOINC is "Ord" and the outcome is either "Presence" or "Absence"
+     */
+    public boolean isPresentOrd() {
+        return this.longNameComponents.getLoincType().startsWith("Presen");
+    }
 
 
     public static String getHeaderLine(){return HEADER_LINE; }

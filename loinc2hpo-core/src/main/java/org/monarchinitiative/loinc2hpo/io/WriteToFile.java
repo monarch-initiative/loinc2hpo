@@ -2,11 +2,6 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.phenomics.ontolib.formats.hpo.HpoTerm;
-import com.github.phenomics.ontolib.ontology.data.ImmutableTermId;
-import com.github.phenomics.ontolib.ontology.data.ImmutableTermPrefix;
-import com.github.phenomics.ontolib.ontology.data.TermId;
-import com.github.phenomics.ontolib.ontology.data.TermPrefix;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -17,6 +12,11 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
+import org.monarchinitiative.phenol.ontology.data.ImmutableTermPrefix;
+import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.monarchinitiative.phenol.ontology.data.TermPrefix;
 
 
 import java.io.*;
@@ -225,8 +225,8 @@ public class WriteToFile {
                         builderMap.get(loincId).setHighValueHpoTerm(hpoTermId4LoincTest.getHpoTerm());
                     }
                     if (code.equals(internalCode.get("A"))
-                            || code.equals(internalCode.get("P"))
-                            || code.equals(internalCode.get("NP"))) {
+                            || code.equals(internalCode.get("POS"))
+                            || code.equals(internalCode.get("NEG"))) {
                         //currently, we neglect those codes
                         //it will be wrong to do so if the user has manually changed what map to them
                         logger.info("!!!!!!!!!!!annotation neglected. MAY BE WRONG!!!!!!!!!!!!!!!");
@@ -272,6 +272,7 @@ public class WriteToFile {
                     TermId low = convertToTermID(elements[2]);
                     TermId intermediate = convertToTermID(elements[3]);
                     TermId high = convertToTermID(elements[4]);
+                    logger.trace(String.format("low: %s; normal: %s; high: %s", low, intermediate, high));
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     String note = elements[6].equals(MISSINGVALUE) ? null : elements[6];
                     boolean flag = Boolean.parseBoolean(elements[7]);
@@ -298,6 +299,7 @@ public class WriteToFile {
                                 .setFlag(flag);
 
                         deserializedMap.put(loincId, builder.build());
+                        logger.trace(deserializedMap.get(loincId));
                     }
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -359,10 +361,10 @@ public class WriteToFile {
     }
 
 
-    private static TermId convertToTermID(String record) {
+    public static TermId convertToTermID(String record) {
         TermPrefix prefix = new ImmutableTermPrefix("HP");
         if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
-            logger.error("Non HPO termId is detected from TSV");
+            logger.error("Non HPO termId is detected from TSV: " + record);
             return null;
         }
         String id = record.substring(3);

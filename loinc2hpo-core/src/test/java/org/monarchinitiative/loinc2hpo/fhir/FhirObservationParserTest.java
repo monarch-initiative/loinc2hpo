@@ -2,12 +2,13 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.phenomics.ontolib.formats.hpo.HpoOntology;
+
 import org.junit.BeforeClass;
 import org.monarchinitiative.loinc2hpo.io.HPOParser;
 import org.monarchinitiative.loinc2hpo.io.FromFile;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
+import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 
 import java.io.*;
 import java.util.Map;

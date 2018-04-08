@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -14,6 +14,7 @@
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
         <ontolib.version>0.3</ontolib.version>
+        <phenol.version>0.1.8</phenol.version>
         <junit.version>4.12</junit.version>
         <guava.version>23.0</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
@@ -93,7 +94,7 @@
         </dependency>
 
 
-        <dependency>
+        <!--dependency>
             <groupId>com.github.phenomics</groupId>
             <artifactId>ontolib-core</artifactId>
             <version>${ontolib.version}</version>
@@ -107,8 +108,36 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
         <dependency>
+            <groupId>org.monarchinitiative.phenol</groupId>
+            <artifactId>phenol-io</artifactId>
+            <version>${phenol.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.jsonld-java</groupId>
+                    <artifactId>jsonld-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+        <!--dependency>
             <groupId>com.github.phenomics</groupId>
             <artifactId>ontolib-io</artifactId>
             <version>${ontolib.version}</version>
@@ -126,7 +155,7 @@
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency-->
 
         <dependency>
             <groupId>org.apache.jena</groupId>

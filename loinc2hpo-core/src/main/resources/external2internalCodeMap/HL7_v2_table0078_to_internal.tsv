@@ -1,12 +1,12 @@
-http://hl7.org/fhir/v2/0078	display	http://jax.org/loinc2hpo
+http://hl7.org/fhir/v2/0078	display	FHIR
 <	Off scale low	L
 >	Off scale high	H
 A	Abnormal	A
 AA	Critically abnormal	A
-AC	Anti-complementary substances present	P
+AC	Anti-complementary substances present	POS
 B	Better	N
 D	Significant change down	L
-DET	Detected	P
+DET	Detected	POS
 H	High	H
 HH	Critically high	H
 HM	Hold for Medical Review	U
@@ -19,22 +19,22 @@ LL	Critically low	L
 LU	Very low	L
 MS	Moderately susceptible. Indicates for microbiology susceptibilities only.	U
 N	Normal	N
-ND	Not Detected	NP
-NEG	Negative	NP
-NR	Non-reactive	NP
+ND	Not Detected	NEG
+NEG	Negative	NEG
+NR	Non-reactive	NEG
 NS	Non-susceptible	U
 null	No range defined, or normal ranges don't apply	U
 OBX	Interpretation qualifiers in separate OBX segments	U
-POS	Positive	P
+POS	Positive	POS
 QCF	Quality Control Failure	U
 R	Resistant	U
-RR	Reactive	P
+RR	Reactive	POS
 S	Susceptible	U
 SDD	Susceptible-dose dependent	U
 SYN-R	Synergy - resistant	U
 SYN-S	Synergy - susceptible	U
-TOX	Cytotoxic substance present	P
+TOX	Cytotoxic substance present	POS
 U	Significant change up	H
 VS	Very susceptible. Indicates for microbiology susceptibilities only.	U
 W	Worse	A
-WR	Weakly reactive	P
+WR	Weakly reactive	POS
