@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -28,6 +29,7 @@ import javafx.stage.Stage;
 import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.Main;
@@ -97,6 +99,7 @@ public class MainController {
     @FXML private Tab annotateTabButton;
     @FXML private Tab Loinc2HPOAnnotationsTabButton;
     @FXML private Tab Loinc2HpoConversionTabButton;
+
 
 
     @FXML private void initialize() {
@@ -204,6 +207,7 @@ public class MainController {
                 openSession(model.getPathToLastSession());
             }
         }
+
 
         //@TODO: to decide whether to remove the following menuitems
         importLoincCategory.setVisible(false);
@@ -440,7 +444,7 @@ public class MainController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("LOINC2HPO Biocuration tool");
         alert.setHeaderText("Loinc2Hpo");
-        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.";
+        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.\n\nversion: " + VersionCommand.getVersion();
         alert.setContentText(s);
         alert.showAndWait();
         e.consume();
