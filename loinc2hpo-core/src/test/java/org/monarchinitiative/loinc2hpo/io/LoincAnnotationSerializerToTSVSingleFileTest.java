@@ -104,7 +104,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void serialize() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
         BufferedReader reader = new BufferedReader(new FileReader(tempFile));
@@ -116,7 +116,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void parse() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
         LoincAnnotationSerializerToTSVSingleFile serilizer = new LoincAnnotationSerializerToTSVSingleFile(hpoTermMap2);
@@ -131,7 +131,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void testFactory() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
 

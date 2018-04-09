@@ -33,7 +33,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
     private static final Logger logger = LogManager.getLogger();
 
-    public LoincAnnotationSerializerToTSVSingleFile() {
+    private LoincAnnotationSerializerToTSVSingleFile() {
 
     }
 
@@ -229,9 +229,4 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         return builder.toString().trim();
     }
 
-    private boolean isAandNdifferent(UniversalLoinc2HPOAnnotation annotation) {
-
-        return annotation.getAbnormalHpoTermName().equals(annotation.getNotAbnormalHpoTermName());
-
-    }
 }

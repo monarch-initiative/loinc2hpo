@@ -29,8 +29,10 @@ import javafx.stage.Stage;
 import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpo.exception.ParameterNotSpecifiedException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
@@ -611,28 +613,39 @@ public class MainController {
         if (model.getPathToLastSession() == null) {
             createNewSession();
         }
-        /**
+
+        // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
+        //create folder is not present
+        Path folderTSVSeparated = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSeparateFilesFolder);
+        if (!Files.exists(folderTSVSeparated)) {
+            try {
+                Files.createDirectory(folderTSVSeparated);
+            } catch (IOException e1) {
+
+                PopUps.showWarningDialog("Error message",
+                        "Failure to create folder",
+                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSeparated));
+                return;
+            }
+
+        }
         //save annotations to "basic_annotations" and "advanced_annotations"
-        String pathToAnnotations = model.getPathToLastSession() + File.separator + "basic_annotations.tsv";
         try {
-            WriteToFile.toTSVbasicAnnotations(pathToAnnotations, model.getLoincAnnotationMap());
+            LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
+            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
+            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile, folderTSVSeparated.toString());
         } catch (IOException e1) {
+
             PopUps.showWarningDialog("Error message",
-                    "Failure to save basic annotations data",
+                    "Failure to save annotations data",
                     "An error occurred. Try again!");
+
         }
 
-        String pathToAnnotations2 = model.getPathToLastSession() + File.separator + "advanced_annotations.tsv";
-        try {
-            WriteToFile.toTSVadvancedAnnotations(pathToAnnotations2, model.getLoincAnnotationMap());
-        } catch (IOException e1) {
-            PopUps.showWarningDialog("Error message",
-                    "Failure to save advanced annotations data",
-                    "An error occurred. Try again!");
-        }
-         **/
+         //end
+         //
 
-        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + "TSVSingleFile");
+        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
             try {
                 Files.createDirectory(folderTSVSingle);
@@ -644,10 +657,10 @@ public class MainController {
             }
         }
 
-        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + "annotations.tsv";
+        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
             LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
-        } catch (Exception e1) {
+        } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,
                     String.format("An error occurred when trying to save data to %s. Try again!", annotationTSVSingleFile));

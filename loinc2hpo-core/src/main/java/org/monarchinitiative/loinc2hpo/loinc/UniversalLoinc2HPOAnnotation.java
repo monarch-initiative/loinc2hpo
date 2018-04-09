@@ -355,6 +355,16 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     }
 
+    public boolean displayNormalIsInversed() {
+        if (loincInterpretationToHPO(internalCode.get("N")) != null) {
+            return loincInterpretationToHPO(internalCode.get("N")).isNegated();
+        } else if (loincInterpretationToHPO(internalCode.get("NEG")) != null) {
+            return loincInterpretationToHPO(internalCode.get("NEG")).isNegated();
+        } else {
+            return false;
+        }
+    }
+
     /**
      * A convenient method to show hpo term for high (Qn) or positive (Ord)
      * @return
