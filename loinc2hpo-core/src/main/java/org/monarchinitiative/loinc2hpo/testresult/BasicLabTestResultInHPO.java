@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.ObservationResultInInternalCode;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 /**
@@ -13,16 +12,18 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
 
     HpoTermId4LoincTest hpoId;
 
-    ObservationResultInInternalCode observation;
+    //ObservationResultInInternalCode observation;
 
     String comment;
 
+    /**
     public BasicLabTestResultInHPO(HpoTermId4LoincTest id, ObservationResultInInternalCode obs, String text) {
 
         hpoId=id;
         observation=obs;
         comment=text;
     }
+     **/
 
     public BasicLabTestResultInHPO(HpoTermId4LoincTest id, String text) {
         this.hpoId = id;
@@ -53,7 +54,7 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
         if (hpoId.getId()==null) {
             return "error => hpoId.getId() is null in testResult";
         }
-        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),observation!=null?observation.toString():"NA",comment!=null?comment:"NA");
+        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?");
     }
 
 
