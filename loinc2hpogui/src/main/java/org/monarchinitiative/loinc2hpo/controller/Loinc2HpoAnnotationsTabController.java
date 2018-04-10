@@ -26,6 +26,7 @@ import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializerToTSVSingleFi
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory.SerializationFormat;
 
 import java.io.*;
 import java.util.LinkedHashMap;
@@ -159,7 +160,7 @@ public class Loinc2HpoAnnotationsTabController {
     }
 
     /**
-     * This method handles my old and new TSV format
+     * This method set up the filename for annotations data and call the following function to import data
      */
     public void importLoincAnnotation() {
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
@@ -171,38 +172,16 @@ public class Loinc2HpoAnnotationsTabController {
         if (f != null) {
             String path = f.getAbsolutePath();
 
-            String header = null;
-            BufferedReader reader = null;
             try {
-                reader = new BufferedReader(new FileReader(path));
-                header = reader.readLine();
-                reader.close();
-            } catch (FileNotFoundException e) {
-                PopUps.showInfoMessage("File is not found", "Error: missing file");
-                return;
-            } catch (IOException e) {
-                PopUps.showInfoMessage("An error occurred during importing", "Error: importing is not completed");
-            }
-
-            //handles my old annotation
-            if (header != null && header.equals(LoincEntry.getHeaderLine())) {
-                FromFile parser = new FromFile(path, model.getOntology());
-                Set<UniversalLoinc2HPOAnnotation> testset = parser.getTests();
-                for (UniversalLoinc2HPOAnnotation test : testset) {
-                    model.addLoincTest(test);
-                }
-            }
-
-            //handles my current TSV annotation
-            if (header != null && header.equals(UniversalLoinc2HPOAnnotation.getHeaderAdvanced())) {
-                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = null;
-                try {
-                    annotationMap = WriteToFile.fromTSV(path, model.getTermMap2());
-                } catch (FileNotFoundException e) {
-                    //already handled
-                }
+                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap =
+                        LoincAnnotationSerializationFactory.parseFromFile(path, model.getTermMap2(),
+                                SerializationFormat.TSVSingleFile);
                 model.getLoincAnnotationMap().putAll(annotationMap);
+            } catch (Exception e) {
+                logger.error("ERROR!!!!!!!!");
+                return;
             }
+
 
         }
         logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
@@ -328,29 +307,33 @@ public class Loinc2HpoAnnotationsTabController {
         chooser.setInitialDirectory(new File(System.getProperty("user.home")));
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
         File f = chooser.showSaveDialog(null);
+        boolean overwrite = false;
+        String path;
         if (f != null) {
-            String path = f.getAbsolutePath();
-            if (f.exists()) {
-                boolean overwrite = PopUps.getBooleanFromUser("Overwrite?", "File will be overwritten", null);
-                if (overwrite) {
-                    try {
-                        WriteToFile.toTSV(path, model.getLoincAnnotationMap());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
+            path = f.getAbsolutePath();
+            if (f.exists()) { //check if user wants to overwrite the existing file
+                overwrite = PopUps.getBooleanFromUser("Overwrite?",
+                        "File will be overwritten", null);
+            }
+
+            if (!f.exists() || overwrite) {
                 try {
-                    WriteToFile.toTSV(path, model.getLoincAnnotationMap());
-                } catch (IOException e) {
-                    PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
+                    LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
+                    LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
+                    LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(),
+                            LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, path);
+                } catch (IOException e1) {
+                    PopUps.showWarningDialog("Error message",
+                            "Failure to Save Session Data" ,
+                            String.format("An error occurred when trying to save data to %s. Try again!", path));
+                    return;
                 }
             }
         }
     }
 
 
-    protected void newSave() {
+    protected void saveAnnotations() {
         boolean saveToNewFile = false;
         String path = model.getPathToAnnotationFile();
         if (path == null) {
@@ -373,11 +356,7 @@ public class Loinc2HpoAnnotationsTabController {
             logger.info("path to destination file: " + path);
         }
 
-        try {
-            WriteToFile.toTSV(path, model.getLoincAnnotationMap());
-        } catch (IOException e) {
-            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
-        }
+        //@TODO: implement saving if necessary
     }
 
 
@@ -408,15 +387,12 @@ public class Loinc2HpoAnnotationsTabController {
             logger.info("path to destination file: " + path);
         }
 
-        try {
-            WriteToFile.appendtoTSV(path, model.getLoincAnnotationMap());
-        } catch (IOException e) {
-            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
-        }
+        //@TODO: implement if necessary
+        throw new UnsupportedOperationException();
 
     }
 
-    protected void newSaveAs() {
+    protected void saveAnnotationsAs() {
 
         String path = null;
         FileChooser chooser = new FileChooser();
@@ -434,11 +410,9 @@ public class Loinc2HpoAnnotationsTabController {
 
         }
 
-        try {
-            WriteToFile.toTSV(path, model.getLoincAnnotationMap());
-        } catch (IOException e) {
-            PopUps.showInfoMessage("An error blocked saving the file, try again", "Error message");
-        }
+        //@TODO: implement if necessary
+        throw new UnsupportedOperationException();
+
     }
 
     protected void clear() {

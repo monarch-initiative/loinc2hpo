@@ -4,23 +4,14 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
-import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
-import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedHpoTermIdException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
 import org.monarchinitiative.phenol.ontology.data.ImmutableTermPrefix;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.monarchinitiative.phenol.ontology.data.TermPrefix;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -10,7 +10,6 @@ import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpo.exception.AnnotationNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 

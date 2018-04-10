@@ -2,39 +2,29 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.javafx.runtime.SystemProperties;
-import com.sun.javafx.stage.WindowCloseRequestHandler;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableMapValue;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpo.exception.ParameterNotSpecifiedException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
-import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.*;
@@ -42,8 +32,6 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -629,6 +617,7 @@ public class MainController {
             }
 
         }
+        /**disable this unless necessary
         //save annotations to "basic_annotations" and "advanced_annotations"
         try {
             LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
@@ -643,7 +632,7 @@ public class MainController {
         }
 
          //end
-         //
+         **/
 
         Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
@@ -707,7 +696,7 @@ public class MainController {
         e.consume();
         logger.info("usr wants to save file");
         //loinc2HpoAnnotationsTabController.saveLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSave();
+        loinc2HpoAnnotationsTabController.saveAnnotations();
 
     }
 
@@ -721,7 +710,7 @@ public class MainController {
         e.consume();
         logger.info("user wants to save to a new file");
         //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSaveAs();
+        loinc2HpoAnnotationsTabController.saveAnnotationsAs();
     }
 
     /**
