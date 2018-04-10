@@ -100,4 +100,6 @@ Additional changes for this version
 
 * Refactor to remove deprecated classes
 
+* Allow user to specify the path to hp OWL and Obo
+
 
