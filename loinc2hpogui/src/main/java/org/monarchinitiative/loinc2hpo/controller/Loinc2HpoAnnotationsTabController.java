@@ -70,13 +70,13 @@ public class Loinc2HpoAnnotationsTabController {
         loincScaleColumn.setSortable(true);
         loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale().toString()));
         belowNormalHpoColumn.setSortable(true);
-        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayLow() == null ? new ReadOnlyStringWrapper("\" \"") : new ReadOnlyStringWrapper(cdf.getValue().displayLow().getName()));
+        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueLow() == null ? new ReadOnlyStringWrapper("\" \"") : new ReadOnlyStringWrapper(cdf.getValue().whenValueLow().getName()));
         notAbnormalHpoColumn.setSortable(true);
-        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayNormal() == null ? new ReadOnlyStringWrapper("\" \"")
-                : new ReadOnlyStringWrapper(cdf.getValue().displayNormal().getName()));
+        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueNormalOrNegative() == null ? new ReadOnlyStringWrapper("\" \"")
+                : new ReadOnlyStringWrapper(cdf.getValue().whenValueNormalOrNegative().getName()));
         aboveNormalHpoColumn.setSortable(true);
-        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().displayHigh() == null ? new ReadOnlyStringWrapper("\" \"")
-        : new ReadOnlyStringWrapper(cdf.getValue().displayHigh().getName()));
+        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueHighOrPositive() == null ? new ReadOnlyStringWrapper("\" \"")
+        : new ReadOnlyStringWrapper(cdf.getValue().whenValueHighOrPositive().getName()));
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));

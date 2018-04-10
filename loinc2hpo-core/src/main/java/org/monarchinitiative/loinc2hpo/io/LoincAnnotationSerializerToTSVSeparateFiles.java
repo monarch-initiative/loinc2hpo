@@ -254,7 +254,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
         stringBuilder.append("\t" + (low == null ? Constants.MISSINGVALUE : low.getIdWithPrefix()));
         stringBuilder.append("\t" + (normal == null ? Constants.MISSINGVALUE : normal.getIdWithPrefix()));
         stringBuilder.append("\t" + (high == null ? Constants.MISSINGVALUE : high.getIdWithPrefix()));
-        stringBuilder.append("\t" + annotation.displayNormalIsInversed());
+        stringBuilder.append("\t" + annotation.isNormalOrNegativeInversed());
         stringBuilder.append("\t" + (annotation.getNote() == null ? Constants.MISSINGVALUE : annotation.getNote()));
         stringBuilder.append("\t" + annotation.getFlag());
         stringBuilder.append("\t" + String.format("%.1f", annotation.getVersion()));
