@@ -98,4 +98,6 @@ Additional changes for this version
 
 * Show version in "About" message
 
+* Refactor to remove deprecated classes
+
 

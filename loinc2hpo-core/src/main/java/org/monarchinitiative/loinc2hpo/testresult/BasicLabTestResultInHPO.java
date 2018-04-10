@@ -54,7 +54,7 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
         if (hpoId.getId()==null) {
             return "error => hpoId.getId() is null in testResult";
         }
-        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?");
+        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?", "?");
     }
 
 
