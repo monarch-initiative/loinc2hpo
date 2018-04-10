@@ -10,7 +10,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -45,7 +44,7 @@ import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.model.Annotation;
+import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
 import org.monarchinitiative.loinc2hpo.model.Model;
 import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
@@ -121,11 +120,11 @@ public class AnnotateTabController {
 
     @FXML private Button modeButton;
     @FXML private TitledPane advancedAnnotationTitledPane;
-    @FXML private TableView<Annotation> advancedAnnotationTable;
-    @FXML private TableColumn<Annotation, String> advancedAnnotationSystem;
-    @FXML private TableColumn<Annotation, String> advancedAnnotationCode;
-    @FXML private TableColumn<Annotation, String> advancedAnnotationHpo;
-    private ObservableList<Annotation> tempAdvancedAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvantagedAnnotationTableComponent> advancedAnnotationTable;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationSystem;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationCode;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationHpo;
+    private ObservableList<AdvantagedAnnotationTableComponent> tempAdvancedAnnotations = FXCollections.observableArrayList();
 
     //candidate HPO classes found by Sparql query
     //@FXML private TableView<HPO_Class_Found> candidateHPOList;
@@ -1247,7 +1246,7 @@ public class AnnotateTabController {
             //popup an alert
             issueDetected = true;
             userConfirmed = PopUps.getBooleanFromUser("Are you sure you want to create an annotation without any HPO terms?",
-                    "Annotation without HPO terms", "No HPO Alert");
+                    "AdvantagedAnnotationTableComponent without HPO terms", "No HPO Alert");
         }
         */
 
@@ -1528,7 +1527,7 @@ public class AnnotateTabController {
 
         if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
 
-        Annotation annotation = null;
+        AdvantagedAnnotationTableComponent annotation = null;
         String system = annotationTextFieldLeft.getText().trim().toLowerCase();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
         Code code = null;
@@ -1539,7 +1538,7 @@ public class AnnotateTabController {
         HpoTerm hpoterm = model.getTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new Annotation(code, new HpoTermId4LoincTest(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTermId4LoincTest(hpoterm, inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -1555,7 +1554,7 @@ public class AnnotateTabController {
         event.consume();
         logger.debug("user wants to delete an annotation");
         logger.debug("tempAdvancedAnnotations size: " + tempAdvancedAnnotations.size());
-        Annotation selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
+        AdvantagedAnnotationTableComponent selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
         if (selectedToDelete != null) {
             tempAdvancedAnnotations.remove(selectedToDelete);
         }
@@ -1828,7 +1827,7 @@ public class AnnotateTabController {
         //remember: advanced annotation == not using internal codes
         for (Map.Entry<Code, HpoTermId4LoincTest> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
             if (!entry.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM)) {
-                tempAdvancedAnnotations.add(new Annotation(entry.getKey(), entry.getValue()));
+                tempAdvancedAnnotations.add(new AdvantagedAnnotationTableComponent(entry.getKey(), entry.getValue()));
             }
         }
 

@@ -21,7 +21,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
-import org.monarchinitiative.loinc2hpo.model.Annotation;
+import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.util.Map;
@@ -43,25 +43,25 @@ public class CurrentAnnotationController{
     @FXML private Label annotationTitle;
     @FXML private TextField internalCodingSystem;
 
-    private ObservableList<Annotation> internalCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<Annotation> internalTableview;
-    @FXML private TableColumn<Annotation, String> codeInternalTableview;
-    @FXML private TableColumn<Annotation, String> hpoInternalTableview;
-    @FXML private TableColumn<Annotation, Boolean> inversedInternalTableview;
+    private ObservableList<AdvantagedAnnotationTableComponent> internalCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvantagedAnnotationTableComponent> internalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeInternalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoInternalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedInternalTableview;
 
-    private ObservableList<Annotation> externalCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<Annotation> externalTableview;
-    @FXML private TableColumn<Annotation, String> systemExternalTableview;
-    @FXML private TableColumn<Annotation, String> codeExternalTableview;
-    @FXML private TableColumn<Annotation, String> hpoExternalTableview;
-    @FXML private TableColumn<Annotation, Boolean> inversedExternalTableview;
+    private ObservableList<AdvantagedAnnotationTableComponent> externalCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvantagedAnnotationTableComponent> externalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> systemExternalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeExternalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoExternalTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedExternalTableview;
 
-    private ObservableList<Annotation> interpretationCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<Annotation> interpretationTableview;
-    @FXML private TableColumn<Annotation, String> systemInterpretTableview;
-    @FXML private TableColumn<Annotation, String> codeInterpretTableview;
-    @FXML private TableColumn<Annotation, String> hpoInterpretTableview;
-    @FXML private TableColumn<Annotation, Boolean> inversedInterpretTableview;
+    private ObservableList<AdvantagedAnnotationTableComponent> interpretationCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvantagedAnnotationTableComponent> interpretationTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> systemInterpretTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeInterpretTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoInterpretTableview;
+    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedInterpretTableview;
 
 
 
@@ -128,13 +128,13 @@ public class CurrentAnnotationController{
         currentAnnotation.getCandidateHpoTerms().entrySet()
             .stream()
             .filter(p -> p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
-            .map(p -> new Annotation(p.getKey(), p.getValue()))
+            .map(p -> new AdvantagedAnnotationTableComponent(p.getKey(), p.getValue()))
             .forEach(internalCodeAnnotations::add);
 
         externalCodeAnnotations.clear();
         currentAnnotation.getCandidateHpoTerms().entrySet().stream()
                 .filter(p -> !p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
-                .map(p -> new Annotation(p.getKey(), p.getValue()))
+                .map(p -> new AdvantagedAnnotationTableComponent(p.getKey(), p.getValue()))
                 .forEach(externalCodeAnnotations::add);
 
         interpretationCodeAnnotations.clear();
@@ -143,7 +143,7 @@ public class CurrentAnnotationController{
             HpoTermId4LoincTest result = currentAnnotation.loincInterpretationToHPO(entry.getValue());
             logger.debug("result is null? " + (result == null));
             if (result != null) {
-                Annotation annotation = new Annotation(entry.getKey(), result);
+                AdvantagedAnnotationTableComponent annotation = new AdvantagedAnnotationTableComponent(entry.getKey(), result);
                 interpretationCodeAnnotations.add(annotation);
                 logger.debug("interpretationCodeAnnotations size: " + interpretationCodeAnnotations.size());
             }

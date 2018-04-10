@@ -284,7 +284,7 @@ public class Model {
     public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
         // todo warn if term already in map
         loincAnnotationMap.put(test.getLoincId(),test);
-        logger.debug("Annotation is add for: " + test.getLoincId());
+        logger.debug("AdvantagedAnnotationTableComponent is add for: " + test.getLoincId());
     }
 
     public void removeLoincTest(String loincNum) {

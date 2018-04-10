@@ -348,6 +348,36 @@ public class MainController {
         e.consume();
     }
 
+    @FXML private void changeHpoOwlTo(ActionEvent e) {
+
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose HPO OWL file");
+        File owl = chooser.showOpenDialog(null);
+        if (owl != null) {
+            model.setPathToHpOwlFile(owl.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
+    @FXML private void changeHpoOboTo(ActionEvent e) {
+
+        e.consume();
+        logger.trace("changeHpoOboTo clicked");
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose HPO OBO file");
+        File obo = chooser.showOpenDialog(null);
+        if (obo != null) {
+            model.setPathToHpOboFile(obo.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
     @FXML public  void setPathToLoincCoreTableFile(ActionEvent e) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose LOINC Core Table file");

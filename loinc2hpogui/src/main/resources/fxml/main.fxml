@@ -49,6 +49,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#setBiocuratorID" text="Set biocurator ID" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#changeHpoOwlTo" text="Change hpo.owl" />
+                        <MenuItem mnemonicParsing="false" onAction="#changeHpoOboTo" text="change hpo.obo" />
                   </items>
                 </Menu>
               </menus>
