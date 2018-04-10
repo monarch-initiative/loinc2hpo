@@ -7,10 +7,10 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -43,13 +43,13 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
     @Override
-    public void serialize(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationmap, String filepath) throws IOException {
+    public void serialize(Map<LoincId, LOINC2HpoAnnotationImpl> annotationmap, String filepath) throws IOException {
 
 
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(filepath));
         writer.write(header);
-        for (UniversalLoinc2HPOAnnotation p : annotationmap.values()) {
+        for (LOINC2HpoAnnotationImpl p : annotationmap.values()) {
             writer.write("\n");
             writer.write(annotationToString(p));
         }
@@ -59,14 +59,14 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
     @Override
-    public Map<LoincId, UniversalLoinc2HPOAnnotation> parse(String filepath) throws FileNotFoundException {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
         if (hpoTermMap == null) {
             throw new NullPointerException("hpoTermMap is not provided yet");
         }
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
-        Map<LoincId, UniversalLoinc2HPOAnnotation.Builder> builders = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new HashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
         reader.lines().forEach(serialized -> {
             String[] elements = serialized.split("\\t");
@@ -98,7 +98,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                             null : elements[12];
 
                     if (!builders.containsKey(loincId)) {
-                        builders.put(loincId, new UniversalLoinc2HPOAnnotation.Builder());
+                        builders.put(loincId, new LOINC2HpoAnnotationImpl.Builder());
                         builders.get(loincId)
                                 .setLoincId(loincId)
                                 .setLoincScale(loincScale)
@@ -118,7 +118,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     } else {
                         coding = Code.getNewCode().setCode(code).setSystem(system);
                     }
-                    HpoTermId4LoincTest annotate = new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse);
+                    HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(hpoTermMap.get(termId), inverse);
                     builders.get(loincId).addAdvancedAnnotation(coding, annotate);
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -146,7 +146,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
 
-    private String annotationToString(UniversalLoinc2HPOAnnotation annotation) {
+    private String annotationToString(LOINC2HpoAnnotationImpl annotation) {
         StringBuilder builder = new StringBuilder();
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 

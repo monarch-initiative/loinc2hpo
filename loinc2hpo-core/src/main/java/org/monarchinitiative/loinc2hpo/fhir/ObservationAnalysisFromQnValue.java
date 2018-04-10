@@ -5,9 +5,9 @@ import org.hl7.fhir.exceptions.FHIRException;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.*;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.util.AgeCalculator;
 
 import java.time.LocalDate;
@@ -24,10 +24,10 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
     private Patient patient;
 
     private Observation observation;
-    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap;
+    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
     private LoincId loincId;
 
-    public ObservationAnalysisFromQnValue(LoincId loincId, Observation observation, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap){
+    public ObservationAnalysisFromQnValue(LoincId loincId, Observation observation, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap){
         this.loincId = loincId;
         this.observation = observation;
         this.annotationMap = annotationMap;
@@ -103,9 +103,9 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
 
     @Override
-    public HpoTermId4LoincTest getHPOforObservation() throws ReferenceNotFoundException, AmbiguousReferenceException, UnrecognizedCodeException {
+    public HpoTerm4TestOutcome getHPOforObservation() throws ReferenceNotFoundException, AmbiguousReferenceException, UnrecognizedCodeException {
 
-        HpoTermId4LoincTest hpoTermId4LoincTest = null;
+        HpoTerm4TestOutcome hpoTerm4TestOutcome = null;
         //find applicable reference range
         List<Observation.ObservationReferenceRangeComponent> references =
                 this.references.stream()
@@ -128,7 +128,7 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
                 result = Loinc2HPOCodedValue.fromCode("N");
             }
             Code resultCode = Code.getNewCode().setSystem(Loinc2HPOCodedValue.CODESYSTEM).setCode(result.toCode());
-            hpoTermId4LoincTest = annotationMap.get(loincId).loincInterpretationToHPO(resultCode);
+            hpoTerm4TestOutcome = annotationMap.get(loincId).loincInterpretationToHPO(resultCode);
         } else if (references.size() == 2) {
             //what does it mean with multiple references
             throw new AmbiguousReferenceException();
@@ -145,7 +145,7 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
             throw new AmbiguousReferenceException();
         }
         //if we can still not find an answer, it is probably that we did not have the annotation
-        if (hpoTermId4LoincTest == null) throw new UnrecognizedCodeException();
-        return hpoTermId4LoincTest;
+        if (hpoTerm4TestOutcome == null) throw new UnrecognizedCodeException();
+        return hpoTerm4TestOutcome;
     }
 }

@@ -3,10 +3,9 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.exception.ParameterNotSpecifiedException;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -43,7 +42,7 @@ public class LoincAnnotationSerializationFactory {
     }
 
 
-    public static void serializeToFile(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap,
+    public static void serializeToFile(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap,
                                        SerializationFormat format, String path) throws IOException{
 
         if (hpoTermMap == null) {
@@ -70,9 +69,9 @@ public class LoincAnnotationSerializationFactory {
         }
     }
 
-    public static Map<LoincId, UniversalLoinc2HPOAnnotation> parseFromFile(String path, Map<TermId, HpoTerm> termmap, SerializationFormat format) throws Exception {
+    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, Map<TermId, HpoTerm> termmap, SerializationFormat format) throws Exception {
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = new LinkedHashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
         LoincAnnotationSerializer serializer;
         switch (format) {
             case TSVSingleFile:

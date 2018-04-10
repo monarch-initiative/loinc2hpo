@@ -47,7 +47,7 @@ public class Model {
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> loincAnnotationMap =new LinkedHashMap<>();
+    public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
@@ -56,7 +56,7 @@ public class Model {
 
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
-    private UniversalLoinc2HPOAnnotation currentAnnotation = null;
+    private LOINC2HpoAnnotationImpl currentAnnotation = null;
     //private boolean tempInversed= false;
     private boolean inversedBasicMode = false; //whether inverse is checked for basic mode
     private boolean inversedAdvancedMode = false; //whether inverse is checked for advanced mode
@@ -247,8 +247,8 @@ public class Model {
         this.inversedAdvancedMode = inversedAdvancedMode;
     }
 
-    public void setCurrentAnnotation(UniversalLoinc2HPOAnnotation current) {this.currentAnnotation = current;}
-    public UniversalLoinc2HPOAnnotation getCurrentAnnotation() {
+    public void setCurrentAnnotation(LOINC2HpoAnnotationImpl current) {this.currentAnnotation = current;}
+    public LOINC2HpoAnnotationImpl getCurrentAnnotation() {
         return currentAnnotation;
     }
 
@@ -281,7 +281,7 @@ public class Model {
 
 
 
-    public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
+    public void addLoincTest(LOINC2HpoAnnotationImpl test) {
         // todo warn if term already in map
         loincAnnotationMap.put(test.getLoincId(),test);
         logger.debug("AdvantagedAnnotationTableComponent is add for: " + test.getLoincId());
@@ -296,7 +296,7 @@ public class Model {
         }
     }
 
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> getLoincAnnotationMap(){ return loincAnnotationMap; }
+    public Map<LoincId,LOINC2HpoAnnotationImpl> getLoincAnnotationMap(){ return loincAnnotationMap; }
 
     public Map<String, Set<LoincId>> getUserCreatedLoincLists() {
         return userCreatedLoincLists;

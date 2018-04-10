@@ -28,8 +28,8 @@ import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.*;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
 import java.io.*;
@@ -62,7 +62,7 @@ public class MainController {
             (false);
 
     //The following is the data that needs to be tracked
-    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap_Copy;
+    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap_Copy;
     private Map<String, Set<LoincId>> loincCategories_Copy;
 
     @Inject private SetupTabController setupTabController;

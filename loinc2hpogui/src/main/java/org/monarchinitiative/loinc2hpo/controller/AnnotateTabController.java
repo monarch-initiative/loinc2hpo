@@ -1152,7 +1152,7 @@ public class AnnotateTabController {
         }
 
         //start building the annotation
-        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder();
         builder.setLoincId(loincCode)
                 .setLoincScale(loincScale)
                 .setNote(annotationNoteField.getText())
@@ -1182,7 +1182,7 @@ public class AnnotateTabController {
         //add the advanced annotations
         if (!tempAdvancedAnnotations.isEmpty()) {
             tempAdvancedAnnotations.forEach(p ->
-                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTermId4LoincTest()));
+                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTerm4TestOutcome()));
         }
 
         //add some meta data, such as date, created by, and version
@@ -1200,7 +1200,7 @@ public class AnnotateTabController {
         }
 
         //complete the building process, build the object
-        UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = builder.build();
+        LOINC2HpoAnnotationImpl loinc2HPOAnnotation = builder.build();
         model.addLoincTest(loinc2HPOAnnotation);
 
         //reset many settings
@@ -1538,7 +1538,7 @@ public class AnnotateTabController {
         HpoTerm hpoterm = model.getTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTermId4LoincTest(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -1786,7 +1786,7 @@ public class AnnotateTabController {
      * This method is called from the pop up window
      * @param loincAnnotation passed from the pop up window
      */
-    void editCurrentAnnotation(UniversalLoinc2HPOAnnotation loincAnnotation) {
+    void editCurrentAnnotation(LOINC2HpoAnnotationImpl loincAnnotation) {
 
         setLoincIdSelected(loincAnnotation.getLoincId());
         model.setLoincUnderEditing(model.getLoincEntryMap().get(loincAnnotation.getLoincId()));
@@ -1798,12 +1798,12 @@ public class AnnotateTabController {
         Code codeNormal = internalCode.get("N");
         Code codePos = internalCode.get("POS");
         Code codeNeg = internalCode.get("NEG");
-        HpoTermId4LoincTest hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
-        HpoTermId4LoincTest hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
+        HpoTerm4TestOutcome hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
+        HpoTerm4TestOutcome hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
         if (hpoHigh == null) {
             hpoHigh = loincAnnotation.loincInterpretationToHPO(codePos);
         }
-        HpoTermId4LoincTest hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
+        HpoTerm4TestOutcome hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
         if (hpoNormal == null) {
             hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNeg);
         }
@@ -1825,7 +1825,7 @@ public class AnnotateTabController {
 
         //populated advanced annotations table view
         //remember: advanced annotation == not using internal codes
-        for (Map.Entry<Code, HpoTermId4LoincTest> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
+        for (Map.Entry<Code, HpoTerm4TestOutcome> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
             if (!entry.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM)) {
                 tempAdvancedAnnotations.add(new AdvantagedAnnotationTableComponent(entry.getKey(), entry.getValue()));
             }

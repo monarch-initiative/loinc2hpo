@@ -6,8 +6,6 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
-import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
@@ -30,7 +28,7 @@ public class ObservationAnalysisFromInterpretationTest {
     private static Observation[] observations = new Observation[2];
     private static Map<String, HpoTerm> hpoTermMap;
     private static Map<TermId, HpoTerm> hpoTermMap2;
-    private static Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
     @BeforeClass
     public static void setup() throws MalformedLoincCodeException {
@@ -63,7 +61,7 @@ public class ObservationAnalysisFromInterpretationTest {
         hpoTermMap2 = termmap2.build();
 
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -78,12 +76,12 @@ public class ObservationAnalysisFromInterpretationTest {
                 .setIntermediateNegated(true)
                 .setHighValueHpoTerm(hi);
 
-        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
 
         testmap.put(loincId, annotation15074);
 
-        loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
@@ -97,10 +95,10 @@ public class ObservationAnalysisFromInterpretationTest {
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
 
-        UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 
         testmap.put(loincId, annotation600);
     }
@@ -128,7 +126,7 @@ public class ObservationAnalysisFromInterpretationTest {
         ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[0].getInterpretation(), testmap);
 
         assertNotNull(analyzer.getHPOforObservation());
-        HpoTermId4LoincTest hpoterm = analyzer.getHPOforObservation();
+        HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
         System.out.println(hpoterm.getId());
         assertEquals(false, hpoterm.isNegated());
 
@@ -141,7 +139,7 @@ public class ObservationAnalysisFromInterpretationTest {
         LoincId loincId = new LoincId("15074-8");
 
         ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[1].getInterpretation(), testmap);
-        HpoTermId4LoincTest hpoterm = analyzer.getHPOforObservation();
+        HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
 
     }
 

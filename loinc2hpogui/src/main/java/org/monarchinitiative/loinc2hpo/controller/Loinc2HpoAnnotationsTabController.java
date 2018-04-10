@@ -44,14 +44,14 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private VBox vbox4wv;
 
     @FXML
-    private TableView<UniversalLoinc2HPOAnnotation> loincAnnotationTableView;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> loincNumberColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> belowNormalHpoColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> loincScaleColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> loincFlagColumn;
-    @FXML private TableColumn<UniversalLoinc2HPOAnnotation, String> noteColumn;
+    private TableView<LOINC2HpoAnnotationImpl> loincAnnotationTableView;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> loincNumberColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> belowNormalHpoColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> loincScaleColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> loincFlagColumn;
+    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> noteColumn;
 
 
 
@@ -141,7 +141,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<LoincId,UniversalLoinc2HPOAnnotation> testmap = model.getLoincAnnotationMap();
+        Map<LoincId,LOINC2HpoAnnotationImpl> testmap = model.getLoincAnnotationMap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -163,7 +163,7 @@ public class Loinc2HpoAnnotationsTabController {
             String path = f.getAbsolutePath();
 
             try {
-                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap =
+                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
                         LoincAnnotationSerializationFactory.parseFromFile(path, model.getTermMap2(),
                                 SerializationFormat.TSVSingleFile);
                 model.getLoincAnnotationMap().putAll(annotationMap);
@@ -193,7 +193,7 @@ public class Loinc2HpoAnnotationsTabController {
         if (new File(basicAnnotationsFilePath).exists()) {
             try {
                 //import basic annotations
-                Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap =
+                Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap =
                         LoincAnnotationSerializationFactory.parseFromFile(pathToOpen, model.getTermMap2(),
                                 LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile);
                 model.getLoincAnnotationMap().putAll(deserializedMap);
@@ -215,7 +215,7 @@ public class Loinc2HpoAnnotationsTabController {
 
             logger.trace("open session from " + pathToOpen);
             try {
-                Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, model.getTermMap2(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, model.getTermMap2(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
                 logger.trace("annotationMap size (111111): " + annotationMap.size());
                 model.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
@@ -245,7 +245,7 @@ public class Loinc2HpoAnnotationsTabController {
             PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
             return;
         }
-        UniversalLoinc2HPOAnnotation selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
+        LOINC2HpoAnnotationImpl selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
         if (selected != null) {
             annotateTabController.setLoincIdSelected(selected.getLoincId());
             annotateTabController.showAllAnnotations(event);
@@ -265,7 +265,7 @@ public class Loinc2HpoAnnotationsTabController {
             return;
         }
 
-        UniversalLoinc2HPOAnnotation toEdit = loincAnnotationTableView.getSelectionModel()
+        LOINC2HpoAnnotationImpl toEdit = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toEdit != null) {
             mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
@@ -279,7 +279,7 @@ public class Loinc2HpoAnnotationsTabController {
 
         boolean confirmation = PopUps.getBooleanFromUser("Are you sure you want to delete the record?", "Confirm deletion request", "Deletion");
         if (confirmation) {
-            UniversalLoinc2HPOAnnotation toDelete = loincAnnotationTableView.getSelectionModel()
+            LOINC2HpoAnnotationImpl toDelete = loincAnnotationTableView.getSelectionModel()
                     .getSelectedItem();
             if (toDelete != null) {
                 loincAnnotationTableView.getItems().remove(toDelete);

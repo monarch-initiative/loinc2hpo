@@ -80,7 +80,7 @@ public class FhirObservationAnalyzerTest {
 
         FhirObservationAnalyzer.setObservation(observation);
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -89,13 +89,13 @@ public class FhirObservationAnalyzerTest {
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         /**
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale);
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTerm4TestOutcome(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTerm4TestOutcome(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTerm4TestOutcome(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTerm4TestOutcome(hi, false));
          **/
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation.Builder()
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setLowValueHpoTerm(hpoTermMap.get("Hypoglycemia"))
