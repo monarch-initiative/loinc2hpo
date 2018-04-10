@@ -6,7 +6,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 /**
  * This class represents the final outcome for a lab test.
- * It keeps record of the HPO term for the result, and
+ * @TODO: delete this class because it is the same as HpoTermId4LoincTest
  */
 public class BasicLabTestResultInHPO implements LabTestResultInHPO {
 
