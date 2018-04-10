@@ -9,8 +9,6 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
@@ -76,25 +74,6 @@ public class FhirObservationAnalyzerTest {
 
     }
 
-    @Test
-    public void getHPOFromInterpretation() throws Exception {
-
-        FhirObservationAnalyzer.setObservation(observation);
-
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
-        LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = hpoTermMap.get("Hypoglycemia").getId();
-        TermId normal = hpoTermMap.get("Abnormality of blood glucose concentration").getId();
-        TermId hi = hpoTermMap.get("Hyperglycemia").getId();
-
-        Loinc2HPOAnnotation test1 = new QnLoinc2HPOAnnotation(loincId, loincScale,  low,  normal,  hi);
-
-        //testmap.put(loincId, test1);
-        //LabTestResultInHPO result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
-        //System.out.println(result);
-
-    }
 
     @Test
     public void testUniversalAnnotation() throws Exception {

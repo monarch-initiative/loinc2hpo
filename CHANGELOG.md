@@ -95,7 +95,9 @@ Additional changes for this version
 
   "system" is renamed to "FHIR";
   Code for "presence" changed from "P" to "POS", code for "not presence" changed from "NP" to "NEG" to be consistent with FHIR
-  
 
+* Show version in "About" message
+
+* Refactor to remove deprecated classes
 
 

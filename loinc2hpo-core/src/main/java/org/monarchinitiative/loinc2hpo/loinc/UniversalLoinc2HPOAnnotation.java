@@ -19,12 +19,13 @@ import java.util.*;
  * This class is responsible for managing the annotation information. The app keeps a map from loinc -> annotation. This
  * class is only the annotation part. For each loinc code, we assign a candidate Hpo term for a potential observation
  * value. The observation value is a code in a coding system (if it is a numeric value, we change it to a code). For Qn
- * type of Loinc, we use the internal code:
+ * type of Loinc, we use the internal codes, which is a subset of FHIR codes:
  * L(ow)                -> Hpo term
  * A(bnormal)/N(ormal)  -> Hpo term
  * H(igh)               -> Hpo term
- * P(ositive)           -> Hpo term
- * N(ot)P(ositive)      -> Hpo term
+ * For Ord types with a "Presence" or "Absence" outcome:
+ * POS(itive)           -> Hpo term
+ * Neg(ative)           -> Hpo term
  *
  * For Ord, Nom and other types, the observation is always a code in an external coding system, we have to assign Hpo
  * terms to expected coded values, or we have to convert the external coded value to an internal coded value listed above.
@@ -328,7 +329,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
      * A convenient method to show hpo term for low
      * @return
      */
-    public HpoTerm displayLow() {
+    public HpoTerm whenValueLow() {
 
         if (loincInterpretationToHPO(internalCode.get("L")) != null) {
             return loincInterpretationToHPO(internalCode.get("L")).getHpoTerm();
@@ -343,7 +344,7 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
      * A convenient method to show hpo term for normal (Qn) or negative (Ord)
      * @return
      */
-    public HpoTerm displayNormal() {
+    public HpoTerm whenValueNormalOrNegative() {
 
         if (loincInterpretationToHPO(internalCode.get("N")) != null) {
             return loincInterpretationToHPO(internalCode.get("N")).getHpoTerm();
@@ -355,11 +356,21 @@ public class UniversalLoinc2HPOAnnotation implements Serializable {
 
     }
 
+    public boolean isNormalOrNegativeInversed() {
+        if (loincInterpretationToHPO(internalCode.get("N")) != null) {
+            return loincInterpretationToHPO(internalCode.get("N")).isNegated();
+        } else if (loincInterpretationToHPO(internalCode.get("NEG")) != null) {
+            return loincInterpretationToHPO(internalCode.get("NEG")).isNegated();
+        } else {
+            return false;
+        }
+    }
+
     /**
      * A convenient method to show hpo term for high (Qn) or positive (Ord)
      * @return
      */
-    public HpoTerm displayHigh() {
+    public HpoTerm whenValueHighOrPositive() {
 
         if (loincInterpretationToHPO(internalCode.get("H")) != null) {
             return loincInterpretationToHPO(internalCode.get("H")).getHpoTerm();

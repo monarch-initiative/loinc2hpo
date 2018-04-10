@@ -212,7 +212,7 @@ public class FhirObservationAnalyzer {
                 UniversalLoinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
                 if(annotationForLoinc == null) throw new AnnotationNotFoundException();
                 HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHPO(internalCode);
-                return new BasicLabTestResultInHPO(hpoId, null, "?");
+                return new BasicLabTestResultInHPO(hpoId, null);
 
             } catch (InternalCodeNotFoundException e) {
                 e.printStackTrace();
