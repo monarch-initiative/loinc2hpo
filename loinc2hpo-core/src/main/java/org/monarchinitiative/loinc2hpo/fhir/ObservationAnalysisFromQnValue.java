@@ -6,14 +6,11 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.util.AgeCalculator;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

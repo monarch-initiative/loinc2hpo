@@ -4,7 +4,6 @@ package org.monarchinitiative.loinc2hpo.io;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.loinc2hpo.codesystems.CodeSystem;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
@@ -33,7 +32,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
     private static final Logger logger = LogManager.getLogger();
 
-    public LoincAnnotationSerializerToTSVSingleFile() {
+    private LoincAnnotationSerializerToTSVSingleFile() {
 
     }
 
@@ -229,9 +228,4 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         return builder.toString().trim();
     }
 
-    private boolean isAandNdifferent(UniversalLoinc2HPOAnnotation annotation) {
-
-        return annotation.getAbnormalHpoTermName().equals(annotation.getNotAbnormalHpoTermName());
-
-    }
 }

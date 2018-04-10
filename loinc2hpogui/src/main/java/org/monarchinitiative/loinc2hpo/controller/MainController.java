@@ -2,35 +2,29 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.javafx.runtime.SystemProperties;
-import com.sun.javafx.stage.WindowCloseRequestHandler;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableMapValue;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.Constants;
+import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
-import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.*;
@@ -38,8 +32,6 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,6 +89,7 @@ public class MainController {
     @FXML private Tab annotateTabButton;
     @FXML private Tab Loinc2HPOAnnotationsTabButton;
     @FXML private Tab Loinc2HpoConversionTabButton;
+
 
 
     @FXML private void initialize() {
@@ -204,6 +197,7 @@ public class MainController {
                 openSession(model.getPathToLastSession());
             }
         }
+
 
         //@TODO: to decide whether to remove the following menuitems
         importLoincCategory.setVisible(false);
@@ -440,7 +434,7 @@ public class MainController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("LOINC2HPO Biocuration tool");
         alert.setHeaderText("Loinc2Hpo");
-        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.";
+        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.\n\nversion: " + VersionCommand.getVersion();
         alert.setContentText(s);
         alert.showAndWait();
         e.consume();
@@ -607,28 +601,40 @@ public class MainController {
         if (model.getPathToLastSession() == null) {
             createNewSession();
         }
-        /**
+
+        // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
+        //create folder is not present
+        Path folderTSVSeparated = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSeparateFilesFolder);
+        if (!Files.exists(folderTSVSeparated)) {
+            try {
+                Files.createDirectory(folderTSVSeparated);
+            } catch (IOException e1) {
+
+                PopUps.showWarningDialog("Error message",
+                        "Failure to create folder",
+                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSeparated));
+                return;
+            }
+
+        }
+        /**disable this unless necessary
         //save annotations to "basic_annotations" and "advanced_annotations"
-        String pathToAnnotations = model.getPathToLastSession() + File.separator + "basic_annotations.tsv";
         try {
-            WriteToFile.toTSVbasicAnnotations(pathToAnnotations, model.getLoincAnnotationMap());
+            LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
+            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
+            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile, folderTSVSeparated.toString());
         } catch (IOException e1) {
+
             PopUps.showWarningDialog("Error message",
-                    "Failure to save basic annotations data",
+                    "Failure to save annotations data",
                     "An error occurred. Try again!");
+
         }
 
-        String pathToAnnotations2 = model.getPathToLastSession() + File.separator + "advanced_annotations.tsv";
-        try {
-            WriteToFile.toTSVadvancedAnnotations(pathToAnnotations2, model.getLoincAnnotationMap());
-        } catch (IOException e1) {
-            PopUps.showWarningDialog("Error message",
-                    "Failure to save advanced annotations data",
-                    "An error occurred. Try again!");
-        }
+         //end
          **/
 
-        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + "TSVSingleFile");
+        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
             try {
                 Files.createDirectory(folderTSVSingle);
@@ -640,10 +646,10 @@ public class MainController {
             }
         }
 
-        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + "annotations.tsv";
+        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
             LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
-        } catch (Exception e1) {
+        } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,
                     String.format("An error occurred when trying to save data to %s. Try again!", annotationTSVSingleFile));
@@ -690,7 +696,7 @@ public class MainController {
         e.consume();
         logger.info("usr wants to save file");
         //loinc2HpoAnnotationsTabController.saveLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSave();
+        loinc2HpoAnnotationsTabController.saveAnnotations();
 
     }
 
@@ -704,7 +710,7 @@ public class MainController {
         e.consume();
         logger.info("user wants to save to a new file");
         //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSaveAs();
+        loinc2HpoAnnotationsTabController.saveAnnotationsAs();
     }
 
     /**
