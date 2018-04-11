@@ -1,39 +1,43 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-
-import ca.uhn.fhir.model.base.composite.BaseIdentifierDt;
-import ca.uhn.fhir.model.base.composite.BaseResourceReferenceDt;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class represents the final outcome for a lab test. It basically wraps the Observation and the outcome. For memory considerations, the best practice is to save the subject and observation identifier only instead of the entire observation.
  */
-public class BasicLabTestResultInHPO implements LabTestResultInHPO {
+public class BasicLabTestOutcome implements LabTestOutcome {
 
     private Observation observation;
-    private BaseResourceReferenceDt subject;
-    private BaseIdentifierDt identifier;
+    private Reference subject;
+    private List<Identifier> identifiers;
     private HpoTerm4TestOutcome hpoId;
 
     private String comment;
 
-    public BasicLabTestResultInHPO(HpoTerm4TestOutcome id, @Nullable String text) {
+    public BasicLabTestOutcome(HpoTerm4TestOutcome id, @Nullable String text) {
         this.hpoId = id;
         this.comment = text;
     }
 
-    public BasicLabTestResultInHPO(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable BaseResourceReferenceDt subject, @Nullable BaseIdentifierDt identifier) {
+    public BasicLabTestOutcome(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable Reference subject, @Nullable List<Identifier> identifiers) {
         this.subject = subject;
-        this.identifier = identifier;
+        this.identifiers = new ArrayList<>();
+        if (identifiers != null) {
+            this.identifiers.addAll(identifiers);
+        }
         this.hpoId = outcome;
         this.comment = comment;
     }
 
-    public BasicLabTestResultInHPO(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable Observation observation) {
+    public BasicLabTestOutcome(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable Observation observation) {
 
         this.observation = observation;
         this.hpoId = outcome;
@@ -49,23 +53,30 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
     }
 
     @Override
-    public BaseIdentifierDt getTestIdentifier() {
+    public List<Identifier> getTestIdentifier() {
 
-        throw new UnsupportedOperationException();
+        return this.identifiers;
     }
 
     @Override
-    public BaseResourceReferenceDt getSubjectReference() {
+    public Reference getSubjectReference() {
 
-        throw new UnsupportedOperationException();
+        return this.subject;
 
     }
 
     @Override
-    public TermId getTermId() { return hpoId.getId(); }
+    public HpoTerm4TestOutcome getOutcome() {
 
-    @Override
-    public boolean isNegated() { return hpoId.isNegated(); }
+        return this.hpoId;
+
+    }
+
+    //@Override
+    //public TermId getTermId() { return hpoId.getId(); }
+
+    //@Override
+    //public boolean isNegated() { return hpoId.isNegated(); }
 
     @Override
     public String toString() {
@@ -76,7 +87,7 @@ public class BasicLabTestResultInHPO implements LabTestResultInHPO {
         if (hpoId.getId()==null) {
             return "error => hpoId.getId() is null in testResult";
         }
-        return String.format("BasicLabTestResultInHPO: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?", "?");
+        return String.format("BasicLabTestOutcome: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?", "?");
     }
 
 

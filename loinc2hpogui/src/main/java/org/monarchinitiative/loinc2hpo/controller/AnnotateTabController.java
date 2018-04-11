@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -17,8 +18,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.*;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -100,7 +104,7 @@ public class AnnotateTabController {
 
     private ImmutableMap<String,HpoTerm> termmap;
     // TODO currently, this list is taking both HPO_CLass_Found and String at different parts of the app.
-    @FXML private ListView hpoListView;
+    @FXML private ListView<HPO_Class_Found> hpoListView;
     private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
 
 
@@ -352,8 +356,14 @@ public class AnnotateTabController {
         });
 
         initadvancedAnnotationTable();
-        loincTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> isPresentOrd.setValue(newValue.isPresentOrd()));
+        //track what is selected in the loincTable. If currently selected LOINC is a Ord type with a Presence/Absence outcome, change the listener isPresentOrd to true; otherwise false.
+        loincTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                isPresentOrd.setValue(newValue.isPresentOrd());
+            }
+        });
 
+        //if the currently selected LOINC is a Ord type with a Presence/Absence outcome, reset the basic annotation buttons
         isPresentOrd.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -477,9 +487,32 @@ public class AnnotateTabController {
         //SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
         logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
         if (sparqlQueryResult.size() == 0) {
-            String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +
-                    "alternative keys (synonyms)";
-            sparqlQueryResult.add(new HPO_Class_Found(noHPOfoundMessage, null, null, null));
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No HPO Found");
+            alert.setContentText("Try search with synonyms");
+            alert.show();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        //do nothing
+                    } finally {
+                        Platform.runLater(() -> {
+                            alert.close();
+                        });
+                    }
+
+                    return null;
+                }
+            };
+            Thread alertThread = new Thread(task);
+            alertThread.start();
         }
         hpoListView.setItems(sparqlQueryResult);
     }
@@ -590,7 +623,33 @@ public class AnnotateTabController {
             ObservableList<String> items = FXCollections.observableArrayList();
             items.add("0 HPO class is found. Try manual search with " +
                     "alternative keys (synonyms)");
-            this.hpoListView.setItems(items);
+            //this.hpoListView.setItems(items);
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No HPO Found");
+            alert.setContentText("Try search with synonyms");
+            alert.show();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        //do nothing
+                    } finally {
+                        Platform.runLater(() -> {
+                            alert.close();
+                        });
+                    }
+
+                    return null;
+                }
+            };
+            Thread alertThread = new Thread(task);
+            alertThread.start();
         }
         //clear text in abnormality text fields if not currently editing a term
         if (!createAnnotationButton.getText().equals("Save")) {
