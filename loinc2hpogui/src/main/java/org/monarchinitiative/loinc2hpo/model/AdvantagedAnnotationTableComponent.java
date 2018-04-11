@@ -1,16 +1,16 @@
 package org.monarchinitiative.loinc2hpo.model;
 
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 
 /**
- * This class is for data visualization in GUI only. It simply keeps a record of a code and its corresponding hpoTermId4LoincTest term
- * wrapped in HpoTermId4LoincTest
+ * This class is for data visualization in GUI only. It simply keeps a record of a code and its corresponding hpoTerm4TestOutcome term
+ * wrapped in HpoTerm4TestOutcome
  */
 public class AdvantagedAnnotationTableComponent {
     private Code code;
-    private String hpo_term; //this is the hpoTermId4LoincTest term name. No need for this one because it can be accessed from the following
-    private HpoTermId4LoincTest hpoTermId4LoincTest;
+    private String hpo_term; //this is the hpoTerm4TestOutcome term name. No need for this one because it can be accessed from the following
+    private HpoTerm4TestOutcome hpoTerm4TestOutcome;
 
     public String getHpo_term() {
         return hpo_term;
@@ -21,18 +21,18 @@ public class AdvantagedAnnotationTableComponent {
     }
 
     @Deprecated
-    public AdvantagedAnnotationTableComponent(Code code, String hpo_term, HpoTermId4LoincTest hpoTermId4LoincTest) {
+    public AdvantagedAnnotationTableComponent(Code code, String hpo_term, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
         this.code = code;
         this.hpo_term = hpo_term;
-        this.hpoTermId4LoincTest = hpoTermId4LoincTest;
+        this.hpoTerm4TestOutcome = hpoTerm4TestOutcome;
     }
 
     //This is the preferred constructor.
-    public AdvantagedAnnotationTableComponent(Code code, HpoTermId4LoincTest hpoTermId4LoincTest) {
+    public AdvantagedAnnotationTableComponent(Code code, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
         this.code = code;
-        if (hpoTermId4LoincTest != null )
-            this.hpo_term = hpoTermId4LoincTest.getHpoTerm().getName();
-        this.hpoTermId4LoincTest = hpoTermId4LoincTest;
+        if (hpoTerm4TestOutcome != null )
+            this.hpo_term = hpoTerm4TestOutcome.getHpoTerm().getName();
+        this.hpoTerm4TestOutcome = hpoTerm4TestOutcome;
     }
 
 
@@ -44,19 +44,19 @@ public class AdvantagedAnnotationTableComponent {
         this.code = code;
     }
 
-    public HpoTermId4LoincTest getHpoTermId4LoincTest() {
-        return hpoTermId4LoincTest;
+    public HpoTerm4TestOutcome getHpoTerm4TestOutcome() {
+        return hpoTerm4TestOutcome;
     }
 
-    public void setHpoTermId4LoincTest(HpoTermId4LoincTest hpoTermId4LoincTest) {
-        this.hpoTermId4LoincTest = hpoTermId4LoincTest;
+    public void setHpoTerm4TestOutcome(HpoTerm4TestOutcome hpoTerm4TestOutcome) {
+        this.hpoTerm4TestOutcome = hpoTerm4TestOutcome;
     }
 
     @Override
     public String toString() {
-        if (this.hpoTermId4LoincTest != null) {
-            String negate = this.hpoTermId4LoincTest.isNegated() ? "not " : "";
-            return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTermId4LoincTest.getHpoTerm().getName();
+        if (this.hpoTerm4TestOutcome != null) {
+            String negate = this.hpoTerm4TestOutcome.isNegated() ? "not " : "";
+            return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTerm4TestOutcome.getHpoTerm().getName();
 
         } else {
             return this.code.getSystem() + ": " + this.code.getCode() + " -> No annotation";

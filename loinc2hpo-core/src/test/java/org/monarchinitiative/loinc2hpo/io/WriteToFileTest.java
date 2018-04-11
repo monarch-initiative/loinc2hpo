@@ -94,7 +94,7 @@ public class WriteToFileTest {
             res.forEach( term -> termmap.put(term.getName(),term));
         }
         hpoTermMap = termmap.build();
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         HpoTerm low = hpoTermMap.get("Hypoglycemia");
@@ -102,11 +102,11 @@ public class WriteToFileTest {
         HpoTerm hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale);
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTerm4TestOutcome(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTerm4TestOutcome(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTerm4TestOutcome(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTerm4TestOutcome(hi, false));
         testmap.put(loincId, glucoseAnnotation);
 
 
@@ -120,10 +120,10 @@ public class WriteToFileTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
-                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+        LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale)
+                .addAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
+                .addAnnotation(internalCodes.get("P"), new HpoTerm4TestOutcome(positive, false));
 
         testmap.put(loincId, bacterialAnnotation);
 
@@ -134,7 +134,7 @@ public class WriteToFileTest {
         WriteToFile.serialize(testmap, serializedFile);
 
         //deserialize
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedAnnotations = WriteToFile.deserialize(serializedFile);
+        Map<LoincId, LOINC2HpoAnnotationImpl> deserializedAnnotations = WriteToFile.deserialize(serializedFile);
         assertNotNull(deserializedAnnotations);
         assertEquals(testmap.size(), deserializedAnnotations.size());
         assertEquals(testmap.get(new LoincId("600-7")).loincInterpretationToHPO(code1).getId(), deserializedAnnotations.get(new LoincId("600-7")).loincInterpretationToHPO(code1).getId());
@@ -161,7 +161,7 @@ public class WriteToFileTest {
             res.forEach( term -> termmap.put(term.getName(),term));
         }
         hpoTermMap = termmap.build();
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMap.get("Hypoglycemia").getId();
@@ -169,11 +169,11 @@ public class WriteToFileTest {
         TermId hi = hpoTermMap.get("Hyperglycemia").getId();
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale);
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTerm4TestOutcome(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTerm4TestOutcome(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTerm4TestOutcome(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTerm4TestOutcome(hi, false));
         testmap.put(loincId, glucoseAnnotation);
 
 
@@ -187,10 +187,10 @@ public class WriteToFileTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
-                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+        LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale)
+                .addAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
+                .addAnnotation(internalCodes.get("P"), new HpoTerm4TestOutcome(positive, false));
 
         testmap.put(loincId, bacterialAnnotation);
 
@@ -230,7 +230,7 @@ public class WriteToFileTest {
         hpoTermMapSerialize = termmapSerialize.build();
         hpoTermMapDeserialize = termMapDeserialize.build();
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         TermId low = hpoTermMapSerialize.get("Hypoglycemia").getId();
@@ -238,11 +238,11 @@ public class WriteToFileTest {
         TermId hi = hpoTermMapSerialize.get("Hyperglycemia").getId();
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale);
-        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTermId4LoincTest(low, false))
-                .addAnnotation(internalCodes.get("N"), new HpoTermId4LoincTest(normal, true))
-                .addAnnotation(internalCodes.get("A"), new HpoTermId4LoincTest(normal, false))
-                .addAnnotation(internalCodes.get("H"), new HpoTermId4LoincTest(hi, false));
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale);
+        glucoseAnnotation.addAnnotation(internalCodes.get("L"), new HpoTerm4TestOutcome(low, false))
+                .addAnnotation(internalCodes.get("N"), new HpoTerm4TestOutcome(normal, true))
+                .addAnnotation(internalCodes.get("A"), new HpoTerm4TestOutcome(normal, false))
+                .addAnnotation(internalCodes.get("H"), new HpoTerm4TestOutcome(hi, false));
         testmap.put(loincId, glucoseAnnotation);
 
 
@@ -256,10 +256,10 @@ public class WriteToFileTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation(loincId, loincScale)
-                .addAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAnnotation(internalCodes.get("P"), new HpoTermId4LoincTest(positive, false));
+        LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl(loincId, loincScale)
+                .addAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
+                .addAnnotation(internalCodes.get("P"), new HpoTerm4TestOutcome(positive, false));
 
         testmap.put(loincId, bacterialAnnotation);
 
@@ -275,7 +275,7 @@ public class WriteToFileTest {
         reader.close();
 
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserialziedFromTSV = WriteToFile.fromTSV(path, hpoTermMapDeserialize);
+        Map<LoincId, LOINC2HpoAnnotationImpl> deserialziedFromTSV = WriteToFile.fromTSV(path, hpoTermMapDeserialize);
         assertNotNull(deserialziedFromTSV);
         assertEquals(testmap.size(), deserialziedFromTSV.size());
         assertEquals(bacterialAnnotation.toString(), deserialziedFromTSV.get(new LoincId("600-7")).toString());

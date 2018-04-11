@@ -18,9 +18,9 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
@@ -33,7 +33,7 @@ public class CurrentAnnotationController{
     private Model model;
 
     private LoincEntry currentLoincEntry = null;
-    private UniversalLoinc2HPOAnnotation currentAnnotation = null;
+    private LOINC2HpoAnnotationImpl currentAnnotation = null;
 
     @Inject AnnotateTabController annotateTabController;
     @Inject MainController mainController;
@@ -82,9 +82,9 @@ public class CurrentAnnotationController{
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode())
         );
         hpoInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
         inversedInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         internalTableview.setItems(internalCodeAnnotations);
 
         systemExternalTableview.setSortable(true);
@@ -94,9 +94,9 @@ public class CurrentAnnotationController{
         codeExternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode()));
         hpoExternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
         inversedExternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         externalTableview.setItems(externalCodeAnnotations);
 
         systemInterpretTableview.setSortable(true);
@@ -106,9 +106,9 @@ public class CurrentAnnotationController{
         codeInterpretTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode()));
         hpoInterpretTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTermId4LoincTest().getHpoTerm().getName()));
+                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
         inversedInterpretTableview.setCellValueFactory(cdf ->
-                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTermId4LoincTest().isNegated()));
+                new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         interpretationTableview.setItems(interpretationCodeAnnotations);
     }
 
@@ -140,7 +140,7 @@ public class CurrentAnnotationController{
         interpretationCodeAnnotations.clear();
         for (Map.Entry<Code, Code> entry: CodeSystemConvertor.getCodeConversionMap().entrySet()) {
             logger.debug("key: " + entry.getKey() + "\nvalue: " + entry.getValue());
-            HpoTermId4LoincTest result = currentAnnotation.loincInterpretationToHPO(entry.getValue());
+            HpoTerm4TestOutcome result = currentAnnotation.loincInterpretationToHPO(entry.getValue());
             logger.debug("result is null? " + (result == null));
             if (result != null) {
                 AdvantagedAnnotationTableComponent annotation = new AdvantagedAnnotationTableComponent(entry.getKey(), result);
@@ -180,7 +180,7 @@ public class CurrentAnnotationController{
         this.currentLoincEntry = currentLoinc;
     }
 
-    public void setCurrentAnnotation(UniversalLoinc2HPOAnnotation currentAnnotation) {
+    public void setCurrentAnnotation(LOINC2HpoAnnotationImpl currentAnnotation) {
         this.currentAnnotation = currentAnnotation;
         logger.info("current annotation is set successfully for: " + this.currentAnnotation.getLoincId());
         initTableStructure();

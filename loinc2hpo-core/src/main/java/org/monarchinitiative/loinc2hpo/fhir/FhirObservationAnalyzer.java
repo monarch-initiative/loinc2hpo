@@ -1,16 +1,13 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-//import javassist.CodeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestResultInHPO;
-import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
+import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +27,9 @@ public class FhirObservationAnalyzer {
 
 
     /**
-     * A core function that tries three ways to return a LabTestResultInHPO object:
+     * @TODO: Should not catch all exceptions here; leave it to the application code
+     * @TODO: Consider provinding BasicLabResultInHPO more information, including subject and identifier
+     * A core function that tries three ways to return a LabTestOutcome object:
      * first, it tries to return the result through the interpretation field. If it fails,
      * second, it tries to return the result through the quantative value, or
      * third, it tries to return the retult through the coded value (ordinal Loinc)
@@ -38,7 +37,8 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestResultInHPO getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, UniversalLoinc2HPOAnnotation> loinc2HPOannotationMap) {
+    public static LabTestOutcome getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HPOannotationMap) {
+
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
             //TODO: consider handling this as a future project
@@ -69,8 +69,8 @@ public class FhirObservationAnalyzer {
             logger.debug("enter analyzer using the interpretation field");
             try {
                 //return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
-                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
-                return new BasicLabTestResultInHPO(hpoterm, null);
+                HpoTerm4TestOutcome hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
+                return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
             } catch (UnrecognizedCodeException e) {
                 //this means the interpretation code is not recognized
                 logger.info("The interpretation codes for this loinc code is not annotated; system will try using raw values");
@@ -99,8 +99,8 @@ public class FhirObservationAnalyzer {
         //Qn will have a value field
         if (observation.hasValueQuantity()) {
             try {
-                HpoTermId4LoincTest hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
-                if (hpoterm != null) return new BasicLabTestResultInHPO(hpoterm, null);
+                HpoTerm4TestOutcome hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
+                if (hpoterm != null) return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
             } catch (ReferenceNotFoundException e) {
                 //if there is no reference
                 logger.error("The observation has no reference field.");
@@ -116,10 +116,10 @@ public class FhirObservationAnalyzer {
         //Ord will have a ValueCodeableConcept field
         if (observation.hasValueCodeableConcept()) {
             try {
-                HpoTermId4LoincTest hpoterm = null;
+                HpoTerm4TestOutcome hpoterm = null;
                 hpoterm = new ObservationAnalysisFromCodedValues(loincId,
                         observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
-                if (hpoterm != null) return new BasicLabTestResultInHPO(hpoterm, null);
+                if (hpoterm != null) return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
             } catch (AmbiguousResultsFoundException e) {
                 logger.error("multiple results are found");
             } catch (UnrecognizedCodeException e) {
@@ -191,8 +191,9 @@ public class FhirObservationAnalyzer {
      * @throws LoincCodeNotFoundException
      * @throws UnsupportedCodingSystemException
      */
-    public static LabTestResultInHPO getHPOFromInterpretation (
-            CodeableConcept interpretation, Map<LoincId, UniversalLoinc2HPOAnnotation> testmap) throws MalformedLoincCodeException,
+    /**
+    public static LabTestOutcome getHPOFromInterpretation (
+            CodeableConcept interpretation, Map<LoincId, LOINC2HpoAnnotationImpl> testmap) throws MalformedLoincCodeException,
             LoincCodeNotFoundException, UnsupportedCodingSystemException, AnnotationNotFoundException  {
         //here we only look at interpretation code system defined by HL7
         Code interpretationCode = null;
@@ -209,10 +210,10 @@ public class FhirObservationAnalyzer {
             try {
                 Code internalCode = CodeSystemConvertor.convertToInternalCode(interpretationCode);
                 LoincId loincId = getLoincIdOfObservation(); //get the loinc code from the observation
-                UniversalLoinc2HPOAnnotation annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
+                LOINC2HpoAnnotationImpl annotationForLoinc = testmap.get(loincId); //get the annotation class for this loinc code
                 if(annotationForLoinc == null) throw new AnnotationNotFoundException();
-                HpoTermId4LoincTest hpoId = annotationForLoinc.loincInterpretationToHPO(internalCode);
-                return new BasicLabTestResultInHPO(hpoId, null);
+                HpoTerm4TestOutcome hpoId = annotationForLoinc.loincInterpretationToHPO(internalCode);
+                return new BasicLabTestOutcome(hpoId, null);
 
             } catch (InternalCodeNotFoundException e) {
                 e.printStackTrace();
@@ -227,6 +228,7 @@ public class FhirObservationAnalyzer {
         }
         return null;
     }
+     **/
 
 
     /**
@@ -234,7 +236,7 @@ public class FhirObservationAnalyzer {
      * need to have a Qn value AND a reference range
      * @return
      */
-    public static LabTestResultInHPO getHPOFromRawValue(){
+    public static LabTestOutcome getHPOFromRawValue(){
 
         return null;
     }
@@ -244,7 +246,7 @@ public class FhirObservationAnalyzer {
      * need to have an ordinal value
      * @return
      */
-    public static LabTestResultInHPO getHPOFromCodedValue() throws FHIRException {
+    public static LabTestOutcome getHPOFromCodedValue() throws FHIRException {
 
         return null;
     }

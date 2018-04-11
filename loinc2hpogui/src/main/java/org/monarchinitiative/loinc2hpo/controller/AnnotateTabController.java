@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -17,8 +18,10 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -27,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.*;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -100,7 +104,7 @@ public class AnnotateTabController {
 
     private ImmutableMap<String,HpoTerm> termmap;
     // TODO currently, this list is taking both HPO_CLass_Found and String at different parts of the app.
-    @FXML private ListView hpoListView;
+    @FXML private ListView<HPO_Class_Found> hpoListView;
     private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
 
 
@@ -352,8 +356,14 @@ public class AnnotateTabController {
         });
 
         initadvancedAnnotationTable();
-        loincTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> isPresentOrd.setValue(newValue.isPresentOrd()));
+        //track what is selected in the loincTable. If currently selected LOINC is a Ord type with a Presence/Absence outcome, change the listener isPresentOrd to true; otherwise false.
+        loincTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                isPresentOrd.setValue(newValue.isPresentOrd());
+            }
+        });
 
+        //if the currently selected LOINC is a Ord type with a Presence/Absence outcome, reset the basic annotation buttons
         isPresentOrd.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -477,9 +487,32 @@ public class AnnotateTabController {
         //SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
         logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
         if (sparqlQueryResult.size() == 0) {
-            String noHPOfoundMessage = "0 HPO class is found. Try manual search with " +
-                    "alternative keys (synonyms)";
-            sparqlQueryResult.add(new HPO_Class_Found(noHPOfoundMessage, null, null, null));
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No HPO Found");
+            alert.setContentText("Try search with synonyms");
+            alert.show();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        //do nothing
+                    } finally {
+                        Platform.runLater(() -> {
+                            alert.close();
+                        });
+                    }
+
+                    return null;
+                }
+            };
+            Thread alertThread = new Thread(task);
+            alertThread.start();
         }
         hpoListView.setItems(sparqlQueryResult);
     }
@@ -590,7 +623,33 @@ public class AnnotateTabController {
             ObservableList<String> items = FXCollections.observableArrayList();
             items.add("0 HPO class is found. Try manual search with " +
                     "alternative keys (synonyms)");
-            this.hpoListView.setItems(items);
+            //this.hpoListView.setItems(items);
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No HPO Found");
+            alert.setContentText("Try search with synonyms");
+            alert.show();
+
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+
+                    try {
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        //do nothing
+                    } finally {
+                        Platform.runLater(() -> {
+                            alert.close();
+                        });
+                    }
+
+                    return null;
+                }
+            };
+            Thread alertThread = new Thread(task);
+            alertThread.start();
         }
         //clear text in abnormality text fields if not currently editing a term
         if (!createAnnotationButton.getText().equals("Save")) {
@@ -1152,7 +1211,7 @@ public class AnnotateTabController {
         }
 
         //start building the annotation
-        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder();
         builder.setLoincId(loincCode)
                 .setLoincScale(loincScale)
                 .setNote(annotationNoteField.getText())
@@ -1182,7 +1241,7 @@ public class AnnotateTabController {
         //add the advanced annotations
         if (!tempAdvancedAnnotations.isEmpty()) {
             tempAdvancedAnnotations.forEach(p ->
-                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTermId4LoincTest()));
+                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTerm4TestOutcome()));
         }
 
         //add some meta data, such as date, created by, and version
@@ -1200,7 +1259,7 @@ public class AnnotateTabController {
         }
 
         //complete the building process, build the object
-        UniversalLoinc2HPOAnnotation loinc2HPOAnnotation = builder.build();
+        LOINC2HpoAnnotationImpl loinc2HPOAnnotation = builder.build();
         model.addLoincTest(loinc2HPOAnnotation);
 
         //reset many settings
@@ -1538,7 +1597,7 @@ public class AnnotateTabController {
         HpoTerm hpoterm = model.getTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTermId4LoincTest(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -1786,7 +1845,7 @@ public class AnnotateTabController {
      * This method is called from the pop up window
      * @param loincAnnotation passed from the pop up window
      */
-    void editCurrentAnnotation(UniversalLoinc2HPOAnnotation loincAnnotation) {
+    void editCurrentAnnotation(LOINC2HpoAnnotationImpl loincAnnotation) {
 
         setLoincIdSelected(loincAnnotation.getLoincId());
         model.setLoincUnderEditing(model.getLoincEntryMap().get(loincAnnotation.getLoincId()));
@@ -1798,12 +1857,12 @@ public class AnnotateTabController {
         Code codeNormal = internalCode.get("N");
         Code codePos = internalCode.get("POS");
         Code codeNeg = internalCode.get("NEG");
-        HpoTermId4LoincTest hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
-        HpoTermId4LoincTest hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
+        HpoTerm4TestOutcome hpoLow = loincAnnotation.loincInterpretationToHPO(codeLow);
+        HpoTerm4TestOutcome hpoHigh = loincAnnotation.loincInterpretationToHPO(codeHigh);
         if (hpoHigh == null) {
             hpoHigh = loincAnnotation.loincInterpretationToHPO(codePos);
         }
-        HpoTermId4LoincTest hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
+        HpoTerm4TestOutcome hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNormal);
         if (hpoNormal == null) {
             hpoNormal = loincAnnotation.loincInterpretationToHPO(codeNeg);
         }
@@ -1825,7 +1884,7 @@ public class AnnotateTabController {
 
         //populated advanced annotations table view
         //remember: advanced annotation == not using internal codes
-        for (Map.Entry<Code, HpoTermId4LoincTest> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
+        for (Map.Entry<Code, HpoTerm4TestOutcome> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
             if (!entry.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM)) {
                 tempAdvancedAnnotations.add(new AdvantagedAnnotationTableComponent(entry.getKey(), entry.getValue()));
             }

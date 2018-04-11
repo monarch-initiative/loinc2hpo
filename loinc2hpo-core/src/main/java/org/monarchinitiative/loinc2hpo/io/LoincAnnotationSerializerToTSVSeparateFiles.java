@@ -39,7 +39,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     /**
      * This method serializes annotation map to two files under filepath, basic_annotations.tsv and advanced_anotations.tsv. Retrieve those values from the constants class
      */
-    public void serialize(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationmap, String filepath) throws IOException {
+    public void serialize(Map<LoincId, LOINC2HpoAnnotationImpl> annotationmap, String filepath) throws IOException {
 
         if (loincEntryMap == null) {
             throw new NullPointerException("loincEntryMap is not provided yet");
@@ -52,7 +52,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
     @Override
-    public Map<LoincId, UniversalLoinc2HPOAnnotation> parse(String filepath) throws FileNotFoundException {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
         if (hpoTermMap == null) {
             throw new NullPointerException("hpoTermMap is not provided yet");
@@ -61,7 +61,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
             throw new NullPointerException("loincEntryMap is not provided yet");
         }
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap;
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
         String basicannotations = filepath + File.separator + Constants.TSVSeparateFilesBasic;
         String advancedAnnotations = filepath + File.separator + Constants.TSVSeparateFilesAdv;
         if (new File(basicannotations).exists()) {
@@ -84,14 +84,14 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
      * @param annotationMap
      * @throws IOException
      */
-    private void toTSVbasicAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap, Map<LoincId, LoincEntry> loincEntryMap) throws IOException {
+    private void toTSVbasicAnnotations(String path, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap, Map<LoincId, LoincEntry> loincEntryMap) throws IOException {
 
         logger.trace("enter toTSVbasicAnnotations() function");
         logger.trace("path: " + path);
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-        writer.write(UniversalLoinc2HPOAnnotation.getHeaderBasic());
+        writer.write(LOINC2HpoAnnotationImpl.getHeaderBasic());
 
-        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+        for (LOINC2HpoAnnotationImpl annotation : annotationMap.values()) {
             writer.newLine();
             writer.write(basicAnnotations2String(annotation, loincEntryMap));
         }
@@ -105,12 +105,12 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
      * @param annotationMap
      * @throws IOException
      */
-    private void toTSVadvancedAnnotations(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) throws IOException {
+    private void toTSVadvancedAnnotations(String path, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) throws IOException {
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-        writer.write(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
+        writer.write(LOINC2HpoAnnotationImpl.getHeaderAdvanced());
 
-        for (UniversalLoinc2HPOAnnotation annotation : annotationMap.values()) {
+        for (LOINC2HpoAnnotationImpl annotation : annotationMap.values()) {
             String advancedstring = advancedAnnotations2String(annotation);
             if (advancedstring != null
                     && !advancedstring.isEmpty()) {
@@ -123,9 +123,9 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public Map<LoincId, UniversalLoinc2HPOAnnotation> fromTSVBasic(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> fromTSVBasic(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = new LinkedHashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {
             String[] elements = serialized.split("\\t");
@@ -147,7 +147,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                     String lastEditedBy = elements[12].equals(Constants.MISSINGVALUE)? null : elements[12];
 
                     if (!deserializedMap.containsKey(loincId)) {
-                        UniversalLoinc2HPOAnnotation.Builder builder = new UniversalLoinc2HPOAnnotation.Builder();
+                        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder();
                         builder.setLoincId(loincId)
                                 .setLoincScale(loincScale)
                                 .setCreatedOn(createdOn)
@@ -199,7 +199,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public void fromTSVAdvanced(String path, Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+    public void fromTSVAdvanced(String path, Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {
@@ -211,9 +211,9 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                     String codeString = elements[3];
                     TermId termId = convertToTermID(elements[4]);
                     boolean inverse = Boolean.parseBoolean(elements[5]);
-                    UniversalLoinc2HPOAnnotation annotation = deserializedMap.get(loincId);
+                    LOINC2HpoAnnotationImpl annotation = deserializedMap.get(loincId);
                     Code code = Code.getNewCode().setSystem(system).setCode(codeString);
-                    annotation.addAdvancedAnnotation(code, new HpoTermId4LoincTest(hpoTermMap.get(termId), inverse));
+                    annotation.addAdvancedAnnotation(code, new HpoTerm4TestOutcome(hpoTermMap.get(termId), inverse));
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
                 }
@@ -235,7 +235,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
         }
     }
 
-    private String basicAnnotations2String(UniversalLoinc2HPOAnnotation annotation, Map<LoincId, LoincEntry> loincEntryMap) {
+    private String basicAnnotations2String(LOINC2HpoAnnotationImpl annotation, Map<LoincId, LoincEntry> loincEntryMap) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(annotation.getLoincId());
         stringBuilder.append("\t" + annotation.getLoincScale().toString());
@@ -267,11 +267,11 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
         return stringBuilder.toString();
     }
 
-    private String advancedAnnotations2String(UniversalLoinc2HPOAnnotation annotation) {
+    private String advancedAnnotations2String(LOINC2HpoAnnotationImpl annotation) {
 
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
-        Map<Code, HpoTermId4LoincTest> advancedAnnotationTerms;
+        Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms;
         advancedAnnotationTerms = new LinkedHashMap<>(annotation.getCandidateHpoTerms());
         if (annotation.getLoincScale() == LoincScale.Qn) {
             advancedAnnotationTerms.remove(internalCode.get("N"));

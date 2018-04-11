@@ -15,7 +15,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.testresult.LabTestResultInHPO;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
@@ -46,19 +46,23 @@ public class Loinc2HpoConversionTabController {
 
     @FXML
     void handleConvertButton(ActionEvent event) {
+        event.consume();
         String path = model.getPathToJsonFhirFile();
         Observation observation = FhirResourceRetriever.parseJsonFile2Observation(path);
         FhirObservationAnalyzer.setObservation(observation);
-        LabTestResultInHPO res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getLoincAnnotationMap());
+        LabTestOutcome res = FhirObservationAnalyzer.getHPO4ObservationOutcome(model.getLoincIds(), model.getLoincAnnotationMap());
         ObservableList<String> items = FXCollections.observableArrayList ();
         if (res == null) {
             items.add(observation.getId() + ": failed not interpret");
         } else {
-            TermId id = res.getTermId();
+            TermId id = res.getOutcome().getId();
             String name = model.termId2HpoName(id);
-            String display = String.format("%s: %s [%s]",observation.getId(), name,id.getIdWithPrefix());
-            if (res.isNegated()) {
-                display = String.format("%s: NOT %s [%s]",observation.getId(), name,id.getIdWithPrefix());
+            //It is fine to use the subject for display purposes, but for computation we should use identifier as subject is not guaranteed unique
+            String subject = res.getSubjectReference() != null && res.getSubjectReference().getReference() != null ?
+                    res.getSubjectReference().getReference() : "Unknown subject";
+            String display = String.format("%s: %s [%s]", subject, name,id.getIdWithPrefix());
+            if (res.getOutcome().isNegated()) {
+                display = String.format("%s: NOT %s [%s]",subject, name,id.getIdWithPrefix());
             }
             items.add(display);
         }
@@ -67,6 +71,7 @@ public class Loinc2HpoConversionTabController {
 
     @FXML
     void handleImportantPatientData(ActionEvent event) {
+        event.consume();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose FHIR observation JSON file");
         File f = chooser.showOpenDialog(null);

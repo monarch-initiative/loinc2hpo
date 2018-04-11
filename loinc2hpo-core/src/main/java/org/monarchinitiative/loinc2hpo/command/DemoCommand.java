@@ -1,13 +1,13 @@
 package org.monarchinitiative.loinc2hpo.command;
 
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DemoCommand extends  Command   {
 
-    Map<String,UniversalLoinc2HPOAnnotation> testMap;
+    Map<String,LOINC2HpoAnnotationImpl> testMap;
 
 
 
