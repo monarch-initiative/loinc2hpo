@@ -72,12 +72,6 @@ public class BasicLabTestOutcome implements LabTestOutcome {
 
     }
 
-    //@Override
-    //public TermId getTermId() { return hpoId.getId(); }
-
-    //@Override
-    //public boolean isNegated() { return hpoId.isNegated(); }
-
     @Override
     public String toString() {
 
