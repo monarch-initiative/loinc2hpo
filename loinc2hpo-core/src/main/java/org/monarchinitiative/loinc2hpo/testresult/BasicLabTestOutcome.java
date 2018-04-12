@@ -81,6 +81,7 @@ public class BasicLabTestOutcome implements LabTestOutcome {
         if (hpoId.getId()==null) {
             return "error => hpoId.getId() is null in testResult";
         }
+
         return String.format("BasicLabTestOutcome: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?", "?");
     }
 

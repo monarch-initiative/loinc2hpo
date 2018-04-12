@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +32,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 
 
     @BeforeClass
-    public static void setup() throws MalformedLoincCodeException {
+    public static void setup() throws MalformedLoincCodeException, DataFormatException, IOException {
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcus.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
         path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcusNoInterpretation.fhir").getPath();

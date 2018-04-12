@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.zip.DataFormatException;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +32,7 @@ public class ObservationAnalysisFromInterpretationTest {
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
     @BeforeClass
-    public static void setup() throws MalformedLoincCodeException {
+    public static void setup() throws MalformedLoincCodeException, IOException, DataFormatException {
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
         path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseConflictingInterpretation.fhir").getPath();
