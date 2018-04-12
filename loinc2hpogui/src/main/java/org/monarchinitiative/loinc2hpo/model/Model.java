@@ -4,6 +4,7 @@ package org.monarchinitiative.loinc2hpo.model;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
@@ -38,6 +39,7 @@ public class Model {
     private String biocuratorID=null;
 
     private String pathToJsonFhirFile=null;
+    private Queue<Observation> observationQueue = new ArrayDeque<>();
 
     private String pathToAutoSavedFolder = null;
 
@@ -221,6 +223,7 @@ public class Model {
 
     public void setFhirFilePath(String p) { pathToJsonFhirFile=p;}
     public String getPathToJsonFhirFile() { return pathToJsonFhirFile; }
+    public Queue<Observation> getObservationQueue() { return this.observationQueue; }
 
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
     public int getLoincAnnotationCount() { return loincAnnotationMap !=null?this.loincAnnotationMap.size():0;}

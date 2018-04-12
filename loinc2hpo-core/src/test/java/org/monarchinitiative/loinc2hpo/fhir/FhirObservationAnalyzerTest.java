@@ -9,6 +9,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
@@ -16,9 +17,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -29,7 +28,7 @@ public class FhirObservationAnalyzerTest {
     private static Map<String, HpoTerm> hpoTermMap;
 
     @BeforeClass
-    public static void setup(){
+    public static void setup() throws Exception{
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
         observation = FhirResourceRetriever.parseJsonFile2Observation(path);
 
@@ -104,10 +103,12 @@ public class FhirObservationAnalyzerTest {
                 .build();
 
         testmap.put(loincId, glucoseAnnotation);
-        /**
-        LabTestOutcome result = FhirObservationAnalyzer.getHPOFromInterpretation(FhirObservationAnalyzer.getObservation().getInterpretation(), testmap);
+
+        Set<LoincId> loincIdSet = new HashSet<>();
+        loincIdSet.add(loincId);
+        LabTestOutcome result = FhirObservationAnalyzer.getHPO4ObservationOutcome(loincIdSet, testmap);
         System.out.println(result);
-         **/
+
     }
 
 

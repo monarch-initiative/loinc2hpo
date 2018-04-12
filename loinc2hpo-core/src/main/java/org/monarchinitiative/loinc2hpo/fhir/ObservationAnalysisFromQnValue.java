@@ -140,6 +140,7 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
             //We should handle this case
 
 
+            throw new AmbiguousReferenceException();
 
         } else {
             throw new AmbiguousReferenceException();

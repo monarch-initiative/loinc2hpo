@@ -8,6 +8,7 @@ import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousSubjectException;
 import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 import org.apache.logging.log4j.Logger;
@@ -31,28 +32,41 @@ public class FhirResourceRetriever {
     public static final IParser jsonParser = ctx.newJsonParser();
 
 
+
     /**
      * This function parses a json file stored locally to an hapi-fhir Observation object
      * @param filepath
      * @return
      */
-    public static Observation parseJsonFile2Observation(String filepath) {
+    public static Observation parseJsonFile2Observation(String filepath) throws IOException, DataFormatException {
         Observation observation = null;
-        try {
-            File file = new File(filepath);
-            byte[] bytes = new byte[(int)file.length()];
-            FileInputStream fileInputStream = new FileInputStream(file);
-            fileInputStream.read(bytes);
-            //logger.debug(new String(bytes));
-            observation = (Observation) jsonParser.parseResource(new String(bytes));
-            fileInputStream.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (DataFormatException e) {
-            logger.error("Json file " + filepath + " is not a valid observation");
+        File file = new File(filepath);
+        byte[] bytes = new byte[(int)file.length()];
+        FileInputStream fileInputStream = new FileInputStream(file);
+        fileInputStream.read(bytes);
+        //logger.debug(new String(bytes));
+        IBaseResource ibaseResource = jsonParser.parseResource(new String(bytes));
+        if (ibaseResource instanceof Observation) {
+            observation = (Observation) ibaseResource;
+        } else {
+            throw new DataFormatException();
         }
+        fileInputStream.close();
+
         return observation;
+    }
+
+    public static Observation parseJsonFile2Observation(File file) throws IOException {
+
+        return parseJsonFile2Observation(file.getAbsolutePath());
+
+    }
+
+    public static String toJsonString(Observation observation) {
+
+        return jsonParser.setPrettyPrint(true).encodeResourceToString(observation);
+
     }
 
     /**

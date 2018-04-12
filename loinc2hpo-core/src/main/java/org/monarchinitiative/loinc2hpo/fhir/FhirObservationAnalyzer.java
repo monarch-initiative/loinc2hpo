@@ -8,9 +8,11 @@ import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
+import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class is responsible for analyzing a FHIR observation
@@ -37,104 +39,54 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestOutcome getHPO4ObservationOutcome(HashSet<LoincId> loincIds, Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HPOannotationMap) {
+    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HPOannotationMap) throws MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException, AmbiguousResultsFoundException, AnnotationNotFoundException, UnrecognizedCodeException, LoincCodeNotAnnotatedException, AmbiguousReferenceException, ReferenceNotFoundException, FHIRException {
 
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
             //TODO: consider handling this as a future project
-            return null;
-        }
-        LoincId loincId = null;
-        try {
-            loincId = getLoincIdOfObservation();
-        } catch (MalformedLoincCodeException e) {
-            logger.error("malformed loinc code; should never happen");
-            return null;
-        } catch (LoincCodeNotFoundException e) {
-            logger.error("No loinc code was found in the observation; should never happen");
-            return null;
-        } catch (UnsupportedCodingSystemException e) {
-            logger.error("coding system not recognized");
-            return null;
+            throw new LoincCodeNotFoundException();
         }
 
+        LoincId loincId = getLoincIdOfObservation();
 
         if (!loinc2HPOannotationMap.containsKey(loincId)) {
-            return null;
+            throw new LoincCodeNotAnnotatedException();
         }
 
-
-
+        HpoTerm4TestOutcome hpoterm = null;
         if (observation.hasInterpretation()) {
             logger.debug("enter analyzer using the interpretation field");
             try {
-                //return getHPOFromInterpretation(observation.getInterpretation(), loinc2HPOannotationMap);
-                HpoTerm4TestOutcome hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
+                //hpoterm won't be null
+                hpoterm = new ObservationAnalysisFromInterpretation(getLoincIdOfObservation(), observation.getInterpretation(), loinc2HPOannotationMap).getHPOforObservation();
                 return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
-            } catch (UnrecognizedCodeException e) {
-                //this means the interpretation code is not recognized
-                logger.info("The interpretation codes for this loinc code is not annotated; system will try using raw values");
-            } catch (MalformedLoincCodeException e1) {
-                //not going to happen
-                logger.error("malformed loinc code.");
-                return null;
-            } catch (LoincCodeNotFoundException e2) {
-                //not going to happen
-                logger.error("no loinc code is found in the observation");
-                return null;
-            } catch (UnsupportedCodingSystemException e3) {
-                //not going to happen
-                logger.error("The interpretation coding system cannot be recognized.");
-                return null;
-            } catch (AmbiguousResultsFoundException e) {
-                logger.error("The observation has conflicting interpretation codes.");
-                return null;
             } catch (AnnotationNotFoundException e) {
-                logger.error("There is no annotation for the loinc code used in the observation");
-            }
+                logger.trace("Annotation for the interpretation code is not found; try other methods");
+            } //catch (AmbiguousResultsFoundException e) {  //we should not catch this exception, I think --@azhang
+              //  logger.trace("Interpretation code resulted conflicting hpo interpretation; try other methods");
+            //}
         }
 
         //if we failed to analyze the outcome through the interpretation field, we try to analyze the raw value using
         //the reference range
         //Qn will have a value field
         if (observation.hasValueQuantity()) {
-            try {
-                HpoTerm4TestOutcome hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
-                if (hpoterm != null) return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
-            } catch (ReferenceNotFoundException e) {
-                //if there is no reference
-                logger.error("The observation has no reference field.");
-                //TODO: make a list of our own references
-            } catch (AmbiguousReferenceException e) {
-                logger.info("There are two reference ranges or more");
-            } catch (UnrecognizedCodeException e) {
-                logger.error("uncognized coding system");
-            }
-
+            hpoterm = new ObservationAnalysisFromQnValue(loincId, observation, loinc2HPOannotationMap).getHPOforObservation();
+            if (hpoterm != null) return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
         }
 
         //Ord will have a ValueCodeableConcept field
         if (observation.hasValueCodeableConcept()) {
-            try {
-                HpoTerm4TestOutcome hpoterm = null;
-                hpoterm = new ObservationAnalysisFromCodedValues(loincId,
-                        observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
-                if (hpoterm != null) return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
-            } catch (AmbiguousResultsFoundException e) {
-                logger.error("multiple results are found");
-            } catch (UnrecognizedCodeException e) {
-                logger.error("unrecognized codes");
-            } catch (FHIRException e) {
-                //not going to happen
-                logger.error("Could not get HPO term from coded value");
-            } catch (AnnotationNotFoundException e) {
-                logger.error("There is no annotation for the loinc code used in the observation");
+            hpoterm = new ObservationAnalysisFromCodedValues(loincId,
+                    observation.getValueCodeableConcept(), loinc2HPOannotationMap).getHPOforObservation();
+            if (hpoterm != null) {
+                return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
             }
         }
 
         //if all the above fails, we cannot do nothing
         logger.error("Could not return HPO for observation: " + observation.getId());
-        return null;
+        return new BasicLabTestOutcome(null, null, observation.getSubject(), observation.getIdentifier());
     }
 
     /**
@@ -142,7 +94,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds: a hashset of all loinc codes (just codes)
      * @return false if the observation does not have one, or in wrong format, or recognized in the hashset
      */
-    private static boolean hasValidLoincCode(HashSet<LoincId> loincIds){
+    private static boolean hasValidLoincCode(Set<LoincId> loincIds){
 
         for (Coding coding : observation.getCode().getCoding()) {
             if (coding.getSystem().equals("http://loinc.org")) {
