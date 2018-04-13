@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +23,6 @@ import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Singleton

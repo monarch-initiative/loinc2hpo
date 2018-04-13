@@ -21,5 +21,9 @@ public class Constants {
     public static final String LOINCCategory = "LOINC CATEGORY";
 
 
+    public static final String LOINCSYSTEM = "http://loinc.org";
+    public static final String HAPIFHIRTESTSERVER = "http://fhirtest.uhn.ca/baseDstu3";
+
+
 
 }

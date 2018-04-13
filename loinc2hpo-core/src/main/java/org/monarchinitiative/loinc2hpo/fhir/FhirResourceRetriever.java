@@ -5,7 +5,6 @@ import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -17,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FhirResourceRetriever {
 
@@ -135,6 +133,48 @@ public class FhirResourceRetriever {
         } else {
             throw new AmbiguousSubjectException("Except one subject, but found multiple");
         }
+
+    }
+
+    private List<Observation> toList(Bundle bundle) {
+
+        List<Observation> resourceList = new ArrayList<Observation>();
+        while (true) {
+            bundle.getEntry()
+                    .forEach(p -> resourceList.add((Observation) p.getResource()));
+            if (bundle.getLink(IBaseBundle.LINK_NEXT) != null){
+                bundle = client.loadPage().next(bundle).execute();
+            } else {
+                break;
+            }
+        }
+
+        return resourceList;
+
+    }
+
+    public List<Observation> retrieveBeautyObservationFromServer() {
+
+        List<Observation> observationList = new ArrayList<>();
+        //String id = patient.getId();
+        //if (id != null) {
+        Bundle observationBundle = client.search().forResource(Observation.class)
+                //.where(new ReferenceClientParam("subject").hasId())
+                .prettyPrint()
+                .returnBundle(Bundle.class)
+                .execute();
+
+        while(true) {
+            observationBundle.getEntry()
+                    .forEach(p -> observationList.add((Observation) p.getResource()));
+            if (observationBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                observationBundle = client.loadPage().next(observationBundle).execute();
+            } else {
+                break;
+            }
+        }
+        //}
+        return observationList;
 
     }
 
