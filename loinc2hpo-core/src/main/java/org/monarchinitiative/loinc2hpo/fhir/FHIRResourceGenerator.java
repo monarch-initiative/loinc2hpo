@@ -1,15 +1,16 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import org.hl7.fhir.dstu3.model.HumanName;
-import org.hl7.fhir.dstu3.model.Identifier;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpo.util.RandomGenerator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
+import org.monarchinitiative.loinc2hpo.Constants;
+import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
+import org.monarchinitiative.loinc2hpo.util.RandomGenerator;
+import org.monarchinitiative.loinc2hpo.util.RandomGeneratorImpl;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -19,9 +20,13 @@ import java.util.stream.Collectors;
 public class FHIRResourceGenerator {
 
     private RandomGenerator randomGenerator;
+    private FakerWrapper fakerWrapper = new FakerWrapper();
+    private Map<LoincId, LoincEntry> loincEntryMap;
 
-    public FHIRResourceGenerator(RandomGenerator randomGenerator) {
-        this.randomGenerator = randomGenerator;
+    public FHIRResourceGenerator(Map<LoincId, LoincEntry> loincEntryMap) {
+
+        this.randomGenerator = new RandomGeneratorImpl();
+        this.loincEntryMap = loincEntryMap;
     }
 
     public enum LOINCEXAMPLE{
@@ -91,14 +96,151 @@ public class FHIRResourceGenerator {
     List<String> loincs = Arrays.stream(LOINCEXAMPLE.values()).map(Enum::toString).collect(Collectors.toList());
 
 
-    public Observation generateObservation(String loinc) {
+    public List<LoincId> loincExamples() {
+        return Arrays.stream(LOINCEXAMPLE.values()).map(p -> {
+            try {
+                return new LoincId(p.toString());
+            } catch (MalformedLoincCodeException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
+    }
+
+    public Observation generateObservation(LoincId loincId, Patient patient) {
         Observation observation = null;
         observation = new Observation();
 
+        //add a fake id
+        observation.setId(randomGenerator.randString(1, 3, true));
+
+        //add two fake identifiers
+        observation.addIdentifier(fakerWrapper.fakeIdentifier())
+                .addIdentifier(fakerWrapper.fakeIdentifier());
+
+        //set a fake status
+        ObservationStatus[] statuses = Observation.ObservationStatus.values();
+        observation.setStatus(statuses[randomGenerator.randInt(0, statuses.length)]);
+
+        //set a fake code with two faking codings
+        CodeableConcept code = new CodeableConcept();
+        Coding loinc = new Coding()
+                .setSystem(Constants.LOINCSYSTEM)
+                .setCode(loincId.toString())
+                .setDisplay(loincEntryMap.get(loincId).getLongName());
+        Coding randCode = fakerWrapper.fakeCoding();
+        code.addCoding(loinc).addCoding(randCode);
+        observation.setCode(code);
+
+        //add subject
+        Reference subject = new Reference();
+        subject.setReference(patient.getId());
+        observation.setSubject(subject);
+
+        //set effective period
+        Period effective = fakerWrapper.fakePeriod();
+        observation.setEffective(effective);
+
+        //set issue date
+        observation.setIssued(fakerWrapper.fakeDateBetween(effective.getStart(), effective.getEnd()));
+
+        //add perform
+        Reference performer = new Reference()
+                .setReference("Practitioner/" + randomGenerator.randString(1, 3, true));
+        observation.addPerformer(performer);
 
 
 
+        //for Qn, add measured value and add interpretation code
+        if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Qn) {
+            //add a reference range
+            Observation.ObservationReferenceRangeComponent referenceRange = fakerWrapper.fakeReferenceRangeComponent(4, 8, "fake unit");
+            observation.addReferenceRange(referenceRange);
 
+            //add measured value
+            int outcome = randomGenerator.randInt(-1, 2); //possible outcome: -1, 0, 1
+            double measuredValue;
+            double ref_low = referenceRange.getLow().getValue().doubleValue();
+            double ref_high = referenceRange.getHigh().getValue().doubleValue();
+            String interpretationCode;
+            switch (outcome) {
+                case -1:
+                    measuredValue = randomGenerator.randDouble(ref_low -2, ref_low);
+                    interpretationCode = "L";
+                    break;
+                case 0:
+                    measuredValue = randomGenerator.randDouble(ref_low, ref_high);
+                    interpretationCode = "N";
+                    break;
+                case 1:
+                    measuredValue = randomGenerator.randDouble(ref_high, ref_high + 2);
+                    interpretationCode = "H";
+                    break;
+                default:
+                    measuredValue = Double.MIN_VALUE;
+                    interpretationCode = "U";
+            }
+            SimpleQuantity measuredQ = new SimpleQuantity();
+            measuredQ.setValue(measuredValue)
+                    .setCode(referenceRange.getHigh().getCode())
+                    .setSystem(referenceRange.getHigh().getSystem())
+                    .setUnit(referenceRange.getHigh().getUnit());
+            observation.setValue(measuredQ);
+
+            boolean toAddInterpretation = randomGenerator.randBoolean();
+            if (toAddInterpretation) {
+                CodeableConcept interpretation = new CodeableConcept();
+                Coding interpCoding = new Coding();
+                interpCoding.setSystem(Constants.V2OBSERVATIONINTERPRETATION)
+                        .setCode(interpretationCode);
+                interpretation.addCoding(interpCoding);
+                observation.setInterpretation(interpretation);
+            }
+
+        }
+
+        if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Ord &&
+                loincEntryMap.get(loincId).isPresentOrd()) {
+            //add measured value: it is usually a threshold with an indication whether measured value below or above it
+            double threshold = randomGenerator.randDouble(0.01, 0.1); //possible outcome: -1, 0, 1
+            Quantity.QuantityComparator comparator;
+            String interpretationCode;
+            boolean belowThreshold = randomGenerator.randBoolean();
+            if (belowThreshold) {
+                comparator = Quantity.QuantityComparator.LESS_THAN;
+                interpretationCode = "NEG";
+            } else {
+                interpretationCode = "POS";
+                comparator = Quantity.QuantityComparator.GREATER_THAN;
+            }
+            SimpleQuantity measuredQ = new SimpleQuantity();
+            Coding unitCoding = fakerWrapper.fakeCoding();
+            measuredQ.setValue(threshold)
+                    .setComparator(comparator)
+                    .setUnit("fake unit")
+                    .setSystem(unitCoding.getSystem())
+                    .setUnit(unitCoding.getCode());
+            observation.setValue(measuredQ);
+
+            boolean toAddInterpretation = randomGenerator.randBoolean();
+            if (toAddInterpretation) {
+                CodeableConcept interpretation = new CodeableConcept();
+                Coding interpCoding = new Coding();
+                interpCoding.setSystem(Constants.V2OBSERVATIONINTERPRETATION)
+                        .setCode(interpretationCode);
+                interpretation.addCoding(interpCoding);
+                observation.setInterpretation(interpretation);
+            }
+        }
+
+
+        else {
+            CodeableConcept result = new CodeableConcept();
+            Coding outcome1 = fakerWrapper.fakeCoding();
+            Coding outcome2 = fakerWrapper.fakeCoding();
+            result.addCoding(outcome1).addCoding(outcome2);
+            observation.setValue(result);
+        }
 
         return observation;
     }
@@ -108,31 +250,38 @@ public class FHIRResourceGenerator {
         List<Patient> patientList = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             Patient patient = new Patient();
-            patientList.add(patient);
 
             patient.setId(randomGenerator.randString(1, 3, true));
 
-            Identifier id1 = new Identifier();
-            String id1_value = randomGenerator.randString(6, 4, true);
-            id1.setSystem("http://jax.test.org")
-                    .setUse(Identifier.IdentifierUse.TEMP)
-                    .setValue(id1_value);
-            Identifier id2 = new Identifier();
-            String id2_value = randomGenerator.randString(6, 4, true);
-            id2.setSystem("http://test.com")
-                    .setUse(Identifier.IdentifierUse.OFFICIAL)
-                    .setValue(id2_value);
-            patient.setIdentifier(Arrays.asList(id1, id2));
+            patient.addIdentifier(fakerWrapper.fakeIdentifier()).addIdentifier(fakerWrapper.fakeIdentifier());
 
             patient.setActive(randomGenerator.randBoolean());
 
-            HumanName name = new HumanName();
+            patient.addName(fakerWrapper.fakeName());
+
+            patient.setGender(randomGenerator.randBoolean() ? Enumerations.AdministrativeGender.MALE : Enumerations.AdministrativeGender.FEMALE);
+
+            patient.setBirthDate(fakerWrapper.fakeBirthday());
+
+            patient.addAddress(fakerWrapper.fakeAddress());
+
+            patient.addTelecom(fakerWrapper.fakeContactPhone())
+                    .addTelecom(fakerWrapper.fakeContactEmail());
+
+            patient.addContact(fakerWrapper.fakeContact());
+
+
+            patientList.add(patient);
 
         }
 
-
-
-
         return patientList;
+    }
+
+    public Map<Patient, List<Observation>> randPatientAndObservation(int patientNum, int ObservationNum) {
+
+        loincExamples().stream().limit(patientNum);
+
+        return null;
     }
 }

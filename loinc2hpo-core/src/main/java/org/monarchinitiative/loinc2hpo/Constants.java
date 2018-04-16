@@ -23,6 +23,10 @@ public class Constants {
 
     public static final String LOINCSYSTEM = "http://loinc.org";
     public static final String HAPIFHIRTESTSERVER = "http://fhirtest.uhn.ca/baseDstu3";
+    public static final String UNITSYSTEM = "http://unitsofmeasure.org";
+
+    public static final String V2OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v2/0078";
+    public static final String V3OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v3/ObservationInterpretation";
 
 
 

@@ -67,6 +67,10 @@ public class FhirResourceRetriever {
 
     }
 
+    public static String toJsonString(Patient patient) {
+        return jsonParser.setPrettyPrint(true).encodeResourceToString(patient);
+    }
+
     /**
      * @TODO: implement it
      * retrieve a patient's observations from FHIR server
