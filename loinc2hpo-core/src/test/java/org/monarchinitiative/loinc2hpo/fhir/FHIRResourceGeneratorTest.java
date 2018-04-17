@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
+import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -86,6 +88,19 @@ public class FHIRResourceGeneratorTest {
         Map<Patient, List<Observation>> patientObservationsList = resourceGenerator.randPatientAndObservation(randPatients, loincIds);
         assertEquals(randPatients.size(), patientObservationsList.size());
         patientObservationsList.get(randPatients.get(0)).forEach(o -> System.out.print(FhirResourceRetriever.toJsonString(o)));
+    }
+
+    @Test
+    public void testUpload() {
+        //List<Patient> patient = resourceGenerator.generatePatient(1);
+        Patient patient = new Patient();
+        patient.setId("jaxpatient/008");
+        patient.addName().addGiven("James").setFamily("Bond").addGiven("008");
+        patient.addIdentifier().setSystem("www.jax.org").setValue("little mouse2");
+        System.out.println(FhirResourceRetriever.toJsonString(patient));
+        MethodOutcome outcome = FhirResourceRetriever.upload(patient);
+        System.out.println(outcome.getId().getValue());
+
     }
 
 }
