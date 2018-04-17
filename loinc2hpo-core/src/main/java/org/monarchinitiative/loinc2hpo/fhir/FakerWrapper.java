@@ -98,9 +98,17 @@ public class FakerWrapper {
                 .toDate();
     }
 
+    Date fakeDate21Century() {
+        return fakeDate(2000, 2017);
+    }
+
     Date fakeDate() {
+        return fakeDate(1900, 2017);
+    }
+
+    Date fakeDate(int startYear, int endYear) {
         return new DateTime(
-                randomGenerator.randInt(1900, 2018),//random year
+                randomGenerator.randInt(startYear, endYear),//random year
                 randomGenerator.randInt(1, 13),    //random month
                 randomGenerator.randInt(1, 29),    //random date
                 randomGenerator.randInt(1, 24),    //random hour
@@ -115,8 +123,8 @@ public class FakerWrapper {
     }
 
     Period fakePeriod() {
-        Date date1 = fakeDate();
-        Date date2 = fakeDate();
+        Date date1 = fakeDate21Century();
+        Date date2 = fakeDate21Century();
         if (date1.before(date2)) {
             return new Period().setStart(date1).setEnd(date2);
         } else {

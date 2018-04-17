@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.fhir;
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -77,6 +78,14 @@ public class FHIRResourceGeneratorTest {
         randPatients.forEach(p -> System.out.println(FhirResourceRetriever.toJsonString(p)));
         //System.out.println(FhirResourceRetriever.toJsonString(randPatients.get(0)));
 
+    }
+
+    @Test
+    public void generatePatientObservationList() {
+        List<LoincId> loincIds = resourceGenerator.loincExamples();
+        Map<Patient, List<Observation>> patientObservationsList = resourceGenerator.randPatientAndObservation(randPatients, loincIds);
+        assertEquals(randPatients.size(), patientObservationsList.size());
+        patientObservationsList.get(randPatients.get(0)).forEach(o -> System.out.print(FhirResourceRetriever.toJsonString(o)));
     }
 
 }

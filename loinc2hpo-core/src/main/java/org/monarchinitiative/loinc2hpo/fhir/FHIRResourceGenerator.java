@@ -23,12 +23,19 @@ public class FHIRResourceGenerator {
     private FakerWrapper fakerWrapper = new FakerWrapper();
     private Map<LoincId, LoincEntry> loincEntryMap;
 
+    /**
+     * Constructor takes in a loincEntry map, which is created by calling method {@link org.monarchinitiative.loinc2hpo.loinc.LoincEntry#getLoincEntryList(String)}  getLoincEntryList}.
+     * @param loincEntryMap
+     */
     public FHIRResourceGenerator(Map<LoincId, LoincEntry> loincEntryMap) {
 
         this.randomGenerator = new RandomGeneratorImpl();
         this.loincEntryMap = loincEntryMap;
     }
 
+    /**
+     * A enum of some LOINC that have been annotated to HPO terms.
+     */
     public enum LOINCEXAMPLE{
         SERUM_POTASSIUM {
             @Override
@@ -96,6 +103,10 @@ public class FHIRResourceGenerator {
     List<String> loincs = Arrays.stream(LOINCEXAMPLE.values()).map(Enum::toString).collect(Collectors.toList());
 
 
+    /**
+     * Return the list of example LOINC in the enum class {@link LOINCEXAMPLE LOINCEXAMPLE}.
+     * @return
+     */
     public List<LoincId> loincExamples() {
         return Arrays.stream(LOINCEXAMPLE.values()).map(p -> {
             try {
@@ -107,6 +118,12 @@ public class FHIRResourceGenerator {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Generate a Observation object for specified LOINC and subject. The values of the observation is randomly generated.
+     * @param loincId
+     * @param patient subject of the observation
+     * @return an observation object
+     */
     public Observation generateObservation(LoincId loincId, Patient patient) {
         Observation observation = null;
         observation = new Observation();
@@ -199,7 +216,7 @@ public class FHIRResourceGenerator {
 
         }
 
-        if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Ord &&
+        else if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Ord &&
                 loincEntryMap.get(loincId).isPresentOrd()) {
             //add measured value: it is usually a threshold with an indication whether measured value below or above it
             double threshold = randomGenerator.randDouble(0.01, 0.1); //possible outcome: -1, 0, 1
@@ -245,13 +262,19 @@ public class FHIRResourceGenerator {
         return observation;
     }
 
+    /**
+     * Generate a list of Patient objects. Patient information is randomly generated.
+     * @param num size of the list
+     * @return a list of fake patients with specified size
+     */
     public List<Patient> generatePatient(int num) {
 
         List<Patient> patientList = new ArrayList<>();
         for (int i = 0; i < num; i++) {
             Patient patient = new Patient();
 
-            patient.setId(randomGenerator.randString(1, 3, true));
+            //fake patient id with prefix: "Patient/"
+            patient.setId("Patient/" + randomGenerator.randString(1, 3, true));
 
             patient.addIdentifier(fakerWrapper.fakeIdentifier()).addIdentifier(fakerWrapper.fakeIdentifier());
 
@@ -278,10 +301,24 @@ public class FHIRResourceGenerator {
         return patientList;
     }
 
-    public Map<Patient, List<Observation>> randPatientAndObservation(int patientNum, int ObservationNum) {
+    /**
+     * Specify a list of patients and LOINC, create fake observations for all LOINC for every patient
+     * @param patientList
+     * @param loincList
+     * @return a map of patient: observations
+     */
+    public Map<Patient, List<Observation>> randPatientAndObservation(List<Patient> patientList, List<LoincId> loincList) {
 
-        loincExamples().stream().limit(patientNum);
+        Map<Patient, List<Observation>> patientObservationListMap = new HashMap<>();
+        patientList.forEach(p -> { //for each patient, create a list of observations
+            List<Observation> observationList = loincList //create a list of observations with the LOINC list
+                    .stream()
+                    .map(loincId -> generateObservation(loincId, p))
+                    .collect(Collectors.toList());
+            patientObservationListMap.put(p, observationList);
+        });
 
-        return null;
+        return patientObservationListMap;
     }
+
 }
