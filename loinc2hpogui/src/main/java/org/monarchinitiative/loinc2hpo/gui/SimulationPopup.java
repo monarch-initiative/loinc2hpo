@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
+import ca.uhn.fhir.rest.api.MethodOutcome;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,14 +16,17 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFaker;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFakerImpl;
+import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,8 +103,13 @@ public class SimulationPopup {
                         "Illegal input. Type in numbers only");
                 return;
             }
-            if (checker.isSelected()) {
+            if (checker.isSelected() && this.simulatedData != null && !this.simulatedData.isEmpty()) {
                 logger.trace("to upload to server");
+                //bundlize(this.simulatedData)
+                // .forEach(FhirResourceRetriever::upload);
+                //keep patient information to model
+                //we need to retrieve patient id through identifiers
+                //then use patient id to get their associated observations
             } else {
                 //we are done
             }
@@ -111,6 +121,14 @@ public class SimulationPopup {
         window.setScene(scene);
         window.showAndWait();
     }
+
+    private List<Bundle> bundlize(Map<Patient, List<Observation>> observations) {
+        List<Bundle> bundleList = new ArrayList<>();
+
+
+        return bundleList;
+    }
+
 
     /**
      * Return simulated data

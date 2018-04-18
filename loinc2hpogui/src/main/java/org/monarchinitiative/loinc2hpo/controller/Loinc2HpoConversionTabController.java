@@ -133,6 +133,7 @@ public class Loinc2HpoConversionTabController {
         e.consume();
         logger.trace("simulate patient observations");
         SimulationPopup popup = new SimulationPopup(model.getLoincEntryMap());
+        //User will interact with the app in the popup window
         popup.displayWindow();
         if (popup.getSimulatedData() != null && !popup.getSimulatedData().isEmpty()) {
             observations.clear();

@@ -192,5 +192,6 @@ public class FhirResourceRetriever {
         return outcome;
     }
 
+
 }
 
