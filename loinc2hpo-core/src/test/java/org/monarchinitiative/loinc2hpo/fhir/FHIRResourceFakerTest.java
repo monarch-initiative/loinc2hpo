@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
@@ -9,19 +8,18 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.util.RandomGenerator;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class FHIRResourceGeneratorTest {
+public class FHIRResourceFakerTest {
 
-    private static FHIRResourceGenerator resourceGenerator;
+    private static FhirResourceFaker resourceGenerator;
     private static List<Patient> randPatients;
 
     @BeforeClass
@@ -30,9 +28,9 @@ public class FHIRResourceGeneratorTest {
         Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
         assertNotNull(loincEntryMap);
         assertTrue(loincEntryMap.size() > 1000);
-        resourceGenerator = new FHIRResourceGenerator(loincEntryMap);
+        resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
 
-        randPatients = resourceGenerator.generatePatient(10);
+        randPatients = resourceGenerator.fakePatients(10);
     }
 
     @Test
@@ -64,11 +62,11 @@ public class FHIRResourceGeneratorTest {
     }
     @Test
     public void generateObservation() throws Exception {
-        FHIRResourceGenerator.LOINCEXAMPLE[] testLoinc = FHIRResourceGenerator.LOINCEXAMPLE.values();
-        for (FHIRResourceGenerator.LOINCEXAMPLE loincexample : testLoinc) {
+        LOINCEXAMPLE[] testLoinc = LOINCEXAMPLE.values();
+        for (LOINCEXAMPLE loincexample : testLoinc) {
             LoincId loincId = new LoincId(loincexample.toString());
             for (Patient patient : randPatients) {
-                System.out.println(FhirResourceRetriever.toJsonString(resourceGenerator.generateObservation(loincId, patient)));
+                System.out.println(FhirResourceRetriever.toJsonString(resourceGenerator.fakeObservation(loincId, patient)));
             }
         }
     }
@@ -84,15 +82,15 @@ public class FHIRResourceGeneratorTest {
 
     @Test
     public void generatePatientObservationList() {
-        List<LoincId> loincIds = resourceGenerator.loincExamples();
-        Map<Patient, List<Observation>> patientObservationsList = resourceGenerator.randPatientAndObservation(randPatients, loincIds);
+        List<LoincId> loincIds = LOINCEXAMPLE.loincExamples();
+        Map<Patient, List<Observation>> patientObservationsList = resourceGenerator.fakeObservations(randPatients, loincIds);
         assertEquals(randPatients.size(), patientObservationsList.size());
         patientObservationsList.get(randPatients.get(0)).forEach(o -> System.out.print(FhirResourceRetriever.toJsonString(o)));
     }
 
     @Test
     public void testUpload() {
-        //List<Patient> patient = resourceGenerator.generatePatient(1);
+        //List<Patient> patient = resourceGenerator.getPatients(1);
         Patient patient = new Patient();
         patient.setId("jaxpatient/008");
         patient.addName().addGiven("James").setFamily("Bond").addGiven("008");
@@ -101,6 +99,14 @@ public class FHIRResourceGeneratorTest {
         MethodOutcome outcome = FhirResourceRetriever.upload(patient);
         System.out.println(outcome.getId().getValue());
 
+    }
+
+    @Test
+    public void testUpload2() {
+        Patient patient = resourceGenerator.fakePatients(1).get(0);
+        System.out.println(FhirResourceRetriever.toJsonString(patient));
+        MethodOutcome outcome = FhirResourceRetriever.upload(patient);
+        System.out.println(outcome.getId().getValue());
     }
 
 }

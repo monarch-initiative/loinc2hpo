@@ -16,7 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpo.fhir.FHIRResourceGenerator;
+import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFaker;
+import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFakerImpl;
+import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
@@ -27,10 +29,10 @@ import java.util.Map;
 public class SimulationPopup {
     private static final Logger logger = LogManager.getLogger();
     private Map<Patient, List<Observation>> simulatedData;
-    private FHIRResourceGenerator generator;
+    private FhirResourceFaker generator;
 
     public SimulationPopup(Map<LoincId, LoincEntry> loincEntryMap) {
-        this.generator = new FHIRResourceGenerator(loincEntryMap);
+        this.generator = new FhirResourceFakerImpl(loincEntryMap);
     }
 
     public void displayWindow() {
@@ -68,11 +70,12 @@ public class SimulationPopup {
         observationsPerPatient.setEditable(false);
         gridPane.add(observationsPerPatient, 1, 1);
 
-        gridPane.add(new Label("Upload?"), 0, 2);
-        CheckBox checker = new CheckBox();
+        gridPane.add(new Label("Upload to server?"), 0, 2);
+        CheckBox checker = new CheckBox("Yes");
         checker.setSelected(false);
         gridPane.add(checker, 1, 2);
 
+        //Label serverAddress = new Label("Test Server: " + Constants.HAPIFHIRTESTSERVER);
 
         Button cancel = new Button("Cancel");
         Button confirm = new Button("Confirm");
@@ -85,11 +88,11 @@ public class SimulationPopup {
             int numPatient, numObservationPerPatient;
             try {
                 numPatient = Integer.parseInt(patientNum.getText());
-                List<Patient> patientList = generator.generatePatient(numPatient);
+                List<Patient> patientList = generator.fakePatients(numPatient);
                 //numObservationPerPatient = Integer.parseInt(observationsPerPatient.getText());
                 //by default, generate 10 observations per patient
-                List<LoincId> loincIds = generator.loincExamples();
-                this.simulatedData = generator.randPatientAndObservation(patientList, loincIds);
+                List<LoincId> loincIds = LOINCEXAMPLE.loincExamples();
+                this.simulatedData = generator.fakeObservations(patientList, loincIds);
             } catch (Exception exp) {
                 PopUps.showWarningDialog("Warning","Error message",
                         "Illegal input. Type in numbers only");
@@ -104,7 +107,7 @@ public class SimulationPopup {
         });
 
         root.getChildren().addAll(gridPane, hbox);
-        Scene scene = new Scene(root, 450, 300);
+        Scene scene = new Scene(root, 300, 300);
         window.setScene(scene);
         window.showAndWait();
     }
@@ -114,6 +117,9 @@ public class SimulationPopup {
      * @return
      */
     public Map<Patient, List<Observation>> getSimulatedData() {
+        if (this.simulatedData == null) {
+            return null;
+        }
         return new HashMap<>(this.simulatedData);
     }
 

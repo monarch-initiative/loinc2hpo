@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-
+import ca.uhn.fhir.model.primitive.IdDt;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
 import org.monarchinitiative.loinc2hpo.Constants;
@@ -17,114 +17,69 @@ import java.util.stream.Collectors;
 /**
  * This class is responsible for generating synthetic FHIR resources
  */
-public class FHIRResourceGenerator {
+public class FhirResourceFakerImpl implements FhirResourceFaker {
 
     private RandomGenerator randomGenerator;
-    private FakerWrapper fakerWrapper = new FakerWrapper();
+    private FhirResourceComponentFaker fhirResourceComponentFaker = new FhirResourceComponentFaker();
     private Map<LoincId, LoincEntry> loincEntryMap;
 
     /**
      * Constructor takes in a loincEntry map, which is created by calling method {@link org.monarchinitiative.loinc2hpo.loinc.LoincEntry#getLoincEntryList(String)}  getLoincEntryList}.
      * @param loincEntryMap
      */
-    public FHIRResourceGenerator(Map<LoincId, LoincEntry> loincEntryMap) {
+    public FhirResourceFakerImpl(Map<LoincId, LoincEntry> loincEntryMap) {
 
         this.randomGenerator = new RandomGeneratorImpl();
         this.loincEntryMap = loincEntryMap;
     }
 
-    /**
-     * A enum of some LOINC that have been annotated to HPO terms.
-     */
-    public enum LOINCEXAMPLE{
-        SERUM_POTASSIUM {
-            @Override
-            public String toString() {
-                return "2823-3";
-            }
-        },
-        HEMOGLOBIN {
-            @Override
-            public String toString() {
-                return "718-7";
-            }
-        },
-        SERUMCREATININE{
-            @Override
-            public String toString() {
-                return "2160-0";
-            }
-        },
-        SERUMCHLORIDE{
-            @Override
-            public String toString() {
-                return "2075-0";
-            }
-        },
-        SERUMGLUCOSE {
-            @Override
-            public String toString() {
-                return "2345-7";
-            }
-        },
-        PLATELETCOUNT{
-            @Override
-            public String toString() {
-                return "777-3";
-            }
-        },
-        PROTEINURINE{
-            @Override
-            public String toString() {
-                return "20454-5";
-            }
-        },
-        ANISOCYTOSIS {
-            @Override
-            public String toString() {
-                return "702-1";
-            }
-        },
-        KETONEURIN {
-            @Override
-            public String toString() {
-                return "2514-8";
-            }
-        },
-        URINECOLOR {
-            @Override
-            public String toString() {
-                return "5778-6";
-            }
+    @Override
+    public Patient fakePatient() {
+        Patient patient = new Patient();
+
+        //fake patient id with prefix: "Patient/"
+        //patient.setId("Patient/" + randomGenerator.randString(1, 3, true));
+        //replace the above line with a built-in fake id generator
+        patient.setId(IdDt.newRandomUuid());
+
+        patient.addIdentifier(fhirResourceComponentFaker.fakeIdentifier()).addIdentifier(fhirResourceComponentFaker.fakeIdentifier());
+
+        patient.setActive(randomGenerator.randBoolean());
+
+        patient.addName(fhirResourceComponentFaker.fakeName());
+
+        patient.setGender(randomGenerator.randBoolean() ? Enumerations.AdministrativeGender.MALE : Enumerations.AdministrativeGender.FEMALE);
+
+        patient.setBirthDate(fhirResourceComponentFaker.fakeBirthday());
+
+        patient.addAddress(fhirResourceComponentFaker.fakeAddress());
+
+        patient.addTelecom(fhirResourceComponentFaker.fakeContactPhone())
+                .addTelecom(fhirResourceComponentFaker.fakeContactEmail());
+
+        patient.addContact(fhirResourceComponentFaker.fakeContact());
+
+        return patient;
+    }
+
+    @Override
+    public List<Patient> fakePatients(int num) {
+        List<Patient> patientList = new ArrayList<>();
+        for (int i = 0; i < num; i++) {
+            patientList.add(fakePatient());
         }
 
+        return patientList;
     }
 
-    List<String> loincs = Arrays.stream(LOINCEXAMPLE.values()).map(Enum::toString).collect(Collectors.toList());
+    @Override
+    public Observation fakeObservation() {
 
-
-    /**
-     * Return the list of example LOINC in the enum class {@link LOINCEXAMPLE LOINCEXAMPLE}.
-     * @return
-     */
-    public List<LoincId> loincExamples() {
-        return Arrays.stream(LOINCEXAMPLE.values()).map(p -> {
-            try {
-                return new LoincId(p.toString());
-            } catch (MalformedLoincCodeException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
+        throw new UnsupportedOperationException();
     }
 
-    /**
-     * Generate a Observation object for specified LOINC and subject. The values of the observation is randomly generated.
-     * @param loincId
-     * @param patient subject of the observation
-     * @return an observation object
-     */
-    public Observation generateObservation(LoincId loincId, Patient patient) {
+    @Override
+    public Observation fakeObservation(LoincId loincId, Patient patient) {
         Observation observation = null;
         observation = new Observation();
 
@@ -132,8 +87,8 @@ public class FHIRResourceGenerator {
         observation.setId(randomGenerator.randString(1, 3, true));
 
         //add two fake identifiers
-        observation.addIdentifier(fakerWrapper.fakeIdentifier())
-                .addIdentifier(fakerWrapper.fakeIdentifier());
+        observation.addIdentifier(fhirResourceComponentFaker.fakeIdentifier())
+                .addIdentifier(fhirResourceComponentFaker.fakeIdentifier());
 
         //set a fake status
         ObservationStatus[] statuses = Observation.ObservationStatus.values();
@@ -145,7 +100,7 @@ public class FHIRResourceGenerator {
                 .setSystem(Constants.LOINCSYSTEM)
                 .setCode(loincId.toString())
                 .setDisplay(loincEntryMap.get(loincId).getLongName());
-        Coding randCode = fakerWrapper.fakeCoding();
+        Coding randCode = fhirResourceComponentFaker.fakeCoding();
         code.addCoding(loinc).addCoding(randCode);
         observation.setCode(code);
 
@@ -155,11 +110,11 @@ public class FHIRResourceGenerator {
         observation.setSubject(subject);
 
         //set effective period
-        Period effective = fakerWrapper.fakePeriod();
+        Period effective = fhirResourceComponentFaker.fakePeriod();
         observation.setEffective(effective);
 
         //set issue date
-        observation.setIssued(fakerWrapper.fakeDateBetween(effective.getStart(), effective.getEnd()));
+        observation.setIssued(fhirResourceComponentFaker.fakeDateBetween(effective.getStart(), effective.getEnd()));
 
         //add perform
         Reference performer = new Reference()
@@ -171,7 +126,7 @@ public class FHIRResourceGenerator {
         //for Qn, add measured value and add interpretation code
         if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Qn) {
             //add a reference range
-            Observation.ObservationReferenceRangeComponent referenceRange = fakerWrapper.fakeReferenceRangeComponent(4, 8, "fake unit");
+            Observation.ObservationReferenceRangeComponent referenceRange = fhirResourceComponentFaker.fakeReferenceRangeComponent(4, 8, "fake unit");
             observation.addReferenceRange(referenceRange);
 
             //add measured value
@@ -231,7 +186,7 @@ public class FHIRResourceGenerator {
                 comparator = Quantity.QuantityComparator.GREATER_THAN;
             }
             SimpleQuantity measuredQ = new SimpleQuantity();
-            Coding unitCoding = fakerWrapper.fakeCoding();
+            Coding unitCoding = fhirResourceComponentFaker.fakeCoding();
             measuredQ.setValue(threshold)
                     .setComparator(comparator)
                     .setUnit("fake unit")
@@ -253,8 +208,8 @@ public class FHIRResourceGenerator {
 
         else {
             CodeableConcept result = new CodeableConcept();
-            Coding outcome1 = fakerWrapper.fakeCoding();
-            Coding outcome2 = fakerWrapper.fakeCoding();
+            Coding outcome1 = fhirResourceComponentFaker.fakeCoding();
+            Coding outcome2 = fhirResourceComponentFaker.fakeCoding();
             result.addCoding(outcome1).addCoding(outcome2);
             observation.setValue(result);
         }
@@ -262,63 +217,21 @@ public class FHIRResourceGenerator {
         return observation;
     }
 
-    /**
-     * Generate a list of Patient objects. Patient information is randomly generated.
-     * @param num size of the list
-     * @return a list of fake patients with specified size
-     */
-    public List<Patient> generatePatient(int num) {
-
-        List<Patient> patientList = new ArrayList<>();
-        for (int i = 0; i < num; i++) {
-            Patient patient = new Patient();
-
-            //fake patient id with prefix: "Patient/"
-            patient.setId("Patient/" + randomGenerator.randString(1, 3, true));
-
-            patient.addIdentifier(fakerWrapper.fakeIdentifier()).addIdentifier(fakerWrapper.fakeIdentifier());
-
-            patient.setActive(randomGenerator.randBoolean());
-
-            patient.addName(fakerWrapper.fakeName());
-
-            patient.setGender(randomGenerator.randBoolean() ? Enumerations.AdministrativeGender.MALE : Enumerations.AdministrativeGender.FEMALE);
-
-            patient.setBirthDate(fakerWrapper.fakeBirthday());
-
-            patient.addAddress(fakerWrapper.fakeAddress());
-
-            patient.addTelecom(fakerWrapper.fakeContactPhone())
-                    .addTelecom(fakerWrapper.fakeContactEmail());
-
-            patient.addContact(fakerWrapper.fakeContact());
 
 
-            patientList.add(patient);
-
-        }
-
-        return patientList;
-    }
-
-    /**
-     * Specify a list of patients and LOINC, create fake observations for all LOINC for every patient
-     * @param patientList
-     * @param loincList
-     * @return a map of patient: observations
-     */
-    public Map<Patient, List<Observation>> randPatientAndObservation(List<Patient> patientList, List<LoincId> loincList) {
-
+    @Override
+    public Map<Patient, List<Observation>> fakeObservations(List<Patient> patientList, List<LoincId> loincList) {
         Map<Patient, List<Observation>> patientObservationListMap = new HashMap<>();
         patientList.forEach(p -> { //for each patient, create a list of observations
             List<Observation> observationList = loincList //create a list of observations with the LOINC list
                     .stream()
-                    .map(loincId -> generateObservation(loincId, p))
+                    .map(loincId -> fakeObservation(loincId, p))
                     .collect(Collectors.toList());
             patientObservationListMap.put(p, observationList);
         });
 
         return patientObservationListMap;
     }
+
 
 }

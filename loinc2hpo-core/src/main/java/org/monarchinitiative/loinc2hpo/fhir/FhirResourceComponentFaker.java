@@ -23,58 +23,59 @@ import org.monarchinitiative.loinc2hpo.util.RandomGeneratorImpl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public class FakerWrapper {
+public class FhirResourceComponentFaker {
 
     private RandomGenerator randomGenerator = new RandomGeneratorImpl();
     private Faker faker;
 
-    public FakerWrapper() {
+    public FhirResourceComponentFaker() {
         this.faker = new Faker();
     }
 
-    HumanName fakeName() {
+    public HumanName fakeName() {
         Name name = faker.name();
         return new HumanName().setUse(HumanName.NameUse.OFFICIAL).setFamily(name.lastName()).addGiven(name.firstName());
     }
 
-    Address fakeAddress() {
+    public Address fakeAddress() {
         com.github.javafaker.Address fakeAddr = faker.address();
         //String streetLine = address.streetAddress() + address.streetAddress(true);
         return new Address().addLine(fakeAddr.streetAddress(true)).setCity(fakeAddr.city())
                 .setState(fakeAddr.state()).setPostalCode(fakeAddr.zipCode()).setCountry(fakeAddr.country());
     }
 
-    Patient.ContactComponent fakeContact() {
+    public Patient.ContactComponent fakeContact() {
         CodeableConcept relationship = new CodeableConcept();
         Coding coding1 = new Coding();
         coding1.setSystem(faker.internet().url()).setCode(String.valueOf(randomGenerator.randUpperCaseChar()));
         relationship.addCoding(coding1);
         Coding coding2 = new Coding();
         coding2.setSystem(faker.internet().url()).setCode(String.valueOf(randomGenerator.randUpperCaseChar()));
+        relationship.addCoding(coding2);
 
         Reference ref = new Reference();
         ref.setReference(faker.company().name() + "/" + randomGenerator.randInt(1, 100));
 
-        return new Patient.ContactComponent().addRelationship(relationship).setAddress(fakeAddress()).setOrganization(ref);
+        return new Patient.ContactComponent().addRelationship(relationship).setAddress(fakeAddress());
+        //.setOrganization(ref);
     }
 
-    ContactPoint fakeContactPhone() {
+    public ContactPoint fakeContactPhone() {
         return new ContactPoint()
                 .setSystem(ContactPoint.ContactPointSystem.PHONE)
                 .setValue(faker.phoneNumber().phoneNumber())
                 .setPeriod(fakePeriod());
     }
 
-    ContactPoint fakeContactEmail() {
+    public ContactPoint fakeContactEmail() {
         return new ContactPoint()
                 .setSystem(ContactPoint.ContactPointSystem.EMAIL)
                 .setValue(faker.internet().emailAddress())
                 .setPeriod(fakePeriod());
     }
 
-    Identifier fakeIdentifier() {
+    public Identifier fakeIdentifier() {
         IdentifierUse[] ids = Identifier.IdentifierUse.values();
         return new Identifier()
                 .setUse(ids[randomGenerator.randInt(0, ids.length)])
@@ -83,11 +84,11 @@ public class FakerWrapper {
                 .setPeriod(fakePeriod());
     }
 
-    Date fakeBirthday() {
+    public Date fakeBirthday() {
         return faker.date().birthday();
     }
 
-    Date fakeDate(int year) {
+    public Date fakeDate(int year) {
         return new DateTime(year,                                   //year
                 randomGenerator.randInt(1, 13),    //random month
                 randomGenerator.randInt(1, 29),    //random date
@@ -97,16 +98,11 @@ public class FakerWrapper {
                 randomGenerator.randInt(0, 1000))  //random millisecond
                 .toDate();
     }
-
-    Date fakeDate21Century() {
-        return fakeDate(2000, 2017);
-    }
-
-    Date fakeDate() {
+    public Date fakeDate() {
         return fakeDate(1900, 2017);
     }
 
-    Date fakeDate(int startYear, int endYear) {
+    public Date fakeDate(int startYear, int endYear) {
         return new DateTime(
                 randomGenerator.randInt(startYear, endYear),//random year
                 randomGenerator.randInt(1, 13),    //random month
@@ -118,11 +114,15 @@ public class FakerWrapper {
                 .toDate();
     }
 
-    Date fakeDateBetween(Date from, Date to) {
+    public Date fakeDate21Century() {
+        return fakeDate(2000, 2017);
+    }
+
+    public Date fakeDateBetween(Date from, Date to) {
         return faker.date().between(from, to);
     }
 
-    Period fakePeriod() {
+    public Period fakePeriod() {
         Date date1 = fakeDate21Century();
         Date date2 = fakeDate21Century();
         if (date1.before(date2)) {
@@ -132,13 +132,13 @@ public class FakerWrapper {
         }
     }
 
-    Coding fakeCoding() {
+    public Coding fakeCoding() {
         return new Coding()
                 .setSystem(faker.internet().url())
                 .setCode(randomGenerator.randString(2,2,false));
     }
 
-    Range fakeRange(int lowBound, int upperBound, String unit) {
+    public Range fakeRange(int lowBound, int upperBound, String unit) {
         List<Double> values = randomGenerator.randDoubles(2, lowBound, upperBound);
         Collections.sort(values);
         double low = values.get(0);
@@ -157,7 +157,7 @@ public class FakerWrapper {
         return new Range().setLow(lowQ).setHigh(highQ);
     }
 
-    ObservationReferenceRangeComponent fakeReferenceRangeComponent(double lowBound, double upperBound, String unit) {
+    public ObservationReferenceRangeComponent fakeReferenceRangeComponent(double lowBound, double upperBound, String unit) {
         //
         List<Double> values = randomGenerator.randDoubles(2, lowBound, upperBound);
         Collections.sort(values);
