@@ -678,6 +678,7 @@ public class MainController {
 
         String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
+            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
             LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
         } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
