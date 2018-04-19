@@ -76,7 +76,7 @@ public class FhirResourceComponentFaker {
     }
 
     public Identifier fakeIdentifier() {
-        IdentifierUse[] ids = Identifier.IdentifierUse.values();
+        IdentifierUse[] ids = {IdentifierUse.OFFICIAL, IdentifierUse.SECONDARY, IdentifierUse.TEMP, IdentifierUse.USUAL};
         return new Identifier()
                 .setUse(ids[randomGenerator.randInt(0, ids.length)])
                 .setSystem(faker.internet().url())

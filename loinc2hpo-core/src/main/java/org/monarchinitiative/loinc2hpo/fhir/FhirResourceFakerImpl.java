@@ -91,7 +91,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
                 .addIdentifier(fhirResourceComponentFaker.fakeIdentifier());
 
         //set a fake status
-        ObservationStatus[] statuses = Observation.ObservationStatus.values();
+        ObservationStatus[] statuses = {ObservationStatus.FINAL, ObservationStatus.CORRECTED, ObservationStatus.AMENDED, ObservationStatus.PRELIMINARY, ObservationStatus.REGISTERED};
         observation.setStatus(statuses[randomGenerator.randInt(0, statuses.length)]);
 
         //set a fake code with two faking codings
@@ -107,6 +107,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
         //add subject
         Reference subject = new Reference();
         subject.setReference(patient.getId());
+
         observation.setSubject(subject);
 
         //set effective period

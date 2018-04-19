@@ -254,7 +254,7 @@ public class SparqlQuery {
         }
     }
 
-    /**
+    /** @TODO: use recursive call to refactor it
      * A method to automatically query the HPO
      * @param loincLongCommonName
      * @return
