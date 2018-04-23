@@ -21,11 +21,13 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceParser;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceParserDstu3;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
+import org.monarchinitiative.loinc2hpo.gui.FhirServerPopup;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SimulationPopup;
 import org.monarchinitiative.loinc2hpo.model.Model;
@@ -132,6 +134,8 @@ public class Loinc2HpoConversionTabController {
     private void importFromServer(ActionEvent e) {
         e.consume();
         logger.trace("import from fhir server");
+        FhirServerPopup serverPopup = new FhirServerPopup(Constants.HAPIFHIRTESTSERVER);
+        serverPopup.displayWindow();
     }
 
 
