@@ -9,6 +9,7 @@ import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousSubjectException;
 import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 import org.apache.logging.log4j.Logger;
@@ -20,13 +21,13 @@ import java.util.List;
 
 public class FhirResourceRetriever {
 
-
-    static final String LOINC_SYSTEM = "http://loinc.org";
-    //let user set the base url from the GUI
-    //By default, we use hapi-fhir test server
-    public static String BASEURL = "http://fhirtest.uhn.ca/baseDstu3";
     private static final Logger logger = LogManager.getLogger();
+    //use hapi-fhir test server as our default
+    private static final String BASEURL = Constants.HAPIFHIRTESTSERVER;
+
+    //creating ctx is expensive, so make it public for the app
     public static final FhirContext ctx = FhirContext.forDstu3();
+    //creating client is inexpensive at all
     static final IGenericClient client = ctx.newRestfulGenericClient(BASEURL);
     public static final IParser jsonParser = ctx.newJsonParser();
 
@@ -37,6 +38,7 @@ public class FhirResourceRetriever {
      * @param filepath
      * @return
      */
+    @Deprecated
     public static Observation parseJsonFile2Observation(String filepath) throws IOException, DataFormatException {
         Observation observation = null;
 
@@ -56,28 +58,25 @@ public class FhirResourceRetriever {
         return observation;
     }
 
+    @Deprecated
     public static Observation parseJsonFile2Observation(File file) throws IOException {
 
         return parseJsonFile2Observation(file.getAbsolutePath());
 
     }
 
-    public static String toJsonString(Observation observation) {
 
-        return jsonParser.setPrettyPrint(true).encodeResourceToString(observation);
-
+    @Deprecated
+    public static String toJsonString(Resource resource) {
+        return jsonParser.setPrettyPrint(true).encodeResourceToString(resource);
     }
-
-    public static String toJsonString(Patient patient) {
-        return jsonParser.setPrettyPrint(true).encodeResourceToString(patient);
-    }
-
     /**
      * @TODO: implement it
      * retrieve a patient's observations from FHIR server
      * @param patient
      * @return
      */
+    @Deprecated
     public static List<Observation> retrieveObservationFromServer(Patient patient) {
 
         List<Observation> observationList = new ArrayList<>();
@@ -108,6 +107,7 @@ public class FhirResourceRetriever {
      * @param subject
      * @return
      */
+    @Deprecated
     public static Patient retrievePatientFromServer(Reference subject) throws SubjectNotFoundException, AmbiguousSubjectException {
 
         List<Patient> patients = new ArrayList<>();
@@ -141,6 +141,7 @@ public class FhirResourceRetriever {
 
     }
 
+    @Deprecated
     private List<Observation> toList(Bundle bundle) {
 
         List<Observation> resourceList = new ArrayList<Observation>();
@@ -158,6 +159,7 @@ public class FhirResourceRetriever {
 
     }
 
+    @Deprecated
     public List<Observation> retrieveBeautyObservationFromServer() {
 
         List<Observation> observationList = new ArrayList<>();

@@ -109,4 +109,12 @@ public class FHIRResourceFakerTest {
         System.out.println(outcome.getId().getValue());
     }
 
+    @Test
+    public void testUploadPatient() {
+        Patient patient = resourceGenerator.fakePatient();
+        MethodOutcome outcome = FhirResourceRetriever.upload(patient);
+        System.out.println(outcome.getId().getValue());
+        System.out.println(outcome.getId().getIdPart());
+    }
+
 }

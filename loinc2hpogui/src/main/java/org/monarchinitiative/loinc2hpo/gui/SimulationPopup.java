@@ -21,23 +21,23 @@ import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFaker;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFakerImpl;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
+import org.monarchinitiative.loinc2hpo.Constants;
+import org.monarchinitiative.loinc2hpo.fhir.*;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SimulationPopup {
     private static final Logger logger = LogManager.getLogger();
     private Map<Patient, List<Observation>> simulatedData;
     private FhirResourceFaker generator;
+    private FhirServer hapiFhirServerDstu3 = new FhirServerDstu3Impl(Constants.HAPIFHIRTESTSERVER);
+    private FhirResourceParser resourceParser = new FhirResourceParserDstu3();
+    private List<String> patientResourceId = new ArrayList<>();
+    private boolean uploadToServerRequested;
 
     public SimulationPopup(Map<LoincId, LoincEntry> loincEntryMap) {
         this.generator = new FhirResourceFakerImpl(loincEntryMap);
@@ -108,14 +108,19 @@ public class SimulationPopup {
             }
             if (checker.isSelected() && this.simulatedData != null && !this.simulatedData.isEmpty()) {
                 logger.trace("to upload to server");
-                /** hapi-fhir test server does not allow uploading bundle type
+                this.uploadToServerRequested = true;
+                patientResourceId.clear();
+                //** hapi-fhir test server does not allow uploading bundle type
                 bundlize(this.simulatedData).stream()
                     .forEach(bundle -> {
-                        MethodOutcome uploadOutcome;
+                        Bundle returnBundle;
                         try {
-                            uploadOutcome = FhirResourceRetriever.upload(bundle);
+                            returnBundle = hapiFhirServerDstu3.upload(bundle);
                             logger.trace("upload success!");
-                            logger.info("Bundle: " + uploadOutcome.getId());
+                            returnBundle.getEntry().stream()
+                                    .filter(c -> c.getResponse().getLocation().startsWith("Patient"))
+                                    .map(c -> c.getResponse().getLocation().split("/")[1])
+                                    .forEach(patientResourceId::add);
                             //keep patient information to model
                             //we need to retrieve patient id through identifiers
                             //then use patient id to get their associated observations
@@ -125,7 +130,8 @@ public class SimulationPopup {
                                     bundle.getEntry().get(0).getResource().getId() + "\n");
                         }
                     });
-**/
+
+                /**
                 //print out all resources
                 logger.trace("Patient to upload:");
                 this.simulatedData.keySet().forEach(p -> {
@@ -144,6 +150,7 @@ public class SimulationPopup {
                 this.simulatedData.values().forEach(list -> {
                     list.forEach(FhirResourceRetriever::upload);
                 });
+                 **/
             } else {
                 //we are done
             }
@@ -166,15 +173,15 @@ public class SimulationPopup {
                     .setResource(patient)
                     .setFullUrl(patient.getId())
                     .getRequest()
-                    .setUrl("Patient")
-                    .setMethod(Bundle.HTTPVerb.POST);
-            observations.forEach(observation -> {
+                        .setUrl("Patient")
+                        .setMethod(Bundle.HTTPVerb.POST);
+            observations.forEach(observation ->
                 bundle.addEntry()
                         .setResource(observation)
                         .getRequest()
                             .setUrl("Observation")
-                            .setMethod(Bundle.HTTPVerb.POST);
-            });
+                            .setMethod(Bundle.HTTPVerb.POST)
+            );
             bundleList.add(bundle);
         });
 
@@ -200,6 +207,23 @@ public class SimulationPopup {
             return null;
         }
         return new HashMap<>(this.simulatedData);
+    }
+
+    /**
+     * Return the list of patients that were uploaded to fhir server
+     * @return
+     */
+    public List<Patient> getPatientUploadedToServer() {
+
+        return patientResourceId.stream()
+                .map(id -> hapiFhirServerDstu3.getPatient(id))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+    }
+
+    public boolean uploadedToServer() {
+        return this.uploadToServerRequested;
     }
 
 }

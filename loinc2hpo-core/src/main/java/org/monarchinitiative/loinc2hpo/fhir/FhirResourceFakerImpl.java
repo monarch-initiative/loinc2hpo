@@ -1,8 +1,13 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
+import ca.uhn.fhir.model.base.composite.BaseResourceReferenceDt;
 import ca.uhn.fhir.model.primitive.IdDt;
+import ca.uhn.fhir.model.primitive.StringDt;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseReference;
+import org.hl7.fhir.instance.model.api.IIdType;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -107,7 +112,6 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
         //add subject
         Reference subject = new Reference();
         subject.setReference(patient.getId());
-
         observation.setSubject(subject);
 
         //set effective period
@@ -118,9 +122,9 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
         observation.setIssued(fhirResourceComponentFaker.fakeDateBetween(effective.getStart(), effective.getEnd()));
 
         //add perform
-        Reference performer = new Reference()
-                .setReference("Practitioner/" + randomGenerator.randString(1, 3, true));
-        observation.addPerformer(performer);
+        //Reference performer = new Reference()
+        //        .setReference("Practitioner/" + randomGenerator.randString(1, 3, true));
+        //observation.addPerformer(performer);
 
 
 
