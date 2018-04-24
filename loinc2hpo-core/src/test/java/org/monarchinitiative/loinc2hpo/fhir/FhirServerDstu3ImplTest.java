@@ -46,6 +46,12 @@ public class FhirServerDstu3ImplTest {
     }
 
     @Test
+    public void getPatient3() throws Exception {
+        List<Patient> patient = fhirServer.getPatient("Harry", "Metz");
+        assertTrue(!patient.isEmpty());
+    }
+
+    @Test
     public void getObservation() throws Exception {
     }
 

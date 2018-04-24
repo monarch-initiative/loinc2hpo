@@ -125,8 +125,7 @@ public class SimulationPopup {
                             //we need to retrieve patient id through identifiers
                             //then use patient id to get their associated observations
                         } catch (Exception error) {
-                            error.printStackTrace();
-                            PopUps.showWarningDialog("Warning", "Error message",
+                            PopUps.showWarningDialog("Warning", "Server failure",
                                     bundle.getEntry().get(0).getResource().getId() + "\n");
                         }
                     });

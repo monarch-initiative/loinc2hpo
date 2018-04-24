@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
+import ca.uhn.fhir.rest.gclient.StringClientParam;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
@@ -13,6 +14,7 @@ import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class FhirServerDstu3Impl implements FhirServer{
@@ -74,7 +76,24 @@ public class FhirServerDstu3Impl implements FhirServer{
 
     @Override
     public List<Patient> getPatient(Identifier identifier) {
-        throw new UnsupportedOperationException();
+        List<Patient> patientList = new ArrayList<>();
+        Bundle patientBundle = client.search().forResource(Patient.class)
+                .where(new TokenClientParam("identifier").exactly()
+                        .systemAndCode(identifier.getSystem(), identifier.getValue()))
+                .returnBundle(Bundle.class)
+                .execute();
+
+        while(true) {
+            patientBundle.getEntry()
+                    .forEach(p -> patientList.add((Patient) p.getResource()));
+            if (patientBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                patientBundle = client.loadPage().next(patientBundle).execute();
+            } else {
+                break;
+            }
+        }
+
+        return patientList;
     }
 
     @Override
@@ -82,6 +101,52 @@ public class FhirServerDstu3Impl implements FhirServer{
         List<Patient> patientList = new ArrayList<>();
         Bundle patientBundle = client.search().forResource(Patient.class)
                 .where(new TokenClientParam("_id").exactly().code(resourceId))
+                .returnBundle(Bundle.class)
+                .execute();
+
+        while(true) {
+            patientBundle.getEntry()
+                    .forEach(p -> patientList.add((Patient) p.getResource()));
+            if (patientBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                patientBundle = client.loadPage().next(patientBundle).execute();
+            } else {
+                break;
+            }
+        }
+
+        return patientList;
+    }
+
+    @Override
+    public List<Patient> getPatient(String firstName, String lastName) {
+        List<Patient> patientList = new ArrayList<>();
+        Bundle patientBundle = client.search().forResource(Patient.class)
+                .where(new StringClientParam("family").matches().value(lastName))
+                .where(new StringClientParam("given").matches().value(firstName))
+                .returnBundle(Bundle.class)
+                .execute();
+
+        while(true) {
+            patientBundle.getEntry()
+                    .forEach(p -> patientList.add((Patient) p.getResource()));
+            if (patientBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                patientBundle = client.loadPage().next(patientBundle).execute();
+            } else {
+                break;
+            }
+        }
+
+        return patientList;
+    }
+
+    @Override
+    public List<Patient> getPatient(String firstName, String lastName, String phoneOrEmail, String zipcode) {
+        List<Patient> patientList = new ArrayList<>();
+        Bundle patientBundle = client.search().forResource(Patient.class)
+                .where(new StringClientParam("family").matches().value(lastName))
+                .where(new StringClientParam("given").matches().value(firstName))
+                .where(new StringClientParam("address-postalcode").matches().value(zipcode))
+                .where(new TokenClientParam("telecom").exactly().code(phoneOrEmail))
                 .returnBundle(Bundle.class)
                 .execute();
 

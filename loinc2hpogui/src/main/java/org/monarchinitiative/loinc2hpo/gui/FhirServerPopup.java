@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
+import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -10,10 +11,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.fhir.FhirServer;
@@ -63,6 +66,9 @@ public class FhirServerPopup {
             }
         });
         baseUrlHBox.getChildren().addAll(baseUrl, urlSelections);
+        if (!urlSelections.getItems().isEmpty()) {
+            urlSelections.getSelectionModel().select(0);
+        }
 
         ComboBox<QueryMode> queryMode = new ComboBox<>();
         queryMode.setPromptText("Select one");
@@ -104,9 +110,12 @@ public class FhirServerPopup {
 
         Label url = new Label("URL");
         gridPane.add(url, 0, 6);
-        TextField urlField = new TextField();
-        urlField.setPromptText("url");
-        gridPane.add(urlField, 1, 6);
+        TextField zipcodeField = new TextField();
+        zipcodeField.setPromptText("zip code");
+        gridPane.add(zipcodeField, 1, 6);
+        TextField telcomField = new TextField();
+        telcomField.setPromptText("phone or email");
+        gridPane.add(telcomField, 1, 7);
 
         Region blank = new Region();
         blank.setMinHeight(20);
@@ -136,22 +145,50 @@ public class FhirServerPopup {
                 PopUps.showWarningDialog("Warning", "Unspecified query mode", "You have to choose a query mode");
                 return;
             } else {
-                switch (selected) {
-                    case RESOURCEID:
-                        if (resourceText.getText().isEmpty()) {
+                try {
+                    switch (selected) {
+                        case RESOURCEID:
+                            if (resourceText.getText().isEmpty()) {
+                                break;
+                            }
+                            patientList = this.fhirServerl.getPatient(resourceText.getText());
                             break;
-                        }
-                        patientList = this.fhirServerl.getPatient(resourceText.getText());
-                        break;
-                    case NAME:
-                        break;
-                    case IDENTIFIER:
-                        break;
-                    case URL:
-                        break;
-                    default:
-                        break;
+                        case NAME:
+                            String firstN = firstName.getText();
+                            String lastN = lastName.getText();
+                            String birthday = "";
+                            if (firstN.isEmpty() && lastN.isEmpty() && birthday.isEmpty()) {
+                                break;
+                            }
+                            patientList = this.fhirServerl.getPatient(firstN, lastN);
+                            break;
+                        case IDENTIFIER:
+                            String systemInput = system.getText();
+                            String idInput = id_identifier.getText();
+                            Identifier identifierKey = new Identifier();
+                            identifierKey.setSystem(systemInput).setValue(idInput);
+                            if (systemInput.isEmpty() && idInput.isEmpty()) {
+                                break;
+                            }
+                            patientList = this.fhirServerl.getPatient(identifierKey);
+                            break;
+                        case NAME_X:
+                            firstN = firstName.getText();
+                            lastN = lastName.getText();
+                            String zipcode = zipcodeField.getText();
+                            String phoneOrEmail = telcomField.getText();
+                            if (firstN.isEmpty() && lastN.isEmpty() && zipcode.isEmpty() && phoneOrEmail.isEmpty()) {
+                                break;
+                            }
+                            patientList = this.fhirServerl.getPatient(firstN, lastN, phoneOrEmail, zipcode);
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (FhirClientConnectionException exception) {
+                    PopUps.showWarningDialog("Server error", "Timeout", "Server error, try again later");
                 }
+
             }
             window.close();
         });
@@ -163,7 +200,7 @@ public class FhirServerPopup {
         RESOURCEID,
         IDENTIFIER,
         NAME,
-        URL
+        NAME_X
     }
 
     public List<Patient> getPatientList() {

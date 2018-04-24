@@ -5,6 +5,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 
+import java.util.Date;
 import java.util.List;
 
 public interface FhirResourceDownload {
@@ -29,6 +30,13 @@ public interface FhirResourceDownload {
      * @return a list of patients. Expecting one patient. Server logic error if otherwise.
      */
     List<Patient> getPatient(String resourceId);
+
+    /**
+     *
+     */
+    List<Patient> getPatient(String firstName, String lastName);
+
+    List<Patient> getPatient(String firstName, String lastName, String phone, String zipcode);
 
     /**
      * Download a list of observations related to a patient
