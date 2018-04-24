@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.Constants;
 
@@ -22,14 +23,17 @@ public class FhirServerDstu3ImplTest {
     }
 
     @Test
+    @Ignore
     public void getPatient() throws Exception {
     }
 
     @Test
+    @Ignore
     public void getPatient1() throws Exception {
     }
 
     @Test
+    @Ignore
     public void getPatient2() throws Exception {
 
         Patient patient = fhirServer.getPatient("2959435").get(0);
@@ -46,20 +50,24 @@ public class FhirServerDstu3ImplTest {
     }
 
     @Test
+    @Ignore
     public void getPatient3() throws Exception {
         List<Patient> patient = fhirServer.getPatient("Harry", "Metz");
         assertTrue(!patient.isEmpty());
     }
 
     @Test
+    @Ignore
     public void getObservation() throws Exception {
     }
 
     @Test
+    @Ignore
     public void upload() throws Exception {
     }
 
     @Test
+    @Ignore
     public void upload1() throws Exception {
     }
 
