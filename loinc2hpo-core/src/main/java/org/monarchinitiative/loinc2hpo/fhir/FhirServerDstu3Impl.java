@@ -38,7 +38,7 @@ public class FhirServerDstu3Impl implements FhirServer{
     }
 
     @Override
-    public Patient getPatient(Reference subject) {
+    public List<Patient> getPatient(Reference subject) {
         /**
         List<Patient> patients = new ArrayList<>();
         if (subject.hasReference()) {
@@ -73,12 +73,12 @@ public class FhirServerDstu3Impl implements FhirServer{
     }
 
     @Override
-    public Patient getPatient(Identifier identifier) {
+    public List<Patient> getPatient(Identifier identifier) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Patient getPatient(String resourceId) {
+    public List<Patient> getPatient(String resourceId) {
         List<Patient> patientList = new ArrayList<>();
         Bundle patientBundle = client.search().forResource(Patient.class)
                 .where(new TokenClientParam("_id").exactly().code(resourceId))
@@ -95,20 +95,17 @@ public class FhirServerDstu3Impl implements FhirServer{
             }
         }
 
-        if (patientList.size() == 1) {
-            return patientList.iterator().next();
-        } else {
-            return null;
-        }
+        return patientList;
     }
 
     @Override
     public List<Observation> getObservation(Patient patient) {
         List<Observation> observationList = new ArrayList<>();
-        String id = patient.getId();
+        String id = patient.getIdElement().getIdPart();
+        System.out.println("id for query: " + id);
         if (id != null) {
             Bundle observationBundle = client.search().forResource(Observation.class)
-                    .where(new ReferenceClientParam("subject").hasId(id))
+                    .where(new ReferenceClientParam("patient").hasId(id))
                     .prettyPrint()
                     .returnBundle(Bundle.class)
                     .execute();

@@ -215,10 +215,12 @@ public class SimulationPopup {
      */
     public List<Patient> getPatientUploadedToServer() {
 
-        return patientResourceId.stream()
+        List<Patient> patientList = new ArrayList<>();
+        patientResourceId.stream()
                 .map(id -> hapiFhirServerDstu3.getPatient(id))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(list -> list.size() == 1)
+                .forEach(patientList::addAll);
+        return patientList;
 
     }
 

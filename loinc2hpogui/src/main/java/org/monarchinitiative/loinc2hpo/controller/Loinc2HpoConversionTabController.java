@@ -7,26 +7,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseButton;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceParser;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceParserDstu3;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceRetriever;
+import org.monarchinitiative.loinc2hpo.fhir.*;
 import org.monarchinitiative.loinc2hpo.gui.FhirServerPopup;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SimulationPopup;
@@ -35,7 +27,6 @@ import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,8 +48,8 @@ public class Loinc2HpoConversionTabController {
     @FXML private Button clearButton;
 
     @FXML
-    private ListView<ObservationListViewComponent> patientRecordListView;
-    private ObservableList<ObservationListViewComponent> resources = FXCollections.observableArrayList();
+    private ListView<ResourceListViewComponent> patientRecordListView;
+    private ObservableList<ResourceListViewComponent> resources = FXCollections.observableArrayList();
 
     @FXML
     private ListView<String> patientPhenotypeTableView;
@@ -76,18 +67,49 @@ public class Loinc2HpoConversionTabController {
         simulateButton.setTooltip(new Tooltip("simulate observations"));
         clearButton.setTooltip(new Tooltip("clear observations"));
         convertButton.setTooltip(new Tooltip("convert observation to HPO term"));
+
+        patientRecordListView.setOnMouseClicked(event -> {
+            if (patientRecordListView.getSelectionModel().getSelectedItem() != null) {
+                ResourceListViewComponent selected = patientRecordListView.getSelectionModel().getSelectedItem();
+                if (event.getButton()== MouseButton.SECONDARY && selected.resource instanceof Patient) {
+                    logger.trace("patient is selected");
+                    MenuItem download = new MenuItem("download observations");
+                    ContextMenu cmu = new ContextMenu();
+                    cmu.getItems().addAll(download);
+                    cmu.show(convertButton.getScene().getWindow());
+                    download.setOnAction(e -> {
+                        FhirServer server = new FhirServerDstu3Impl(model.getFhirServer());
+                        Patient selectedPatient = (Patient) selected.resource;
+                        //FhirResourceParser parser = new FhirResourceParserDstu3();
+                        //parser.setPrettyPrint(true);
+                        //System.out.println(parser.toJson(selectedPatient));
+
+                        List<Observation> observations = server.getObservation(selectedPatient);
+                        logger.trace("num of observations: " + observations.size());
+                        if (!observations.isEmpty()) {
+                            resources.clear();
+                            resources.addAll(
+                                    observations.stream()
+                                            .map(ResourceListViewComponent::new)
+                                            .collect(Collectors.toList()));
+                        }
+
+                    });
+                }
+            }
+        });
     }
 
 
     /**
      * Private class that defines how to display an observation resource
      */
-    private class ObservationListViewComponent {
+    private class ResourceListViewComponent {
 
         private Resource resource;
         private FhirResourceParser parser = new FhirResourceParserDstu3();
 
-        protected ObservationListViewComponent(Resource resource) {
+        protected ResourceListViewComponent(Resource resource) {
 
             this.resource = resource;
 
@@ -113,7 +135,7 @@ public class Loinc2HpoConversionTabController {
                 try {
                     FhirResourceParser parser = new FhirResourceParserDstu3();
                     Observation o = (Observation) parser.parse(file);
-                    resources.add(new ObservationListViewComponent(o));
+                    resources.add(new ResourceListViewComponent(o));
                 } catch (IOException e) {
                     PopUps.showWarningDialog("Warning", "Error importing" + file.getName(),
                             "Try to import the file again." );
@@ -134,8 +156,17 @@ public class Loinc2HpoConversionTabController {
     private void importFromServer(ActionEvent e) {
         e.consume();
         logger.trace("import from fhir server");
-        FhirServerPopup serverPopup = new FhirServerPopup(Constants.HAPIFHIRTESTSERVER);
+        FhirServerPopup serverPopup = new FhirServerPopup(model);
         serverPopup.displayWindow();
+        resources.clear();
+        if (serverPopup.getPatientList() != null && !serverPopup.getPatientList().isEmpty()) {
+            resources.addAll(
+                    serverPopup.getPatientList()
+                            .stream()
+                            .map(ResourceListViewComponent::new)
+                            .collect(Collectors.toList())
+            );
+        }
     }
 
 
@@ -153,7 +184,7 @@ public class Loinc2HpoConversionTabController {
                 resources.addAll(
                         popup.getPatientUploadedToServer()
                                 .stream()
-                                .map(ObservationListViewComponent::new)
+                                .map(ResourceListViewComponent::new)
                                 .collect(Collectors.toList())
                 );
             }
@@ -161,8 +192,8 @@ public class Loinc2HpoConversionTabController {
             if (popup.getSimulatedData() != null && !popup.getSimulatedData().isEmpty()) {
                 resources.clear();
                 popup.getSimulatedData().values().forEach(l -> //l is a list of observations for a patient
-                        //for every observation in the list, map to the ObservationListViewComponent and add to list
-                        resources.addAll(l.stream().map(ObservationListViewComponent::new).collect(Collectors.toList())));
+                        //for every observation in the list, map to the ResourceListViewComponent and add to list
+                        resources.addAll(l.stream().map(ResourceListViewComponent::new).collect(Collectors.toList())));
             }
         }
 

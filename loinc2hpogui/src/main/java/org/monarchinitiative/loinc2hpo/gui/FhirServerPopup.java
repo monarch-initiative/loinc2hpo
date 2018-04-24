@@ -1,24 +1,37 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.monarchinitiative.loinc2hpo.fhir.FhirServer;
+import org.monarchinitiative.loinc2hpo.fhir.FhirServerDstu3Impl;
+import org.monarchinitiative.loinc2hpo.model.Model;
+
+import java.util.List;
 
 public class FhirServerPopup {
 
     private static final Logger logger = LogManager.getLogger();
+    private Model model;
     private String base;
+    private FhirServer fhirServerl;
+    private List<Patient> patientList;
 
-    public FhirServerPopup(String baseUrl) {
-        this.base = baseUrl;
+    public FhirServerPopup(Model model) {
+        this.model = model;
     }
 
     public void displayWindow() {
@@ -36,13 +49,23 @@ public class FhirServerPopup {
         HBox baseUrlHBox = new HBox();
         baseUrlHBox.setSpacing(10);
         Label baseUrl = new Label("base URL");
-        TextField baseUrlString = new TextField();
-        if (this.base != null) {
-            baseUrlString.setText(this.base);
-        }
-        baseUrlHBox.getChildren().addAll(baseUrl, baseUrlString);
+        ComboBox<String> urlSelections = new ComboBox<>();
+        urlSelections.getItems().addAll(model.getFhirServers());
+        urlSelections.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (observable != null && newValue != null) {
+                    model.setFhirServer(newValue);
+                    fhirServerl = new FhirServerDstu3Impl(newValue);
+                } else {
+                    //do nothing
+                }
+            }
+        });
+        baseUrlHBox.getChildren().addAll(baseUrl, urlSelections);
 
-        ComboBox<QueryMode> queryMode = new ComboBox();
+        ComboBox<QueryMode> queryMode = new ComboBox<>();
+        queryMode.setPromptText("Select one");
         queryMode.getItems().addAll(QueryMode.values());
 
         GridPane gridPane = new GridPane();
@@ -57,9 +80,9 @@ public class FhirServerPopup {
         Label resourceId = new Label("resource id");
         gridPane.add(resourceId, 0, 1);
 
-        TextField textField = new TextField();
-        textField.setPromptText("comma separated");
-        gridPane.add(textField, 1, 1);
+        TextField resourceText = new TextField();
+        resourceText.setPromptText("comma separated");
+        gridPane.add(resourceText, 1, 1);
 
         Label identifier = new Label("identifier");
         gridPane.add(identifier, 0, 2);
@@ -85,13 +108,18 @@ public class FhirServerPopup {
         urlField.setPromptText("url");
         gridPane.add(urlField, 1, 6);
 
+        Region blank = new Region();
+        blank.setMinHeight(20);
+        blank.setPrefHeight(20);
+        blank.setMinHeight(25);
+
         HBox hBox = new HBox();
         Button cancel = new Button("Cancel");
         Button confirm = new Button("Confirm");
         hBox.setSpacing(20);
         hBox.getChildren().addAll(cancel, confirm);
 
-        root.getChildren().addAll(baseUrlHBox, gridPane, hBox);
+        root.getChildren().addAll(baseUrlHBox, gridPane, blank, hBox);
         Scene scene = new Scene(root, 300, 400);
         window.setScene(scene);
 
@@ -103,7 +131,28 @@ public class FhirServerPopup {
 
         confirm.setOnAction(c -> {
             logger.trace("user confirms");
-            queryPatient(queryMode.getSelectionModel().getSelectedItem());
+            QueryMode selected = queryMode.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                PopUps.showWarningDialog("Warning", "Unspecified query mode", "You have to choose a query mode");
+                return;
+            } else {
+                switch (selected) {
+                    case RESOURCEID:
+                        if (resourceText.getText().isEmpty()) {
+                            break;
+                        }
+                        patientList = this.fhirServerl.getPatient(resourceText.getText());
+                        break;
+                    case NAME:
+                        break;
+                    case IDENTIFIER:
+                        break;
+                    case URL:
+                        break;
+                    default:
+                        break;
+                }
+            }
             window.close();
         });
 
@@ -117,8 +166,12 @@ public class FhirServerPopup {
         URL
     }
 
-    void queryPatient(QueryMode mode) {
-        //@TODO: implement
+    public List<Patient> getPatientList() {
+        return this.patientList;
+    }
+
+    public List<Observation> getObservationsForPatient(Patient patient) {
+        return fhirServerl.getObservation(patient);
     }
 
 }

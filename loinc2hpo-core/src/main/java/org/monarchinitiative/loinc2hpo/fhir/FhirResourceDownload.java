@@ -12,28 +12,28 @@ public interface FhirResourceDownload {
     /**
      * Download a patient from a test server from the subject field
      * @param subject
-     * @return
+     * @return a list of patient. Expecting one patient.
      */
-    Patient getPatient(Reference subject);
+    List<Patient> getPatient(Reference subject);
 
     /**
      * Download a patient with a specified identifier
      * @param identifier
-     * @return
+     * @return a list of patients. Expecting one patient. Server logic error if otherwise.
      */
-    Patient getPatient(Identifier identifier);
+    List<Patient> getPatient(Identifier identifier);
 
     /**
      * Download a patient with a resource id
      * @param resourceId
-     * @return
+     * @return a list of patients. Expecting one patient. Server logic error if otherwise.
      */
-    Patient getPatient(String resourceId);
+    List<Patient> getPatient(String resourceId);
 
     /**
      * Download a list of observations related to a patient
      * @param patient
-     * @return
+     * @return a list of observations for a patient. List size range [0, MAX INFINITY).
      */
     List<Observation> getObservation(Patient patient);
 
