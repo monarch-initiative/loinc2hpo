@@ -5,12 +5,10 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -65,25 +63,32 @@ public class SimulationPopup {
         gridPane.setPadding(new Insets(20, 20, 20, 20));
 
 
-        gridPane.add(new Label("# Patient:"), 0, 0);
+        Label patientNumLabel = new Label("# patient");
+        gridPane.add(patientNumLabel, 0, 0);
         TextField patientNum = new TextField();
         patientNum.setPromptText("# of unique patients");
         patientNum.setText("1");
         gridPane.add(patientNum, 1, 0);
 
-        gridPane.add(new Label("# Observations:"), 0, 1);
+        Label observationNumLabel = new Label("# observations");
+        observationNumLabel.setMinWidth(100);
+        observationNumLabel.setTooltip(new Tooltip("number of observations per patient"));
+        gridPane.add(observationNumLabel, 0, 1);
         TextField observationsPerPatient = new TextField();
         observationsPerPatient.setPromptText("# observations per patient");
         observationsPerPatient.setText("10");
         observationsPerPatient.setEditable(false);
         gridPane.add(observationsPerPatient, 1, 1);
 
-        gridPane.add(new Label("Upload to server?"), 0, 2);
+        gridPane.add(new Label("Upload?"), 0, 2);
         CheckBox checker = new CheckBox("Yes");
         checker.setSelected(false);
         gridPane.add(checker, 1, 2);
 
         //Label serverAddress = new Label("Test Server: " + Constants.HAPIFHIRTESTSERVER);
+
+        Region blackRegion = new Region();
+        blackRegion.setMinHeight(10);
 
         Button cancel = new Button("Cancel");
         Button confirm = new Button("Confirm");
@@ -156,7 +161,7 @@ public class SimulationPopup {
             window.close();
         });
 
-        root.getChildren().addAll(gridPane, hbox);
+        root.getChildren().addAll(gridPane, blackRegion, hbox);
         Scene scene = new Scene(root, 300, 300);
         window.setScene(scene);
         window.showAndWait();
