@@ -107,8 +107,8 @@ public class FhirServerPopup {
         lastName.setPromptText("last name");
         gridPane.add(lastName, 1, 5);
 
-        Label url = new Label("URL");
-        gridPane.add(url, 0, 6);
+        Label other = new Label("other info");
+        gridPane.add(other, 0, 6);
         TextField zipcodeField = new TextField();
         zipcodeField.setPromptText("zip code");
         gridPane.add(zipcodeField, 1, 6);
@@ -130,6 +130,56 @@ public class FhirServerPopup {
         root.getChildren().addAll(baseUrlHBox, gridPane, blank, hBox);
         Scene scene = new Scene(root, 300, 400);
         window.setScene(scene);
+
+        queryMode.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<QueryMode>() {
+            @Override
+            public void changed(ObservableValue<? extends QueryMode> observable, QueryMode oldValue, QueryMode newValue) {
+                if (observable != null && newValue != null) {
+                    switch (newValue) {
+                        case RESOURCEID:
+                            resourceText.setDisable(false);
+                            system.setDisable(true);
+                            id_identifier.setDisable(true);
+                            firstName.setDisable(true);
+                            lastName.setDisable(true);
+                            zipcodeField.setDisable(true);
+                            telcomField.setDisable(true);
+                            break;
+                        case IDENTIFIER:
+                            resourceText.setDisable(true);
+                            system.setDisable(false);
+                            id_identifier.setDisable(false);
+                            firstName.setDisable(true);
+                            lastName.setDisable(true);
+                            zipcodeField.setDisable(true);
+                            telcomField.setDisable(true);
+                            break;
+                        case NAME:
+                            resourceText.setDisable(true);
+                            system.setDisable(true);
+                            id_identifier.setDisable(true);
+                            firstName.setDisable(false);
+                            lastName.setDisable(false);
+                            zipcodeField.setDisable(true);
+                            telcomField.setDisable(true);
+                            break;
+                        case NAME_X:
+                            resourceText.setDisable(true);
+                            system.setDisable(true);
+                            id_identifier.setDisable(true);
+                            firstName.setDisable(false);
+                            lastName.setDisable(false);
+                            zipcodeField.setDisable(false);
+                            telcomField.setDisable(false);
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    //do nothing
+                }
+            }
+        });
 
         cancel.setOnAction(p -> {
             logger.trace("user cancels");
