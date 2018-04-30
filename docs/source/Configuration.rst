@@ -26,9 +26,12 @@ affect the operation of the app.
 
 * Set biocurator ID. From the menu bar, click **"Configuration"** - **"Set biocurator ID"**, specify your biocurator ID. If you are not assigned one, create one for yourself with the following format: organization name first followed by `:`, then your name/id.
 
-* Once you are done, click **"Edit"** - **"Show settings"** to view all your settings. The first two settings should **NOT** be null in order for the app to work correctly.
+* Once you are done, click **"Configuration"** - **"Show settings"** to view all your settings. The first two settings should **NOT** be null in order for the app to work correctly.
+
+* Use customized hpo. If you prefer to use your own versions of hpo, click **"Configuration"** - **"Change hpo.owl"** to set the path to your hpo.owl file; use the button below to set the path to the hpo.obo file. An important note: inconsistencies of hpo.owl and hpo.obo files will lead to errors, so make sure your hpo OWL and OBO files are serialized from the same HPO.
+
 
 Change Settings
 ---------------
-The settings will be saved to a local file so that you do not need to repeat the above steps every time you run the app. Should you want to change the settings, follow the above steps accordingly to overwrite the original settings.
+The settings will be saved to a local file so that you do not need to repeat the above steps every time you run the app. This applies even after you upgrade to a newer version of the app. Should you decide to change the settings, follow the above steps accordingly to overwrite the original settings.
 

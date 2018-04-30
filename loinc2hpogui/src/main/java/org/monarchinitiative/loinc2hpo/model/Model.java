@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
@@ -404,6 +405,25 @@ public class Model {
             logger.error("Could not open settings at " + path);
         }
     }
+
+    private String fhirServer = Constants.HAPIFHIRTESTSERVER;//default fhir server
+    public String getFhirServer() {
+        return fhirServer;
+    }
+
+    public void setFhirServer(String fhirServer) {
+        this.fhirServer = fhirServer;
+    }
+
+    private List<String> fhirServers = new ArrayList<>(Arrays.asList(this.fhirServer));
+    public List<String> getFhirServers() {
+        return fhirServers;
+    }
+
+    public void setFhirServers(List<String> fhirServers) {
+        this.fhirServers = fhirServers;
+    }
+
 
 
 }

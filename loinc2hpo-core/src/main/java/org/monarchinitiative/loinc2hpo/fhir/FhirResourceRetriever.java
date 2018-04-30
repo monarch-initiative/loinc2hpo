@@ -3,12 +3,13 @@ package org.monarchinitiative.loinc2hpo.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.parser.IParser;
+import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousSubjectException;
 import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 import org.apache.logging.log4j.Logger;
@@ -17,17 +18,16 @@ import org.apache.logging.log4j.LogManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FhirResourceRetriever {
 
-
-    static final String LOINC_SYSTEM = "http://loinc.org";
-    //let user set the base url from the GUI
-    //By default, we use hapi-fhir test server
-    public static String BASEURL = "http://fhirtest.uhn.ca/baseDstu3";
     private static final Logger logger = LogManager.getLogger();
+    //use hapi-fhir test server as our default
+    private static final String BASEURL = Constants.HAPIFHIRTESTSERVER;
+
+    //creating ctx is expensive, so make it public for the app
     public static final FhirContext ctx = FhirContext.forDstu3();
+    //creating client is inexpensive at all
     static final IGenericClient client = ctx.newRestfulGenericClient(BASEURL);
     public static final IParser jsonParser = ctx.newJsonParser();
 
@@ -38,6 +38,7 @@ public class FhirResourceRetriever {
      * @param filepath
      * @return
      */
+    @Deprecated
     public static Observation parseJsonFile2Observation(String filepath) throws IOException, DataFormatException {
         Observation observation = null;
 
@@ -57,24 +58,25 @@ public class FhirResourceRetriever {
         return observation;
     }
 
+    @Deprecated
     public static Observation parseJsonFile2Observation(File file) throws IOException {
 
         return parseJsonFile2Observation(file.getAbsolutePath());
 
     }
 
-    public static String toJsonString(Observation observation) {
 
-        return jsonParser.setPrettyPrint(true).encodeResourceToString(observation);
-
+    @Deprecated
+    public static String toJsonString(Resource resource) {
+        return jsonParser.setPrettyPrint(true).encodeResourceToString(resource);
     }
-
     /**
      * @TODO: implement it
      * retrieve a patient's observations from FHIR server
      * @param patient
      * @return
      */
+    @Deprecated
     public static List<Observation> retrieveObservationFromServer(Patient patient) {
 
         List<Observation> observationList = new ArrayList<>();
@@ -105,6 +107,7 @@ public class FhirResourceRetriever {
      * @param subject
      * @return
      */
+    @Deprecated
     public static Patient retrievePatientFromServer(Reference subject) throws SubjectNotFoundException, AmbiguousSubjectException {
 
         List<Patient> patients = new ArrayList<>();
@@ -137,6 +140,60 @@ public class FhirResourceRetriever {
         }
 
     }
+
+    @Deprecated
+    private List<Observation> toList(Bundle bundle) {
+
+        List<Observation> resourceList = new ArrayList<Observation>();
+        while (true) {
+            bundle.getEntry()
+                    .forEach(p -> resourceList.add((Observation) p.getResource()));
+            if (bundle.getLink(IBaseBundle.LINK_NEXT) != null){
+                bundle = client.loadPage().next(bundle).execute();
+            } else {
+                break;
+            }
+        }
+
+        return resourceList;
+
+    }
+
+    @Deprecated
+    public List<Observation> retrieveBeautyObservationFromServer() {
+
+        List<Observation> observationList = new ArrayList<>();
+        //String id = patient.getId();
+        //if (id != null) {
+        Bundle observationBundle = client.search().forResource(Observation.class)
+                //.where(new ReferenceClientParam("subject").hasId())
+                .prettyPrint()
+                .returnBundle(Bundle.class)
+                .execute();
+
+        while(true) {
+            observationBundle.getEntry()
+                    .forEach(p -> observationList.add((Observation) p.getResource()));
+            if (observationBundle.getLink(IBaseBundle.LINK_NEXT ) != null) {
+                observationBundle = client.loadPage().next(observationBundle).execute();
+            } else {
+                break;
+            }
+        }
+        //}
+        return observationList;
+
+    }
+
+    public static MethodOutcome upload(Resource resource) {
+        MethodOutcome outcome = client.create()
+                .resource(resource)
+                .prettyPrint()
+                .encodedJson()
+                .execute();
+        return outcome;
+    }
+
 
 }
 

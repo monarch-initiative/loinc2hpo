@@ -102,4 +102,12 @@ Additional changes for this version
 
 * Allow user to specify the path to hp OWL and Obo
 
+## v1.1.3
+
+* Add function to simulate patient data (patient and observation resources)
+
+* Add function to allow uploading simulated data to hapi-fhir server
+
+* Add function to allow downloading patient data from fhir server
+
 
