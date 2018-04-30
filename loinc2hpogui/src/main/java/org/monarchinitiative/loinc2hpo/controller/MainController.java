@@ -21,6 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.wagon.CommandExecutionException;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
@@ -804,7 +805,97 @@ public class MainController {
 
     }
 
+    @FXML
+    private void start(ActionEvent e){
+        e.consume();
+        logger.trace("user starts a session");
+        try {
+            sendLockingEmail();
+            PopUps.showWarningDialog("Success", "Locking Message Sent", "Next: pull latest annotation data");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to send locking message", "Do it manually");
+        }
+    }
 
+    @FXML
+    private void checkoutData(ActionEvent e) {
+        e.consume();
+        logger.trace("user starts a session");
+        try {
+            checkoutAnnotation();
+            PopUps.showWarningDialog("Success", "Latest data successfully pulled from Github", "You can start annotating now");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to execute terminal command", "Need to start manually");
+        }
+    }
+
+    @FXML
+    private void checkinData(ActionEvent e) {
+        e.consume();
+        logger.trace("user ends a session");
+        try {
+            checkinAnnotation();
+            PopUps.showWarningDialog("Success", "Data successfully checked in to Github", "Next: send out unlocking message");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to check in data to Github", "Do it manually");
+        }
+    }
+
+    @FXML
+    private void end(ActionEvent e) {
+        e.consume();
+        logger.trace("user ends a session");
+        try {
+            sendUnlockingEmail();
+            PopUps.showWarningDialog("Success", "Unlocking message successfully sent out", "All clear. You can safely leave now");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to send unlocking message", "Need to send manually");
+        }
+    }
+
+    private void checkoutAnnotation() throws IOException, InterruptedException, CommandExecutionException {
+
+        String command = "git pull origin develop && git checkout develop";
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+
+    }
+
+    public void checkinAnnotation() throws IOException, InterruptedException, CommandExecutionException {
+
+        String command = String.format("git add . && git commit -m \"%s\" && git push origin develop", "update");
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+
+    }
+
+    public void sendLockingEmail() throws IOException, InterruptedException, CommandExecutionException {
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"kingmanzhang@gmail.com\"", model.getBiocuratorID());
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
+
+    public void sendUnlockingEmail() throws IOException, InterruptedException, CommandExecutionException {
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"kingmanzhang@gmail.com\"", model.getBiocuratorID());
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
 
 
 }
