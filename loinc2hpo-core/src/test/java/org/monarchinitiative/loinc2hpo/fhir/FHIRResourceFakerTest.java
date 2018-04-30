@@ -7,6 +7,7 @@ import com.github.javafaker.Name;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class FHIRResourceFakerTest {
 
     private static FhirResourceFaker resourceGenerator;
