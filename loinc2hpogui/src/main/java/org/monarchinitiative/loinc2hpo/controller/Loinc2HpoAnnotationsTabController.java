@@ -219,6 +219,7 @@ public class Loinc2HpoAnnotationsTabController {
                 logger.trace("annotationMap size (111111): " + annotationMap.size());
                 model.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
+                e.printStackTrace();
                 logger.error("ERROR!!!!!!!!");
                 return;
             }
