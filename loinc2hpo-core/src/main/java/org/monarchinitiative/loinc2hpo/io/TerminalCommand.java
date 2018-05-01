@@ -31,6 +31,8 @@ public class TerminalCommand {
         pb.directory(new File(this.dir));
         Process p = pb.start();
         p.waitFor();
+        p.getInputStream();
+        p.getErrorStream();
         return p.exitValue();
     }
 
