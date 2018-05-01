@@ -782,6 +782,9 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
+        if (model.getPathToAutoSavedFolder() != null) {
+            chooser.setInitialDirectory(new File(model.getPathToAutoSavedFolder()));
+        }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
         File f = chooser.showOpenDialog(null);

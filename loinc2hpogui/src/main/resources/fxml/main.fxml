@@ -27,6 +27,7 @@
                         <MenuItem fx:id="appendAnnotationsToMenuItem" mnemonicParsing="false" onAction="#handleAppendToButton" text="Append Annotations To" />
                         <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
                         <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#updateHpo" text="Update HPO" />
                         <MenuItem mnemonicParsing="false" onAction="#start" text="Email Locking" />
                         <MenuItem mnemonicParsing="false" onAction="#checkoutData" text="CheckOut Data" />
                         <MenuItem mnemonicParsing="false" onAction="#checkinData" text="CheckIn Data" />
@@ -56,8 +57,9 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#setHPORepo" text="Set HPO repo" />
                         <MenuItem mnemonicParsing="false" onAction="#changeHpoOwlTo" text="Change hpo.owl" />
-                        <MenuItem mnemonicParsing="false" onAction="#changeHpoOboTo" text="change hpo.obo" />
+                        <MenuItem mnemonicParsing="false" onAction="#changeHpoOboTo" text="Change hpo.obo" />
                   </items>
                 </Menu>
               </menus>

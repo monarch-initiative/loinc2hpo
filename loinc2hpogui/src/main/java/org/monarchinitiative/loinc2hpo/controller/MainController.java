@@ -379,6 +379,21 @@ public class MainController {
 
     }
 
+    @FXML private void setHPORepo(ActionEvent e) {
+
+        e.consume();
+        logger.trace("set HPO repo");
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Choose Human Phenotype Ontology Github repo");
+        File hpo = chooser.showDialog(null);
+        if (hpo != null) {
+            model.setPathToHpGitRepo(hpo.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
     @FXML public  void setPathToLoincCoreTableFile(ActionEvent e) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose LOINC Core Table file");
@@ -806,6 +821,20 @@ public class MainController {
     }
 
     @FXML
+    private void updateHpo(ActionEvent e) {
+        e.consume();
+        logger.trace("user wants to update HPO");
+        try {
+            updateHpo();
+        } catch (NullPointerException e1) {
+            PopUps.showWarningDialog("Warning", "Failure to update Human Phenotype Ontology", "You may not have set the path to HPO repository");
+        } catch (Exception e1) {
+            PopUps.showWarningDialog("Warning", "Failure to update Human Phenotype Ontology", "Do it manually");
+        }
+
+    }
+
+    @FXML
     private void start(ActionEvent e){
         e.consume();
         logger.trace("user starts a session");
@@ -853,6 +882,16 @@ public class MainController {
         }
     }
 
+    private void updateHpo() throws IOException, InterruptedException, CommandExecutionException {
+        String command = "git pull && cd src/ontology && make && cd ../..";
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToHpGitRepo());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
+
     private void checkoutAnnotation() throws IOException, InterruptedException, CommandExecutionException {
 
         String command = "git pull origin develop && git checkout develop";
@@ -878,7 +917,7 @@ public class MainController {
     }
 
     public void sendLockingEmail() throws IOException, InterruptedException, CommandExecutionException {
-        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"kingmanzhang@gmail.com\"", model.getBiocuratorID());
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
         TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
         int exitvalue = tm.execute();
@@ -888,7 +927,7 @@ public class MainController {
     }
 
     public void sendUnlockingEmail() throws IOException, InterruptedException, CommandExecutionException {
-        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"kingmanzhang@gmail.com\"", model.getBiocuratorID());
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
         TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
         int exitvalue = tm.execute();
