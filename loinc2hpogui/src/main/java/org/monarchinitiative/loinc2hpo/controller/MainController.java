@@ -91,6 +91,8 @@ public class MainController {
     @FXML private Tab Loinc2HPOAnnotationsTabButton;
     @FXML private Tab Loinc2HpoConversionTabButton;
 
+    @FXML private MenuItem updateHpoButton;
+
 
 
     @FXML private void initialize() {
@@ -207,6 +209,7 @@ public class MainController {
         saveAnnotationsAsMenuItem.setVisible(false);
         appendAnnotationsToMenuItem.setVisible(false);
         clearMenu.setVisible(false);
+        updateHpoButton.setVisible(false);
     }
 
     private boolean isConfigurationCompleted() {

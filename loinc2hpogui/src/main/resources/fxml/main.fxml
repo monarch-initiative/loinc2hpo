@@ -27,7 +27,7 @@
                         <MenuItem fx:id="appendAnnotationsToMenuItem" mnemonicParsing="false" onAction="#handleAppendToButton" text="Append Annotations To" />
                         <MenuItem fx:id="importAnnotationButton" mnemonicParsing="false" onAction="#handleImportAnnotationFile" text="Import Annotation File" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#updateHpo" text="Update HPO" />
+                        <MenuItem fx:id="updateHpoButton" mnemonicParsing="false" onAction="#updateHpo" text="Update HPO" />
                         <MenuItem mnemonicParsing="false" onAction="#start" text="Email Locking" />
                         <MenuItem mnemonicParsing="false" onAction="#checkoutData" text="CheckOut Data" />
                         <MenuItem mnemonicParsing="false" onAction="#checkinData" text="CheckIn Data" />
