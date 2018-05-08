@@ -28,11 +28,7 @@ public class HpoTerm4TestOutcome implements Serializable {
     //this is the prefered constructor
     public HpoTerm4TestOutcome(HpoTerm hpoTerm, boolean negated) {
 
-        if (hpoTerm == null) {
-            this.tid = null;
-        } else {
-            this.tid = hpoTerm.getId();
-        }
+        this.tid = hpoTerm.getId();
         this.hpoTerm = hpoTerm;
         this.isNegated = negated;
     }

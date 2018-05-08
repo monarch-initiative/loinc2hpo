@@ -220,6 +220,7 @@ public class Loinc2HpoAnnotationsTabController {
                 model.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
                 e.printStackTrace();
+                PopUps.showWarningDialog("Warning", "Error loading annotation data", "This is typically due to HPO is outdated. Create latest HPO and retart this app.");
                 logger.error("ERROR!!!!!!!!");
                 return;
             }

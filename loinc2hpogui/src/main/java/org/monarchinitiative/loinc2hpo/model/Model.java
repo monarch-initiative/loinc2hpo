@@ -46,6 +46,8 @@ public class Model {
 
     private String pathToLastSession = null;
 
+    private String pathToHpGitRepo = null;
+
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
@@ -193,6 +195,14 @@ public class Model {
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
     public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
     }
+    public void setPathToHpGitRepo(String pathToHpGitRepo) {
+        this.pathToHpGitRepo = pathToHpGitRepo;
+    }
+    public String getPathToHpGitRepo() {
+        return pathToHpGitRepo;
+    }
+
+
     public void setBiocuratorID(String id){biocuratorID=id;}
 
     public String getPathToAutoSavedFolder() {
@@ -367,6 +377,9 @@ public class Model {
             if (pathToLastSession != null) {
                 bw.write(String.format("last session:%s\n", pathToLastSession));
             }
+            if (pathToHpGitRepo != null) {
+                bw.write(String.format("hp-repo:%s\n", pathToHpGitRepo));
+            }
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -398,6 +411,7 @@ public class Model {
                 else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
                 else if (key.equals("autosave to")) this.pathToAutoSavedFolder = value;
                 else if (key.equals("last session")) this.pathToLastSession = value;
+                else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
             }
             br.close();
         } catch (IOException e) {

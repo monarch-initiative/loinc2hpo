@@ -66,7 +66,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         }
 
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
-        Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
         reader.lines().forEach(serialized -> {
             String[] elements = serialized.split("\\t");

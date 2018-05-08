@@ -782,6 +782,9 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
+        if (model.getPathToAutoSavedFolder() != null) {
+            chooser.setInitialDirectory(new File(model.getPathToAutoSavedFolder()));
+        }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
         File f = chooser.showOpenDialog(null);
@@ -1781,11 +1784,26 @@ public class AnnotateTabController {
     }
 
     protected void setLoincIdSelected(LoincEntry loincEntry) {
-        loincTableView.getSelectionModel().select(loincEntry);
+        /**
+         *
+         * loincTableView.getSelectionModel().select(loincEntry);
+         logger.debug("selected: " + loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number().toString());
+         * loincTableView.requestFocus();
+        int focusindex = 0;
+        for (int i = 0; i < loincTableView.getItems().size(); i++) {
+            if (loincTableView.getSelectionModel().isSelected()) {
+                focusindex = i;
+            }
+        }
+         logger.debug("focusindex: " + focusindex);
+         **/
+        //@TODO: this is a lazy implementation. We should try to put selected item in view
+        loincTableView.getItems().clear();
+        loincTableView.getItems().addAll(loincEntry);
     }
     void setLoincIdSelected(LoincId loincId) {
         LoincEntry loincEntry = model.getLoincEntryMap().get(loincId);
-        loincTableView.getSelectionModel().select(loincEntry);
+        setLoincIdSelected(loincEntry);
     }
 
     @FXML

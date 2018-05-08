@@ -52,6 +52,7 @@ public class HpoOntologyParser {
      */
     public void parseOntology() throws IOException {
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpoOntologyPath));
+        logger.debug("ontology path: " + hpoOntologyPath);
         this.ontology = hpoOboParser.parse();
     }
 
