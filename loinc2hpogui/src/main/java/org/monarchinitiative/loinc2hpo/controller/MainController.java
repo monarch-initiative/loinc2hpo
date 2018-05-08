@@ -27,6 +27,7 @@ import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
+import org.monarchinitiative.loinc2hpo.gui.RestartApp;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.*;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -855,7 +856,13 @@ public class MainController {
         logger.trace("user starts a session");
         try {
             checkoutAnnotation();
-            PopUps.showWarningDialog("Success", "Latest data successfully pulled from Github", "You can start annotating now");
+            boolean restart = PopUps.getBooleanFromUser("Restart now?", "Need to restart to apply new settings", "Restart Required");
+            if (restart) {
+                logger.debug("user choose to restart: " + restart);
+                RestartApp.restartApplication();
+            } else {
+                PopUps.showWarningDialog("Warning", "Latest data successfully pulled from Github but now shown", "Need to restart");
+            }
         } catch (Exception e1){
             PopUps.showWarningDialog("Warning", "Failure to execute terminal command", "Need to start manually");
         }
