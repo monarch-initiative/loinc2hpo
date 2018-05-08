@@ -3,8 +3,9 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -22,14 +23,43 @@ public class LoincAnnotationSerializationFactory {
         JSON
     }
 
-    public static void serializeToFile(Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap,
-                                       SerializationFormat format, String path) throws Exception {
+    private static Map<LoincId, LoincEntry> loincEntryMap;
+    private static Map<TermId, HpoTerm> hpoTermMap;
+
+    /**
+     * Use this method to set the LoincEntryMap that is used by TSVSeparatedFile deserializer
+     */
+    public static void setLoincEntryMap(Map<LoincId, LoincEntry> xloincEntryMap) {
+        loincEntryMap = xloincEntryMap;
+    }
+
+    /**
+     * Use this method to set the HPO TermMap that is used by all deserializers.
+     * Can be replaced by calling parse() with the map as a parameter
+     */
+    public static void setHpoTermMap(Map<TermId, HpoTerm> termMap) {
+        hpoTermMap = termMap;
+    }
+
+
+    public static void serializeToFile(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap,
+                                       SerializationFormat format, String path) throws IOException{
+
+        if (hpoTermMap == null) {
+            throw new NullPointerException("hpoTermMap not specified!");
+        }
+        LoincAnnotationSerializer serializer;
         switch (format) {
             case TSVSingleFile:
-                LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+                serializer = new LoincAnnotationSerializerToTSVSingleFile(hpoTermMap);
                 serializer.serialize(annotationMap, path);
                 break;
             case TSVSeparateFile:
+                if (loincEntryMap == null) {
+                    throw new NullPointerException("loincEntryMap not specified!");
+                }
+                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(hpoTermMap, loincEntryMap);
+                serializer.serialize(annotationMap, path);
                 break;
             case JSON:
                 break;
@@ -39,16 +69,20 @@ public class LoincAnnotationSerializationFactory {
         }
     }
 
-    public static Map<LoincId, UniversalLoinc2HPOAnnotation> parseFromFile(String path, Map<TermId, HpoTerm> termmap, SerializationFormat format) throws Exception {
-        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = new LinkedHashMap<>();
+    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, Map<TermId, HpoTerm> termmap, SerializationFormat format) throws Exception {
+
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
+        LoincAnnotationSerializer serializer;
         switch (format) {
             case TSVSingleFile:
                 logger.trace("entry TSVSingleFile serilizer:");
-                LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(termmap);
+                serializer = new LoincAnnotationSerializerToTSVSingleFile(termmap);
                 annotationMap = serializer.parse(path);
                 logger.trace("annotationMap size: " + annotationMap.size());
                 break;
             case TSVSeparateFile:
+                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(termmap, loincEntryMap);
+                annotationMap = serializer.parse(path);
                 break;
             case JSON:
                 break;

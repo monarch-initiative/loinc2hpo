@@ -1,8 +1,6 @@
 Tutorial
 ========
 
-This tutorial is for loinc2hpo V1.1.0.
-
 Overview
 --------
 The app has three tabs.
@@ -131,3 +129,49 @@ To save data, you can click `File` - `Save Session`. This will save your annotat
 
 To export data, you can click `File` - `Export annotations as`. Currently the app only supports .tsv files.
 
+
+Converting Observations to HPO terms
+------------------------------------
+
+The third tab "Loinc2HpoConversion" is responsible for converting patient observations into corresponding HPO terms using the annotation map generated above. Here we will demonstrate a few different ways to do this, which is largely dependent on the source of patient observations.
+
+Convert locally stored observations to HPO terms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Assuming that you have some json serialization of patient observations, you can click `Local` to select the files (multi selection is supported). The app will import the files into the left text region. Then you can click the `convert` button to get the HPO term.
+
+Download observations from FHIR server and convert to HPO terms
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In real world, patient information and their observations are probably saved in a hospital FHIR server. In order to get the observations for a patient, you have to retrieve the patient first using his or her identification. To do this, click the `Server` button, type in the base url for the FHIR server, and provide relevant information to search for the patient.
+
+To demonstrate the process, we will search for a patient named "Harry Metz" with a phone number "002-837-6481" and postal code "79442-0781" from a test FHIR server (hapi-fhir test server: http://fhirtest.uhn.ca):
+
+  .. image:: images/queryPatientFromServer.png
+     :align: center
+     :scale: 60 %
+
+After clicking `confirm`, the patient is found on the server and loaded into the left text region.
+
+  .. image:: images/downloadObservationsFromServer.png
+     :align: center
+     :scale: 30%
+
+Next, you can get all observations related to this patient by right clicking on the patient record and then clicking "download observations". The observations will be loaded to the left text region. Last, you can click `Convert` button to get a list of HPO terms, one for each observation, on the right text region.
+
+  .. image:: images/convertObservationsToHPO.png
+     :align: center
+     :scale: 30%
+
+Note that you may not be able to find such a patient if you try it yourself. This is because the hapi-fhir test server regularly purges their system so all data will be lost. We actually faked such a patient and uploaded to the test server right before we wrote the tutorial. Next, we are going to show you how we did this.
+
+
+Simulate patients and observations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For demonstration purposes, you can create simulated patients and their observations by clicking the `Simulate` button. You will see a popup window that asks you how many patients you want to simulate. Currently, we choose to create 10 observation for each patient, 5 ``Qn`` type, 4 ``Ord`` type ("presence"/"absence" outcome) and 1 ``Nom`` type. Check the "Upload" checkerbox and click `Confirm`. The app will generate fake patients and observations and then upload to the hapi-fhir test server. If it is successful, the patient information will populate the left text region. You can select a patient and request his/her observations from the server. Since the server has the patient, you are now able to search for it using his/her identifications.
+
+  .. image:: images/simulate.png
+     :align: center
+
+Note that the hapi-fhir server is not always stable. You can avoid uploading to server by not checking the `Upload` choice. If you do that, patient observations will directly populate the left text region.

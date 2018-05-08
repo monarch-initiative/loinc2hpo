@@ -13,7 +13,6 @@ import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-public class UniversalLoinc2HPOAnnotationTest {
+public class LOINC2HpoAnnotationImplTest {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -51,7 +50,7 @@ public class UniversalLoinc2HPOAnnotationTest {
             res.forEach( term -> termmap.put(term.getName(),term));
         }
         hpoTermMap = termmap.build();
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -60,7 +59,7 @@ public class UniversalLoinc2HPOAnnotationTest {
         HpoTerm hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation.Builder()
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setLowValueHpoTerm(low)
@@ -81,12 +80,12 @@ public class UniversalLoinc2HPOAnnotationTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation.Builder()
+        LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTermId4LoincTest(positive, false))
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive, false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);
@@ -103,7 +102,7 @@ public class UniversalLoinc2HPOAnnotationTest {
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
 
-        //System.out.println(UniversalLoinc2HPOAnnotation.getHeaderAdvanced());
+        //System.out.println(LOINC2HpoAnnotationImpl.getHeaderAdvanced());
         //reader.lines().forEach(System.out::println);
         String content = "15074-8\tQn\tFHIR\tA\tHP:0011015\tfalse\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
                 "15074-8\tQn\tFHIR\tN\tHP:0011015\ttrue\tnull\tfalse\t0.0\tNA\tNA\tNA\tNA\n" +
@@ -137,7 +136,7 @@ public class UniversalLoinc2HPOAnnotationTest {
         hpoTermMap = termmap.build();
 
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -152,7 +151,7 @@ public class UniversalLoinc2HPOAnnotationTest {
                 .setIntermediateNegated(true)
                 .setHighValueHpoTerm(hi);
 
-        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
         assertEquals("15074-8", annotation15074.getLoincId().toString());
         assertEquals("Qn", annotation15074.getLoincScale().toString());
@@ -198,7 +197,7 @@ public class UniversalLoinc2HPOAnnotationTest {
         hpoTermMap = termmap.build();
 
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
          LoincId loincId = new LoincId("600-7");
          LoincScale loincScale = LoincScale.string2enum("Nom");
@@ -212,10 +211,10 @@ public class UniversalLoinc2HPOAnnotationTest {
          loinc2HpoAnnotationBuilder.setLoincId(loincId)
                  .setLoincScale(loincScale)
                  .setPosValueHpoTerm(positive)
-                 .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                 .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
+                 .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                 .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
 
-         UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
+         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
          assertEquals("600-7", annotation600.getLoincId().toString());
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
@@ -255,7 +254,7 @@ public class UniversalLoinc2HPOAnnotationTest {
         hpoTermMap = termmap.build();
 
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -270,23 +269,23 @@ public class UniversalLoinc2HPOAnnotationTest {
                 .setIntermediateNegated(true)
                 .setHighValueHpoTerm(hi);
 
-        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
-        System.out.println(UniversalLoinc2HPOAnnotation.getHeaderBasic());
+        System.out.println(LOINC2HpoAnnotationImpl.getHeaderBasic());
         System.out.println(annotation15074.getBasicAnnotationsString().trim());
     }
 
     @Test
     public void testSerializeEmptyBasicAnnotation() throws Exception {
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale);
 
-        UniversalLoinc2HPOAnnotation annotationEmpty = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotationEmpty = loinc2HpoAnnotationBuilder.build();
         //System.out.println(annotationEmpty.getBasicAnnotationsString());
         assertEquals("15074-8	Qn	NA	NA	NA	false	NA	false	0.0	NA	NA	NA	NA", annotationEmpty.getBasicAnnotationsString().trim());
 
@@ -315,7 +314,7 @@ public class UniversalLoinc2HPOAnnotationTest {
         hpoTermMap = termmap.build();
 
 
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
+        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("600-7");
         LoincScale loincScale = LoincScale.string2enum("Nom");
@@ -329,95 +328,14 @@ public class UniversalLoinc2HPOAnnotationTest {
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
 
-        UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
+        LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
         System.out.println(annotation600.getAdvancedAnnotationsString());
     }
 
 
-    @Test
-    @Ignore
-    public void testWriteInOut() throws Exception {
-
-        Map<String, HpoTerm> hpoTermMap;
-        Map<TermId, HpoTerm> hpoTermMap2;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,HpoTerm> termmap2 = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> {
-                termmap.put(term.getName(),term);
-                termmap2.put(term.getId(), term);
-            });
-        }
-        hpoTermMap = termmap.build();
-        hpoTermMap2 = termmap2.build();
-
-
-        UniversalLoinc2HPOAnnotation.Builder loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
-
-        LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        HpoTerm low = hpoTermMap.get("Hypoglycemia");
-        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
-
-        loinc2HpoAnnotationBuilder.setLoincId(loincId)
-                .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
-                .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi);
-
-        UniversalLoinc2HPOAnnotation annotation15074 = loinc2HpoAnnotationBuilder.build();
-
-        Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
-        testmap.put(loincId, annotation15074);
-
-        loinc2HpoAnnotationBuilder = new UniversalLoinc2HPOAnnotation.Builder();
-
-        loincId = new LoincId("600-7");
-        loincScale = LoincScale.string2enum("Nom");
-        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
-
-        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
-
-        loinc2HpoAnnotationBuilder.setLoincId(loincId)
-                .setLoincScale(loincScale)
-                .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false));
-
-        UniversalLoinc2HPOAnnotation annotation600 = loinc2HpoAnnotationBuilder.build();
-
-        testmap.put(loincId, annotation600);
-
-        assertEquals(2, testmap.size());
-        String filepath = temporaryFolder.newFile().getAbsolutePath();
-        WriteToFile.toTSVbasicAnnotations(filepath, testmap);
-        String filepath2 = temporaryFolder.newFile().getAbsolutePath();
-        WriteToFile.toTSVadvancedAnnotations(filepath2, testmap);
-
-        Map<LoincId, UniversalLoinc2HPOAnnotation> deserializedMap = WriteToFile.fromTSVBasic(filepath, hpoTermMap2);
-        WriteToFile.fromTSVAdvanced(filepath2, deserializedMap, hpoTermMap2);
-
-        assertEquals(2, deserializedMap.size());
-        deserializedMap.values().forEach(System.out::println);
-    }
 
 
 }

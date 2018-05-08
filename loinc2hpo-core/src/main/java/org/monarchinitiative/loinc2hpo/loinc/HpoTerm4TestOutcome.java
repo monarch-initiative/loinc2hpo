@@ -7,7 +7,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.Serializable;
 
-public class HpoTermId4LoincTest implements Serializable {
+public class HpoTerm4TestOutcome implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private boolean isNegated=false;
@@ -15,18 +15,18 @@ public class HpoTermId4LoincTest implements Serializable {
     private HpoTerm hpoTerm;
 
     @Deprecated
-    public HpoTermId4LoincTest(TermId id) {
+    public HpoTerm4TestOutcome(TermId id) {
         this.tid=id;
     }
 
     @Deprecated
-    public HpoTermId4LoincTest(TermId id, boolean negated) {
+    public HpoTerm4TestOutcome(TermId id, boolean negated) {
         this(id);
         isNegated=negated;
     }
 
     //this is the prefered constructor
-    public HpoTermId4LoincTest(HpoTerm hpoTerm, boolean negated) {
+    public HpoTerm4TestOutcome(HpoTerm hpoTerm, boolean negated) {
 
         this.tid = hpoTerm.getId();
         this.hpoTerm = hpoTerm;

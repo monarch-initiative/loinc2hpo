@@ -8,6 +8,11 @@ To build and run the GUI, use the following command.::
   $ java -jar loinc2hpogui/target/Loinc2HpoGui-jar-with-dependencies.jar
 
 
+If you downloaded the jar releases directly, use the following command.::
+
+  //replace {$PATH} with the path to the jar file
+  $ java -jar {$PATH}/Loinc2HpoGui-jar-with-dependencies.jar
+
 To run the library code, enter the following ::
 
   $ java -jar loinc2hpo-core/target/Loinc2HpoLib.jar download

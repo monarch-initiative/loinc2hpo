@@ -10,10 +10,10 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
 
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
-    private static Map<LoincId, UniversalLoinc2HPOAnnotation> testmap = new HashMap<>();
+    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
     private static Map<String, HpoTerm> hpoTermMap;
     private static Map<TermId, HpoTerm> hpoTermMap2;
     @Rule
@@ -67,7 +67,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         HpoTerm hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
-        UniversalLoinc2HPOAnnotation glucoseAnnotation = new UniversalLoinc2HPOAnnotation.Builder()
+        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setLowValueHpoTerm(low)
@@ -88,12 +88,12 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        UniversalLoinc2HPOAnnotation bacterialAnnotation = new UniversalLoinc2HPOAnnotation.Builder()
+        LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .addAdvancedAnnotation(code1, new HpoTermId4LoincTest(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTermId4LoincTest(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTermId4LoincTest(positive, false))
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive, false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);
@@ -104,7 +104,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void serialize() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
         BufferedReader reader = new BufferedReader(new FileReader(tempFile));
@@ -116,11 +116,11 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void parse() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
         LoincAnnotationSerializerToTSVSingleFile serilizer = new LoincAnnotationSerializerToTSVSingleFile(hpoTermMap2);
-        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = serilizer.parse(tempFile);
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = serilizer.parse(tempFile);
         assertNotNull(annotationMap);
         assertEquals(2, annotationMap.size());
         annotationMap.values().forEach(System.out::println);
@@ -131,11 +131,11 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public void testFactory() throws Exception {
 
         String tempFile = folder.newFile().getAbsolutePath();
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile();
+        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, tempFile);
 
 
-        Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tempFile, hpoTermMap2, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tempFile, hpoTermMap2, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
         assertNotNull(annotationMap);
         assertEquals(2, annotationMap.size());
         annotationMap.values().forEach(System.out::println);

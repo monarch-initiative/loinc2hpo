@@ -22,7 +22,7 @@ loinc2hpo-core/src/main/java/org/monarchinitiative/loinc2hpo/util/TST.java
 
 
 
-loinc-hpoTermId4LoincTest-mapping.tsv
+loinc-hpoTerm4TestOutcome-mapping.tsv
 loinc2hpo-core/src/main/resources/hp.owl
 loinc2hpo-core/src/main/resources/data_UNC_annotated.csv
 loinc2hpo-core/src/main/resources/loinc_most_frequent.csv

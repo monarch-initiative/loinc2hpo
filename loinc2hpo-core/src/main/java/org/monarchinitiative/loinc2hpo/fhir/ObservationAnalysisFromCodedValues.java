@@ -9,10 +9,9 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpo.exception.AnnotationNotFoundException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
-import org.monarchinitiative.loinc2hpo.loinc.HpoTermId4LoincTest;
-import org.monarchinitiative.loinc2hpo.loinc.Loinc2HPOAnnotation;
+import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -24,15 +23,15 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
     private LoincId loincId;
     private CodeableConcept codedValue;
-    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap;
+    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
 
-    public ObservationAnalysisFromCodedValues(LoincId loincId, CodeableConcept codedvalue, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) {
+    public ObservationAnalysisFromCodedValues(LoincId loincId, CodeableConcept codedvalue, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
         this.loincId = loincId;
         this.codedValue = codedvalue;
         this.annotationMap = annotationMap;
     }
 
-    public ObservationAnalysisFromCodedValues(LoincId loincId, Observation observation, Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap) {
+    public ObservationAnalysisFromCodedValues(LoincId loincId, Observation observation, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
         this.loincId = loincId;
         try {
             this.codedValue = observation.getValueCodeableConcept();
@@ -45,9 +44,9 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
 
     @Override
-    public HpoTermId4LoincTest getHPOforObservation() throws AmbiguousResultsFoundException, UnrecognizedCodeException, AnnotationNotFoundException {
+    public HpoTerm4TestOutcome getHPOforObservation() throws AmbiguousResultsFoundException, UnrecognizedCodeException, AnnotationNotFoundException {
         if (annotationMap.get(loincId) == null) throw new AnnotationNotFoundException();
-        Set<HpoTermId4LoincTest> results = new HashSet<>();
+        Set<HpoTerm4TestOutcome> results = new HashSet<>();
         codedValue.getCoding()
                 .stream()
                 .filter(p -> annotationMap.get(loincId).getCodes().contains(new Code(p)))

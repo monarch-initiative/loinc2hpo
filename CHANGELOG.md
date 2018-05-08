@@ -95,7 +95,19 @@ Additional changes for this version
 
   "system" is renamed to "FHIR";
   Code for "presence" changed from "P" to "POS", code for "not presence" changed from "NP" to "NEG" to be consistent with FHIR
-  
 
+* Show version in "About" message
+
+* Refactor to remove deprecated classes
+
+* Allow user to specify the path to hp OWL and Obo
+
+## v1.1.3
+
+* Add function to simulate patient data (patient and observation resources)
+
+* Add function to allow uploading simulated data to hapi-fhir server
+
+* Add function to allow downloading patient data from fhir server
 
 

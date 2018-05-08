@@ -4,9 +4,10 @@ package org.monarchinitiative.loinc2hpo.model;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Observation;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.loinc.QnLoinc2HPOAnnotation;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
@@ -39,16 +40,19 @@ public class Model {
     private String biocuratorID=null;
 
     private String pathToJsonFhirFile=null;
+    private Queue<Observation> observationQueue = new ArrayDeque<>();
 
     private String pathToAutoSavedFolder = null;
 
     private String pathToLastSession = null;
 
+    private String pathToHpGitRepo = null;
+
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> loincAnnotationMap =new LinkedHashMap<>();
+    public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
@@ -57,7 +61,7 @@ public class Model {
 
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
-    private UniversalLoinc2HPOAnnotation currentAnnotation = null;
+    private LOINC2HpoAnnotationImpl currentAnnotation = null;
     //private boolean tempInversed= false;
     private boolean inversedBasicMode = false; //whether inverse is checked for basic mode
     private boolean inversedAdvancedMode = false; //whether inverse is checked for advanced mode
@@ -191,6 +195,14 @@ public class Model {
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
     public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
     }
+    public void setPathToHpGitRepo(String pathToHpGitRepo) {
+        this.pathToHpGitRepo = pathToHpGitRepo;
+    }
+    public String getPathToHpGitRepo() {
+        return pathToHpGitRepo;
+    }
+
+
     public void setBiocuratorID(String id){biocuratorID=id;}
 
     public String getPathToAutoSavedFolder() {
@@ -222,6 +234,7 @@ public class Model {
 
     public void setFhirFilePath(String p) { pathToJsonFhirFile=p;}
     public String getPathToJsonFhirFile() { return pathToJsonFhirFile; }
+    public Queue<Observation> getObservationQueue() { return this.observationQueue; }
 
     public int getOntologyTermCount() { return ontology!=null?ontology.countNonObsoleteTerms():0; }
     public int getLoincAnnotationCount() { return loincAnnotationMap !=null?this.loincAnnotationMap.size():0;}
@@ -248,8 +261,8 @@ public class Model {
         this.inversedAdvancedMode = inversedAdvancedMode;
     }
 
-    public void setCurrentAnnotation(UniversalLoinc2HPOAnnotation current) {this.currentAnnotation = current;}
-    public UniversalLoinc2HPOAnnotation getCurrentAnnotation() {
+    public void setCurrentAnnotation(LOINC2HpoAnnotationImpl current) {this.currentAnnotation = current;}
+    public LOINC2HpoAnnotationImpl getCurrentAnnotation() {
         return currentAnnotation;
     }
 
@@ -282,10 +295,10 @@ public class Model {
 
 
 
-    public void addLoincTest(UniversalLoinc2HPOAnnotation test) {
+    public void addLoincTest(LOINC2HpoAnnotationImpl test) {
         // todo warn if term already in map
         loincAnnotationMap.put(test.getLoincId(),test);
-        logger.debug("Annotation is add for: " + test.getLoincId());
+        logger.debug("AdvantagedAnnotationTableComponent is add for: " + test.getLoincId());
     }
 
     public void removeLoincTest(String loincNum) {
@@ -297,7 +310,7 @@ public class Model {
         }
     }
 
-    public Map<LoincId,UniversalLoinc2HPOAnnotation> getLoincAnnotationMap(){ return loincAnnotationMap; }
+    public Map<LoincId,LOINC2HpoAnnotationImpl> getLoincAnnotationMap(){ return loincAnnotationMap; }
 
     public Map<String, Set<LoincId>> getUserCreatedLoincLists() {
         return userCreatedLoincLists;
@@ -364,6 +377,9 @@ public class Model {
             if (pathToLastSession != null) {
                 bw.write(String.format("last session:%s\n", pathToLastSession));
             }
+            if (pathToHpGitRepo != null) {
+                bw.write(String.format("hp-repo:%s\n", pathToHpGitRepo));
+            }
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -395,6 +411,7 @@ public class Model {
                 else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
                 else if (key.equals("autosave to")) this.pathToAutoSavedFolder = value;
                 else if (key.equals("last session")) this.pathToLastSession = value;
+                else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
             }
             br.close();
         } catch (IOException e) {
@@ -402,6 +419,25 @@ public class Model {
             logger.error("Could not open settings at " + path);
         }
     }
+
+    private String fhirServer = Constants.HAPIFHIRTESTSERVER;//default fhir server
+    public String getFhirServer() {
+        return fhirServer;
+    }
+
+    public void setFhirServer(String fhirServer) {
+        this.fhirServer = fhirServer;
+    }
+
+    private List<String> fhirServers = new ArrayList<>(Arrays.asList(this.fhirServer));
+    public List<String> getFhirServers() {
+        return fhirServers;
+    }
+
+    public void setFhirServers(List<String> fhirServers) {
+        this.fhirServers = fhirServers;
+    }
+
 
 
 }

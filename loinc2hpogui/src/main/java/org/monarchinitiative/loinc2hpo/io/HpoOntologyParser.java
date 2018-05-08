@@ -14,8 +14,6 @@ import org.monarchinitiative.phenol.ontology.data.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -54,6 +52,7 @@ public class HpoOntologyParser {
      */
     public void parseOntology() throws IOException {
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpoOntologyPath));
+        logger.debug("ontology path: " + hpoOntologyPath);
         this.ontology = hpoOboParser.parse();
     }
 

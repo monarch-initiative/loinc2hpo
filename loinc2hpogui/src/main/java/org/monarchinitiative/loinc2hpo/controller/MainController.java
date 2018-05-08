@@ -2,44 +2,37 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.sun.javafx.runtime.SystemProperties;
-import com.sun.javafx.stage.WindowCloseRequestHandler;
-import com.sun.org.apache.bcel.internal.generic.POP;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableMapValue;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.MapChangeListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.jena.dboe.sys.Sys;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.wagon.CommandExecutionException;
+import org.monarchinitiative.loinc2hpo.Constants;
+import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
-import org.monarchinitiative.loinc2hpo.gui.Main;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
 import org.monarchinitiative.loinc2hpo.io.*;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.UniversalLoinc2HPOAnnotation;
 import org.monarchinitiative.loinc2hpo.model.Model;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,7 +63,7 @@ public class MainController {
             (false);
 
     //The following is the data that needs to be tracked
-    private Map<LoincId, UniversalLoinc2HPOAnnotation> annotationMap_Copy;
+    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap_Copy;
     private Map<String, Set<LoincId>> loincCategories_Copy;
 
     @Inject private SetupTabController setupTabController;
@@ -97,6 +90,9 @@ public class MainController {
     @FXML private Tab annotateTabButton;
     @FXML private Tab Loinc2HPOAnnotationsTabButton;
     @FXML private Tab Loinc2HpoConversionTabButton;
+
+    @FXML private MenuItem updateHpoButton;
+
 
 
     @FXML private void initialize() {
@@ -205,6 +201,7 @@ public class MainController {
             }
         }
 
+
         //@TODO: to decide whether to remove the following menuitems
         importLoincCategory.setVisible(false);
         exportLoincCategory.setVisible(false);
@@ -212,6 +209,7 @@ public class MainController {
         saveAnnotationsAsMenuItem.setVisible(false);
         appendAnnotationsToMenuItem.setVisible(false);
         clearMenu.setVisible(false);
+        updateHpoButton.setVisible(false);
     }
 
     private boolean isConfigurationCompleted() {
@@ -354,6 +352,51 @@ public class MainController {
         e.consume();
     }
 
+    @FXML private void changeHpoOwlTo(ActionEvent e) {
+
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose HPO OWL file");
+        File owl = chooser.showOpenDialog(null);
+        if (owl != null) {
+            model.setPathToHpOwlFile(owl.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
+    @FXML private void changeHpoOboTo(ActionEvent e) {
+
+        e.consume();
+        logger.trace("changeHpoOboTo clicked");
+        e.consume();
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose HPO OBO file");
+        File obo = chooser.showOpenDialog(null);
+        if (obo != null) {
+            model.setPathToHpOboFile(obo.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
+    @FXML private void setHPORepo(ActionEvent e) {
+
+        e.consume();
+        logger.trace("set HPO repo");
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Choose Human Phenotype Ontology Github repo");
+        File hpo = chooser.showDialog(null);
+        if (hpo != null) {
+            model.setPathToHpGitRepo(hpo.getAbsolutePath());
+            model.writeSettings();
+            configurationComplete.set(isConfigurationCompleted());
+        }
+
+    }
+
     @FXML public  void setPathToLoincCoreTableFile(ActionEvent e) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Choose LOINC Core Table file");
@@ -440,7 +483,7 @@ public class MainController {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("LOINC2HPO Biocuration tool");
         alert.setHeaderText("Loinc2Hpo");
-        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.";
+        String s = "A tool for biocurating HPO mappings for LOINC laboratory codes.\n\nversion: " + VersionCommand.getVersion();
         alert.setContentText(s);
         alert.showAndWait();
         e.consume();
@@ -607,28 +650,40 @@ public class MainController {
         if (model.getPathToLastSession() == null) {
             createNewSession();
         }
-        /**
+
+        // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
+        //create folder is not present
+        Path folderTSVSeparated = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSeparateFilesFolder);
+        if (!Files.exists(folderTSVSeparated)) {
+            try {
+                Files.createDirectory(folderTSVSeparated);
+            } catch (IOException e1) {
+
+                PopUps.showWarningDialog("Error message",
+                        "Failure to create folder",
+                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSeparated));
+                return;
+            }
+
+        }
+        /**disable this unless necessary
         //save annotations to "basic_annotations" and "advanced_annotations"
-        String pathToAnnotations = model.getPathToLastSession() + File.separator + "basic_annotations.tsv";
         try {
-            WriteToFile.toTSVbasicAnnotations(pathToAnnotations, model.getLoincAnnotationMap());
+            LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
+            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
+            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile, folderTSVSeparated.toString());
         } catch (IOException e1) {
+
             PopUps.showWarningDialog("Error message",
-                    "Failure to save basic annotations data",
+                    "Failure to save annotations data",
                     "An error occurred. Try again!");
+
         }
 
-        String pathToAnnotations2 = model.getPathToLastSession() + File.separator + "advanced_annotations.tsv";
-        try {
-            WriteToFile.toTSVadvancedAnnotations(pathToAnnotations2, model.getLoincAnnotationMap());
-        } catch (IOException e1) {
-            PopUps.showWarningDialog("Error message",
-                    "Failure to save advanced annotations data",
-                    "An error occurred. Try again!");
-        }
+         //end
          **/
 
-        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + "TSVSingleFile");
+        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
             try {
                 Files.createDirectory(folderTSVSingle);
@@ -640,10 +695,11 @@ public class MainController {
             }
         }
 
-        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + "annotations.tsv";
+        String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
+            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
             LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
-        } catch (Exception e1) {
+        } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,
                     String.format("An error occurred when trying to save data to %s. Try again!", annotationTSVSingleFile));
@@ -690,7 +746,7 @@ public class MainController {
         e.consume();
         logger.info("usr wants to save file");
         //loinc2HpoAnnotationsTabController.saveLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSave();
+        loinc2HpoAnnotationsTabController.saveAnnotations();
 
     }
 
@@ -704,7 +760,7 @@ public class MainController {
         e.consume();
         logger.info("user wants to save to a new file");
         //loinc2HpoAnnotationsTabController.saveAsLoincAnnotation();
-        loinc2HpoAnnotationsTabController.newSaveAs();
+        loinc2HpoAnnotationsTabController.saveAnnotationsAs();
     }
 
     /**
@@ -767,7 +823,121 @@ public class MainController {
 
     }
 
+    @FXML
+    private void updateHpo(ActionEvent e) {
+        e.consume();
+        logger.trace("user wants to update HPO");
+        try {
+            updateHpo();
+        } catch (NullPointerException e1) {
+            PopUps.showWarningDialog("Warning", "Failure to update Human Phenotype Ontology", "You may not have set the path to HPO repository");
+        } catch (Exception e1) {
+            PopUps.showWarningDialog("Warning", "Failure to update Human Phenotype Ontology", "Do it manually");
+        }
 
+    }
+
+    @FXML
+    private void start(ActionEvent e){
+        e.consume();
+        logger.trace("user starts a session");
+        try {
+            sendLockingEmail();
+            PopUps.showWarningDialog("Success", "Locking Message Sent", "Next: pull latest annotation data");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to send locking message", "Do it manually");
+        }
+    }
+
+    @FXML
+    private void checkoutData(ActionEvent e) {
+        e.consume();
+        logger.trace("user starts a session");
+        try {
+            checkoutAnnotation();
+            PopUps.showWarningDialog("Success", "Latest data successfully pulled from Github", "You can start annotating now");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to execute terminal command", "Need to start manually");
+        }
+    }
+
+    @FXML
+    private void checkinData(ActionEvent e) {
+        e.consume();
+        logger.trace("user ends a session");
+        try {
+            checkinAnnotation();
+            PopUps.showWarningDialog("Success", "Data successfully checked in to Github", "Next: send out unlocking message");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to check in data to Github", "Do it manually");
+        }
+    }
+
+    @FXML
+    private void end(ActionEvent e) {
+        e.consume();
+        logger.trace("user ends a session");
+        try {
+            sendUnlockingEmail();
+            PopUps.showWarningDialog("Success", "Unlocking message successfully sent out", "All clear. You can safely leave now");
+        } catch (Exception e1){
+            PopUps.showWarningDialog("Warning", "Failure to send unlocking message", "Need to send manually");
+        }
+    }
+
+    private void updateHpo() throws IOException, InterruptedException, CommandExecutionException {
+        String command = "git pull && cd src/ontology && make && cd ../..";
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToHpGitRepo());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
+
+    private void checkoutAnnotation() throws IOException, InterruptedException, CommandExecutionException {
+
+        String command = "git pull origin develop && git checkout develop";
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+
+    }
+
+    public void checkinAnnotation() throws IOException, InterruptedException, CommandExecutionException {
+
+        String command = String.format("git add . && git commit -m \"%s\" && git push origin develop", "update");
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+
+    }
+
+    public void sendLockingEmail() throws IOException, InterruptedException, CommandExecutionException {
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
+
+    public void sendUnlockingEmail() throws IOException, InterruptedException, CommandExecutionException {
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
+        String[] commands = new String[] {"/bin/bash", "-c", command};
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        int exitvalue = tm.execute();
+        if (exitvalue != 0) {
+            throw new CommandExecutionException("failure"); //borrowed an exception from another library
+        }
+    }
 
 
 }

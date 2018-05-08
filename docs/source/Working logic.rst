@@ -16,12 +16,12 @@ Mapping LOINC to candidate HPO terms
 
 LOINC observations have four main categories, quantitative(Qn), ordinal(Ord), nominal (Nom) and narrative(Nar). The majority of them are ``Qn`` (~50%) and ``Ord`` (~26%) and a smaller percentage are ``Nom`` and ``Nar`` type (<10%). The outcome of Qn and Ord type observations are typically represented with a code from the FHIR interpretation code valueset. Some examples are ``L`` for "low", ``LL`` for "critically low", or ``NEG`` for "negative". The full valueset is included in Table 2. Therefore, if we map those interpretation codes to a candidate HPO term for each LOINC, we will be able to convert an observation into a HPO term.
 
-However, the FHIR interpretation code valueset has 39 codes. It would be a massive task we need to map 39 HPO terms for each LOINC code, let alone there could be more than one interpretation code system for different EHR systems. Fortunately, many interpretation codes are  similar (e.g. FHIR ``L`` and ``LL`` both represent "low" but at different severity). So instead of annotating each each interpretation code, we will first map an interpretation code valueset into a much smaller internal code system with 7 values (Table 1). Then we just need to annotate 7 values for each LOINC code (actually 6 because "U" does not need an annotation) instead of 39. Table 2 shows the map between FHIR interpretation code valueset to our internal code system. Similar maps can be built to deal with other interpretation code systems.
+However, the FHIR interpretation code valueset has 39 codes. It would be a massive task if we need to map 39 HPO terms for each LOINC code, let alone there could be more than one interpretation code system for different EHR systems. Fortunately, many interpretation codes are  similar (e.g. FHIR ``L`` and ``LL`` both represent "low" but at different severity). So we picked 7 FHIR codes as our internal code to simplify the annotation job. Instead of annotating each each interpretation code, we will first map an interpretation code valueset into this internal FHIR subset (Table 1). Then we just need to annotate 7 values for each LOINC code (actually 6 because "U" does not need an annotation) instead of 39. Table 2 shows the map between FHIR interpretation code valueset to the FHIR subset. Similar maps can be built to deal with other interpretation code systems.
 
 Table 1: Internal Code System
 
 +-----------+------------------------+
-|code system|http://jax.org/loinc2hpo|
+|code system|   FHIR                 |
 +-----------+------------------------+
 |Code       |   Meaning              |
 +===========+========================+
@@ -33,9 +33,9 @@ Table 1: Internal Code System
 +-----------+------------------------+
 |H          |   high                 |
 +-----------+------------------------+
-|NP         |   not present          |
+|NEG        |   not present          |
 +-----------+------------------------+
-|P          |   present              |
+|POS        |   present              |
 +-----------+------------------------+
 |U          |   unknown              |
 +-----------+------------------------+
@@ -43,9 +43,9 @@ Table 1: Internal Code System
 Table 2: FHIR interpretation code set Mapping to internal code system
 
 +-----------------------------------+---------------------------+
-|FHIR interpretation code value set |internal code system       |
+|FHIR interpretation code value set |internal FHIR subset       |
 +-------+---------------------------+---------------------------+
-|system |http://hl7.org/fhir/v2/0078|http://jax.org/loinc2hpo   |
+|system |http://hl7.org/fhir/v2/0078|FHIR                       |
 +-------+---------------------------+--------+------------------+
 |Code   | Meaning                   |Code    | Meaning          |
 +=======+===========================+========+==================+
@@ -57,14 +57,14 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 +-------+---------------------------+--------+------------------+
 |AA     |Critically abnormal        |A       |abnormal          |
 +-------+---------------------------+--------+------------------+
-|AC     |Anti-complementary         |P       |present           |
+|AC     |Anti-complementary         |POS     |present           |
 |       |substances present         |        |                  |
 +-------+---------------------------+--------+------------------+
 |B      |Better                     |N       |normal            |
 +-------+---------------------------+--------+------------------+
 |D      |Significant change down    |L       |low               |
 +-------+---------------------------+--------+------------------+
-|DET    |Detected                   |P       |present           |
+|DET    |Detected                   |POS     |present           |
 +-------+---------------------------+--------+------------------+
 |H      |High                       |H       |high              |
 +-------+---------------------------+--------+------------------+
@@ -92,11 +92,11 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 +-------+---------------------------+--------+------------------+
 |N      |Normal                     |N       |normal            |
 +-------+---------------------------+--------+------------------+
-|ND     |Not Detected               |NP      |not present       |
+|ND     |Not Detected               |NEG     |not present       |
 +-------+---------------------------+--------+------------------+
-|NEG    |Negative                   |NP      |not present       |
+|NEG    |Negative                   |NEG     |not present       |
 +-------+---------------------------+--------+------------------+
-|NR     |Non-reactive               |NP      |not present       |
+|NR     |Non-reactive               |NEG     |not present       |
 +-------+---------------------------+--------+------------------+
 |NS     |Non-susceptible            |U       |unknown           |
 +-------+---------------------------+--------+------------------+
@@ -106,13 +106,13 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 |OBX    |Interpretation qualifiers  |U       |unknown           |
 |       |in separate OBX segments   |        |                  |
 +-------+---------------------------+--------+------------------+
-|POS    |Positive                   |P       |positive          |
+|POS    |Positive                   |POS     |positive          |
 +-------+---------------------------+--------+------------------+
 |QCF    |Quality Control Failure    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
 |R      |Resistant                  |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|RR     |Reactive                   |P       |present           |
+|RR     |Reactive                   |POS     |present           |
 +-------+---------------------------+--------+------------------+
 |S      |Susceptible                |U       |unknown           |
 +-------+---------------------------+--------+------------------+
@@ -122,7 +122,7 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 +-------+---------------------------+--------+------------------+
 |SYN-S  |Synergy - susceptible	    |U       |unknown           |
 +-------+---------------------------+--------+------------------+
-|TOX    |Cytotoxic substance present|P       |present           |
+|TOX    |Cytotoxic substance present|POS     |present           |
 +-------+---------------------------+--------+------------------+
 |U      |Significant change up      |H       |high              |
 +-------+---------------------------+--------+------------------+
@@ -132,19 +132,18 @@ Table 2: FHIR interpretation code set Mapping to internal code system
 +-------+---------------------------+--------+------------------+
 |W      |Worse                      |A       |abnormal          |
 +-------+---------------------------+--------+------------------+
-|WR     |Weakly reactive            |P       |present           |
+|WR     |Weakly reactive            |POS     |present           |
 +-------+---------------------------+--------+------------------+
 
-We can make the annotation task even easier. If we analyze our internal codes carefully, ``NP`` ("not present"), resenting an outcome that the measured value is below a certain threshold, is actually the same as ``L`` ("low"), while ``P`` ("present") is the opposite and actually the same as ``H`` ("high"). Obviously, ``A`` ("abnormal") is simply the reverse of ``N`` ("normal"). So actually, we only need to map three HPO terms for each LOINC code, representing the outcomes of low value, intermediate value, and high value. The above rules should apply to the majority of LOINC codes, although we cannot rule out the possibility that they do not apply, so we will allow mapping different terms to ``NP`` and ``L``, ``P`` and ``H``, or ``A`` and ``N``.
+We can make the annotation task even easier. If we analyze our internal codes carefully, ``NEG`` ("not present") and "POS", resenting an outcome that the measured value is only applicable to ``Ord`` type of LOINC that has "present" or "absent" as its outcome. On the other hand, "L", "N", "A", "H" only apply to ``Qn`` type of LOINC. "A" and "N" will map to the same HPO term but have opposite negation value. What this means is that we only need to map 2 HPO terms to ``Ord`` LOINC with "presence"/"absence" outcome and 3 HPO terms to ``Qn`` LOINC.
 
 The following graph summarize the annotation process and how the app convert a LOINC observation into HPO terms. We pick three HPO terms for each LOINC code, representing the desired phenotype to assign for the patient when the observation value is low, intermediate, or high. By default, those three terms will be mapped to the internal coding values, which further map to external code values used in real world.
 
     .. image:: images/annotation_scheme.png
 
-* note: A LOINC observation may not have both ``P`` ``NP`` and ``L`` ``H``. For example, annotating ``10449-7`` (``"Glucose in Serum or Plasma -- 1 hour post meal"``) with ``P`` ``NP`` seems unrealistic. Doing this, however, will not affect how the app performs when it tries to convert an observation into HPO terms, as ``P`` and ``NP`` will never be encountered, and it does make the annotation task easier.
+* note:
 
-
-``Ord``, ``Nom`` and ``Nar`` observations can use other coding systems that are more difficult to handle. For example, ``Loinc 600-7`` or "Bacteria identified in Blood by Culture" may use a SNOMED concept to represent the finding that *Staphylococcus aureus* is detected::
+``Ord``(non-"presence"/"absence" outcome), ``Nom`` and ``Nar`` observations can use other coding systems that are more difficult to handle. For example, ``Loinc 600-7`` or "Bacteria identified in Blood by Culture" may use a SNOMED concept to represent the finding that *Staphylococcus aureus* is detected::
 
   "coding":[
   {
