@@ -876,7 +876,7 @@ public class MainController {
             checkinAnnotation();
             PopUps.showWarningDialog("Success", "Data successfully checked in to Github", "Next: send out unlocking message");
         } catch (Exception e1){
-            PopUps.showWarningDialog("Warning", "Failure to check in data to Github", "Do it manually");
+            PopUps.showWarningDialog("Warning", "Failure to check in data to Github", "Possible reasons & solutions:\n1) No data change: no need to check in data \n2) Data has not been saved: save session data and retry\n 3) unknown reasons: check in data manually");
         }
     }
 
