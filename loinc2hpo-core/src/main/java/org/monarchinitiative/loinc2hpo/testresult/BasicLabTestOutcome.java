@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * This class represents the final outcome for a lab test. It basically wraps the Observation and the outcome. For memory considerations, the best practice is to save the subject and observation identifier only instead of the entire observation.
  */
+@Deprecated
 public class BasicLabTestOutcome implements LabTestOutcome {
 
     private Observation observation;

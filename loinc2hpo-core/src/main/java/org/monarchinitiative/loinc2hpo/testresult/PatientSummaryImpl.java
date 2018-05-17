@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
+import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import sun.tools.java.Identifier;
 
@@ -11,24 +12,26 @@ import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
-    private List<Identifier> identifiers;
-    private String id;
+    private Patient patient;
     private List<LabTest> labTests;
     private List<AbnormalityComponent> abnormalityComponents;
-    private Map<HpoTerm, AbnormalitySynonet> synonetMap;
+    private static Map<HpoTerm, AbnormalitySynonet> synonetMap;
 
-    public PatientSummaryImpl(Map<HpoTerm, AbnormalitySynonet> synonetMap){
-        this.synonetMap = synonetMap;
+    //do not allow instantiation with new
+    private PatientSummaryImpl(){
+
+    }
+
+    static PatientSummaryImpl getInstance(){
+        if (synonetMap == null) {
+            throw new RuntimeException("synonetMap is not set");
+        }
+        return new PatientSummaryImpl();
     }
 
     @Override
-    public List<Identifier> patientIdentifier() {
-        return new ArrayList<>(identifiers);
-    }
-
-    @Override
-    public String patientId() {
-        return this.id;
+    public Patient patient() {
+        return this.patient;
     }
 
     @Override
@@ -42,17 +45,29 @@ public class PatientSummaryImpl implements PatientSummary{
         tests.forEach(this::addTest);
     }
 
+    /**
+     * How to interpret patient abnormalities?
+     * check all patient abnormalities, for abnormalities that he is showing:
+     * if current test diagnosed that he is showing the same term, no need to do anything except check expiration date;
+     * if current test diagnosed that he is showing mutually exclusive terms, terminate the current term and add a new abnormality
+     * if current test diagnosed that he is showing novel abnormalities, just add a new abnormality
+     * @param test
+     */
     private void interpret_new_test(LabTest test) {
-        HpoTerm newterm = test.getOutcome().getOutcome().getHpoTerm();
+        HpoTerm newterm = test.outcome().getHpoTerm();
         for (AbnormalityComponent component : abnormalityComponents) {
             if (component.abnormality().equals(newterm)) {
                 //if the patient is already diagnosed with the phenotype, we don't need to do more
-            } else {
+                //but if the current test has an effectiveEnd time, we should update it
+                if (test.effectiveEnd() != null) {
+                    component.setEffectiveEnd(test.effectiveEnd());
+                }
+            } else if (synonetMap.get(component.abnormality()).has(newterm)){
+                component.setEffectiveEnd(test.effectiveEnd());
+                component.
 
             }
-            if (this.synonetMap.get(component.abnormality()).has()) {
 
-            }
         }
     }
 

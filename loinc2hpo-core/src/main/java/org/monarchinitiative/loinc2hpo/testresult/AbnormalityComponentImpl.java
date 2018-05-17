@@ -1,12 +1,8 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.apache.maven.model.Build;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
-
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -54,6 +50,16 @@ public class AbnormalityComponentImpl implements AbnormalityComponent{
     @Override
     public boolean isNegated() {
         return this.isNegated;
+    }
+
+    @Override
+    public void changeEffectiveStart(Date start) {
+        this.start = start;
+    }
+
+    @Override
+    public void changeEffectiveEnd(Date end) {
+        this.end = end;
     }
 
     public static class Builder {

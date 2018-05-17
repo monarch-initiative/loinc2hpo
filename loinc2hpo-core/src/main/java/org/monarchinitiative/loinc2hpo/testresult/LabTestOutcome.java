@@ -9,9 +9,14 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.List;
 
 /**
+ * This class should combine with the Labtest.class.
+ */
+
+/**
  * This interface defines classes that model the outcome from a lab test after our analysis. It contains the information about the subject of the test, the identifier of the test, and the outcome (in HPO terms).
  */
 
+@Deprecated
 public interface LabTestOutcome {
 
     /**

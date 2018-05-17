@@ -1,29 +1,24 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
+import org.hl7.fhir.dstu3.model.Patient;
 import sun.tools.java.Identifier;
 
 import java.util.Date;
 import java.util.List;
 
 /**
- * This class is used to represent the summary of a patient. It should be able to answer at least one question:
- * Given a time period, what phenotype abnormalities does the patient have
+ * This class is used to represent the summary of a patient. It should have the following components:
+ * patient id;
+ * lab tests;
+ * phenotype abnormalities
  */
 public interface PatientSummary {
 
-    //subject with identifier
-
     /**
-     * Return subject identifier. This is the preferred way for identification.
+     * Reference to the subject
      * @return
      */
-    List<Identifier> patientIdentifier();
-
-    /**
-     * Return the id for the patient
-     * @return
-     */
-    String patientId();
+    Patient patient();
 
     //A list of lab tests that the patient performed
 
