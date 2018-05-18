@@ -4,7 +4,7 @@ import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 import java.util.Set;
 
-public interface AbnormalitySynonet {
+public interface PhenoSet {
 
     /**
      * A set of hpo terms that are outcomes of same lab tests

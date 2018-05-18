@@ -6,18 +6,18 @@ import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AbnormalityComponentImpl implements AbnormalityComponent{
+public class PhenoSetComponentImpl implements PhenoSetComponent {
 
     private Date start;
     private Date end;
     private HpoTerm hpoTerm;
     private boolean isNegated;
 
-    private AbnormalityComponentImpl() {
+    private PhenoSetComponentImpl() {
 
     }
 
-    private AbnormalityComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull HpoTerm hpoTerm, boolean isNegated) {
+    private PhenoSetComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull HpoTerm hpoTerm, boolean isNegated) {
         this.start = start;
         this.end = end;
         this.hpoTerm = hpoTerm;
@@ -36,10 +36,11 @@ public class AbnormalityComponentImpl implements AbnormalityComponent{
 
     @Override
     public boolean isEffective(Date timepoint) {
-        if (timepoint.before(end) && timepoint.after(start)) {
-            return true;
+        //at timepoint between [effectiveStart, effectiveEnd] inclusive is effective
+        if (timepoint.before(start) || timepoint.after(end)) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -107,8 +108,8 @@ public class AbnormalityComponentImpl implements AbnormalityComponent{
         }
 
 
-        protected AbnormalityComponentImpl build() {
-            return new AbnormalityComponentImpl(this.start, this.end, this.hpoTerm, this.isNegated);
+        protected PhenoSetComponentImpl build() {
+            return new PhenoSetComponentImpl(this.start, this.end, this.hpoTerm, this.isNegated);
         }
     }
 }

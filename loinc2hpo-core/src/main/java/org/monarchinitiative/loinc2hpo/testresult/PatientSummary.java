@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.hl7.fhir.dstu3.model.Patient;
-import sun.tools.java.Identifier;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +23,7 @@ public interface PatientSummary {
 
     /**
      * Add one more test for the patient
+     * If the test outcome can be transformed into a HPO term, add the phenotype to a phenoset timeline.
      */
     void addTest(LabTest test);
 
@@ -36,7 +36,7 @@ public interface PatientSummary {
     /**
      * Add a phenotype manifest
      */
-    void addPhenoManifest(AbnormalityComponent abnormalityComponent);
+    //void addPhenoManifest(PhenoSetComponent phenoSetComponent);
 
 
     /**
@@ -49,15 +49,15 @@ public interface PatientSummary {
      * Returns a list of phenotype manifestations during a specified period. Core function of this class.
      * @param start
      * @param end
-     * @return a set of HPO terms
+     * @return a set of phenoset components. It is likely that same phenotypes occur multiple times but with different period associated with them.
      */
-    List<AbnormalityComponent> phenoDuring(Date start, Date end);
+    List<PhenoSetComponent> phenoDuring(Date start, Date end);
 
     /**
      * Return a list of phenotype menifestations in a patient's lifetime.
      * @return
      */
-    List<AbnormalityComponent> phenoSinceBorn();
+    List<PhenoSetComponent> phenoSinceBorn();
 
 
 }

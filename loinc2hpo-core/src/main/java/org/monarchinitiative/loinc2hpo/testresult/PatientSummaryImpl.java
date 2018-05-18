@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
-import sun.tools.java.Identifier;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,10 +11,11 @@ import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
+    private static Map<HpoTerm, PhenoSet> phenoSetMap;
+
     private Patient patient;
     private List<LabTest> labTests;
-    private List<AbnormalityComponent> abnormalityComponents;
-    private static Map<HpoTerm, AbnormalitySynonet> synonetMap;
+    private List<PhenoSetTimeLine> phenoSetTimeLines;
 
     //do not allow instantiation with new
     private PatientSummaryImpl(){
@@ -23,8 +23,8 @@ public class PatientSummaryImpl implements PatientSummary{
     }
 
     static PatientSummaryImpl getInstance(){
-        if (synonetMap == null) {
-            throw new RuntimeException("synonetMap is not set");
+        if (phenoSetMap == null) {
+            throw new RuntimeException("phenoSetMap is not set");
         }
         return new PatientSummaryImpl();
     }
@@ -38,6 +38,7 @@ public class PatientSummaryImpl implements PatientSummary{
     public void addTest(LabTest test) {
         this.labTests.add(test);
         //determine abnormality
+        interpret_new_test(test);
     }
 
     @Override
@@ -54,27 +55,21 @@ public class PatientSummaryImpl implements PatientSummary{
      * @param test
      */
     private void interpret_new_test(LabTest test) {
-        HpoTerm newterm = test.outcome().getHpoTerm();
-        for (AbnormalityComponent component : abnormalityComponents) {
-            if (component.abnormality().equals(newterm)) {
-                //if the patient is already diagnosed with the phenotype, we don't need to do more
-                //but if the current test has an effectiveEnd time, we should update it
-                if (test.effectiveEnd() != null) {
-                    component.setEffectiveEnd(test.effectiveEnd());
-                }
-            } else if (synonetMap.get(component.abnormality()).has(newterm)){
-                component.setEffectiveEnd(test.effectiveEnd());
-                component.
-
-            }
-
+        if (test.outcome() == null) { //if test is not transformed into HPO, return
+            return;
         }
-    }
 
-    @Override
-    public void addPhenoManifest(AbnormalityComponent abnormalityComponent) {
-        this.abnormalityComponents.add(abnormalityComponent);
-
+        HpoTerm newterm = test.outcome().getHpoTerm();
+        for (PhenoSetTimeLine timeLine : phenoSetTimeLines) {
+            if (timeLine.phenoset().has(newterm)) {
+                PhenoSetComponent newComponent = new PhenoSetComponentImpl.Builder()
+                        .start(test.effectiveStart())
+                        //default end time
+                        .hpoTerm(test.outcome().getHpoTerm())
+                        .isNegated(test.outcome().isNegated()).build();
+                timeLine.insert(newComponent);
+            }
+        }
     }
 
     @Override
@@ -83,15 +78,24 @@ public class PatientSummaryImpl implements PatientSummary{
     }
 
     @Override
-    public List<AbnormalityComponent> phenoDuring(Date start, Date end) {
-        return this.abnormalityComponents
-                .stream()
-                .filter(c -> c.effectiveStart().before(start) && c.effectiveEnd().after(end))
-                .collect(Collectors.toList());
+    public List<PhenoSetComponent> phenoDuring(Date start, Date end) {
+        List<PhenoSetComponent> patientPhenotypes = new ArrayList<>();
+        phenoSetTimeLines.stream().forEach(timeline -> {
+            timeline.getTimeLine().stream()
+                    .filter(component -> component.isEffective(start))
+                    .filter(component -> component.isEffective(end))
+                    .forEach(patientPhenotypes::add);
+        });
+        return patientPhenotypes;
     }
 
     @Override
-    public List<AbnormalityComponent> phenoSinceBorn() {
-        return new ArrayList<>(this.abnormalityComponents);
+    public List<PhenoSetComponent> phenoSinceBorn() {
+
+        List<PhenoSetComponent> patientPhenotypes = new ArrayList<>();
+        phenoSetTimeLines.stream().forEach(timeLine -> {
+            patientPhenotypes.addAll(timeLine.getTimeLine());
+        });
+        return patientPhenotypes;
     }
 }
