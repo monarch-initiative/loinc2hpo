@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-public class PhenoSetComponentImplTest {
+public class PhenotypeComponentImplTest {
 
-    private static PhenoSetComponent testComponent;
+    private static PhenotypeComponent testComponent;
     private static Map<String, HpoTerm> hpoTermMap;
     private static Map<TermId, HpoTerm> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -56,7 +56,7 @@ public class PhenoSetComponentImplTest {
     public void init() throws Exception {
         //create an instance
         Date start = dateFormat.parse("2016-09-30 09:30:00");
-        testComponent = new PhenoSetComponentImpl.Builder()
+        testComponent = new PhenotypeComponentImpl.Builder()
                 .start(start)
                 .hpoTerm(hpoTermMap.get("Hyperglycemia"))
                 .isNegated(false)

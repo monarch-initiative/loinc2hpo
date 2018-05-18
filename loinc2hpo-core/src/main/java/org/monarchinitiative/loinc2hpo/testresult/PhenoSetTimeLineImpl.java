@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
-    private List<PhenoSetComponent> phenosetTimeLine;
+    private List<PhenotypeComponent> phenosetTimeLine;
     private PhenoSet phenoset;
 
     public PhenoSetTimeLineImpl(PhenoSet phenoset) {
@@ -20,18 +20,18 @@ public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
     }
 
     @Override
-    public List<PhenoSetComponent> getTimeLine() {
+    public List<PhenotypeComponent> getTimeLine() {
         return new LinkedList<>(this.phenosetTimeLine);
     }
 
     @Override
-    public void insert(PhenoSetComponent newAbnorm) {
+    public void insert(PhenotypeComponent newAbnorm) {
         if (this.phenosetTimeLine.isEmpty()) {
             phenosetTimeLine.add(newAbnorm);
             return;
         }
         for (int i = 0; i < phenosetTimeLine.size(); i++) {
-            PhenoSetComponent current = phenosetTimeLine.get(i);
+            PhenotypeComponent current = phenosetTimeLine.get(i);
             if (current.effectiveStart().after(newAbnorm.effectiveStart())) {
                 newAbnorm.changeEffectiveEnd(current.effectiveStart());
                 phenosetTimeLine.add(i, newAbnorm);
@@ -64,13 +64,13 @@ public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
 
     @Override
-    public void delete(PhenoSetComponent phenoSetComponent) {
+    public void delete(PhenotypeComponent phenotypeComponent) {
         throw new UnsupportedOperationException();
 
     }
 
     @Override
-    public PhenoSetComponent current(Date date) {
-        return null;
+    public PhenotypeComponent current(Date date) {
+        return phenosetTimeLine.stream().filter();
     }
 }

@@ -23,13 +23,18 @@ public class PhenoSetImpl implements PhenoSet {
     }
 
     @Override
-    public boolean has(HpoTerm term) {
+    public boolean sameSet(HpoTerm term) {
         if (termSet.isEmpty()) {
             return false;
         } else {
             return this.hpoTermUnionFind.inSameSet(term, termSet.iterator().next());
         }
 
+    }
+
+    @Override
+    public boolean hasOccurred(HpoTerm term) {
+        return !this.termSet.isEmpty() && this.termSet.contains(term);
     }
 
     @Override

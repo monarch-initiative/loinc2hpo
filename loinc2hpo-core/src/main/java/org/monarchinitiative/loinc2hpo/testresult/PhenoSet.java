@@ -13,7 +13,9 @@ public interface PhenoSet {
      */
     Set<HpoTerm> getSet();
 
-    boolean has(HpoTerm term);
+    boolean sameSet(HpoTerm term);
+
+    boolean hasOccurred(HpoTerm term);
 
     void add(HpoTerm hpoTerm);
 

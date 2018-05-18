@@ -4,7 +4,7 @@ import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 import java.util.Date;
 
-public interface PhenoSetComponent {
+public interface PhenotypeComponent {
     /**
      * When does a patient start to show the phenotype
      * @return

@@ -6,18 +6,18 @@ import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
 
-public class PhenoSetComponentImpl implements PhenoSetComponent {
+public class PhenotypeComponentImpl implements PhenotypeComponent {
 
     private Date start;
     private Date end;
     private HpoTerm hpoTerm;
     private boolean isNegated;
 
-    private PhenoSetComponentImpl() {
+    private PhenotypeComponentImpl() {
 
     }
 
-    private PhenoSetComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull HpoTerm hpoTerm, boolean isNegated) {
+    private PhenotypeComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull HpoTerm hpoTerm, boolean isNegated) {
         this.start = start;
         this.end = end;
         this.hpoTerm = hpoTerm;
@@ -108,8 +108,8 @@ public class PhenoSetComponentImpl implements PhenoSetComponent {
         }
 
 
-        protected PhenoSetComponentImpl build() {
-            return new PhenoSetComponentImpl(this.start, this.end, this.hpoTerm, this.isNegated);
+        protected PhenotypeComponentImpl build() {
+            return new PhenotypeComponentImpl(this.start, this.end, this.hpoTerm, this.isNegated);
         }
     }
 }

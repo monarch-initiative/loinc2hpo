@@ -36,7 +36,7 @@ public interface PatientSummary {
     /**
      * Add a phenotype manifest
      */
-    //void addPhenoManifest(PhenoSetComponent phenoSetComponent);
+    //void addPhenoManifest(PhenotypeComponent phenoSetComponent);
 
 
     /**
@@ -51,13 +51,13 @@ public interface PatientSummary {
      * @param end
      * @return a set of phenoset components. It is likely that same phenotypes occur multiple times but with different period associated with them.
      */
-    List<PhenoSetComponent> phenoDuring(Date start, Date end);
+    List<PhenotypeComponent> phenoDuring(Date start, Date end);
 
     /**
      * Return a list of phenotype menifestations in a patient's lifetime.
      * @return
      */
-    List<PhenoSetComponent> phenoSinceBorn();
+    List<PhenotypeComponent> phenoSinceBorn();
 
 
 }

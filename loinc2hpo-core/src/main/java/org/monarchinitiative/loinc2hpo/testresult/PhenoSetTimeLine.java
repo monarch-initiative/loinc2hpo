@@ -7,11 +7,11 @@ public interface PhenoSetTimeLine {
 
     PhenoSet phenoset();
 
-    List<PhenoSetComponent> getTimeLine();
+    List<PhenotypeComponent> getTimeLine();
 
-    void insert(PhenoSetComponent phenoSetComponent);
+    void insert(PhenotypeComponent phenotypeComponent);
 
-    void delete(PhenoSetComponent phenoSetComponent);
+    void delete(PhenotypeComponent phenotypeComponent);
 
-    PhenoSetComponent current(Date date);
+    PhenotypeComponent current(Date date);
 }

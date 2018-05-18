@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -23,10 +22,7 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 @Ignore
-/**
- * Only manually run this test
- */
-public class PhenoSetUnionFindTest {
+public class PhenoSetImplTest {
 
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
     private static Map<String, HpoTerm> hpoTermMap;
@@ -68,15 +64,36 @@ public class PhenoSetUnionFindTest {
 
         unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap);
 
+
+
+    }
+    @Test
+    public void sameSet() throws Exception {
+
+        PhenoSet phenoSet = new PhenoSetImpl(unionFind.getUnionFind());
+
+        HpoTerm term1 = hpoTermMap.get("Hypocapnia");
+        HpoTerm term2 = hpoTermMap.get("Hypercapnia");
+        assertFalse(phenoSet.sameSet(term2));
+        phenoSet.add(term1);
+        assertTrue(phenoSet.sameSet(term2));
+
+
     }
 
     @Test
-    public void test1() throws Exception {
+    public void hasOccurred() throws Exception {
+        PhenoSet phenoSet = new PhenoSetImpl(unionFind.getUnionFind());
+
         HpoTerm term1 = hpoTermMap.get("Hypocapnia");
         HpoTerm term2 = hpoTermMap.get("Hypercapnia");
-        assertTrue(unionFind.getUnionFind().inSameSet(term1, term2));
-        HpoTerm term3 = hpoTermMap.get("Nitrituria");
-        assertFalse(unionFind.getUnionFind().inSameSet(term1, term3));
+        assertFalse(phenoSet.hasOccurred(term1));
+        phenoSet.add(term1);
+        assertTrue(phenoSet.hasOccurred(term1));
+        assertFalse(phenoSet.hasOccurred(term2));
+        phenoSet.add(term2);
+        assertTrue(phenoSet.hasOccurred(term2));
     }
+
 
 }

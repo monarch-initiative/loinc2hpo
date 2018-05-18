@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
@@ -61,8 +60,8 @@ public class PatientSummaryImpl implements PatientSummary{
 
         HpoTerm newterm = test.outcome().getHpoTerm();
         for (PhenoSetTimeLine timeLine : phenoSetTimeLines) {
-            if (timeLine.phenoset().has(newterm)) {
-                PhenoSetComponent newComponent = new PhenoSetComponentImpl.Builder()
+            if (timeLine.phenoset().sameSet(newterm)) {
+                PhenotypeComponent newComponent = new PhenotypeComponentImpl.Builder()
                         .start(test.effectiveStart())
                         //default end time
                         .hpoTerm(test.outcome().getHpoTerm())
@@ -78,8 +77,8 @@ public class PatientSummaryImpl implements PatientSummary{
     }
 
     @Override
-    public List<PhenoSetComponent> phenoDuring(Date start, Date end) {
-        List<PhenoSetComponent> patientPhenotypes = new ArrayList<>();
+    public List<PhenotypeComponent> phenoDuring(Date start, Date end) {
+        List<PhenotypeComponent> patientPhenotypes = new ArrayList<>();
         phenoSetTimeLines.stream().forEach(timeline -> {
             timeline.getTimeLine().stream()
                     .filter(component -> component.isEffective(start))
@@ -90,9 +89,9 @@ public class PatientSummaryImpl implements PatientSummary{
     }
 
     @Override
-    public List<PhenoSetComponent> phenoSinceBorn() {
+    public List<PhenotypeComponent> phenoSinceBorn() {
 
-        List<PhenoSetComponent> patientPhenotypes = new ArrayList<>();
+        List<PhenotypeComponent> patientPhenotypes = new ArrayList<>();
         phenoSetTimeLines.stream().forEach(timeLine -> {
             patientPhenotypes.addAll(timeLine.getTimeLine());
         });
