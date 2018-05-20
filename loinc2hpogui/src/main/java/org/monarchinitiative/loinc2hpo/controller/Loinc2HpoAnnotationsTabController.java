@@ -6,12 +6,15 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.Constants;
@@ -219,10 +222,20 @@ public class Loinc2HpoAnnotationsTabController {
                 logger.trace("annotationMap size (111111): " + annotationMap.size());
                 model.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
-                e.printStackTrace();
-                PopUps.showWarningDialog("Warning", "Error loading annotation data", "This is typically due to HPO is outdated. Create latest HPO and retart this app.");
-                logger.error("ERROR!!!!!!!!");
-                return;
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
+                        Alert alert1 = new Alert(Alert.AlertType.WARNING);
+                        alert1.setHeaderText("Error loading annotation data");
+                        alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.");
+                        alert1.setTitle("Warning");
+                        Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
+                        stage.setAlwaysOnTop(true);
+                        stage.showAndWait();
+                    }
+                });
+                //return;
             }
 
         } else {
