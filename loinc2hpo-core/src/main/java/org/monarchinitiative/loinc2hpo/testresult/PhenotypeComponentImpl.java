@@ -44,6 +44,17 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
     }
 
     @Override
+    public boolean isPersistingDuring(Date start, Date end) {
+        return !start.before(this.start) && !end.after(this.end);
+    }
+
+    @Override
+    public boolean occurredDuring(Date start, Date end) {
+        return !(start.after(this.end) || end.before(this.start));
+    }
+
+
+    @Override
     public HpoTerm abnormality() {
         return this.hpoTerm;
     }

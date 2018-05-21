@@ -1,8 +1,10 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
@@ -26,6 +28,9 @@ public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
     @Override
     public void insert(PhenotypeComponent newAbnorm) {
+
+        phenoset.add(newAbnorm.abnormality());
+
         if (this.phenosetTimeLine.isEmpty()) {
             phenosetTimeLine.add(newAbnorm);
             return;
@@ -62,15 +67,32 @@ public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
     }
 
-
-    @Override
-    public void delete(PhenotypeComponent phenotypeComponent) {
-        throw new UnsupportedOperationException();
-
-    }
-
     @Override
     public PhenotypeComponent current(Date date) {
-        return phenosetTimeLine.stream().filter();
+        for (PhenotypeComponent current : this.phenosetTimeLine) {
+            if (current.isEffective(date)) {
+                return current;
+            }
+        }
+        return null;
     }
+
+    @Override
+    public PhenotypeComponent persistDuring(Date start, Date end) {
+        for (PhenotypeComponent component : this.phenosetTimeLine) {
+            if (component.isPersistingDuring(start, end)) {
+                return component;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<PhenotypeComponent> occurredDuring(Date start, Date end) {
+        return this.phenosetTimeLine.stream()
+                .filter(p -> p.occurredDuring(start, end))
+                .collect(Collectors.toList());
+    }
+
+
 }

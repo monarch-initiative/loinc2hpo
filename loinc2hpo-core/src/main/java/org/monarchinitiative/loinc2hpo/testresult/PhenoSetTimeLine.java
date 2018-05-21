@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 public interface PhenoSetTimeLine {
@@ -11,7 +11,13 @@ public interface PhenoSetTimeLine {
 
     void insert(PhenotypeComponent phenotypeComponent);
 
-    void delete(PhenotypeComponent phenotypeComponent);
+    //void delete(PhenotypeComponent phenotypeComponent);
 
     PhenotypeComponent current(Date date);
+
+    //a phenotype that persisted during the entire period
+    PhenotypeComponent persistDuring(Date start, Date end);
+
+    //a list of phenotypes that occurred at least some time during the period
+    List<PhenotypeComponent> occurredDuring(Date start, Date end);
 }

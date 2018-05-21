@@ -16,7 +16,6 @@ import java.util.List;
  * This interface defines classes that model the outcome from a lab test after our analysis. It contains the information about the subject of the test, the identifier of the test, and the outcome (in HPO terms).
  */
 
-@Deprecated
 public interface LabTestOutcome {
 
     /**

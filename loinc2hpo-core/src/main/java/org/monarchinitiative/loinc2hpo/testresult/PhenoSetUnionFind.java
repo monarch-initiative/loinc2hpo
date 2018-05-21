@@ -41,4 +41,5 @@ public class PhenoSetUnionFind {
     public UnionFind<HpoTerm> getUnionFind() {
         return this.unionFind;
     }
+
 }

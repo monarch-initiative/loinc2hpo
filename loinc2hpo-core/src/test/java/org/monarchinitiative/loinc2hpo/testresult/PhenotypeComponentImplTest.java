@@ -61,6 +61,7 @@ public class PhenotypeComponentImplTest {
                 .hpoTerm(hpoTermMap.get("Hyperglycemia"))
                 .isNegated(false)
                 .build();
+
     }
 
     @Test
@@ -105,6 +106,38 @@ public class PhenotypeComponentImplTest {
         assertTrue(testComponent.isEffective(dateFormat.parse("2020-09-30 09:30:01")));
         testComponent.changeEffectiveEnd(dateFormat.parse("2018-09-30 09:30:01"));
         assertFalse(testComponent.isEffective(dateFormat.parse("2020-09-30 09:30:01")));
+    }
+
+    @Test
+    public void persistingDuring() throws Exception {
+        Date start = dateFormat.parse("2018-09-30 09:30:01");
+        Date end = dateFormat.parse("2028-10-30 09:45:56");
+        assertFalse(testComponent.isPersistingDuring(dateFormat.parse("1999-09-20 09:00:00"), dateFormat.parse("2001-09-10 10:44:34")));
+        assertFalse(testComponent.isPersistingDuring(dateFormat.parse("1999-09-20 09:00:00"), start));
+        assertTrue(testComponent.isPersistingDuring(start, end));
+        testComponent.changeEffectiveEnd(dateFormat.parse("2018-09-30 09:30:01"));
+        assertFalse(testComponent.isPersistingDuring(start, end));
+        assertTrue(testComponent.isPersistingDuring(start, start));
+    }
+
+    @Test
+    public void occurredDuring() throws Exception {
+        Date date00 = dateFormat.parse("2014-09-30 10:33:33");
+        Date date0 = dateFormat.parse("2016-05-30 10:33:33");
+        Date date1 = dateFormat.parse("2018-09-30 10:33:33");
+        Date date2 = dateFormat.parse("2018-10-30 10:33:33");
+        Date date3 = dateFormat.parse("2018-11-30 10:33:33");
+        Date date4 = dateFormat.parse("2018-12-30 10:33:33");
+        testComponent.changeEffectiveEnd(date2);
+
+        assertFalse(testComponent.occurredDuring(date00, date0));
+        assertTrue(testComponent.occurredDuring(date0, testComponent.effectiveStart()));
+        assertTrue(testComponent.occurredDuring(date0, date1));
+        assertTrue(testComponent.occurredDuring(date1, date3));
+        assertTrue(testComponent.occurredDuring(date2, date3));
+        assertFalse(testComponent.occurredDuring(date3, date4));
+
+
     }
 
 }

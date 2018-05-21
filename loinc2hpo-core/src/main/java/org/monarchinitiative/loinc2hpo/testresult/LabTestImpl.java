@@ -64,7 +64,7 @@ public class LabTestImpl implements LabTest{
         return this.outcome;
     }
 
-    static class Builder {
+    public static class Builder {
         private Patient patient;
         private Date effectiveStart;
         private Date effectiveEnd;
@@ -72,37 +72,42 @@ public class LabTestImpl implements LabTest{
         private String resourceId;
         private HpoTerm4TestOutcome outcome;
 
-        protected Builder patient(Patient patient) {
+        public Builder patient(Patient patient) {
             this.patient = patient;
             return this;
         }
 
-        protected Builder effectiveStart(Date effectiveStart) {
+        public Builder effectiveStart(Date effectiveStart) {
             this.effectiveStart = effectiveStart;
             return this;
         }
 
-        protected Builder effectiveEnd(Date effectiveEnd) {
+        public Builder effectiveEnd(Date effectiveEnd) {
             this.effectiveEnd = effectiveEnd;
             return this;
         }
 
-        protected Builder loincId(LoincId loincId) {
+        public Builder loincId(LoincId loincId) {
             this.loincId = loincId;
             return this;
         }
 
-        protected Builder resourceId(String id) {
+        public Builder resourceId(String id) {
             this.resourceId = id;
             return this;
         }
 
-        protected Builder outcome(HpoTerm4TestOutcome outcome) {
+        public Builder outcome(HpoTerm4TestOutcome outcome) {
             this.outcome = outcome;
             return this;
         }
 
-        protected LabTestImpl build() {
+        public Builder outcome(LabTestOutcome outcome) {
+            this.outcome = outcome.getOutcome();
+            return this;
+        }
+
+        public LabTestImpl build() {
             return new LabTestImpl(patient, effectiveStart, effectiveEnd, loincId, resourceId, outcome);
         }
 

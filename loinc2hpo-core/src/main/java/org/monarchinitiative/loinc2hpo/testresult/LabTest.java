@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This will be used to represent a lab test. It has the following component:
+ * This will be used to represent a more complete lab test. It has the following component:
  * subject,
  * test effective period (start and end date)
  * test id in LOINC,
  * test resource id (in case we want to refer to FHIR resource)
- * outcome in HPO
+ * LabTestOutcome
  */
 
 public interface LabTest {

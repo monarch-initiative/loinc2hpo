@@ -26,6 +26,22 @@ public interface PhenotypeComponent {
     boolean isEffective(Date timepoint);
 
     /**
+     * Is the phenotype effective during the entire period
+     * @param start
+     * @param end
+     * @return
+     */
+    boolean isPersistingDuring(Date start, Date end);
+
+    /**
+     * Did the phenotype occur during a period
+     * @param start
+     * @param end
+     * @return
+     */
+    boolean occurredDuring(Date start, Date end);
+
+    /**
      * Phenotype abnormality
      * @return
      */

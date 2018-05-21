@@ -45,13 +45,19 @@ public interface PatientSummary {
      */
     List<LabTest> tests();
 
+    List<PhenoSetTimeLine> timeLines();
+
+    List<PhenotypeComponent> phenoAt(Date timepoint);
+
     /**
      * Returns a list of phenotype manifestations during a specified period. Core function of this class.
      * @param start
      * @param end
      * @return a set of phenoset components. It is likely that same phenotypes occur multiple times but with different period associated with them.
      */
-    List<PhenotypeComponent> phenoDuring(Date start, Date end);
+    List<PhenotypeComponent> phenoPersistedDuring(Date start, Date end);
+
+    List<PhenotypeComponent> phenoOccurredDuring(Date start, Date end);
 
     /**
      * Return a list of phenotype menifestations in a patient's lifetime.

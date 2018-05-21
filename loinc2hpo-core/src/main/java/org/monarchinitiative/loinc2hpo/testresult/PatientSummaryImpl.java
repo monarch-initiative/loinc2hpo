@@ -1,32 +1,39 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.hl7.fhir.dstu3.model.Patient;
+import org.jgrapht.alg.util.UnionFind;
 import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
-    private static Map<HpoTerm, PhenoSet> phenoSetMap;
+    //private static Map<HpoTerm, PhenoSet> phenoSetMap;
 
     private Patient patient;
     private List<LabTest> labTests;
     private List<PhenoSetTimeLine> phenoSetTimeLines;
+    private UnionFind<HpoTerm> hpoTermUnionFind;
 
-    //do not allow instantiation with new
-    private PatientSummaryImpl(){
-
+    public PatientSummaryImpl(Patient patient, UnionFind<HpoTerm> hpoTermUnionFind){
+        this.patient = patient;
+        this.labTests = new ArrayList<>();
+        this.phenoSetTimeLines = new ArrayList<>();
+        this.hpoTermUnionFind = hpoTermUnionFind;
     }
 
-    static PatientSummaryImpl getInstance(){
+    /**
+    static PatientSummaryImpl getInstance(Patient patient){
         if (phenoSetMap == null) {
             throw new RuntimeException("phenoSetMap is not set");
         }
-        return new PatientSummaryImpl();
+        return new PatientSummaryImpl(patient);
     }
+     **/
 
     @Override
     public Patient patient() {
@@ -59,15 +66,36 @@ public class PatientSummaryImpl implements PatientSummary{
         }
 
         HpoTerm newterm = test.outcome().getHpoTerm();
+        PhenotypeComponent newComponent = new PhenotypeComponentImpl.Builder()
+                .start(test.effectiveStart())
+                //default end time
+                .hpoTerm(test.outcome().getHpoTerm())
+                .isNegated(test.outcome().isNegated()).build();
+
+        boolean timeLineFound = false;
+        PhenoSetTimeLine target = null;
         for (PhenoSetTimeLine timeLine : phenoSetTimeLines) {
             if (timeLine.phenoset().sameSet(newterm)) {
-                PhenotypeComponent newComponent = new PhenotypeComponentImpl.Builder()
-                        .start(test.effectiveStart())
-                        //default end time
-                        .hpoTerm(test.outcome().getHpoTerm())
-                        .isNegated(test.outcome().isNegated()).build();
-                timeLine.insert(newComponent);
+  System.out.println(timeLine.getTimeLine().get(0).abnormality().getName());
+  System.out.println("Find a timeline");
+                timeLineFound = true;
+                target = timeLine;
+                break;
             }
+        }
+
+        if (timeLineFound) {
+            target.insert(newComponent);
+            target.phenoset().add(newterm);
+            System.out.println("Added to existing timeline. TimeLines: " + this.phenoSetTimeLines.size());
+
+        } else {
+            PhenoSet newPhenoset = new PhenoSetImpl(this.hpoTermUnionFind);
+            PhenoSetTimeLine newTimeLine = new PhenoSetTimeLineImpl(newPhenoset);
+            newTimeLine.insert(newComponent);
+            newPhenoset.add(newterm);
+            this.phenoSetTimeLines.add(newTimeLine);
+            System.out.println("New timeline. TimeLines: " + this.phenoSetTimeLines.size());
         }
     }
 
@@ -77,24 +105,37 @@ public class PatientSummaryImpl implements PatientSummary{
     }
 
     @Override
-    public List<PhenotypeComponent> phenoDuring(Date start, Date end) {
+    public List<PhenoSetTimeLine> timeLines() {
+        return new ArrayList<>(this.phenoSetTimeLines);
+    }
+
+    @Override
+    public List<PhenotypeComponent> phenoAt(Date timepoint) {
+        return phenoSetTimeLines.stream()
+                .map(timeLine -> timeLine.current(timepoint))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PhenotypeComponent> phenoPersistedDuring(Date start, Date end) {
+        return phenoSetTimeLines.stream()
+                .map(timeline -> timeline.persistDuring(start, end))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PhenotypeComponent> phenoOccurredDuring(Date start, Date end) {
         List<PhenotypeComponent> patientPhenotypes = new ArrayList<>();
-        phenoSetTimeLines.stream().forEach(timeline -> {
-            timeline.getTimeLine().stream()
-                    .filter(component -> component.isEffective(start))
-                    .filter(component -> component.isEffective(end))
-                    .forEach(patientPhenotypes::add);
-        });
+        phenoSetTimeLines.stream()
+                .map(timeline -> timeline.occurredDuring(start, end))
+                .forEach(patientPhenotypes::addAll);
         return patientPhenotypes;
     }
 
     @Override
     public List<PhenotypeComponent> phenoSinceBorn() {
-
         List<PhenotypeComponent> patientPhenotypes = new ArrayList<>();
-        phenoSetTimeLines.stream().forEach(timeLine -> {
-            patientPhenotypes.addAll(timeLine.getTimeLine());
-        });
+        phenoSetTimeLines.forEach(timeLine -> patientPhenotypes.addAll(timeLine.getTimeLine()));
         return patientPhenotypes;
     }
 }
