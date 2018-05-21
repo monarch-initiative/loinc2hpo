@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class LoincAnnotationSerializationFactory {
     }
 
     private static Map<LoincId, LoincEntry> loincEntryMap;
-    private static Map<TermId, HpoTerm> hpoTermMap;
+    private static Map<TermId, Term> hpoTermMap;
 
     /**
      * Use this method to set the LoincEntryMap that is used by TSVSeparatedFile deserializer
@@ -37,7 +37,7 @@ public class LoincAnnotationSerializationFactory {
      * Use this method to set the HPO TermMap that is used by all deserializers.
      * Can be replaced by calling parse() with the map as a parameter
      */
-    public static void setHpoTermMap(Map<TermId, HpoTerm> termMap) {
+    public static void setHpoTermMap(Map<TermId, Term> termMap) {
         hpoTermMap = termMap;
     }
 
@@ -69,7 +69,7 @@ public class LoincAnnotationSerializationFactory {
         }
     }
 
-    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, Map<TermId, HpoTerm> termmap, SerializationFormat format) throws Exception {
+    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, Map<TermId, Term> termmap, SerializationFormat format) throws Exception {
 
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
         LoincAnnotationSerializer serializer;

@@ -8,7 +8,7 @@ import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+
 
 import java.util.HashSet;
 import java.util.Map;

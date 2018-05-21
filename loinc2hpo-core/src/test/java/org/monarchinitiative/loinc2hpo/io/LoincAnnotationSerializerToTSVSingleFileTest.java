@@ -15,8 +15,8 @@ import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
@@ -30,8 +30,8 @@ import static org.junit.Assert.*;
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
-    private static Map<String, HpoTerm> hpoTermMap;
-    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<String, Term> hpoTermMap;
+    private static Map<TermId, Term> hpoTermMap2;
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
@@ -46,10 +46,10 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId, HpoTerm> termMap2 = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId, Term> termMap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> {
                 termmap.put(term.getName(),term);
@@ -62,9 +62,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        HpoTerm low = hpoTermMap.get("Hypoglycemia");
-        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
+        Term low = hpoTermMap.get("Hypoglycemia");
+        Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        Term hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
@@ -81,9 +81,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
-        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
+        Term forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");

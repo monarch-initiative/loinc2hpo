@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.Serializable;
@@ -57,10 +57,10 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
     @JsonProperty("loinc scale")
     private LoincScale loincScale = null;
     //The following fields record three terms for basic annotations
-    private HpoTerm low = null;
-    private HpoTerm intermediate = null;
+    private Term low = null;
+    private Term intermediate = null;
     private boolean intermediateNegated = false;
-    private HpoTerm high = null;
+    private Term high = null;
 
     //The following hashmap stores all manually created advanced annotations
     private Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms = null;
@@ -102,7 +102,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * @param version
      */
     public LOINC2HpoAnnotationImpl(LoincId loincId, LoincScale loincScale,
-                                   HpoTerm low, HpoTerm intermediate, boolean intermediateNegated, HpoTerm high, Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms, LocalDateTime createdOn, String createdBy, LocalDateTime lastEditedOn, String lastEditedBy, String note, boolean flag, double version) {
+                                   Term low, Term intermediate, boolean intermediateNegated, Term high, Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms, LocalDateTime createdOn, String createdBy, LocalDateTime lastEditedOn, String lastEditedBy, String note, boolean flag, double version) {
 
         this.loincId = loincId;
         this.loincScale = loincScale;
@@ -329,7 +329,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for low
      * @return
      */
-    public HpoTerm whenValueLow() {
+    public Term whenValueLow() {
 
         if (loincInterpretationToHPO(internalCode.get("L")) != null) {
             return loincInterpretationToHPO(internalCode.get("L")).getHpoTerm();
@@ -344,7 +344,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for normal (Qn) or negative (Ord)
      * @return
      */
-    public HpoTerm whenValueNormalOrNegative() {
+    public Term whenValueNormalOrNegative() {
 
         if (loincInterpretationToHPO(internalCode.get("N")) != null) {
             return loincInterpretationToHPO(internalCode.get("N")).getHpoTerm();
@@ -370,7 +370,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for high (Qn) or positive (Ord)
      * @return
      */
-    public HpoTerm whenValueHighOrPositive() {
+    public Term whenValueHighOrPositive() {
 
         if (loincInterpretationToHPO(internalCode.get("H")) != null) {
             return loincInterpretationToHPO(internalCode.get("H")).getHpoTerm();
@@ -554,10 +554,10 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         private LoincId loincId = null;
         private LoincScale loincScale = null;
-        private HpoTerm low = null;
-        private HpoTerm intermediate = null;
+        private Term low = null;
+        private Term intermediate = null;
         private boolean intermediateNegated = false;
-        private HpoTerm high = null;
+        private Term high = null;
         private Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms = new HashMap<>();
         private LocalDateTime createdOn = null;
         private String createdBy = null;
@@ -600,7 +600,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Set the HPO term when the measured value is low
          * @param low
          */
-        public Builder setLowValueHpoTerm(HpoTerm low) {
+        public Builder setLowValueHpoTerm(Term low) {
 
             this.low = low;
             if (low == null) {
@@ -616,7 +616,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Set the HPO term when the measured value is intermediate (typically "normal")
          * @param intermediate
          */
-        public Builder setIntermediateValueHpoTerm(HpoTerm intermediate) {
+        public Builder setIntermediateValueHpoTerm(Term intermediate) {
 
             this.intermediate = intermediate;
             if (intermediate == null) {
@@ -631,7 +631,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         }
 
-        public Builder setIntermediateValueHpoTerm(HpoTerm intermediate, boolean isNegated) {
+        public Builder setIntermediateValueHpoTerm(Term intermediate, boolean isNegated) {
 
             this.intermediate = intermediate;
             if (intermediate == null) {
@@ -667,7 +667,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Specify the HPO term when the measured value is high.
          * @param high
          */
-        public Builder setHighValueHpoTerm(HpoTerm high) {
+        public Builder setHighValueHpoTerm(Term high) {
 
             this.high = high;
             if (high == null) {
@@ -679,7 +679,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         }
 
-        public Builder setPosValueHpoTerm(HpoTerm pos) {
+        public Builder setPosValueHpoTerm(Term pos) {
 
             if (pos == null) {
                 return this;
@@ -690,7 +690,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             return this;
         }
 
-        public Builder setNegValueHpoTerm(HpoTerm neg, boolean inverse) {
+        public Builder setNegValueHpoTerm(Term neg, boolean inverse) {
 
             if (neg == null) {
                 return this;

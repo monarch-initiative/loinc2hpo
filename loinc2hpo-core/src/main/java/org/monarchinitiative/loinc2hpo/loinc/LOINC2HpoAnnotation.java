@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.time.LocalDateTime;
@@ -55,13 +55,13 @@ public interface LOINC2HpoAnnotation {
 
     TermId getPositiveHpoTermName();
 
-    HpoTerm whenValueLow();
+    Term whenValueLow();
 
-    HpoTerm whenValueNormalOrNegative();
+    Term whenValueNormalOrNegative();
 
     boolean isNormalOrNegativeInversed();
 
-    HpoTerm whenValueHighOrPositive();
+    Term whenValueHighOrPositive();
 
     boolean hasCreatedOn();
 

@@ -1,5 +1,7 @@
 # loinc2hpo Changelog
 
+
+
 ## current
 * v 1.0.1
 
@@ -109,5 +111,14 @@ Additional changes for this version
 * Add function to allow uploading simulated data to hapi-fhir server
 
 * Add function to allow downloading patient data from fhir server
+
+## v1.1.4
+
+* Add function to restart the app when necessary
+
+* Prevent app from crashing when user's local HPO is outdated
+
+* Added classes to model patient phenopacket (phenotype only)
+* Refactored to use phenol 1.0.0
 
 

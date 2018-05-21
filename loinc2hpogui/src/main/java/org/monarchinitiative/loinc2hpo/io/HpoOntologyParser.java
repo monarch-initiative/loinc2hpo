@@ -6,8 +6,6 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoRelationship;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
 import org.monarchinitiative.phenol.ontology.data.*;
 
@@ -36,8 +34,8 @@ public class HpoOntologyParser {
     HpoOntology ontology;
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
-    private ImmutableMap<String, HpoTerm> termmap;
-    private ImmutableMap<TermId, HpoTerm> termmap2;
+    private ImmutableMap<String, Term> termmap;
+    private ImmutableMap<TermId, Term> termmap2;
 
 
     public HpoOntologyParser(String path){
@@ -57,14 +55,14 @@ public class HpoOntologyParser {
     }
 
     private void initTermMaps() {
-        ImmutableMap.Builder<String,HpoTerm> termmapBuilder = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,HpoTerm> termmap2Builder = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmapBuilder = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,Term> termmap2Builder = new ImmutableMap.Builder<>();
         if (ontology !=null) {
 
             // ontology.getTermMap().values().  forEach(term -> termmap.put(term.getName(), term));
             // for some reason there is a bug here...issue #34 on ontolib tracker
             // here is a workaround to remove duplicate entries
-            List<HpoTerm> res = ontology.getTermMap().values().stream().distinct()
+            List<Term> res = ontology.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
 
             res.forEach( term -> termmapBuilder.put(term.getName(),term));
@@ -75,19 +73,19 @@ public class HpoOntologyParser {
         }
     }
 
-    public Ontology<HpoTerm, HpoRelationship> getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
-    public Ontology<HpoTerm, HpoRelationship> getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
+    public Ontology getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
+    public Ontology getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
     public HpoOntology getOntology() { return ontology; }
 
     /** @return a map will all terms of the Hpo Phenotype subontology. */
-    public ImmutableMap<String,HpoTerm> getTermMap() {
+    public ImmutableMap<String,Term> getTermMap() {
         if (termmap == null) {
             initTermMaps();
         }
         return termmap;
     }
 
-    public ImmutableMap<TermId,HpoTerm> getTermMap2() {
+    public ImmutableMap<TermId,Term> getTermMap2() {
         if (termmap2 == null) {
             initTermMaps();
         }
