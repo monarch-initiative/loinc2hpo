@@ -12,6 +12,7 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -22,13 +23,19 @@ import org.monarchinitiative.loinc2hpo.fhir.*;
 import org.monarchinitiative.loinc2hpo.gui.FhirServerPopup;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.gui.SimulationPopup;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.testresult.LabTest;
+import org.monarchinitiative.loinc2hpo.testresult.LabTestImpl;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.Date;
 
 @Singleton
 public class Loinc2HpoConversionTabController {
@@ -246,6 +253,47 @@ public class Loinc2HpoConversionTabController {
             displays.add(o.getSubject().getReference() + " : failed to interpret [code 20]");
         }
     }
+
+    //wrap basic test outcome in a complete labtest record
+    private LabTest addTestMetaInfo(Observation o, LabTestOutcome basicOutcome, Map<Identifier, Patient> patientMap) throws FHIRException, MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException {
+        LabTest labTest;
+
+        Patient subject = null;
+        if (o.hasIdentifier()) {
+            List<Patient> candidate = o.getIdentifier().stream()
+                    .map(patientMap::get)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collect(Collectors.toList());
+            if (candidate.size() == 1) { //candidate has to be unique
+                subject = candidate.get(0);
+            }
+        }
+        Date effectiveStartDate;
+        Date effectiveEndDate;
+        if (o.hasEffectiveDateTimeType()) {
+        effectiveStartDate =  o.getEffectiveDateTimeType().getValue();
+        effectiveEndDate = effectiveStartDate;
+        } else if (o.hasEffectivePeriod()) {
+        effectiveStartDate = o.getEffectivePeriod().getStart();
+        effectiveEndDate = o.getEffectivePeriod().getEnd();
+        } else {
+        effectiveStartDate = null; //no test date
+        effectiveEndDate = null;
+        }
+        FhirObservationAnalyzer.setObservation(o);
+        LoincId loincId = FhirObservationAnalyzer.getLoincIdOfObservation();
+
+        return new LabTestImpl.Builder()
+                .effectiveStart(effectiveStartDate)
+                .effectiveEnd(effectiveEndDate)
+                .loincId(loincId)
+                .outcome(basicOutcome)
+                .resourceId(o.getId())
+                .patient(subject)
+                .build();
+    }
+
 
     private String display(LabTestOutcome testOutcome) {
         //It is fine to use the subject for display purposes, but for computation we should use identifier as subject is not guaranteed unique

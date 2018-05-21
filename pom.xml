@@ -134,6 +134,10 @@
                     <groupId>com.google.inject</groupId>
                     <artifactId>guice</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.jgrapht</groupId>
+                    <artifactId>jgrapht-core</artifactId>
+                </exclusion>
 
             </exclusions>
         </dependency>
@@ -926,6 +930,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
 
 
     </dependencies>
@@ -966,12 +976,17 @@
             <organization>The Jackson Laboratory for Genomic Medicine</organization>
             <organizationUrl>https://www.jax.org</organizationUrl>
         </developer>
+        <developer>
+            <name>Xingmin "Aaron" Zhang</name>
+            <email>aaron.zhang@jax.org</email>
+            <organization>The Jackson Laboratory for Genomic Medicine</organization>
+            <organizationUrl>https://www.jax.org</organizationUrl>
+        </developer>
     </developers>
 
 
 
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

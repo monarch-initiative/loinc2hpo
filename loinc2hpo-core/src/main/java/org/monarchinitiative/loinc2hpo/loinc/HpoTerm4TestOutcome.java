@@ -33,7 +33,7 @@ public class HpoTerm4TestOutcome implements Serializable {
         this.isNegated = negated;
     }
 
-
+    @Deprecated
     public TermId getId() {return tid; }
 
     public boolean isNegated() {
