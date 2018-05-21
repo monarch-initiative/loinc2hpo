@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class GitHubPopup {
     //suggestion for the loinc code
     private LoincEntry loincEntry;
 
-    private HpoTerm hpoTerm; //if the suggestion is about a known term
+    private Term hpoTerm; //if the suggestion is about a known term
     private String uname = null;
     private String pword = null;
     /** Will be set to true if the user clicks the cancel button. */
@@ -71,7 +71,7 @@ public class GitHubPopup {
      * @param term      An HPO Term for which we ant to suggest a new child term.
      * @param childterm set this to true if we want to create an issue to make a new child term
      */
-    public GitHubPopup(LoincEntry loincEntry, HpoTerm term,  boolean childterm) {
+    public GitHubPopup(LoincEntry loincEntry, Term term,  boolean childterm) {
         this.loincEntry = loincEntry;
         this.hpoTerm = term;
         this.suggestNewChildTerm = childterm;
