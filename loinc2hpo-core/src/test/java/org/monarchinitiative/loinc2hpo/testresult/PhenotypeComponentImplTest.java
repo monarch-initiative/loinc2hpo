@@ -6,8 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
@@ -24,8 +24,8 @@ import static org.junit.Assert.*;
 public class PhenotypeComponentImplTest {
 
     private static PhenotypeComponent testComponent;
-    private static Map<String, HpoTerm> hpoTermMap;
-    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<String, Term> hpoTermMap;
+    private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @BeforeClass
@@ -38,10 +38,10 @@ public class PhenotypeComponentImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,HpoTerm> termmap2 = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,Term> termmap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> {
                 termmap.put(term.getName(),term);

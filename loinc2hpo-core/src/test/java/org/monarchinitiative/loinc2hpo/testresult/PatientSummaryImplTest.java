@@ -14,8 +14,8 @@ import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
@@ -31,10 +31,10 @@ import static org.junit.Assert.*;
 public class PatientSummaryImplTest {
 
     private PhenoSetTimeLine glucosetimeLine;
-    private static Map<String, HpoTerm> hpoTermMap;
-    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<String, Term> hpoTermMap;
+    private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static UnionFind<HpoTerm> hpoTermUnionFind;
+    private static UnionFind<Term> hpoTermUnionFind;
     private static FhirResourceFaker resourceGenerator;
     private static List<Patient> randPatients;
 
@@ -51,10 +51,10 @@ public class PatientSummaryImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId, HpoTerm> termMap2 = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId, Term> termMap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> {
                 termmap.put(term.getName(),term);

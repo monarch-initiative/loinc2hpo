@@ -11,7 +11,7 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
@@ -28,7 +28,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
             "comment");
     final String MISSINGVALUE = "NA";
 
-    private Map<TermId, HpoTerm> hpoTermMap = null;
+    private Map<TermId, Term> hpoTermMap = null;
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -36,7 +36,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
     }
 
-    public LoincAnnotationSerializerToTSVSingleFile(Map<TermId, HpoTerm> hpoTermMap) {
+    public LoincAnnotationSerializerToTSVSingleFile(Map<TermId, Term> hpoTermMap) {
 
         this.hpoTermMap = hpoTermMap;
 

@@ -8,7 +8,7 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
@@ -20,14 +20,14 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
 
     private static final Logger logger = LogManager.getLogger();
 
-    private Map<TermId, HpoTerm> hpoTermMap = null;
+    private Map<TermId, Term> hpoTermMap = null;
     private Map<LoincId, LoincEntry> loincEntryMap = null;
 
     private LoincAnnotationSerializerToTSVSeparateFiles() {
 
     }
 
-    public LoincAnnotationSerializerToTSVSeparateFiles(Map<TermId, HpoTerm> hpoTermMap, Map<LoincId, LoincEntry> loincEntryMap) {
+    public LoincAnnotationSerializerToTSVSeparateFiles(Map<TermId, Term> hpoTermMap, Map<LoincId, LoincEntry> loincEntryMap) {
 
         this.hpoTermMap = hpoTermMap;
         this.loincEntryMap = loincEntryMap;
@@ -123,7 +123,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> fromTSVBasic(String path, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> fromTSVBasic(String path, Map<TermId, Term> hpoTermMap) throws FileNotFoundException {
 
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -199,7 +199,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public void fromTSVAdvanced(String path, Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap, Map<TermId, HpoTerm> hpoTermMap) throws FileNotFoundException {
+    public void fromTSVAdvanced(String path, Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap, Map<TermId, Term> hpoTermMap) throws FileNotFoundException {
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {

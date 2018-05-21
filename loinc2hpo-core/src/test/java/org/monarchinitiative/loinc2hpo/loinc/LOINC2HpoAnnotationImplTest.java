@@ -11,8 +11,8 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,7 +34,7 @@ public class LOINC2HpoAnnotationImplTest {
 
     @Test
     public void testToString() throws Exception {
-        Map<String, HpoTerm> hpoTermMap;
+        Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -43,9 +43,9 @@ public class LOINC2HpoAnnotationImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> termmap.put(term.getName(),term));
         }
@@ -54,9 +54,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        HpoTerm low = hpoTermMap.get("Hypoglycemia");
-        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
+        Term low = hpoTermMap.get("Hypoglycemia");
+        Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        Term hi = hpoTermMap.get("Hyperglycemia");
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
@@ -73,9 +73,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
-        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
+        Term forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
@@ -118,7 +118,7 @@ public class LOINC2HpoAnnotationImplTest {
     public void testBuilderForBasicAnnotation() throws Exception {
 
 
-        Map<String, HpoTerm> hpoTermMap;
+        Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -127,9 +127,9 @@ public class LOINC2HpoAnnotationImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> termmap.put(term.getName(),term));
         }
@@ -140,9 +140,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        HpoTerm low = hpoTermMap.get("Hypoglycemia");
-        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
+        Term low = hpoTermMap.get("Hypoglycemia");
+        Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        Term hi = hpoTermMap.get("Hyperglycemia");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
@@ -179,7 +179,7 @@ public class LOINC2HpoAnnotationImplTest {
 
     @Test
     public void testBuilderForAdvanced() throws Exception {
-        Map<String, HpoTerm> hpoTermMap;
+        Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -188,9 +188,9 @@ public class LOINC2HpoAnnotationImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> termmap.put(term.getName(),term));
         }
@@ -201,9 +201,9 @@ public class LOINC2HpoAnnotationImplTest {
 
          LoincId loincId = new LoincId("600-7");
          LoincScale loincScale = LoincScale.string2enum("Nom");
-         HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-         HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-         HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
+         Term forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+         Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+         Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
          Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
          Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
@@ -236,7 +236,7 @@ public class LOINC2HpoAnnotationImplTest {
     @Test
     @Ignore
     public void testSerializeBasicAnnotation() throws Exception {
-        Map<String, HpoTerm> hpoTermMap;
+        Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -245,9 +245,9 @@ public class LOINC2HpoAnnotationImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> termmap.put(term.getName(),term));
         }
@@ -258,9 +258,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        HpoTerm low = hpoTermMap.get("Hypoglycemia");
-        HpoTerm normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        HpoTerm hi = hpoTermMap.get("Hyperglycemia");
+        Term low = hpoTermMap.get("Hypoglycemia");
+        Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
+        Term hi = hpoTermMap.get("Hyperglycemia");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
@@ -296,7 +296,7 @@ public class LOINC2HpoAnnotationImplTest {
     public void testSerializeAdvancedAnnotation() throws Exception {
 
 
-        Map<String, HpoTerm> hpoTermMap;
+        Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
         HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
@@ -305,9 +305,9 @@ public class LOINC2HpoAnnotationImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> termmap.put(term.getName(),term));
         }
@@ -318,9 +318,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         LoincId loincId = new LoincId("600-7");
         LoincScale loincScale = LoincScale.string2enum("Nom");
-        HpoTerm forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-        HpoTerm forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-        HpoTerm positive = hpoTermMap.get("Recurrent bacterial infections");
+        Term forCode1 = hpoTermMap.get("Recurrent E. coli infections");
+        Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
+        Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");

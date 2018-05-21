@@ -8,8 +8,8 @@ import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
@@ -25,8 +25,8 @@ import static org.junit.Assert.*;
 public class PhenoSetImplTest {
 
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
-    private static Map<String, HpoTerm> hpoTermMap;
-    private static Map<TermId, HpoTerm> hpoTermMap2;
+    private static Map<String, Term> hpoTermMap;
+    private static Map<TermId, Term> hpoTermMap2;
     private static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
     private static PhenoSetUnionFind unionFind;
 
@@ -40,10 +40,10 @@ public class PhenoSetImplTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImmutableMap.Builder<String,HpoTerm> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId, HpoTerm> termMap2 = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
+        ImmutableMap.Builder<TermId,Term> termMap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
-            List<HpoTerm> res = hpo.getTermMap().values().stream().distinct()
+            List<Term> res = hpo.getTermMap().values().stream().distinct()
                     .collect(Collectors.toList());
             res.forEach( term -> {
                 termmap.put(term.getName(),term);
@@ -72,8 +72,8 @@ public class PhenoSetImplTest {
 
         PhenoSet phenoSet = new PhenoSetImpl(unionFind.getUnionFind());
 
-        HpoTerm term1 = hpoTermMap.get("Hypocapnia");
-        HpoTerm term2 = hpoTermMap.get("Hypercapnia");
+        Term term1 = hpoTermMap.get("Hypocapnia");
+        Term term2 = hpoTermMap.get("Hypercapnia");
         assertFalse(phenoSet.sameSet(term2));
         phenoSet.add(term1);
         assertTrue(phenoSet.sameSet(term2));
@@ -85,8 +85,8 @@ public class PhenoSetImplTest {
     public void hasOccurred() throws Exception {
         PhenoSet phenoSet = new PhenoSetImpl(unionFind.getUnionFind());
 
-        HpoTerm term1 = hpoTermMap.get("Hypocapnia");
-        HpoTerm term2 = hpoTermMap.get("Hypercapnia");
+        Term term1 = hpoTermMap.get("Hypocapnia");
+        Term term2 = hpoTermMap.get("Hypercapnia");
         assertFalse(phenoSet.hasOccurred(term1));
         phenoSet.add(term1);
         assertTrue(phenoSet.hasOccurred(term1));

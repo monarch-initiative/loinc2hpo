@@ -54,7 +54,7 @@ import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
 import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
 import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
+import org.monarchinitiative.phenol.ontology.data.Term;
 
 
 import java.io.*;
@@ -102,7 +102,7 @@ public class AnnotateTabController {
     private HPO_Class_Found hpo_drag_and_drop;
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
-    private ImmutableMap<String,HpoTerm> termmap;
+    private ImmutableMap<String,Term> termmap;
     // TODO currently, this list is taking both HPO_CLass_Found and String at different parts of the app.
     @FXML private ListView<HPO_Class_Found> hpoListView;
     private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
@@ -1185,9 +1185,9 @@ public class AnnotateTabController {
         }
 
         //We don't have to force every loinc code to have three phenotypes
-        HpoTerm low = termmap.get(hpoLo);
-        HpoTerm normal = termmap.get(hpoNormal);
-        HpoTerm high = termmap.get(hpoHi);
+        Term low = termmap.get(hpoLo);
+        Term normal = termmap.get(hpoNormal);
+        Term high = termmap.get(hpoHi);
         //logger.debug((String.format("Terms found: lo- %s; normal- %s; hi- %s", low.getName(), normal.getName(), high.getName())));
 
         //Warning user that there is something wrong
@@ -1597,7 +1597,7 @@ public class AnnotateTabController {
             code = Code.getNewCode().setSystem(system).setCode(codeId);
         }
         String candidateHPO = annotationTextFieldRight.getText();
-        HpoTerm hpoterm = model.getTermMap().get(stripEN(candidateHPO));
+        Term hpoterm = model.getTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
             annotation = new AdvantagedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
@@ -1725,7 +1725,7 @@ public class AnnotateTabController {
             return;
         }
 
-        HpoTerm hpoTerm = model.getTermMap().get(hpoSelected.getLabel());
+        Term hpoTerm = model.getTermMap().get(hpoSelected.getLabel());
 
         GitHubPopup popup = new GitHubPopup(loincEntrySelected, hpoTerm, true);
         initializeGitHubLabelsIfNecessary();

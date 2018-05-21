@@ -9,11 +9,7 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.formats.hpo.HpoTerm;
-import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
-import org.monarchinitiative.phenol.ontology.data.ImmutableTermPrefix;
-import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.monarchinitiative.phenol.ontology.data.TermPrefix;
+import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.*;
 import java.util.*;
@@ -51,7 +47,7 @@ public class Model {
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
     private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
-    /** Key: a loinc code such as 10076-3; value: the corresponding {@link QnLoinc2HPOAnnotation} object .*/
+    /** Key: a loinc code such as 10076-3; value: the corresponding TODO -- what link QnLoinc2HPOAnnotation object .*/
     public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
 
@@ -156,8 +152,8 @@ public class Model {
     }
 
     //hpo term maps from name or id to hpoterm
-    private ImmutableMap<String,HpoTerm> termmap=null;
-    private ImmutableMap<TermId, HpoTerm> termmap2 = null;
+    private ImmutableMap<String,Term> termmap=null;
+    private ImmutableMap<TermId, Term> termmap2 = null;
 
     private LoincEntry loincUnderEditing = null;
 
@@ -340,9 +336,9 @@ public class Model {
         termmap2=parser.getTermMap2();
     }
 
-    public ImmutableMap<String,HpoTerm> getTermMap() { return termmap;}
+    public ImmutableMap<String,Term> getTermMap() { return termmap;}
 
-    public Map<TermId, HpoTerm> getTermMap2() { return termmap2; }
+    public Map<TermId, Term> getTermMap2() { return termmap2; }
 
 
     public HpoOntology getOntology() {
