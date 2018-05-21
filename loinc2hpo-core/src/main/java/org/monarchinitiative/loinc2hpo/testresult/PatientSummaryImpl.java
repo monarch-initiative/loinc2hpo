@@ -76,8 +76,8 @@ public class PatientSummaryImpl implements PatientSummary{
         PhenoSetTimeLine target = null;
         for (PhenoSetTimeLine timeLine : phenoSetTimeLines) {
             if (timeLine.phenoset().sameSet(newterm)) {
-  System.out.println(timeLine.getTimeLine().get(0).abnormality().getName());
-  System.out.println("Find a timeline");
+  //System.out.println(timeLine.getTimeLine().get(0).abnormality().getName());
+  //System.out.println("Find a timeline");
                 timeLineFound = true;
                 target = timeLine;
                 break;
@@ -87,7 +87,7 @@ public class PatientSummaryImpl implements PatientSummary{
         if (timeLineFound) {
             target.insert(newComponent);
             target.phenoset().add(newterm);
-            System.out.println("Added to existing timeline. TimeLines: " + this.phenoSetTimeLines.size());
+            //System.out.println("Added to existing timeline. TimeLines: " + this.phenoSetTimeLines.size());
 
         } else {
             PhenoSet newPhenoset = new PhenoSetImpl(this.hpoTermUnionFind);
@@ -95,7 +95,7 @@ public class PatientSummaryImpl implements PatientSummary{
             newTimeLine.insert(newComponent);
             newPhenoset.add(newterm);
             this.phenoSetTimeLines.add(newTimeLine);
-            System.out.println("New timeline. TimeLines: " + this.phenoSetTimeLines.size());
+            //System.out.println("New timeline. TimeLines: " + this.phenoSetTimeLines.size());
         }
     }
 

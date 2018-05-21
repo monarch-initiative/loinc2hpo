@@ -153,7 +153,7 @@ public class PatientSummaryImplTest {
                 .resourceId("unknown resource id")
                 .build();
         patientSummary1.addTest(test2);
-        assertEquals(2, patientSummary1.tests().size());
+        assertEquals(3, patientSummary1.tests().size());
 
         assertEquals(2, patientSummary1.timeLines().size());
 
@@ -167,14 +167,45 @@ public class PatientSummaryImplTest {
 
     @Test
     public void phenoPersistedDuring() throws Exception {
+        LabTest test2 = new LabTestImpl.Builder()
+                .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
+                .loincId(new LoincId("15074-7"))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .patient(patient)
+                .resourceId("unknown resource id")
+                .build();
+        patientSummary1.addTest(test2);
+        assertEquals(2, patientSummary1.phenoPersistedDuring(dateFormat.parse("2016-10-22 10:00:00"), dateFormat.parse("2016-12-31 00:00:00")).size());
+        //patientSummary1.phenoPersistedDuring(dateFormat.parse("2016-10-22 10:00:00"), dateFormat.parse("2016-12-31 00:00:00")).stream().forEach(p -> System.out.println(p.abnormality().getName()));
     }
 
     @Test
     public void phenoOccurredDuring() throws Exception {
+
+        assertEquals(1, patientSummary1.phenoOccurredDuring(dateFormat.parse("2015-12-31 00:00:00"), dateFormat.parse("2016-10-20 11:59:59")).size());
+        assertEquals(2, patientSummary1.phenoOccurredDuring(dateFormat.parse("2015-12-31 00:00:00"), dateFormat.parse("2016-10-22 11:59:59")).size());
+        LabTest test2 = new LabTestImpl.Builder()
+                .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
+                .loincId(new LoincId("15074-7"))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .patient(patient)
+                .resourceId("unknown resource id")
+                .build();
+        patientSummary1.addTest(test2);
+        assertEquals(3, patientSummary1.phenoOccurredDuring(dateFormat.parse("2015-12-31 00:00:00"), dateFormat.parse("2018-10-22 11:59:59")).size());
     }
 
     @Test
     public void phenoSinceBorn() throws Exception {
+        LabTest test2 = new LabTestImpl.Builder()
+                .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
+                .loincId(new LoincId("15074-7"))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .patient(patient)
+                .resourceId("unknown resource id")
+                .build();
+        patientSummary1.addTest(test2);
+        assertEquals(3, patientSummary1.phenoSinceBorn().size());
     }
 
 }
