@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -18,10 +17,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -30,7 +27,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.*;
 import javafx.util.Callback;
-import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -60,6 +56,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Singleton
@@ -120,6 +117,9 @@ public class AnnotateTabController {
     @FXML private TableColumn<LoincEntry, String> scaleTableColumn;
     @FXML private TableColumn<LoincEntry, String> systemTableColumn;
     @FXML private TableColumn<LoincEntry, String> nameTableColumn;
+    @FXML private CheckMenuItem loincTableEnableMultiSelection;
+    private LOINC2HpoAnnotationImpl toCopy;
+    @FXML private MenuItem pasteAnnotationButton;
 
 
     @FXML private Button modeButton;
@@ -372,6 +372,22 @@ public class AnnotateTabController {
         });
 
 
+        loincTableEnableMultiSelection.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (observable != null) {
+                    if (newValue) {
+                        logger.trace("multi selection is enabled");
+                        loincTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                    } else {
+                        logger.trace("multi selection is not enabled");
+                        loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+                    }
+                } else {
+                    return;
+                }
+            }
+        });
     }
 
     void defaultStartUp() {
@@ -1135,6 +1151,98 @@ public class AnnotateTabController {
         return inverseChecker.isSelected();
     }
 
+    //ensure that at least one LOINC entry is selected
+    private boolean checkSelectedLoinc() {
+        switch (loincTableView.getSelectionModel().getSelectionMode()) {
+            case SINGLE:
+                if (loincTableView.getSelectionModel().getSelectedItem() != null &&
+                        loincTableView.getSelectionModel().getSelectedItem().getScale().equals(toCopy.getLoincScale().toString())) {
+                    return true;
+                }
+            case MULTIPLE:
+                if (loincTableView.getSelectionModel().getSelectedItems() != null &&
+                        !loincTableView.getSelectionModel().getSelectedItems().isEmpty()) {
+                    List<String> scaleTypes = loincTableView.getSelectionModel().getSelectedItems()
+                            .stream().map(LoincEntry::getScale)
+                            .distinct().collect(Collectors.toList());
+                    if (scaleTypes.size() == 1 && scaleTypes.get(0).equals(toCopy.getLoincScale().toString())) {
+                        return true;
+                    }
+                }
+            default:
+                return false;
+        }
+    }
+
+    @FXML private void copyAnnotation(ActionEvent event) {
+        logger.trace("copy loincAnnotation to other LOINCs");
+        LoincEntry selectedLoinc = loincTableView.getSelectionModel().getSelectedItem();
+        if (selectedLoinc == null) {
+            logger.error("Select a LOINC entry to copy");
+            return;
+        }
+        if (!model.getLoincAnnotationMap().containsKey(selectedLoinc.getLOINC_Number())) {
+            PopUps.showWarningDialog("Error Selection", "LOINC does not have annotation", "Select a LOINC code that has already been annotated");
+            logger.error("Annotation does not exist for " + selectedLoinc.getLOINC_Number());
+            return;
+        }
+        toCopy = model.getLoincAnnotationMap().get(selectedLoinc.getLOINC_Number());
+        loincTableEnableMultiSelection.setSelected(true);
+        //loincTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+
+    @FXML private void pasteAnnotation(ActionEvent e) {
+        logger.trace("paste annotation");
+        if (toCopy == null) {
+            PopUps.showWarningDialog("Error Selection", "Unspecified item to copy", "Select a LOINC code to copy annotation from in the LOINC table");
+            return;
+        }
+        if (!checkSelectedLoinc()) { //make sure there is at least one valid LOINC entry selection
+            PopUps.showWarningDialog("Error Selection", "Possible Errors:", "1) No LOINC entry is selected;\n2) >= 1 selected LOINC entry does match the scale of origin LOINC");
+            return;
+        }
+
+        if (!loincTableEnableMultiSelection.isSelected()) {
+            pasteAnnotationTo(loincTableView.getSelectionModel().getSelectedItem().getLOINC_Number());
+        } else {
+            loincTableView.getSelectionModel().getSelectedItems().stream()
+                    .forEach(loinc -> {
+                        logger.trace("copy to: " + loinc.getLongName());
+                        pasteAnnotationTo(loinc.getLOINC_Number());
+                    });
+        }
+
+        //refresh annotation tab
+        loinc2HpoAnnotationsTabController.refreshTable();
+        changeColorLoincTableView();
+        model.setSessionChanged(true);
+
+        //reset
+        toCopy = null;
+        //loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        loincTableEnableMultiSelection.setSelected(false);
+
+    }
+
+    private void pasteAnnotationTo(LoincId loincId) {
+        if (model.getLoincAnnotationMap().containsKey(loincId)) {
+            logger.trace("Overwrite: " + loincId);
+        }
+        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder()
+                .setLoincId(loincId)
+                .setLoincScale(toCopy.getLoincScale())
+                .setCreatedBy(toCopy.getCreatedBy())
+                .setCreatedOn(toCopy.getCreatedOn())
+                .setLastEditedBy(toCopy.getLastEditedBy())
+                .setLastEditedOn(toCopy.getLastEditedOn())
+                .setNote(toCopy.getNote())
+                .setFlag(toCopy.getFlag())
+                .setVersion(toCopy.getVersion());
+        toCopy.getCandidateHpoTerms().entrySet().stream()
+                .forEach(entry -> builder.addAdvancedAnnotation(entry.getKey(), entry.getValue()));
+        model.addLoincTest(builder.build());
+
+    }
 
     @FXML private void createLoinc2HpoAnnotation(ActionEvent e) {
 
@@ -1143,6 +1251,7 @@ public class AnnotateTabController {
             PopUps.showInfoMessage("No loinc entry is selected. Try clicking \"Initialize Loinc Table\"", "No Loinc selection Error");
             return;
         }
+
         //specify loinc for the annotation
         LoincEntry loincEntry = loincTableView.getSelectionModel().getSelectedItem();
         LoincId loincCode = loincEntry.getLOINC_Number();
@@ -1276,6 +1385,7 @@ public class AnnotateTabController {
         flagForAnnotation.setSelected(false);
         annotationNoteField.clear();
         model.setSessionChanged(true);
+        loincTableEnableMultiSelection.setSelected(false);
 
         loinc2HpoAnnotationsTabController.refreshTable();
         createAnnotationSuccess.setFill(Color.GREEN);
