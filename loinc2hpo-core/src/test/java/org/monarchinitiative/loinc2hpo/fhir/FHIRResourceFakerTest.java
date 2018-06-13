@@ -4,11 +4,11 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -117,6 +117,39 @@ public class FHIRResourceFakerTest {
         MethodOutcome outcome = FhirResourceRetriever.upload(patient);
         System.out.println(outcome.getId().getValue());
         System.out.println(outcome.getId().getIdPart());
+    }
+
+    @Test
+    @Ignore
+    public void testUploadLoincPanels() throws Exception {
+        Patient patient = resourceGenerator.fakePatient();
+        LoincId panelId = new LoincId("35094-2");
+        LoincId sys = new LoincId("8480-6");
+        LoincId dias = new LoincId("8462-4");
+        Observation obsPanel = new Observation();//resourceGenerator.fakeObservation(panelId, patient);
+        obsPanel.setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("35094-2")));
+        Identifier identifier = new Identifier();
+        identifier.setSystem("Jax.org").setValue("Little mouse");
+        obsPanel.addIdentifier(identifier);
+
+        Observation compSys = new Observation();//resourceGenerator.fakeObservation(sys, patient);
+        Observation compDias = new Observation(); //resourceGenerator.fakeObservation(dias, patient);
+//        Observation.ObservationComponentComponent compSys = new Observation.ObservationComponentComponent();
+        compSys.setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("8480-6")))
+                .setValue(new Quantity(80).setUnit("mm Hg"))
+                .addIdentifier(identifier);
+//        Observation.ObservationComponentComponent compDias = new Observation.ObservationComponentComponent();
+        compDias.setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("8462-4")))
+                .setValue(new Quantity(120).setUnit("mm Hg"))
+                .addIdentifier(identifier);
+//        obsPanel.addComponent(compSys).addComponent(compDias);
+        obsPanel.addContained(compSys).addContained(compDias);
+        System.out.println("no. resources contained: " + obsPanel.getContained().size());
+        System.out.println(FhirResourceRetriever.jsonParser.setPrettyPrint(true).encodeResourceToString(obsPanel));
+//        obsPanel.getContained().forEach(c -> System.out.println(FhirResourceRetriever.jsonParser.setPrettyPrint(true).encodeResourceToString(c)));
+//        MethodOutcome outcome = FhirResourceRetriever.upload(obsPanel);
+//        System.out.println(outcome.getId().getValue());
+//        System.out.println(outcome.getId().getIdPart());
     }
 
 }
