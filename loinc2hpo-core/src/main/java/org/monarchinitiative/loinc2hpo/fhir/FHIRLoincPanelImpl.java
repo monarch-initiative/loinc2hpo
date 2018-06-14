@@ -2,25 +2,29 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FHIRLoincPanelImpl implements FHIRLoincPanel {
+public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 
-    private Patient subject;
-    private LoincId panelId;
-    private List<Observation> components;
+    protected Patient subject;
+    protected LoincId panelId;
+    protected List<Observation> components;
+    protected ResourceCollection resourceCollection;
 
-    public FHIRLoincPanelImpl(LoincId panelid) {
+    public FHIRLoincPanelImpl(LoincId panelid, ResourceCollection resourceCollection) {
         this.panelId = panelid;
+        this.resourceCollection = resourceCollection;
     }
 
-    public FHIRLoincPanelImpl(LoincId panelId, Patient patient) {
+    public FHIRLoincPanelImpl(LoincId panelId, Patient patient, ResourceCollection resourceCollection) {
         this.panelId = panelId;
         this.subject = patient;
+        this.resourceCollection = resourceCollection;
     }
 
     @Override
@@ -63,7 +67,5 @@ public class FHIRLoincPanelImpl implements FHIRLoincPanel {
     }
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws Exception {
-        return null;//FhirObservationAnalyzer.getHPO4ObservationOutcome(loincIdSet, annotationMap);
-    }
+    public abstract HpoTerm4TestOutcome getHPOforObservation() throws Exception;
 }

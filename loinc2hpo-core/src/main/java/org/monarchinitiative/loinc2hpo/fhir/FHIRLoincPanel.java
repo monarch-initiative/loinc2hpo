@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This interface defines a unit of FHIR resources belonging to a LOINC panel. For example, a class that implements this interface can be instantiated to represent LOINC 35094-2 Blood pressure panel. It is highly likely that we need to define concrete classes to present each panel in order to implement the ObservationAnalysis interface
+ * This interface defines a collection of FHIR resources belonging to a LOINC panel. For example, a class that implements this interface can be instantiated to represent LOINC 35094-2 Blood pressure panel. It is highly likely that we need to define concrete classes to present each panel in order to implement the ObservationAnalysis interface
  */
 public interface FHIRLoincPanel extends ObservationAnalysis {
 
