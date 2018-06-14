@@ -761,7 +761,7 @@ public class AnnotateTabController {
                     .filter( loincEntry -> containedIn(query, loincEntry.getLongName()))
                     .forEach(loincEntry -> {
                         entrylist.add(loincEntry);
-                        logger.debug(loincEntry.getLOINC_Number() + " : " + loincEntry.getLongName());
+                        //logger.debug(loincEntry.getLOINC_Number() + " : " + loincEntry.getLongName());
                     });
                     //.forEach(loincEntry -> entryListInOrder.add(loincEntry));
         }
@@ -1582,8 +1582,8 @@ public class AnnotateTabController {
                     setText(item);
                     try {
                         if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
-                            logger.info("model contains " + item);
-                            logger.info("num of items in model " + model.getLoincAnnotationMap().size());
+                            //logger.info("model contains " + item);
+                            //logger.info("num of items in model " + model.getLoincAnnotationMap().size());
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: cyan");
                             //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
