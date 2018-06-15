@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpo.loinc;
 
 /**
  * Indicate the conditionality of a LOINC test in a panel.
- * Refer to LOINC manual, p92-93 "Representing conditionality"
+ * Refer to LOINC manual, P92-93 "Representing conditionality"
  */
 public enum PanelComponentConditionality {
     R,      //required

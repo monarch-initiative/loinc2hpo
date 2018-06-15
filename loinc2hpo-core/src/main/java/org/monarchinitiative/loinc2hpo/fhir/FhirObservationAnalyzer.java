@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
@@ -11,8 +12,10 @@ import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for analyzing a FHIR observation
@@ -132,6 +135,19 @@ public class FhirObservationAnalyzer {
         }
         if (loincId == null) throw new LoincCodeNotFoundException();
         return loincId;
+    }
+
+    /**
+     * Extract LOINC code strings from the observation.
+     * Note: the function does not check the returned value conform LoincId format
+     * @param observation
+     * @return a list of LOINC codes
+     */
+    public static List<String> getLoincIdOfObservation(Observation observation) {
+        return observation.getCode().getCoding().stream()
+                .filter(c -> c.getSystem().equals(Constants.LOINCSYSTEM))
+                .map(Coding::getCode)
+                .collect(Collectors.toList());
     }
 
     /**

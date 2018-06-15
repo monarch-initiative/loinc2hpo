@@ -12,12 +12,12 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 public class GlasgowComaPanel extends FHIRLoincPanelImpl{
 
-    public GlasgowComaPanel (LoincId loincId, ResourceCollection resourceCollection) {
-        super(loincId, resourceCollection);
+    public GlasgowComaPanel (LoincId loincId) {
+        super(loincId);
     }
 
-    public GlasgowComaPanel (LoincId loincId, Patient subject, ResourceCollection resourceCollection){
-        super(loincId, subject, resourceCollection);
+    public GlasgowComaPanel (LoincId loincId, Patient subject){
+        super(loincId, subject);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GlasgowComaPanel extends FHIRLoincPanelImpl{
         }
 
         Code score = new Code(target.getValueCodeableConcept().getCoding().get(0));
-        return resourceCollection.annotationMap().get(new LoincId("9269-2")).loincInterpretationToHPO(score);
+        return loincAnnotationMap.get(new LoincId("9269-2")).loincInterpretationToHPO(score);
 
     }
 }

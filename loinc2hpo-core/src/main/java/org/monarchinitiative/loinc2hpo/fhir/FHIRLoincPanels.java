@@ -42,10 +42,10 @@ public interface FHIRLoincPanels {
     void addComponent(Observation observation);
 
     /**
-     * Add a list of observations to the panel
+     * Add a list of observations belonging to the same panel
      * @param observations
      */
-    void addComponents(List<Observation> observations);
+    void addComponents(LoincId panelLoinc, List<Observation> observations);
 
     /**
      * Add a list of observations belonging to the same panel

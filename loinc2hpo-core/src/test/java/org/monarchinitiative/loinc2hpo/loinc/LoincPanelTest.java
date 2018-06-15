@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import java.io.*;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -48,9 +47,9 @@ public class LoincPanelTest {
     public void isMappableToHpo() throws Exception {
         LoincId testPanel = new LoincId("24322-0");
         LoincPanel panel = panelMap.get(testPanel);
-        assertFalse(panel.isMappableToHpo());
-        panel.setMappableToHpo(true);
-        assertTrue(panel.isMappableToHpo());
+        assertFalse(panel.isInterpretableInHPO());
+        panel.setInterpretableInHPO(true);
+        assertTrue(panel.isInterpretableInHPO());
     }
 
     @Test

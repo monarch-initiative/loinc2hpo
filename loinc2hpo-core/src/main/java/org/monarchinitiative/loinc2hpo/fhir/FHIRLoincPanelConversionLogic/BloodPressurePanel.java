@@ -8,12 +8,12 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 public class BloodPressurePanel extends FHIRLoincPanelImpl {
 
-    public BloodPressurePanel(LoincId loincId, ResourceCollection resourceCollection) {
-        super(loincId, resourceCollection);
+    public BloodPressurePanel(LoincId loincId) {
+        super(loincId);
     }
 
-    public BloodPressurePanel(LoincId loincId, Patient subject, ResourceCollection resourceCollection) {
-        super(loincId, subject, resourceCollection);
+    public BloodPressurePanel(LoincId loincId, Patient subject) {
+        super(loincId, subject);
     }
 
     @Override

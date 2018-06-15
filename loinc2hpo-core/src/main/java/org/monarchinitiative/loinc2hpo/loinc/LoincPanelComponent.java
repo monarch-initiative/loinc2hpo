@@ -4,17 +4,19 @@ import com.google.common.collect.ImmutableMap;
 
 public class LoincPanelComponent {
 
-    private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
-    private LoincId loincId;
-    private PanelComponentConditionality testingConditionality;
-    private PanelComponentConditionality mappingConditionality;
+    private static ImmutableMap<LoincId, LoincEntry> loincEntryMap; // All LOINC entries
+    private LoincId loincId; // LOINC id for this component
+    private PanelComponentConditionality testingConditionality; // Is this LOINC test required to complete the order of the panel
+    private PanelComponentConditionality conditionalityForParentMapping; // Is this LOINC required to map the panel to a HPO term
+    private boolean interpretableInHPO; // Is this LOINC interpretable in HPO terms? e.g. systolic and diastolic BP can be interpreted in HPO terms; while a time point in a series of glucose tolerance test cannot be interpreted as an isolated data point
 
-
-
-    public LoincPanelComponent(LoincId loincId, PanelComponentConditionality conditionality, ImmutableMap<LoincId, LoincEntry> loincEntryMap) {
+    public LoincPanelComponent(LoincId loincId, PanelComponentConditionality conditionality) {
         this.loincId = loincId;
         this.testingConditionality = conditionality;
-        this.loincEntryMap = loincEntryMap;
+    }
+
+    public static void setLoincEntryMap(ImmutableMap<LoincId, LoincEntry> immutableLoincEntryMap) {
+        loincEntryMap = immutableLoincEntryMap;
     }
 
     public LoincEntry getLoincEntry() {
@@ -37,11 +39,19 @@ public class LoincPanelComponent {
         this.testingConditionality = testingConditionality;
     }
 
-    public PanelComponentConditionality getMappingConditionality() {
-        return mappingConditionality;
+    public PanelComponentConditionality getConditionalityForParentMapping() {
+        return conditionalityForParentMapping;
     }
 
-    public void setMappingConditionality(PanelComponentConditionality mappingConditionality) {
-        this.mappingConditionality = mappingConditionality;
+    public void setConditionalityForParentMapping(PanelComponentConditionality conditionalityForParentMapping) {
+        this.conditionalityForParentMapping = conditionalityForParentMapping;
+    }
+
+    public boolean isInterpretableInHPO() {
+        return this.interpretableInHPO;
+    }
+
+    public void setInterpretableInHPO(boolean interpretableInHPO) {
+        this.interpretableInHPO = interpretableInHPO;
     }
 }

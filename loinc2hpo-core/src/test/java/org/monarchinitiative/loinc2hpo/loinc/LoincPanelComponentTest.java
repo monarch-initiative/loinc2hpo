@@ -5,8 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.junit.Assert.*;
 
 @Ignore
@@ -43,9 +41,9 @@ public class LoincPanelComponentTest {
 
     @Test
     public void getMappingConditionality() throws Exception {
-        assertNull(component.getMappingConditionality());
-        component.setMappingConditionality(PanelComponentConditionality.R);
-        assertEquals(PanelComponentConditionality.R, component.getMappingConditionality());
+        assertNull(component.getConditionalityForParentMapping());
+        component.setConditionalityForParentMapping(PanelComponentConditionality.R);
+        assertEquals(PanelComponentConditionality.R, component.getConditionalityForParentMapping());
     }
 
 }

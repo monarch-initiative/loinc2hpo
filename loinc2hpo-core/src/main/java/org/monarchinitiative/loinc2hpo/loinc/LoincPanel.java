@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.google.common.collect.ImmutableMap;
-import org.codehaus.plexus.logging.LoggerManager;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedLoincCodeException;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ public class LoincPanel {
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
     private final LoincId panelLoincId;
     private Set<LoincPanelComponent> chidren;
-    private boolean mappableToHpo;
+    private boolean interpretableInHPO;
 
     public LoincPanel(LoincId loincId, ImmutableMap<LoincId, LoincEntry> loincEntryMap) {
         this.panelLoincId = loincId;
@@ -64,17 +63,17 @@ public class LoincPanel {
         return new HashSet<>(chidren);
     }
 
-    public boolean isMappableToHpo() {
-        return mappableToHpo;
+    public boolean isInterpretableInHPO() {
+        return interpretableInHPO;
     }
 
-    public void setMappableToHpo(boolean mappableToHpo) {
-        this.mappableToHpo = mappableToHpo;
+    public void setInterpretableInHPO(boolean interpretableInHPO) {
+        this.interpretableInHPO = interpretableInHPO;
     }
 
     public Set<LoincPanelComponent> getChildrenRequiredForMapping() {
         return this.chidren.stream()
-                .filter(c -> c.getMappingConditionality() == PanelComponentConditionality.R) //only return required ones
+                .filter(c -> c.getConditionalityForParentMapping() == PanelComponentConditionality.R) //only return required ones
                 .collect(Collectors.toSet());
     }
 
@@ -82,7 +81,7 @@ public class LoincPanel {
     public void setChildMappingConditionality(LoincId child, PanelComponentConditionality conditionality) {
         for (LoincPanelComponent component : this.chidren) {
             if (component.getLoincEntry().getLOINC_Number().equals(child)) {
-                component.setMappingConditionality(conditionality);
+                component.setConditionalityForParentMapping(conditionality);
                 //System.out.println("change component: " + component.getLoincEntry().getLOINC_Number().toString());
             }
         }
