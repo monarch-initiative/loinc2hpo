@@ -26,18 +26,18 @@ public class GlasgowComaPanel extends FHIRLoincPanelImpl{
             return null;
         }
         //@TODO: use total score stored at 9269-2
-        Observation target = null;
-        for (Observation obs : components) {
-            long targetFound = obs.getCode().getCoding().stream()
-                    .filter(coding -> coding.getSystem().equals(Constants.LOINCSYSTEM))
-                    .map(Coding::getCode)
-                    .filter(s -> s.equals("9269-2"))
-                    .count();
-            if (targetFound == 1) {
-                target = obs;
-                break;
-            }
-        }
+        Observation target = components.get(new LoincId("9269-2"));
+//        for (Observation obs : components) {
+//            long targetFound = obs.getCode().getCoding().stream()
+//                    .filter(coding -> coding.getSystem().equals(Constants.LOINCSYSTEM))
+//                    .map(Coding::getCode)
+//                    .filter(s -> s.equals("9269-2"))
+//                    .count();
+//            if (targetFound == 1) {
+//                target = obs;
+//                break;
+//            }
+//        }
         if (target == null) {
             return null;
         }

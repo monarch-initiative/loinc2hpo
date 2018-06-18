@@ -24,12 +24,28 @@ public class FhirObservationAnalyzer {
     private static final Logger logger = LogManager.getLogger();
 
     static private Observation observation;
+    static private Set<LoincId> loincIds;
+    static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+
+    /**
+     * Initialize the resources required for observation to hpo transformation
+     * @param loincIdsSet
+     * @param loincAnnotationMap
+     */
+    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap) {
+        loincIds = loincIdsSet;
+        annotationMap = loincAnnotationMap;
+    }
 
     public static void setObservation(Observation aFhirObservation) {
         observation = aFhirObservation;
     }
     public static Observation getObservation(){ return observation; }
 
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation observationToAnalyze) throws FHIRException, ReferenceNotFoundException, LoincCodeNotAnnotatedException, AmbiguousResultsFoundException, UnrecognizedCodeException, LoincCodeNotFoundException, MalformedLoincCodeException, AnnotationNotFoundException, UnsupportedCodingSystemException, AmbiguousReferenceException {
+        observation = observationToAnalyze;
+        return getHPO4ObservationOutcome(loincIds, annotationMap);
+    }
 
     /**
      * @TODO: Should not catch all exceptions here; leave it to the application code

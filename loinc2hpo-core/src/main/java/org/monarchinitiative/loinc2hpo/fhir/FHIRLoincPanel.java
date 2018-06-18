@@ -38,8 +38,16 @@ public interface FHIRLoincPanel extends ObservationAnalysis {
 
     /**
      * Add a component observation to the panel
+     * @TODO: don't implement it yet; it's more complicated
      * @param observation
      */
     void addComponent(Observation observation);
+
+    /**
+     * Add all components to a panel
+     * Use Map as argument as it will make future work easier
+     * @param observations
+     */
+    void addComponents(Map<LoincId, Observation> observations);
 
 }

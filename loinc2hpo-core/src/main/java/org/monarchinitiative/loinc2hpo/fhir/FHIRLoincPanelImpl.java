@@ -8,16 +8,14 @@ import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 
     protected Patient subject;
     protected LoincId panelId;
-    protected List<Observation> components;
+    protected Map<LoincId, Observation> components;
     //protected ResourceCollection resourceCollection;
 
     protected static Set<LoincId> loincIdSet;
@@ -69,22 +67,30 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 
     @Override
     public List<Observation> panelComponents() {
-        return new ArrayList<>(this.components);
+        return new ArrayList<>(this.components.values());
     }
 
     @Override
     public void addComponent(Observation observation) {
-        // the observation should not be added twice
-        if (this.components.isEmpty()) {
-            this.components = new ArrayList<>();
-            this.components.add(observation);
+//        // the observation should not be added twice
+//        if (this.components.isEmpty()) {
+//            this.components = new ArrayList<>();
+//            this.components.add(observation);
+//        }
+//        for (Observation component : components) {
+//            if (component.getId().equals(observation.getId())) {
+//                return;
+//            }
+//            this.components.add(observation);
+//        }
+    }
+
+    @Override
+    public void addComponents(Map<LoincId, Observation> observationList) {
+        if (this.components == null) {
+            this.components = new HashMap<>();
         }
-        for (Observation component : components) {
-            if (component.getId().equals(observation.getId())) {
-                return;
-            }
-            this.components.add(observation);
-        }
+        this.components.putAll(observationList);
     }
 
     @Override

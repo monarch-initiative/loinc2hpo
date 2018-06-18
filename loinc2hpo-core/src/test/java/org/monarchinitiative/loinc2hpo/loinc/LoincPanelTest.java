@@ -22,8 +22,8 @@ public class LoincPanelTest {
     @BeforeClass
     public static void setUp() throws Exception {
         loincEntryMap = LoincEntry.getLoincEntryList(loincCoreTable);
+        LoincPanelComponent.setLoincEntryMap(loincEntryMap);
         panelMap = LoincPanel.getPanels(loincPanels, loincEntryMap);
-
     }
 
     @Test
@@ -38,7 +38,7 @@ public class LoincPanelTest {
         LoincId testPanel = new LoincId("24322-0");
         LoincPanel panel = panelMap.get(testPanel);
         assertEquals(13, panel.getChidren().size());
-        LoincPanelComponent newChild = new LoincPanelComponent(new LoincId("8040-8"), PanelComponentConditionality.O, loincEntryMap);
+        LoincPanelComponent newChild = new LoincPanelComponent(new LoincId("8040-8"), PanelComponentConditionality.O);
         panel.addChild(newChild);
         assertEquals(14, panel.getChidren().size());
     }

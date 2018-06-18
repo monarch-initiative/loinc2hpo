@@ -20,15 +20,18 @@ public class LoincPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(LoincPanel.class);
 
-    private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
+    private static ImmutableMap<LoincId, LoincEntry> loincEntryMap;
     private final LoincId panelLoincId;
     private Set<LoincPanelComponent> chidren;
     private boolean interpretableInHPO;
 
-    public LoincPanel(LoincId loincId, ImmutableMap<LoincId, LoincEntry> loincEntryMap) {
+    public LoincPanel(LoincId loincId) {
         this.panelLoincId = loincId;
-        this.loincEntryMap = loincEntryMap;
         this.chidren = new LinkedHashSet<>();
+    }
+
+    public static void setLoincEntryMap(ImmutableMap<LoincId, LoincEntry> loincEntryMapX){
+        loincEntryMap = loincEntryMapX;
     }
 
 //    public LoincId getPanelLoincId() {
@@ -87,7 +90,8 @@ public class LoincPanel {
         }
     }
 
-    public static Map<LoincId, LoincPanel> getPanels(String path, ImmutableMap<LoincId, LoincEntry> loincEntryMap) throws IOException, MalformedLoincCodeException, UnrecognizedLoincCodeException {
+    public static Map<LoincId, LoincPanel> getPanels(String path, ImmutableMap<LoincId, LoincEntry> loincEntryMapX) throws IOException, MalformedLoincCodeException, UnrecognizedLoincCodeException {
+        loincEntryMap = loincEntryMapX;
         Map<LoincId, LoincPanel> loincPanelMap = new HashMap<>();
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -118,7 +122,7 @@ public class LoincPanel {
         invalidPanelId.add(panelLoinc);
         continue;
     }
-                loincPanelMap.putIfAbsent(panelLoinc, new LoincPanel(panelLoinc, loincEntryMap));
+                loincPanelMap.putIfAbsent(panelLoinc, new LoincPanel(panelLoinc));
                 LoincId childLoinc = new LoincId(elements[5]);
     if (!loincEntryMap.containsKey(childLoinc)) { //skip unrecognized LOINC code: UPDATE LOINC table version!
         //System.out.println("invalid child Loinc: " + childLoinc.toString());
@@ -131,7 +135,7 @@ public class LoincPanel {
                 } else {
                     testingConditionality = PanelComponentConditionality.U;
                 }
-                LoincPanelComponent child = new LoincPanelComponent(childLoinc, testingConditionality, loincEntryMap);
+                LoincPanelComponent child = new LoincPanelComponent(childLoinc, testingConditionality);
 
                 if (!loincPanelMap.get(panelLoinc).componentExists(childLoinc) && !childLoinc.equals(panelLoinc)) {
                     loincPanelMap.get(panelLoinc).addChild(child);
