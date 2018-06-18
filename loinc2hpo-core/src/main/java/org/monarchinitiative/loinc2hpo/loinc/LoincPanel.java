@@ -22,12 +22,12 @@ public class LoincPanel {
 
     private static ImmutableMap<LoincId, LoincEntry> loincEntryMap;
     private final LoincId panelLoincId;
-    private Set<LoincPanelComponent> chidren;
+    private Map<LoincId, LoincPanelComponent> chidren;
     private boolean interpretableInHPO;
 
     public LoincPanel(LoincId loincId) {
         this.panelLoincId = loincId;
-        this.chidren = new LinkedHashSet<>();
+        this.chidren = new LinkedHashMap<>();
     }
 
     public static void setLoincEntryMap(ImmutableMap<LoincId, LoincEntry> loincEntryMapX){
@@ -42,28 +42,29 @@ public class LoincPanel {
         return loincEntryMap.get(this.panelLoincId);
     }
 
-    public void addChild(LoincPanelComponent child) {
+    public void addChild(LoincId loincId, LoincPanelComponent child) {
 //        for (LoincPanelComponent component : this.chidren) {
 //            if (component.getLoincEntry().getLOINC_Number().equals(child.getLoincEntry().getLOINC_Number())) {
 //                logger.error("attempting to add a component that already exists: " + child.getLoincEntry().getLOINC_Number().toString());
 //                return;
 //            }
 //        }
-        this.chidren.add(child);
+        this.chidren.putIfAbsent(loincId, child);
     }
 
     public boolean componentExists(LoincId loincId) {
-        if (this.chidren.size() == 0) {
-            return false;
-        }
-        return this.chidren.stream()
-                .map(c -> c.getLoincEntry().getLOINC_Number())
-                .filter(loinc -> loinc.equals(loincId))
-                .collect(Collectors.toList()).size() != 0;
+//        if (this.chidren.size() == 0) {
+//            return false;
+//        }
+//        return this.chidren.stream()
+//                .map(c -> c.getLoincEntry().getLOINC_Number())
+//                .filter(loinc -> loinc.equals(loincId))
+//                .collect(Collectors.toList()).size() != 0;
+        return this.chidren.containsKey(loincId);
     }
 
-    public Set<LoincPanelComponent> getChidren() {
-        return new HashSet<>(chidren);
+    public Map<LoincId, LoincPanelComponent> getChidren() {
+        return new LinkedHashMap<>(chidren);
     }
 
     public boolean isInterpretableInHPO() {
@@ -75,19 +76,21 @@ public class LoincPanel {
     }
 
     public Set<LoincPanelComponent> getChildrenRequiredForMapping() {
-        return this.chidren.stream()
+        return this.chidren.values().stream()
                 .filter(c -> c.getConditionalityForParentMapping() == PanelComponentConditionality.R) //only return required ones
                 .collect(Collectors.toSet());
     }
 
     //change the mapping conditionality for one component of the panel
     public void setChildMappingConditionality(LoincId child, PanelComponentConditionality conditionality) {
-        for (LoincPanelComponent component : this.chidren) {
-            if (component.getLoincEntry().getLOINC_Number().equals(child)) {
-                component.setConditionalityForParentMapping(conditionality);
-                //System.out.println("change component: " + component.getLoincEntry().getLOINC_Number().toString());
-            }
+
+        if (!this.chidren.containsKey(child)) {
+            throw new NullPointerException("LoincId does not exit in the LOINC panel");
+            //System.out.println("change component: " + component.getLoincEntry().getLOINC_Number().toString());
         }
+
+        this.chidren.get(child).setConditionalityForParentMapping(conditionality);
+
     }
 
     public static Map<LoincId, LoincPanel> getPanels(String path, ImmutableMap<LoincId, LoincEntry> loincEntryMapX) throws IOException, MalformedLoincCodeException, UnrecognizedLoincCodeException {
@@ -138,7 +141,7 @@ public class LoincPanel {
                 LoincPanelComponent child = new LoincPanelComponent(childLoinc, testingConditionality);
 
                 if (!loincPanelMap.get(panelLoinc).componentExists(childLoinc) && !childLoinc.equals(panelLoinc)) {
-                    loincPanelMap.get(panelLoinc).addChild(child);
+                    loincPanelMap.get(panelLoinc).addChild(childLoinc, child);
                 }
             }
         }
@@ -159,5 +162,13 @@ public class LoincPanel {
         reader.close();
 
         return loincPanelMap;
+    }
+
+    public static void serializeLoincPanel(Map<LoincId, LoincPanel> loincPanelMap) {
+
+    }
+
+    public static Map<LoincId, LoincPanel> deserializeLoincPanel(String path) {
+        return null;
     }
 }
