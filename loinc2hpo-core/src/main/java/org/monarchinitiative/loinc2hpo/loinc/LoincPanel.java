@@ -6,9 +6,7 @@ import org.monarchinitiative.loinc2hpo.exception.UnrecognizedLoincCodeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,6 +141,10 @@ public class LoincPanel {
                 if (!loincPanelMap.get(panelLoinc).componentExists(childLoinc) && !childLoinc.equals(panelLoinc)) {
                     loincPanelMap.get(panelLoinc).addChild(childLoinc, child);
                 }
+// // @TODO: LoincPanelsAndForms v2.63 has a lot repeats: same Loinc panel AND component. Why?
+//                if (loincPanelMap.get(panelLoinc).componentExists(childLoinc)) {
+//System.out.println(line);
+//                }
             }
         }
         if (count_malformed != 0) {
@@ -164,11 +166,71 @@ public class LoincPanel {
         return loincPanelMap;
     }
 
-    public static void serializeLoincPanel(Map<LoincId, LoincPanel> loincPanelMap) {
+    public static void serializeLoincPanel(Map<LoincId, LoincPanel> loincPanelMap, String path) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        final String header = "panelLoinc\tinterpretableInHpo\tcomponentLoinc\tcomponentConditionalityForParentTest\tcomponentConditionalityForParentMapping\tcomponentInterpretableInHpo";
+        writer.write(header);
+        writer.write("\n");
+        loincPanelMap.entrySet().stream().forEach(
+                entry -> {
+                    entry.getValue().chidren.entrySet().stream().forEach(component -> {
+                        try {
+                            writer.write(entry.getKey().toString());
+                            writer.write("\t");
+                            writer.write(entry.getValue().interpretableInHPO? "Y" : "N");
+                            writer.write("\t");
+                            writer.write(component.getKey().toString());
+                            writer.write("\t");
+                            writer.write(component.getValue().getTestingConditionality() != null ? component.getValue().getTestingConditionality().toString() : "U");
+                            writer.write("\t");
+                            writer.write(component.getValue().getConditionalityForParentMapping() != null ? component.getValue().getConditionalityForParentMapping().toString() : "U");
+                            writer.write("\t");
+                            writer.write(component.getValue().isInterpretableInHPO() ? "Y" : "N");
+                            writer.write("\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+        );
 
+        writer.close();
     }
 
-    public static Map<LoincId, LoincPanel> deserializeLoincPanel(String path) {
-        return null;
+    public static Map<LoincId, LoincPanel> deserializeLoincPanel(String path) throws FileNotFoundException, IOException{
+
+        Map<LoincId, LoincPanel> loincPanelMap = new LinkedHashMap<>();
+
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String line = reader.readLine(); //skip header
+        String[] fields = line.split("\t");
+        while ((line = reader.readLine()) != null) {
+            String[] elements = line.split("\t");
+            if (elements.length != fields.length) {
+                logger.error("loincPanelAnnotation line does not have required no. of fields");
+                continue;
+            }
+            //read each element
+            try {
+                LoincId panelLoinc = new LoincId(elements[0]);
+                boolean interpretableInHpo = elements[1].equals("Y");
+                LoincId componentLoinc = new LoincId(elements[2]);
+                PanelComponentConditionality componentConditionalityForParentTest = PanelComponentConditionality.of(elements[3]);
+                PanelComponentConditionality componentConditionalityForParentMapping = PanelComponentConditionality.of(elements[4]);
+                boolean componentInterpretableInHpo = elements[5].equals("Y");
+                loincPanelMap.putIfAbsent(panelLoinc, new LoincPanel(panelLoinc));
+                LoincPanelComponent component = new LoincPanelComponent(componentLoinc, componentConditionalityForParentTest);
+                component.setConditionalityForParentMapping(componentConditionalityForParentMapping);
+                component.setInterpretableInHPO(componentInterpretableInHpo);
+                loincPanelMap.get(panelLoinc).setInterpretableInHPO(interpretableInHpo);
+                loincPanelMap.get(panelLoinc).addChild(componentLoinc, component);
+            } catch (MalformedLoincCodeException e) {
+                e.printStackTrace();
+            }
+        }
+
+        reader.close();
+
+        return loincPanelMap;
     }
 }

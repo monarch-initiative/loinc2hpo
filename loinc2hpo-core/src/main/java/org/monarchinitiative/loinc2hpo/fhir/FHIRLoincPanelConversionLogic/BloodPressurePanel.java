@@ -41,13 +41,15 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         }
         LabTestOutcome systolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(systolic);
         LabTestOutcome dystolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(dystolic);
-        if (systolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypertension") ||
-                dystolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypertension")){
-            return systolicOutcome.getOutcome();
+        if (systolicOutcome.getOutcome().getHpoTerm().getName().equals("Elevated systolic blood pressure") ||
+                dystolicOutcome.getOutcome().getHpoTerm().getName().equals("Elevated diastolic blood pressure")){
+            Code high = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get("H");
+            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(high);
         }
         if (systolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypotension") &&
                 dystolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypotension")) {
-            return systolicOutcome.getOutcome();
+            Code low = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get("L");
+            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(low);
         }
         else {
             Code normal = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get("N");

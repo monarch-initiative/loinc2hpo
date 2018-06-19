@@ -13,6 +13,8 @@ import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,12 +28,14 @@ import java.util.stream.Collectors;
  */
 public class ResourceCollection {
 
+    private static Logger logger = LoggerFactory.getLogger(ResourceCollection.class);
+
     private String loincEntryPath;
     private String hpoOboPath;
     private String hpoOwlPath;
     private String annotationMapPath;
     private String loincPanelPath;
-    private String loincPanelAnnotationPath;
+    //private String loincPanelAnnotationPath;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
@@ -39,7 +43,7 @@ public class ResourceCollection {
     private Map<LoincId, LoincPanel> loincPanelMap;
     private Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
 
-    public void setLoincEntryFile(String path) {
+    public void setLoincEntryPath(String path) {
         this.loincEntryPath = path;
     }
 
@@ -59,11 +63,13 @@ public class ResourceCollection {
         this.loincPanelPath = path;
     }
 
-    public void setLoincPanelAnnotationPath(String path){
-        this.loincPanelAnnotationPath = path;
-    }
+//    public void setLoincPanelAnnotationPath(String path){
+//        this.loincPanelAnnotationPath = path;
+//    }
 
     public ImmutableMap<LoincId, LoincEntry> loincEntryMap() {
+        logger.trace("enter loincEntryMap()");
+        logger.trace(String.format("loincEntryPath is null: %s", this.loincEntryPath == null));
         if (this.loincEntryPath == null) {
             return null;
         }
@@ -140,10 +146,7 @@ public class ResourceCollection {
         if (this.loincPanelMap != null) {
             return this.loincPanelMap;
         }
-        this.loincPanelMap = LoincPanel.getPanels(this.loincPanelPath, this.loincEntryMap);
-        if (this.loincPanelAnnotationPath != null) {
-            addLoincPanelAnnotation(this.loincPanelAnnotationPath, loincPanelMap);
-        }
+        this.loincPanelMap = LoincPanel.deserializeLoincPanel(this.loincPanelPath);
         return this.loincPanelMap;
     }
 

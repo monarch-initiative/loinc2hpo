@@ -82,9 +82,38 @@ public class LoincPanelTest {
     @Test
     public void getPanels() throws Exception {
         //total no. of panels: 3093
-        System.out.println("no. of panels: " + panelMap.size());
+//        panelMap.get(new LoincId("49087-0")).getChidren().values().forEach(c -> System.out.println(c.getLoincEntry().getLOINC_Number().toString() + "\t" + c.getTestingConditionality().toString()));
+        assertEquals(3093, panelMap.size());
+        assertEquals(PanelComponentConditionality.Rflx_a, panelMap.get(new LoincId("75515-7")).getChidren().get(new LoincId("75508-2")).getTestingConditionality());
+        assertEquals(PanelComponentConditionality.Rflx, panelMap.get(new LoincId("87543-5")).getChidren().get(new LoincId("51773-0")).getTestingConditionality());
+        assertEquals(PanelComponentConditionality.R_a, panelMap.get(new LoincId("77574-2")).getChidren().get(new LoincId("79537-7")).getTestingConditionality());
+        assertEquals(PanelComponentConditionality.R, panelMap.get(new LoincId("86923-0")).getChidren().get(new LoincId("86493-4")).getTestingConditionality());
+        assertEquals(PanelComponentConditionality.O, panelMap.get(new LoincId("81942-5")).getChidren().get(new LoincId("81930-0")).getTestingConditionality());
+        //panelMap.get(new LoincId("77574-2")).getChidren().values().forEach(c -> System.out.println(c.getLoincEntry().getLOINC_Number().toString() + "\t" + c.getTestingConditionality().toString()));
+        //assertEquals(PanelComponentConditionality.C, panelMap.get(new LoincId("77574-2")).getChidren().get(new LoincId("79534-4")).getTestingConditionality());
+        //assertEquals(PanelComponentConditionality.U, panelMap.get(new LoincId("82958-0")).getChidren().get(new LoincId("13225-8")).getTestingConditionality());
     }
 
+    @Test
+    public void testserializer() throws Exception {
+        final String path = "loincpanelAnnotation.tsv";
+        LoincPanel.serializeLoincPanel(panelMap, path);
+    }
+
+    @Test
+    public void testdeserializer() throws Exception {
+        final String path = "/Users/zhangx/git/loinc2hpoAnnotation/Data/LoincPanel/loincpanelAnnotation.tsv";
+        Map<LoincId, LoincPanel> loincPanelMap = LoincPanel.deserializeLoincPanel(path);
+        assertNotNull(loincPanelMap);
+        assertNotEquals(0, loincPanelMap.size());
+        assertEquals(3093, loincPanelMap.size());
+        assertEquals(6, loincPanelMap.get(new LoincId("45979-2")).getChidren().size());
+        assertEquals(9, loincPanelMap.get(new LoincId("35094-2")).getChidren().size());
+        assertEquals(2, loincPanelMap.get(new LoincId("35094-2")).getChildrenRequiredForMapping().size());
+        loincPanelMap.get(new LoincId("35094-2")).getChildrenRequiredForMapping().forEach(c -> System.out.println(c.getLoincEntry().getLOINC_Number().toString() + "\t" + c.isInterpretableInHPO()));
+        assertEquals(1, loincPanelMap.get(new LoincId("35088-4")).getChildrenRequiredForMapping().size());
+        loincPanelMap.get(new LoincId("35088-4")).getChildrenRequiredForMapping().forEach(c -> System.out.println(c.getLoincEntry().getLOINC_Number().toString() + "\t" + c.isInterpretableInHPO()));
+    }
     @Test
     public void checkIfPanelsAreTopLoincs() throws Exception{
         Set<LoincId> top2000 = new LinkedHashSet<>();

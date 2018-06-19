@@ -18,21 +18,22 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
     protected Map<LoincId, Observation> components;
     //protected ResourceCollection resourceCollection;
 
-    protected static Set<LoincId> loincIdSet;
-    protected static Map<LoincId, LoincEntry> loincEntryMap;
-    protected static Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
+//    protected static Set<LoincId> loincIdSet;
+//    protected static Map<LoincId, LoincEntry> loincEntryMap;
+//    protected static Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
 
-    public static void setLoincIds(Set<LoincId> loincIds) {
-        loincIdSet = loincIds;
-    }
+//    public static void setLoincIds(Set<LoincId> loincIds) {
+//        loincIdSet = loincIds;
+//    }
+//
+//    public static void setLoincEntryMap(Map<LoincId, LoincEntry> loincEntryMapE) {
+//        loincEntryMap = loincEntryMapE;
+//    }
+//
+//    public static void setLoincAnnotationMap(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap){
+//        loincAnnotationMap = annotationMap;
+//    }
 
-    public static void setLoincEntryMap(Map<LoincId, LoincEntry> loincEntryMapE) {
-        loincEntryMap = loincEntryMapE;
-    }
-
-    public static void setLoincAnnotationMap(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap){
-        loincAnnotationMap = annotationMap;
-    }
 
 
     public FHIRLoincPanelImpl(LoincId panelid) {
@@ -45,6 +46,12 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
         this.subject = patient;
         //this.resourceCollection = resourceCollection;
     }
+
+//    static void initResources(Set<LoincId> loincIdSetX, Map<LoincId, LoincEntry> loincEntryMapX, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMapX){
+//        loincIdSet = loincIdSetX;
+//        loincEntryMap = loincEntryMapX;
+//        loincAnnotationMap = annotationMapX;
+//    }
 
     @Override
     public Patient getSubject() {
@@ -83,6 +90,7 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 //            }
 //            this.components.add(observation);
 //        }
+        throw new UnsupportedOperationException();
     }
 
     @Override

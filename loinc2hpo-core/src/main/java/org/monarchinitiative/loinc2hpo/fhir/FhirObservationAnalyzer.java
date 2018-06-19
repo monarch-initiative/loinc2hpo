@@ -103,6 +103,8 @@ public class FhirObservationAnalyzer {
             }
         }
 
+        //@TODO: analyze observations with
+
         //if all the above fails, we cannot do nothing
         logger.error("Could not return HPO for observation: " + observation.getId());
         return new BasicLabTestOutcome(null, null, observation.getSubject(), observation.getIdentifier());
@@ -120,7 +122,7 @@ public class FhirObservationAnalyzer {
                 try {
                     LoincId loincId = new LoincId(coding.getCode());
                     if (!loincIds.contains(loincId)) {
-                        logger.info("The observation has a correctly formed loinc code, but the code is not found in the loinc table. Check whether it is a new loinc code");
+                        logger.info("The observation has a correctly formed loinc code, but the code is not found in the loinc table. Check whether it is a new loinc code: " + loincId);
                     }
                     return loincIds.contains(loincId);
                 } catch (MalformedLoincCodeException e) {

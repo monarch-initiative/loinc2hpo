@@ -10,9 +10,9 @@ public class LoincPanelComponent {
     private PanelComponentConditionality conditionalityForParentMapping; // Is this LOINC required to map the panel to a HPO term
     private boolean interpretableInHPO; // Is this LOINC interpretable in HPO terms? e.g. systolic and diastolic BP can be interpreted in HPO terms; while a time point in a series of glucose tolerance test cannot be interpreted as an isolated data point
 
-    public LoincPanelComponent(LoincId loincId, PanelComponentConditionality conditionality) {
+    public LoincPanelComponent(LoincId loincId, PanelComponentConditionality conditionalityForParentTesting) {
         this.loincId = loincId;
-        this.testingConditionality = conditionality;
+        this.testingConditionality = conditionalityForParentTesting;
     }
 
     public static void setLoincEntryMap(ImmutableMap<LoincId, LoincEntry> immutableLoincEntryMap) {
