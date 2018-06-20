@@ -8,6 +8,7 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
+import org.monarchinitiative.loinc2hpo.testresult.LabTest;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 
 
@@ -45,6 +46,21 @@ public class FhirObservationAnalyzer {
     public static LabTestOutcome getHPO4ObservationOutcome(Observation observationToAnalyze) throws FHIRException, ReferenceNotFoundException, LoincCodeNotAnnotatedException, AmbiguousResultsFoundException, UnrecognizedCodeException, LoincCodeNotFoundException, MalformedLoincCodeException, AnnotationNotFoundException, UnsupportedCodingSystemException, AmbiguousReferenceException {
         observation = observationToAnalyze;
         return getHPO4ObservationOutcome(loincIds, annotationMap);
+    }
+
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation.ObservationComponentComponent component) {
+        component.getCode();
+        return null;
+    }
+
+    /**
+     * This method is to analyze a ObservationRelatedComponenent that is usually a component of a LOINC panel.
+     * @param relatedComponent
+     * @return
+     */
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation.ObservationRelatedComponent relatedComponent) {
+
+        return null;
     }
 
     /**

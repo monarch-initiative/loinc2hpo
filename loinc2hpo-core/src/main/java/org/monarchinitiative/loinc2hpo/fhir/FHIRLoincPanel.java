@@ -23,6 +23,27 @@ public interface FHIRLoincPanel extends ObservationAnalysis {
         loincAnnotationMap.putAll(annotationMapX);
     }
 
+//    /**
+//     * Create a new instance of FHIRLoincPanel
+//     * @param loincId
+//     * @return
+//     */
+//    FHIRLoincPanel instance(LoincId loincId);
+//
+//    /**
+//     * Create a new instance of FHIRLoincPanel for specified subject
+//     * @param loincId
+//     * @param subject
+//     * @return
+//     */
+//    FHIRLoincPanel instance(LoincId loincId, Patient subject);
+
+    /**
+     * Set the subject for the LOINC panel
+     * @param patient
+     */
+    void setSubject(Patient patient);
+
     /**
      * Return the subject of the panel
      * @return
@@ -49,10 +70,10 @@ public interface FHIRLoincPanel extends ObservationAnalysis {
 
     /**
      * Add a component observation to the panel
-     * @TODO: don't implement it yet; it's more complicated
+     * @param loincId
      * @param observation
      */
-    void addComponent(Observation observation);
+    void addComponent(LoincId loincId, Observation observation);
 
     /**
      * Add all components to a panel

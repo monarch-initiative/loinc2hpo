@@ -32,8 +32,7 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         if (components.size() < 2) {
             return null;
         }
-        //@TODO: convert two required LOINC tests to HPO
-        //Logic: call hypertension only when both are high
+        //Logic: call hypertension only when at least one is high
         Observation systolic = components.get(new LoincId("8480-6"));
         Observation dystolic = components.get(new LoincId("8462-4"));
         if (systolic == null || dystolic == null) {

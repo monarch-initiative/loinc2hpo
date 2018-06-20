@@ -13,28 +13,15 @@ import java.util.stream.Collectors;
 
 public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 
+//    protected FHIRLoincPanelFactory factory = new FHIRLoincPanelFactoryLazy();
     protected Patient subject;
     protected LoincId panelId;
     protected Map<LoincId, Observation> components;
-    //protected ResourceCollection resourceCollection;
 
-//    protected static Set<LoincId> loincIdSet;
-//    protected static Map<LoincId, LoincEntry> loincEntryMap;
-//    protected static Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
 
-//    public static void setLoincIds(Set<LoincId> loincIds) {
-//        loincIdSet = loincIds;
+//    public FHIRLoincPanelImpl(FHIRLoincPanelFactory factory) {
+//        this.factory = factory;
 //    }
-//
-//    public static void setLoincEntryMap(Map<LoincId, LoincEntry> loincEntryMapE) {
-//        loincEntryMap = loincEntryMapE;
-//    }
-//
-//    public static void setLoincAnnotationMap(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap){
-//        loincAnnotationMap = annotationMap;
-//    }
-
-
 
     public FHIRLoincPanelImpl(LoincId panelid) {
         this.panelId = panelid;
@@ -47,11 +34,20 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
         //this.resourceCollection = resourceCollection;
     }
 
-//    static void initResources(Set<LoincId> loincIdSetX, Map<LoincId, LoincEntry> loincEntryMapX, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMapX){
-//        loincIdSet = loincIdSetX;
-//        loincEntryMap = loincEntryMapX;
-//        loincAnnotationMap = annotationMapX;
+//    @Override
+//    public FHIRLoincPanel instance(LoincId loincId) {
+//        return this.factory.createFhirLoincPanel(loincId);
 //    }
+//
+//    @Override
+//    public FHIRLoincPanel instance(LoincId loincId, Patient subject) {
+//        return this.factory.createFhirLoincPanel(loincId, subject);
+//    }
+
+    @Override
+    public void setSubject(Patient subject) {
+        this.subject = subject;
+    }
 
     @Override
     public Patient getSubject() {
@@ -78,19 +74,8 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
     }
 
     @Override
-    public void addComponent(Observation observation) {
-//        // the observation should not be added twice
-//        if (this.components.isEmpty()) {
-//            this.components = new ArrayList<>();
-//            this.components.add(observation);
-//        }
-//        for (Observation component : components) {
-//            if (component.getId().equals(observation.getId())) {
-//                return;
-//            }
-//            this.components.add(observation);
-//        }
-        throw new UnsupportedOperationException();
+    public void addComponent(LoincId loincId, Observation observation) {
+        this.components.put(loincId, observation);
     }
 
     @Override

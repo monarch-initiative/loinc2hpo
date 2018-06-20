@@ -9,10 +9,7 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.ResourceCollectionTest;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
-import org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanel;
-import org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanelImpl;
-import org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanels;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzer;
+import org.monarchinitiative.loinc2hpo.fhir.*;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -28,6 +25,7 @@ public class BloodPressurePanelTest {
     private static ResourceCollection resources = SharedResourceCollection.resourceCollection;
 
     private static FHIRLoincPanel bpPanel;
+    private static FHIRLoincPanelFactory panelFactory = new FHIRLoincPanelFactoryLazy();
 
     @BeforeClass
     public static void setup() throws Exception{
@@ -52,7 +50,7 @@ public class BloodPressurePanelTest {
                 .setSubject(new Reference().setIdentifier(new Identifier().setSystem("org.jax").setValue("Mouse Jerry")));
                 //.setInterpretation(new CodeableConcept().addCoding(new Coding().setSystem("http://hl7.org/fhir/v2/0078").setCode("H")));
 
-        bpPanel = new BloodPressurePanel(new LoincId("35094-2"));
+        bpPanel = panelFactory.createFhirLoincPanel(new LoincId("35094-2"));
         Map<LoincId, Observation> components = new HashMap<>();
         components.put(new LoincId("8480-6"), systolic);
         components.put(new LoincId("8462-4"), dystolic);
