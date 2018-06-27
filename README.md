@@ -20,7 +20,7 @@ $ java -jar loinc2hpo-core/target/Loinc2HpoLib.jar demo
 Please refer to http://loinc2hpo.readthedocs.io/en/latest/.
 
 # spring framework app
-We are developing a separate app that will specialize in one functionality of this app - converting FHIR observations into HPO terms. The new app will be coded with the Spring framework and be able to interact with real-world hospital FHIR servers. Please refer to the app with the following link: https://github.com/OCTRI/fhir2hpo
+We are developing a separate app that will specialize in one functionality of this app - converting FHIR observations into HPO terms. The new app will be coded with the Spring framework and we strive to achieve enterprise-level quality. Please refer to the app with the following link: https://github.com/OCTRI/fhir2hpo
 
 # funding
 We gratefully acknowledge funding by NCATS (CD2H project), 1U24TR002306
