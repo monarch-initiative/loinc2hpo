@@ -29,8 +29,8 @@ public class HpoOntologyParser {
     /** Path to the {@code hp.obo} file. */
     private String hpoOntologyPath=null;
 
-    private TermPrefix pref = new ImmutableTermPrefix("HP");
-    private final TermId INHERITANCE = new ImmutableTermId(pref,"0000005");
+    private TermPrefix pref = new TermPrefix("HP");
+    private final TermId INHERITANCE = new TermId(pref,"0000005");
     HpoOntology ontology;
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
