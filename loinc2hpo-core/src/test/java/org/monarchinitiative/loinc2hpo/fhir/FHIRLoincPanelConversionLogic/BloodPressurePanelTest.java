@@ -43,12 +43,15 @@ public class BloodPressurePanelTest {
                 .setValue(new Quantity().setValue(100).setUnit("mmHg"))
                 .setInterpretation(new CodeableConcept().addCoding(new Coding().setSystem(Constants.V2OBSERVATIONINTERPRETATION).setCode("H")));
         Observation.ObservationRelatedComponent related1 = new Observation.ObservationRelatedComponent();
+        //related1.setTarget()
 
         Observation loincPanel = new Observation();
         loincPanel.setSubject(subject)
                 .setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("35094-2")))
                 .setSubject(new Reference().setIdentifier(new Identifier().setSystem("org.jax").setValue("Mouse Jerry")));
+        loincPanel.addRelated(related1);
                 //.setInterpretation(new CodeableConcept().addCoding(new Coding().setSystem("http://hl7.org/fhir/v2/0078").setCode("H")));
+
 
         bpPanel = panelFactory.createFhirLoincPanel(new LoincId("35094-2"));
         Map<LoincId, Observation> components = new HashMap<>();

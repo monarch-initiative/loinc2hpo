@@ -12,6 +12,7 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.util.List;
 import java.util.Map;
@@ -150,6 +151,46 @@ public class FHIRResourceFakerTest {
 //        MethodOutcome outcome = FhirResourceRetriever.upload(obsPanel);
 //        System.out.println(outcome.getId().getValue());
 //        System.out.println(outcome.getId().getIdPart());
+    }
+
+    @Test
+    public void testObservationComponenet() throws Exception {
+
+        LoincId panelId = new LoincId("35094-2");
+        LoincId sys = new LoincId("8480-6");
+        LoincId dias = new LoincId("8462-4");
+
+        Observation obsPanel = new Observation()
+                .setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("35094-2")))
+                .addIdentifier(new Identifier().setSystem("Jax.org").setValue("Little mouse"));
+
+        //blood pressure reference
+        SimpleQuantity lowSys = new SimpleQuantity();
+        lowSys.setValue(80).setUnit("mm Hg");
+        SimpleQuantity highSys = new SimpleQuantity();
+        highSys.setValue(120).setUnit("mm Hg");
+
+        SimpleQuantity lowDias = new SimpleQuantity();
+        lowDias.setValue(80).setUnit("mm Hg");
+        SimpleQuantity highDias = new SimpleQuantity();
+        highDias.setValue(120).setUnit("mm Hg");
+
+        Observation.ObservationComponentComponent compSys = new Observation.ObservationComponentComponent();
+        compSys.setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("8480-6")))
+                .setValue(new Quantity(80).setUnit("mm Hg"))
+                .addReferenceRange(new Observation.ObservationReferenceRangeComponent()
+                        .setHigh(highSys).setLow(lowSys));
+
+        Observation.ObservationComponentComponent compDias = new Observation.ObservationComponentComponent();
+        compDias.setCode(new CodeableConcept().addCoding(new Coding().setSystem(Constants.LOINCSYSTEM).setCode("8462-4")))
+                .setValue(new Quantity(120).setUnit("mm Hg"))
+                .addReferenceRange(new Observation.ObservationReferenceRangeComponent()
+                        .setHigh(highDias).setLow(lowDias));
+
+        obsPanel.addComponent(compSys).addComponent(compDias);
+
+        System.out.println(FhirResourceRetriever.jsonParser.setPrettyPrint(true).encodeResourceToString(obsPanel));
+
     }
 
 }
