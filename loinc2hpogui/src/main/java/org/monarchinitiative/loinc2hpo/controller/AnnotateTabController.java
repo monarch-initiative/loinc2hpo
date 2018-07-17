@@ -163,6 +163,7 @@ public class AnnotateTabController {
             .observableArrayList();
     final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
     final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
+    final private String UNSPECIFIEDSPECIMEN = "unspecified_specimen";
 
     private BooleanProperty isPresentOrd = new SimpleBooleanProperty(false);
 
@@ -913,6 +914,7 @@ public class AnnotateTabController {
         List<String> initialListNames = new ArrayList<>();
         initialListNames.add(LOINCWAITING4NEWHPO);
         initialListNames.add(LOINCUNABLE2ANNOTATE);
+        initialListNames.add(UNSPECIFIEDSPECIMEN);
         userCreatedLoincLists.addAll(initialListNames);
         logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
         /*
@@ -1598,6 +1600,9 @@ public class AnnotateTabController {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: lightcoral");
                             //@TODO: change color of other groups. tip: allow user to pick a color
+                        } else if (model.getUserCreatedLoincLists().get(UNSPECIFIEDSPECIMEN) != null && model.getUserCreatedLoincLists().get(UNSPECIFIEDSPECIMEN).contains(new LoincId(item))) {
+                            TableRow<LoincEntry> currentRow = getTableRow();
+                            currentRow.setStyle("-fx-background-color: plum");
                         } else{//for reasons I don't understand, this else block is critical to make it work!!!
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("");
