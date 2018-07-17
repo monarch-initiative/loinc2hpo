@@ -121,4 +121,9 @@ Additional changes for this version
 * Added classes to model patient phenopacket (phenotype only)
 * Refactored to use phenol 1.0.0
 
+## v1.1.5
+
+* Add feature to copy annotation for one LOINC and paste to multiple selections of similar LOINC
+
+* Add functionality to annotate LOINC panels
 

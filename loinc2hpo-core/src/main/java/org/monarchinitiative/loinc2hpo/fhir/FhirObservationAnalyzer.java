@@ -4,15 +4,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
+import org.monarchinitiative.loinc2hpo.testresult.LabTest;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for analyzing a FHIR observation
@@ -21,12 +25,43 @@ public class FhirObservationAnalyzer {
     private static final Logger logger = LogManager.getLogger();
 
     static private Observation observation;
+    static private Set<LoincId> loincIds;
+    static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+
+    /**
+     * Initialize the resources required for observation to hpo transformation
+     * @param loincIdsSet
+     * @param loincAnnotationMap
+     */
+    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap) {
+        loincIds = loincIdsSet;
+        annotationMap = loincAnnotationMap;
+    }
 
     public static void setObservation(Observation aFhirObservation) {
         observation = aFhirObservation;
     }
     public static Observation getObservation(){ return observation; }
 
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation observationToAnalyze) throws FHIRException, ReferenceNotFoundException, LoincCodeNotAnnotatedException, AmbiguousResultsFoundException, UnrecognizedCodeException, LoincCodeNotFoundException, MalformedLoincCodeException, AnnotationNotFoundException, UnsupportedCodingSystemException, AmbiguousReferenceException {
+        observation = observationToAnalyze;
+        return getHPO4ObservationOutcome(loincIds, annotationMap);
+    }
+
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation.ObservationComponentComponent component) {
+        component.getCode();
+        return null;
+    }
+
+    /**
+     * This method is to analyze a ObservationRelatedComponenent that is usually a component of a LOINC panel.
+     * @param relatedComponent
+     * @return
+     */
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation.ObservationRelatedComponent relatedComponent) {
+
+        return null;
+    }
 
     /**
      * @TODO: Should not catch all exceptions here; leave it to the application code
@@ -84,6 +119,8 @@ public class FhirObservationAnalyzer {
             }
         }
 
+        //@TODO: analyze observations with
+
         //if all the above fails, we cannot do nothing
         logger.error("Could not return HPO for observation: " + observation.getId());
         return new BasicLabTestOutcome(null, null, observation.getSubject(), observation.getIdentifier());
@@ -101,7 +138,7 @@ public class FhirObservationAnalyzer {
                 try {
                     LoincId loincId = new LoincId(coding.getCode());
                     if (!loincIds.contains(loincId)) {
-                        logger.info("The observation has a correctly formed loinc code, but the code is not found in the loinc table. Check whether it is a new loinc code");
+                        logger.info("The observation has a correctly formed loinc code, but the code is not found in the loinc table. Check whether it is a new loinc code: " + loincId);
                     }
                     return loincIds.contains(loincId);
                 } catch (MalformedLoincCodeException e) {
@@ -132,6 +169,19 @@ public class FhirObservationAnalyzer {
         }
         if (loincId == null) throw new LoincCodeNotFoundException();
         return loincId;
+    }
+
+    /**
+     * Extract LOINC code strings from the observation.
+     * Note: the function does not check the returned value conform LoincId format
+     * @param observation
+     * @return a list of LOINC codes
+     */
+    public static List<String> getLoincIdOfObservation(Observation observation) {
+        return observation.getCode().getCoding().stream()
+                .filter(c -> c.getSystem().equals(Constants.LOINCSYSTEM))
+                .map(Coding::getCode)
+                .collect(Collectors.toList());
     }
 
     /**
