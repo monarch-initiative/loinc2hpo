@@ -125,5 +125,9 @@ Additional changes for this version
 
 * Add feature to copy annotation for one LOINC and paste to multiple selections of similar LOINC
 
-* Add functionality to annotate LOINC panels
+* Add function to annotate LOINC panels
+
+* Add function to convert FHIR messages for LOINC panels
+
+* Add a LOINC list for tests with "unspecified specimen". Messages on those should be not converted to HPO. 
 
