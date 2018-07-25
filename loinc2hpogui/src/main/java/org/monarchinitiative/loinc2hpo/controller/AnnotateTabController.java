@@ -17,14 +17,22 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
@@ -164,6 +172,7 @@ public class AnnotateTabController {
     final private String LOINCWAITING4NEWHPO = "require_new_HPO_terms";
     final private String LOINCUNABLE2ANNOTATE = "unable_to_annotate";
     final private String UNSPECIFIEDSPECIMEN = "unspecified_specimen";
+    final private String LOINC4QC = "test_for_QC";
 
     private BooleanProperty isPresentOrd = new SimpleBooleanProperty(false);
 
@@ -904,6 +913,49 @@ public class AnnotateTabController {
 
     }
 
+    @FXML
+    private void setLoincGroupColor(ActionEvent e) {
+        logger.trace("user wants to set the color of LOINC groups");
+        Stage window = new Stage();
+
+        VBox root = new VBox();
+        root.setSpacing(10);
+
+
+        ToolBar toolBar = new ToolBar();
+        final ComboBox<String> loincGroupCombo = new ComboBox();
+        loincGroupCombo.getItems().addAll(userCreatedLoincLists);
+        loincGroupCombo.getSelectionModel().select(0);
+        final ColorPicker colorPicker = new ColorPicker();
+        colorPicker.setOnAction(t -> logger.trace("Color for " + loincGroupCombo.getSelectionModel().getSelectedItem() + ": " + colorPicker.getValue().toString()));
+        toolBar.getItems().addAll(loincGroupCombo, colorPicker);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(2));
+        for (int i = 0; i < userCreatedLoincLists.size(); i++) {
+            TextField name = new TextField(userCreatedLoincLists.get(i));
+            //name.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"))));
+            //name.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
+            gridPane.add(name, 0, i);
+
+
+//            TextField color = new TextField("color");
+//            color.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
+            TextField color = new TextField();
+            color.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
+
+            gridPane.add(color, 1, i);
+            logger.trace("color" + color.getBackground().getFills().toString());
+        }
+
+        root.getChildren().addAll(toolBar, gridPane);
+        Scene scene = new Scene(root, 400, 400);
+        window.setScene(scene);
+        window.showAndWait();
+    }
+
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
         if (!model.getUserCreatedLoincLists().isEmpty()) {
@@ -915,6 +967,7 @@ public class AnnotateTabController {
         initialListNames.add(LOINCWAITING4NEWHPO);
         initialListNames.add(LOINCUNABLE2ANNOTATE);
         initialListNames.add(UNSPECIFIEDSPECIMEN);
+        initialListNames.add(LOINC4QC);
         userCreatedLoincLists.addAll(initialListNames);
         logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
         /*
