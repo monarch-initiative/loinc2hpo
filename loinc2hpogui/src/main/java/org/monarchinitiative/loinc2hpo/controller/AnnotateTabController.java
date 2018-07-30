@@ -17,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -30,9 +29,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
@@ -54,10 +51,7 @@ import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
 import org.monarchinitiative.loinc2hpo.model.Model;
-import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
-import org.monarchinitiative.loinc2hpo.util.LoincLongNameComponents;
-import org.monarchinitiative.loinc2hpo.util.LoincLongNameParser;
-import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
+import org.monarchinitiative.loinc2hpo.util.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 
@@ -65,6 +59,8 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import org.monarchinitiative.loinc2hpo.gui.ColorUtils;
 
 
 @Singleton
@@ -164,7 +160,7 @@ public class AnnotateTabController {
     @FXML private Menu loincListsButton;
     @FXML private MenuItem backMenuItem;
     @FXML private MenuItem forwardMenuItem;
-    @FXML private Menu userCreatedLoincListsButton;
+    @FXML private Menu groupUngroup2LoincListButton;
     @FXML private Menu exportLoincListButton;
     @FXML private Menu importLoincGroupButton;
     final ObservableList<String> userCreatedLoincLists = FXCollections
@@ -249,8 +245,7 @@ public class AnnotateTabController {
             }
         });
 
-        //if user creates a new Loinc group, add two menuitems for it, and specify the actions when those menuitems are
-        //clicked
+        //if user creates a new Loinc group, add two menuitems for it, and specify the actions when those menuitems are clicked
         userCreatedLoincLists.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
@@ -265,7 +260,7 @@ public class AnnotateTabController {
                                 model.addUserCreatedLoincList(p, new LinkedHashSet<>());
 
                                 MenuItem newListMenuItem = new MenuItem(p);
-                                userCreatedLoincListsButton.getItems().add(newListMenuItem);
+                                groupUngroup2LoincListButton.getItems().add(newListMenuItem);
                                 newListMenuItem.setOnAction((event -> {
                                     logger.trace("action detected");
                                     if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
@@ -403,6 +398,16 @@ public class AnnotateTabController {
     void defaultStartUp() {
         initLOINCtable(null);
         Platform.runLater(()->initHPOmodelButton(null));
+        List<String> DEFAULTGROUPS = Arrays.asList(LOINCWAITING4NEWHPO, LOINCUNABLE2ANNOTATE, UNSPECIFIEDSPECIMEN, LOINC4QC);
+        for(int i = 0; i < DEFAULTGROUPS.size(); i++) {
+            if (!model.getUserCreatedLoincListsColor().containsKey(DEFAULTGROUPS.get(i))) {
+                model.addOrUpdateUserCreatedLoincListColor(DEFAULTGROUPS.get(i), model.defaultColorList().get(i + 1));
+                logger.info(DEFAULTGROUPS.get(i) + "::::" + model.defaultColorList().get(i + 1));
+            }
+        }
+        logger.info("default colors in model:");
+        model.defaultColorList().forEach(System.out::println);
+        logger.trace("default color for LOINC lists is set");
     }
 
     private void noLoincEntryAlert(){
@@ -910,7 +915,10 @@ public class AnnotateTabController {
         }
         //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
         userCreatedLoincLists.add(nameOfList);
-
+        Random rand = new Random();
+        double[] randColorValues = rand.doubles(3, 0, 255).toArray();
+        Color randColor = Color.color(randColorValues[0], randColorValues[1], randColorValues[2]);
+        model.addOrUpdateUserCreatedLoincListColor(nameOfList, ColorUtils.colorValue(randColor));
     }
 
     @FXML
@@ -924,31 +932,51 @@ public class AnnotateTabController {
 
         ToolBar toolBar = new ToolBar();
         final ComboBox<String> loincGroupCombo = new ComboBox();
+
         loincGroupCombo.getItems().addAll(userCreatedLoincLists);
-        loincGroupCombo.getSelectionModel().select(0);
+
         final ColorPicker colorPicker = new ColorPicker();
-        colorPicker.setOnAction(t -> logger.trace("Color for " + loincGroupCombo.getSelectionModel().getSelectedItem() + ": " + colorPicker.getValue().toString()));
+        loincGroupCombo.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (observable != null) {
+                    final String colorString = model.getUserCreatedLoincListsColor().get(newValue);
+                    if (colorString != null) {
+                        final Color color = Color.web(colorString);
+                        colorPicker.setValue(color);
+                    }
+
+                }
+            }
+        });
+        loincGroupCombo.getSelectionModel().select(0);
+
         toolBar.getItems().addAll(loincGroupCombo, colorPicker);
 
         GridPane gridPane = new GridPane();
         gridPane.setHgap(10);
         gridPane.setVgap(10);
         gridPane.setPadding(new Insets(2));
+
+        Map<String, TextField> gridPaneColors = new HashMap<>();
         for (int i = 0; i < userCreatedLoincLists.size(); i++) {
             TextField name = new TextField(userCreatedLoincLists.get(i));
-            //name.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"))));
-            //name.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
             gridPane.add(name, 0, i);
-
-
-//            TextField color = new TextField("color");
-//            color.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
             TextField color = new TextField();
-            color.setBackground(new Background(new BackgroundFill(Paint.valueOf("#331a80"), null, null)));
-
+            color.setBackground(new Background(new BackgroundFill(Color.web(model.getUserCreatedLoincListsColor().get(name.getText())), null, null)));
             gridPane.add(color, 1, i);
+            gridPaneColors.put(name.getText(), color);
             logger.trace("color" + color.getBackground().getFills().toString());
         }
+
+
+        colorPicker.setOnAction(t -> {
+            model.addOrUpdateUserCreatedLoincListColor(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
+            logger.trace("new color: " + model.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
+            gridPaneColors.get(loincGroupCombo.getSelectionModel().getSelectedItem()).setBackground(new Background(new BackgroundFill(colorPicker.getValue(), null, null)));
+            changeColorLoincTableView();
+            model.writeSettings();
+        });
 
         root.getChildren().addAll(toolBar, gridPane);
         Scene scene = new Scene(root, 400, 400);
@@ -956,6 +984,9 @@ public class AnnotateTabController {
         window.showAndWait();
     }
 
+    /**
+     * This function is normally not useful because of MainController::openSession()
+     */
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
         if (!model.getUserCreatedLoincLists().isEmpty()) {
@@ -963,6 +994,8 @@ public class AnnotateTabController {
             return;
         }
         //by default, there will be two user created lists
+        //This is not scaling well. @TODO: consider other ways
+        //consider detecting existing lists by scanning the folder
         List<String> initialListNames = new ArrayList<>();
         initialListNames.add(LOINCWAITING4NEWHPO);
         initialListNames.add(LOINCUNABLE2ANNOTATE);
@@ -972,10 +1005,10 @@ public class AnnotateTabController {
         logger.trace("initializeUserCreatedLoincListsIfNecessary(): 2222");
         /*
         //create a menuitem for each and add to two menus; also create a list to record data
-        userCreatedLoincListsButton.getItems().clear();
+        groupUngroup2LoincListButton.getItems().clear();
         exportLoincListButton.getItems().clear();
         initialListNames.forEach(p -> {
-            userCreatedLoincListsButton.getItems().add(new MenuItem(p));
+            groupUngroup2LoincListButton.getItems().add(new MenuItem(p));
             exportLoincListButton.getItems().add(new MenuItem(p));
             model.addUserCreatedLoincList(p, new ArrayList<>());
         });
@@ -1014,7 +1047,7 @@ public class AnnotateTabController {
         e.consume();
         logger.trace("context memu for loinc table requested");
         initializeMenuItemsForFilteredLists();
-        initializeUserCreatedLoincListsIfNecessary();
+        //initializeUserCreatedLoincListsIfNecessary(); //usually not run
         logger.trace("exit buildContextMenuForLoinc()");
     }
 
@@ -1636,29 +1669,43 @@ public class AnnotateTabController {
                 if(item != null && !empty) {
                     setText(item);
                     try {
+                        TableRow<LoincEntry> currentRow = getTableRow();
                         if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
-                            //logger.info("model contains " + item);
-                            //logger.info("num of items in model " + model.getLoincAnnotationMap().size());
-                            TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: cyan");
-                            //setStyle("-fx-text-fill: red; -fx-font-weight: bold; -fx-background-color: lightblue");
-                        } else if (model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO) != null
-                                && model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).contains(new LoincId(item))) {
-                            logger.info("model usercreated list for LoincWaiting4NewHPO # items: " +
-                                    model.getUserCreatedLoincLists().get(LOINCWAITING4NEWHPO).size());
-                            TableRow<LoincEntry> currentRow = getTableRow();
-                            currentRow.setStyle("-fx-background-color: deeppink");
-                        } else if (model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE) != null
-                                && model.getUserCreatedLoincLists().get(LOINCUNABLE2ANNOTATE).contains(new LoincId(item))) {
-                            TableRow<LoincEntry> currentRow = getTableRow();
-                            currentRow.setStyle("-fx-background-color: lightcoral");
-                            //@TODO: change color of other groups. tip: allow user to pick a color
-                        } else if (model.getUserCreatedLoincLists().get(UNSPECIFIEDSPECIMEN) != null && model.getUserCreatedLoincLists().get(UNSPECIFIEDSPECIMEN).contains(new LoincId(item))) {
-                            TableRow<LoincEntry> currentRow = getTableRow();
-                            currentRow.setStyle("-fx-background-color: plum");
-                        } else{//for reasons I don't understand, this else block is critical to make it work!!!
-                            TableRow<LoincEntry> currentRow = getTableRow();
-                            currentRow.setStyle("");
+                        } else {
+                            LoincId loincId = new LoincId(item);
+                            //check which list is the loinc in
+                            List<String> inList = model.getUserCreatedLoincLists().entrySet()
+                                    .stream()
+                                    .filter(entry -> entry.getValue().contains(loincId))
+                                    .map(entry -> entry.getKey())
+                                    .collect(Collectors.toList());
+                            //get the colors for the loinc lists that the loinc is in
+                            List<Color> colors = inList.stream()
+                                    .map(l -> model.getUserCreatedLoincListsColor().get(l))
+                                    .filter(Objects::nonNull)
+                                    .map(Color::web)
+                                    .collect(Collectors.toList());
+
+                            //if the loinc is some list
+                            if (inList.size() != 0 && colors.size() != 0) {
+                                logger.info(loincId + ":" + colors.size());
+                                //mix colors if the loinc is in multiple lists
+                                int red = (int) colors.stream().mapToDouble(Color::getRed)
+                                        .average().getAsDouble() * 255;
+                                int green = (int) colors.stream().mapToDouble(Color::getGreen)
+                                        .average().getAsDouble() * 255;
+                                int blue = (int) colors.stream().mapToDouble(Color::getBlue)
+                                        .average().getAsDouble() * 255;
+
+                                String mixed = ColorUtils.colorValue(red, green, blue);
+                                currentRow.setStyle(String.format("-fx-background-color: %s", mixed));
+                            } else if (inList.size() != 0 && colors.size() == 0) {
+                                currentRow.setStyle("-fx-background-color: red");
+                            } else { //if the loinc is not in any list
+                                //TableRow<LoincEntry> currentRow = getTableRow();
+                                currentRow.setStyle("");
+                            }
                         }
                     } catch (MalformedLoincCodeException e) {
                         //do nothing

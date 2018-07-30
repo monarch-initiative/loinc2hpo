@@ -281,7 +281,7 @@
                                     <Menu fx:id="loincListsButton" mnemonicParsing="false" text="lists" />
                                     <MenuItem mnemonicParsing="false" onAction="#newLoincList" text="New Group" />
                                     <MenuItem mnemonicParsing="false" onAction="#setLoincGroupColor" text="Set Group Color" />
-                                    <Menu fx:id="userCreatedLoincListsButton" mnemonicParsing="false" text="Group/Ungroup..." />
+                                    <Menu fx:id="groupUngroup2LoincListButton" mnemonicParsing="false" text="Group/Ungroup..." />
                                     <Menu fx:id="exportLoincListButton" mnemonicParsing="false" text="Export..." />
                                     <Menu fx:id="importLoincGroupButton" mnemonicParsing="false" text="Import..." />
                                     <SeparatorMenuItem mnemonicParsing="false" />

@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpo.gui.GitHubPopup;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.paint.Color;
 
 import static org.junit.Assert.*;
 
@@ -73,5 +74,15 @@ public class GitHubPosterTest {
         labels.add("immunology");
         poster.setLabel(labels);
         System.out.println(poster.debugReformatpayloadWithLabel());
+    }
+
+    @Test
+    public void testColor() throws Exception {
+        Color color = Color.PINK;
+        System.out.println("#" + color.toString().substring(2,8).toUpperCase());
+        System.out.println(String.format( "#%02X%02X%02X",
+                (int)( color.getRed() * 255 ),
+                (int)( color.getGreen() * 255 ),
+                (int)( color.getBlue() * 255 ) ));
     }
 }

@@ -11,11 +11,11 @@ import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.ontology.data.*;
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.scene.paint.Color;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -427,10 +427,11 @@ public class Model {
                 else if (key.equals("last session")) this.pathToLastSession = value;
                 else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
                 else if (key.equals("loinc-list-color")) {
-                    String[] entries = value.split(",");
+                    String[] entries = value.split("\\|");
                     Arrays.stream(entries)
-                            .map(e -> e.split("\\|")) //has to be two elements
+                            .map(e -> e.split(",")) //has to be two elements
                             .forEach(e -> userCreatedLoincListsColor.put(e[0], e[1]));
+                    logger.trace("color for LOINC lists is set from settings");
                 }
             }
             br.close();
@@ -463,10 +464,15 @@ public class Model {
                 Color.CYAN.toString(),
                 Color.MAGENTA.toString(),
                 Color.PINK.toString(),
-                Color.GRAY.toString(),
-                Color.GREEN.toString(),
-                Color.ORANGE.toString());
+                Color.LIGHTBLUE.toString(),
+                Color.ORANGE.toString(),
+                Color.CHOCOLATE.toString()
+                );
+                //.stream()
+                //.map(color -> "#" + color.substring(2,8).toUpperCase())
+                //.collect(Collectors.toList());
     }
+
 
 
 
