@@ -916,7 +916,7 @@ public class AnnotateTabController {
         //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
         userCreatedLoincLists.add(nameOfList);
         Random rand = new Random();
-        double[] randColorValues = rand.doubles(3, 0, 255).toArray();
+        double[] randColorValues = rand.doubles(3, 0, 1).toArray();
         Color randColor = Color.color(randColorValues[0], randColorValues[1], randColorValues[2]);
         model.addOrUpdateUserCreatedLoincListColor(nameOfList, ColorUtils.colorValue(randColor));
     }
@@ -1666,53 +1666,50 @@ public class AnnotateTabController {
             @Override
             protected void updateItem(String item, boolean empty){
                 super.updateItem(item, empty);
-                if(item != null && !empty) {
+                //if(item != null && !empty) {
+                if(!empty) {
                     setText(item);
                     try {
-                        TableRow<LoincEntry> currentRow = getTableRow();
                         if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
+                            TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: cyan");
                         } else {
+                            TableRow<LoincEntry> currentRow = getTableRow();
                             LoincId loincId = new LoincId(item);
-                            //check which list is the loinc in
                             List<String> inList = model.getUserCreatedLoincLists().entrySet()
                                     .stream()
                                     .filter(entry -> entry.getValue().contains(loincId))
                                     .map(entry -> entry.getKey())
                                     .collect(Collectors.toList());
-                            //get the colors for the loinc lists that the loinc is in
-                            List<Color> colors = inList.stream()
+                            if (!inList.isEmpty()) {
+                                List<Color> colors = inList.stream()
                                     .map(l -> model.getUserCreatedLoincListsColor().get(l))
                                     .filter(Objects::nonNull)
                                     .map(Color::web)
                                     .collect(Collectors.toList());
+                                if (colors.isEmpty()) {
+                                    currentRow.setStyle("");
+                                } else {
+                                    String backgroundColorValue = colors.get(0).toString(); //just use the first color
+                                    logger.trace(backgroundColorValue);
+                                    logger.trace(String.format("#%s", backgroundColorValue.substring(2,8).toUpperCase()));
+                                    currentRow.setStyle("-fx-background-color: " + String.format("#%s", backgroundColorValue.substring(2,8).toUpperCase()));
+                                    //Cannot use set background. It DOES NOT work!
+                                    //currentRow.setBackground(new Background(new BackgroundFill(colors.get(0), null, null)));
+                                }
 
-                            //if the loinc is some list
-                            if (inList.size() != 0 && colors.size() != 0) {
-                                logger.info(loincId + ":" + colors.size());
-                                //mix colors if the loinc is in multiple lists
-                                int red = (int) colors.stream().mapToDouble(Color::getRed)
-                                        .average().getAsDouble() * 255;
-                                int green = (int) colors.stream().mapToDouble(Color::getGreen)
-                                        .average().getAsDouble() * 255;
-                                int blue = (int) colors.stream().mapToDouble(Color::getBlue)
-                                        .average().getAsDouble() * 255;
-
-                                String mixed = ColorUtils.colorValue(red, green, blue);
-                                currentRow.setStyle(String.format("-fx-background-color: %s", mixed));
-                            } else if (inList.size() != 0 && colors.size() == 0) {
-                                currentRow.setStyle("-fx-background-color: red");
-                            } else { //if the loinc is not in any list
-                                //TableRow<LoincEntry> currentRow = getTableRow();
+                            } else {
                                 currentRow.setStyle("");
                             }
                         }
                     } catch (MalformedLoincCodeException e) {
                         //do nothing
+                        logger.error("should never happen:xdeide");
                     }
                 } else {
                     setText(null);
                     getTableRow().setStyle("");
+                    //logger.trace("changecolor:44444");
                 }
             }
 
