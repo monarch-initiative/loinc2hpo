@@ -131,3 +131,9 @@ Additional changes for this version
 
 * Add a LOINC list for tests with "unspecified specimen". Messages on those should be not converted to HPO. 
 
+## v1.1.6
+
+* Add feature to allow easy addition of LOINC lists: allow user to change colors of LOINC lists
+
+* Switch to owl only
+

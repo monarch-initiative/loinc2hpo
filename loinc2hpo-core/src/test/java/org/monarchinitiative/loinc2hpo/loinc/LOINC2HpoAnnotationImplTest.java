@@ -10,8 +10,9 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.BufferedReader;
@@ -36,11 +37,11 @@ public class LOINC2HpoAnnotationImplTest {
     public void testToString() throws Exception {
         Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
@@ -120,11 +121,11 @@ public class LOINC2HpoAnnotationImplTest {
 
         Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
@@ -181,11 +182,11 @@ public class LOINC2HpoAnnotationImplTest {
     public void testBuilderForAdvanced() throws Exception {
         Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
@@ -238,11 +239,11 @@ public class LOINC2HpoAnnotationImplTest {
     public void testSerializeBasicAnnotation() throws Exception {
         Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
@@ -298,11 +299,11 @@ public class LOINC2HpoAnnotationImplTest {
 
         Map<String, Term> hpoTermMap;
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();

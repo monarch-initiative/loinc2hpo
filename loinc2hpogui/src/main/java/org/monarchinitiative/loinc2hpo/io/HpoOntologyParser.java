@@ -5,8 +5,10 @@ package org.monarchinitiative.loinc2hpo.io;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.File;
@@ -29,8 +31,8 @@ public class HpoOntologyParser {
     /** Path to the {@code hp.obo} file. */
     private String hpoOntologyPath=null;
 
-    private TermPrefix pref = new ImmutableTermPrefix("HP");
-    private final TermId INHERITANCE = new ImmutableTermId(pref,"0000005");
+    private TermPrefix pref = new TermPrefix("HP");
+    private final TermId INHERITANCE = new TermId(pref,"0000005");
     HpoOntology ontology;
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
@@ -48,8 +50,8 @@ public class HpoOntologyParser {
      * Parse the HP ontology file and place the data in {@link #ontology} and
      * @throws IOException
      */
-    public void parseOntology() throws IOException {
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpoOntologyPath));
+    public void parseOntology() throws PhenolException {
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpoOntologyPath));
         logger.debug("ontology path: " + hpoOntologyPath);
         this.ontology = hpoOboParser.parse();
     }

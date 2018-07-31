@@ -3,8 +3,9 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +29,10 @@ public class HPOParser {
             LOGGER.error(String.format("Unable to find HPO file at %s",path));
             return;
         }
-        final HpoOboParser parser = new HpoOboParser(f);
+        final HpOboParser parser = new HpOboParser(f);
         try {
             this.hpo = parser.parse();
-        } catch(IOException e) {
+        } catch(PhenolException e) {
             LOGGER.error(String.format("I/O error with HPO file at %s",path));
             LOGGER.error(e,e);
         }

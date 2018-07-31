@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.loinc.*;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.ontology.data.*;
 
@@ -49,7 +50,7 @@ public class Model {
 
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
-    private static final TermPrefix HPPREFIX = new ImmutableTermPrefix("HP");
+    private static final TermPrefix HPPREFIX = new TermPrefix("HP");
     /** Key: a loinc code such as 10076-3; value: the corresponding TODO -- what link QnLoinc2HPOAnnotation object .*/
     public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
@@ -290,7 +291,7 @@ public class Model {
             return null;
         }
         hpoId= hpoId.substring(3);
-        return new ImmutableTermId(HPPREFIX,hpoId);
+        return new TermId(HPPREFIX,hpoId);
     }
 
 
@@ -339,7 +340,7 @@ public class Model {
         try {
             parser.parseOntology();
             this.ontology = parser.getOntology();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
         }
         termmap=parser.getTermMap();
