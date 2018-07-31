@@ -13,6 +13,9 @@ import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
+import javafx.scene.paint.Color;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -50,6 +53,7 @@ public class Model {
     /** Key: a loinc code such as 10076-3; value: the corresponding TODO -- what link QnLoinc2HPOAnnotation object .*/
     public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
+    private Map<String, String> userCreatedLoincListsColor = new LinkedHashMap<>();
 
     private Map<LoincId, LoincEntry> loincEntryMap;
     private HashSet<LoincId> loincIds = new HashSet<>();
@@ -316,6 +320,12 @@ public class Model {
         this.userCreatedLoincLists.put(listName, list);
     }
 
+    public Map<String, String> getUserCreatedLoincListsColor() { return userCreatedLoincListsColor; }
+
+    public void addOrUpdateUserCreatedLoincListColor(String listName, String color) {
+        userCreatedLoincListsColor.put(listName, color);
+    }
+
     private void init() {
     }
 
@@ -376,6 +386,14 @@ public class Model {
             if (pathToHpGitRepo != null) {
                 bw.write(String.format("hp-repo:%s\n", pathToHpGitRepo));
             }
+            if (!userCreatedLoincListsColor.isEmpty()) {
+                bw.write("loinc-list-color:");
+                List<String> list_color_pair = userCreatedLoincListsColor.entrySet().stream()
+                        .map(e -> e.getKey() + "," + e.getValue())
+                        .collect(Collectors.toList());
+                bw.write(String.join("|", list_color_pair));
+                bw.write("\n");
+            }
             bw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -408,6 +426,13 @@ public class Model {
                 else if (key.equals("autosave to")) this.pathToAutoSavedFolder = value;
                 else if (key.equals("last session")) this.pathToLastSession = value;
                 else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
+                else if (key.equals("loinc-list-color")) {
+                    String[] entries = value.split("\\|");
+                    Arrays.stream(entries)
+                            .map(e -> e.split(",")) //has to be two elements
+                            .forEach(e -> userCreatedLoincListsColor.put(e[0], e[1]));
+                    logger.trace("color for LOINC lists is set from settings");
+                }
             }
             br.close();
         } catch (IOException e) {
@@ -433,6 +458,21 @@ public class Model {
     public void setFhirServers(List<String> fhirServers) {
         this.fhirServers = fhirServers;
     }
+
+    public List<String> defaultColorList() {
+        return Arrays.asList(
+                Color.CYAN.toString(),
+                Color.MAGENTA.toString(),
+                Color.PINK.toString(),
+                Color.LIGHTBLUE.toString(),
+                Color.ORANGE.toString(),
+                Color.CHOCOLATE.toString()
+                );
+                //.stream()
+                //.map(color -> "#" + color.substring(2,8).toUpperCase())
+                //.collect(Collectors.toList());
+    }
+
 
 
 

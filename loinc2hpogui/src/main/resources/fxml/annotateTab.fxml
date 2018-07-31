@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+<SplitPane dividerPositions="0.4605475040257649" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
   <items>
       <SplitPane dividerPositions="0.6185308848080133">
          <items>
@@ -280,7 +280,8 @@
                                     <MenuItem fx:id="forwardMenuItem" mnemonicParsing="false" onAction="#nextLoincList" text="-&gt; forward" />
                                     <Menu fx:id="loincListsButton" mnemonicParsing="false" text="lists" />
                                     <MenuItem mnemonicParsing="false" onAction="#newLoincList" text="New Group" />
-                                    <Menu fx:id="userCreatedLoincListsButton" mnemonicParsing="false" text="Group/Ungroup..." />
+                                    <MenuItem mnemonicParsing="false" onAction="#setLoincGroupColor" text="Set Group Color" />
+                                    <Menu fx:id="groupUngroup2LoincListButton" mnemonicParsing="false" text="Group/Ungroup..." />
                                     <Menu fx:id="exportLoincListButton" mnemonicParsing="false" text="Export..." />
                                     <Menu fx:id="importLoincGroupButton" mnemonicParsing="false" text="Import..." />
                                     <SeparatorMenuItem mnemonicParsing="false" />
