@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.paint.Color;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -336,12 +337,14 @@ public class Model {
             logger.error("Attempt to parse hp.obo file with null path to file");
             return;
         }
-        HpoOntologyParser parser = new HpoOntologyParser(pathToHpoOboFile);
+        HpoOntologyParser parser = new HpoOntologyParser(pathToHpoOwlFile);
         try {
             parser.parseOntology();
             this.ontology = parser.getOntology();
         } catch (PhenolException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
+        } catch (OWLOntologyCreationException e) {
+            logger.error("Could not parge HPO owl file at " + pathToHpoOwlFile);
         }
         termmap=parser.getTermMap();
         termmap2=parser.getTermMap2();

@@ -4,6 +4,7 @@ import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.commons.chain.web.MapEntry;
 import org.hl7.fhir.dstu3.model.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class BloodPressurePanelTest {
 
     private static ResourceCollection resources = SharedResourceCollection.resourceCollection;

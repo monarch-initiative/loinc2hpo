@@ -45,37 +45,11 @@ public class PatientSummaryImplTest {
     @BeforeClass
     public static void setup() throws Exception{
         ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
-//        String hpo_obo = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.obo";
-//        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-//        HpoOntology hpo = null;
-//        try {
-//            hpo = hpoOboParser.parse();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-//        ImmutableMap.Builder<TermId, Term> termMap2 = new ImmutableMap.Builder<>();
-//        if (hpo !=null) {
-//            List<Term> res = hpo.getTermMap().values().stream().distinct()
-//                    .collect(Collectors.toList());
-//            res.forEach( term -> {
-//                termmap.put(term.getName(),term);
-//                termMap2.put(term.getId(), term);
-//            });
-//        }
-//        hpoTermMap = termmap.build();
-//        hpoTermMap2 = termMap2.build();
+
         hpoTermMap = resourceCollection.hpoTermMapFromName();
         hpoTermMap2 = resourceCollection.hpoTermMap();
         HpoOntology hpo = resourceCollection.getHPO();
-
-        String tsvSingleFile = "/Users/zhangx/git/loinc2hpoAnnotation/Data/TSVSingleFile/annotations.tsv";
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = null;
-        try {
-            annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, hpoTermMap2, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
         hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap).getUnionFind();
 

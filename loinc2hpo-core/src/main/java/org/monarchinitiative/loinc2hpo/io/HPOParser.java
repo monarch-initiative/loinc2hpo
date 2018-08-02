@@ -12,7 +12,9 @@ import java.io.IOException;
 
 /**
  * Use <a href="https://github.com/Phenomics/ontolib">ontolib</a> to parse the HPO OBO file.
+ * This class overlaps with HpoOntologyParser
  */
+@Deprecated
 public class HPOParser {
     private static final Logger LOGGER = LogManager.getLogger();
 
