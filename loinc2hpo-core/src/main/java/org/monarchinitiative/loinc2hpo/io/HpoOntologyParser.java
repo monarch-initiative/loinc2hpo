@@ -5,21 +5,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-
 import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
-import org.monarchinitiative.phenol.io.owl.hpo.HpOwlParser;
 import org.monarchinitiative.phenol.ontology.data.*;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
- * This class uses the <a href="https://github.com/phenomics/ontolib">ontolb</a> library to
- * parse both the {@code hp.obo} file and the phenotype annotation file
- * {@code phenotype_annotation.tab}
+ * This class uses the <a href="https://github.com/monarch-initiative/phenol">phenol</a> library to the Human Phenotype Ontology in .obo or .owl format
  * (see <a href="http://human-phenotype-ontology.github.io/">HPO Homepage</a>).
  * @author Peter Robinson
- * @author Vida Ravanmehr
  * @author Aaron Zhang
  */
 public class HpoOntologyParser {
@@ -49,7 +44,7 @@ public class HpoOntologyParser {
      * Parse the HP ontology file and place the data in {@link #hpoOntology} and
      * @throws PhenolException, OWLOntologyCreationException
      */
-    public void parseOntology() throws PhenolException, OWLOntologyCreationException {
+    public void parseOntology() throws PhenolException, FileNotFoundException {
         if (isObo) {
             HpOboParser hpoOboParser = new HpOboParser(new File(hpoOboPath));
             logger.debug("ontology path: " + hpoOboPath);
@@ -69,9 +64,6 @@ public class HpoOntologyParser {
         }
     }
 
-    //public Ontology getPhenotypeSubontology() { return ontology.getPhenotypicAbnormalitySubOntology(); }
-    //public Ontology getInheritanceSubontology() { return ontology.subOntology(INHERITANCE); }
-
     public HpoOntology getOntology() {
 
         return this.hpoOntology;
@@ -86,6 +78,9 @@ public class HpoOntologyParser {
         return termmap;
     }
 
+    /**
+     * @return a map from the term id of the HPO phenotype subontology
+     */
     public ImmutableMap<TermId,Term> getTermMap2() {
         if (termmap2 == null) {
             initTermMaps();
