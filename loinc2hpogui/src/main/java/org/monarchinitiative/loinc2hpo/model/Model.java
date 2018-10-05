@@ -343,8 +343,8 @@ public class Model {
             this.ontology = parser.getOntology();
         } catch (PhenolException e) {
             logger.error("Could not parse HPO obo file at "+pathToHpoOboFile);
-        } catch (OWLOntologyCreationException e) {
-            logger.error("Could not parge HPO owl file at " + pathToHpoOwlFile);
+        }  catch (FileNotFoundException e) {
+            logger.error("Could not find HPO owl file at " + pathToHpoOwlFile);
         }
         termmap=parser.getTermMap();
         termmap2=parser.getTermMap2();

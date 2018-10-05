@@ -879,7 +879,7 @@ public class AnnotateTabController {
             //entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
-            logger.error("Unable to obtain path to LOINC of interest file");
+            logger.info("Unable to obtain path to LOINC of interest file");
         }
     }
 

@@ -135,5 +135,7 @@ Additional changes for this version
 
 * Add feature to allow easy addition of LOINC lists: allow user to change colors of LOINC lists
 
-* Switch to owl only
+* Added HPO parser for owl format.
+
+* Refactored to use phenol 1.2.6
 
