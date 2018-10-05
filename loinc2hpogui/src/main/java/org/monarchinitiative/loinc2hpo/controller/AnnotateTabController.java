@@ -406,7 +406,7 @@ public class AnnotateTabController {
             }
         }
         logger.info("default colors in model:");
-        model.defaultColorList().forEach(System.out::println);
+        //model.defaultColorList().forEach(System.out::println);
         logger.trace("default color for LOINC lists is set");
     }
 
@@ -1157,7 +1157,7 @@ public class AnnotateTabController {
 
     @FXML private void handleCandidateHPODragged(MouseEvent e) {
 
-        System.out.println("Drag event detected");
+        //System.out.println("Drag event detected");
         Dragboard db = hpoListView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
         Object selectedCell = hpoListView.getSelectionModel().getSelectedItem();
@@ -1316,6 +1316,9 @@ public class AnnotateTabController {
         if (model.getLoincAnnotationMap().containsKey(loincId)) {
             logger.trace("Overwrite: " + loincId);
         }
+        String comments = toCopy.getNote()==null ? "" : "@original comment: " + toCopy.getNote();
+        String copyInfo = String.format("copied from: %s %s", toCopy.getLoincId().toString(), comments);
+
         LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(toCopy.getLoincScale())
@@ -1323,7 +1326,7 @@ public class AnnotateTabController {
                 .setCreatedOn(toCopy.getCreatedOn())
                 .setLastEditedBy(toCopy.getLastEditedBy())
                 .setLastEditedOn(toCopy.getLastEditedOn())
-                .setNote(toCopy.getNote())
+                .setNote(copyInfo)
                 .setFlag(toCopy.getFlag())
                 .setVersion(toCopy.getVersion());
         toCopy.getCandidateHpoTerms().entrySet().stream()
@@ -1597,7 +1600,7 @@ public class AnnotateTabController {
 
     @FXML
     private void handleDragInTreeView(MouseEvent e) {
-        System.out.println("Drag event detected");
+        //System.out.println("Drag event detected");
         Dragboard db = treeView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent content = new ClipboardContent();
         Object selectedItem = treeView.getSelectionModel().getSelectedItem().getValue();

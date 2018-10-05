@@ -4,9 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
+import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
+import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -30,26 +35,13 @@ public class PhenotypeComponentImplTest {
 
     @BeforeClass
     public static void setup() throws Exception{
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,Term> termmap2 = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> {
-                termmap.put(term.getName(),term);
-                termmap2.put(term.getId(), term);
-            });
-        }
-        hpoTermMap = termmap.build();
-        hpoTermMap2 = termmap2.build();
+
+        ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
+        //resourceCollection.setHpoOboPath(PhenotypeComponentImplTest.class.getResource("/obo/hp.obo").getPath());
+
+        hpoTermMap = resourceCollection.hpoTermMapFromName();
+        hpoTermMap2 = resourceCollection.hpoTermMap();
+
     }
 
     @Before

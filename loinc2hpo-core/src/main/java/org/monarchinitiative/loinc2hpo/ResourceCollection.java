@@ -9,8 +9,9 @@ import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class ResourceCollection {
     private String annotationMapPath;
     private String loincPanelPath;
     //private String loincPanelAnnotationPath;
+    private HpoOntology hpo;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
@@ -94,11 +96,11 @@ public class ResourceCollection {
             return this.termidTermMap;
         }
 
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(this.hpoOboPath));
+        HpOboParser hpoOboParser = new HpOboParser(new File(this.hpoOboPath));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<TermId,Term> termmap = new ImmutableMap.Builder<>();
@@ -116,11 +118,11 @@ public class ResourceCollection {
             return this.termnameTermMap;
         }
 
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(this.hpoOboPath));
+        HpOboParser hpoOboParser = new HpOboParser(new File(this.hpoOboPath));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
@@ -152,6 +154,12 @@ public class ResourceCollection {
 
     private void addLoincPanelAnnotation(String loincPanelAnnotationPath, Map<LoincId, LoincPanel> loincPanelMap){
 
+    }
+
+    public HpoOntology getHPO() throws PhenolException {
+        HpOboParser hpOboParser = new HpOboParser(new File(this.hpoOboPath));
+        this.hpo = hpOboParser.parse();
+        return this.hpo;
     }
 
 }

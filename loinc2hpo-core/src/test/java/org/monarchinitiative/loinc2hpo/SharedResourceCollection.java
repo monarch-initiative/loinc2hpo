@@ -23,8 +23,10 @@ public class SharedResourceCollection {
     static {
         resourceCollection.setLoincEntryPath(loincCoreTable);
         resourceCollection.setLoincPanelPath(loincPanels);
-        resourceCollection.setHpoOboPath(hpo_obo);
-        resourceCollection.setHpoOwlPath(hpo_owl);
+        //resourceCollection.setHpoOboPath(hpo_obo);
+        resourceCollection.setHpoOboPath(SharedResourceCollection.class.getResource("/obo/hp.obo").getPath());
+        //resourceCollection.setHpoOwlPath(hpo_owl);
+        resourceCollection.setHpoOwlPath(SharedResourceCollection.class.getResource("/hp.owl").getPath());
         resourceCollection.setAnnotationMapPath(loincAnnotationPath);
     }
 }

@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -14,6 +15,10 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
+/**
+ * This class is to test the resource collection
+ */
+@Ignore
 public class ResourceCollectionTest {
 
     private static Map<LoincId, LoincEntry> loincEntryMap;

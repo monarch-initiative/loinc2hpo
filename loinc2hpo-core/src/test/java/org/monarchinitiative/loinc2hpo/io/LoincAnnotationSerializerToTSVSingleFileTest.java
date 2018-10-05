@@ -14,8 +14,9 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -39,11 +40,11 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public static void setup() throws Exception {
 
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
+        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
         HpoOntology hpo = null;
         try {
             hpo = hpoOboParser.parse();
-        } catch (IOException e) {
+        } catch (PhenolException e) {
             e.printStackTrace();
         }
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
