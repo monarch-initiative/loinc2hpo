@@ -3,7 +3,9 @@ package org.monarchinitiative.loinc2hpo.io;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+//import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
 import org.monarchinitiative.phenol.ontology.data.TermPrefix;
+//import org.monarchinitiative.phenol.ontology.data.ImmutableTermPrefix;
 
 import java.io.IOException;
 import java.util.Map;

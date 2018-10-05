@@ -30,6 +30,7 @@ public class HpoOntologyParser {
     private boolean isObo = false;
     private HpoOntology hpoOntology;
 
+
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
     private ImmutableMap<String, Term> termmap;
     private ImmutableMap<TermId, Term> termmap2;
