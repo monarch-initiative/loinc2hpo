@@ -5,20 +5,30 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.shared.JenaException;
 import org.apache.jena.util.FileManager;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.monarchinitiative.loinc2hpo.util.HPO_Class_Found;
-import org.monarchinitiative.loinc2hpo.util.SparqlQuery;
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
+import org.semanticweb.owlapi.formats.RDFaDocumentFormat;
+import org.semanticweb.owlapi.io.FileDocumentSource;
+import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
+import org.semanticweb.owlapi.model.OWLDocumentFormat;
+import org.semanticweb.owlapi.model.OWLDocumentFormatImpl;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.model.parameters.OntologyCopy;
+//import ru.avicomp.owlapi.OWLOntologyFactoryImpl;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
@@ -63,6 +73,28 @@ public class SparqlQueryTest {
         //org.apache.jena.rdf.model.Model modelFromRDF = FileManager.get().loadModel(path, null, "TURTLE");
         //assertNotNull(modelFromRDF);
     }
+
+//    @Test
+//    @Ignore
+//    public void testLoadOwlFunctionalSyntax() throws Exception {
+//        String hpo_owl_fs = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp-edit.owl";
+//        String hpo_owl = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.owl";
+//        org.apache.jena.rdf.model.Model jenaModel = ModelFactory.createDefaultModel();
+//        //InputStream inputStream = new FileInputStream(new File(hpo_owl_fs));
+//        System.out.println("11111");
+//        //OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
+//        //OWLOntology owlOntology = owlOntologyManager.loadOntologyFromOntologyDocument(new File(hpo_owl_fs));
+//
+//        OntologyManager manager = OntManagers.createONT();
+//        OWLOntologyDocumentSource source = new FileDocumentSource(new File(hpo_owl_fs), new FunctionalSyntaxDocumentFormat());
+//        System.out.println("22222");
+//        //PipedInputStream inputStream = new PipedInputStream();
+//        //PipedOutputStream outputStream = new PipedOutputStream(inputStream);
+//        //owlOntology.saveOntology(outputStream);
+//        OntologyModel ontology = manager.loadOntologyFromOntologyDocument(source);
+//        jenaModel = ontology.asGraphModel();
+//        System.out.println("completed");
+//    }
 
     @Test
     public void testinitializeModel() {

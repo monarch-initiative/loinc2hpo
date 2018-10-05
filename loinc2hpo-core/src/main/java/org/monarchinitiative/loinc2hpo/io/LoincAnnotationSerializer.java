@@ -6,8 +6,6 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 //import org.monarchinitiative.phenol.ontology.data.ImmutableTermId;
 import org.monarchinitiative.phenol.ontology.data.TermPrefix;
 //import org.monarchinitiative.phenol.ontology.data.ImmutableTermPrefix;
-import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.monarchinitiative.phenol.ontology.data.TermPrefix;
 
 import java.io.IOException;
 import java.util.Map;

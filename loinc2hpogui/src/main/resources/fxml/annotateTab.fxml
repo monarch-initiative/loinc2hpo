@@ -4,11 +4,13 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -25,7 +27,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.6265664160401002" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+<SplitPane dividerPositions="0.4605475040257649" onDragDone="#handleDragDone" onDragOver="#handleDragOver" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
   <items>
       <SplitPane dividerPositions="0.6185308848080133">
          <items>
@@ -278,9 +280,14 @@
                                     <MenuItem fx:id="forwardMenuItem" mnemonicParsing="false" onAction="#nextLoincList" text="-&gt; forward" />
                                     <Menu fx:id="loincListsButton" mnemonicParsing="false" text="lists" />
                                     <MenuItem mnemonicParsing="false" onAction="#newLoincList" text="New Group" />
-                                    <Menu fx:id="userCreatedLoincListsButton" mnemonicParsing="false" text="Group/Ungroup..." />
+                                    <MenuItem mnemonicParsing="false" onAction="#setLoincGroupColor" text="Set Group Color" />
+                                    <Menu fx:id="groupUngroup2LoincListButton" mnemonicParsing="false" text="Group/Ungroup..." />
                                     <Menu fx:id="exportLoincListButton" mnemonicParsing="false" text="Export..." />
                                     <Menu fx:id="importLoincGroupButton" mnemonicParsing="false" text="Import..." />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <CheckMenuItem fx:id="loincTableEnableMultiSelection" mnemonicParsing="false" text="Enable Multiselection" />
+                                    <MenuItem mnemonicParsing="false" onAction="#copyAnnotation" text="Copy Annotation" />
+                                    <MenuItem fx:id="pasteAnnotationButton" mnemonicParsing="false" onAction="#pasteAnnotation" text="Paste Annotation" />
                                 </items>
                               </ContextMenu>
                            </contextMenu>

@@ -1,17 +1,21 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.google.common.collect.ImmutableMap;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
+import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.io.BufferedReader;
@@ -30,26 +34,23 @@ public class LOINC2HpoAnnotationImplTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
+    private static ResourceCollection resourceCollection;
+    private static Map<String, Term> hpoTermMap;
+
+
+    @BeforeClass
+    public static void setUp() {
+        resourceCollection = new ResourceCollection();
+        resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp.obo").getPath());
+
+        hpoTermMap = resourceCollection.hpoTermMapFromName();
+    }
+
 
 
     @Test
     public void testToString() throws Exception {
-        Map<String, Term> hpoTermMap;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        hpoTermMap = termmap.build();
+
         Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
         LoincId loincId = new LoincId("15074-8");
@@ -117,25 +118,6 @@ public class LOINC2HpoAnnotationImplTest {
     @Test
     public void testBuilderForBasicAnnotation() throws Exception {
 
-
-        Map<String, Term> hpoTermMap;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        hpoTermMap = termmap.build();
-
-
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
@@ -179,23 +161,6 @@ public class LOINC2HpoAnnotationImplTest {
 
     @Test
     public void testBuilderForAdvanced() throws Exception {
-        Map<String, Term> hpoTermMap;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        hpoTermMap = termmap.build();
-
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
@@ -236,23 +201,6 @@ public class LOINC2HpoAnnotationImplTest {
     @Test
     @Ignore
     public void testSerializeBasicAnnotation() throws Exception {
-        Map<String, Term> hpoTermMap;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        hpoTermMap = termmap.build();
-
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
@@ -294,25 +242,6 @@ public class LOINC2HpoAnnotationImplTest {
     @Test
     @Ignore
     public void testSerializeAdvancedAnnotation() throws Exception {
-
-
-        Map<String, Term> hpoTermMap;
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> termmap.put(term.getName(),term));
-        }
-        hpoTermMap = termmap.build();
-
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 

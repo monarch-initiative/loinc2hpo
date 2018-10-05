@@ -14,7 +14,7 @@
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
         <ontolib.version>0.3</ontolib.version>
-        <phenol.version>1.1.0</phenol.version>
+        <phenol.version>1.2.1</phenol.version>
         <junit.version>4.12</junit.version>
         <guava.version>23.0</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
@@ -138,7 +138,10 @@
                     <groupId>org.jgrapht</groupId>
                     <artifactId>jgrapht-core</artifactId>
                 </exclusion>
-
+                <!--<exclusion>-->
+                    <!--<groupId>net.sourceforge.owlapi</groupId>-->
+                    <!--<artifactId>owlapi-distribution</artifactId>-->
+                <!--</exclusion>-->
             </exclusions>
         </dependency>
         <!--dependency>
@@ -185,6 +188,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owlapi-distribution -->
+        <!--<dependency>-->
+            <!--<groupId>net.sourceforge.owlapi</groupId>-->
+            <!--<artifactId>owlapi-distribution</artifactId>-->
+            <!--<version>5.1.4</version>-->
+        <!--</dependency>-->
+
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -935,6 +946,12 @@
             <artifactId>jgrapht-core</artifactId>
             <version>1.2.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.poi</groupId>-->
+            <!--<artifactId>poi-ooxml</artifactId>-->
+            <!--<version>3.17</version>-->
+        <!--</dependency>-->
 
 
 

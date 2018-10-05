@@ -4,11 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
+import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpoOboParser;
+import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -31,40 +34,16 @@ public class PhenoSetImplTest {
     private static PhenoSetUnionFind unionFind;
 
     @BeforeClass
-    public static void setup() {
-        String hpo_obo = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.obo";
-        HpoOboParser hpoOboParser = new HpoOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,Term> termMap2 = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> {
-                termmap.put(term.getName(),term);
-                termMap2.put(term.getId(), term);
-            });
-        }
-        hpoTermMap = termmap.build();
-        hpoTermMap2 = termMap2.build();
+    public static void setup() throws Exception {
 
-        String tsvSingleFile = "/Users/zhangx/git/loinc2hpoAnnotation/Data/TSVSingleFile/annotations.tsv";
-        try {
-            annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, hpoTermMap2, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
 
-        System.out.println("annotationMap size:" + annotationMap.size());
+        hpoTermMap = resourceCollection.hpoTermMapFromName();
+        hpoTermMap2 = resourceCollection.hpoTermMap();
+        HpoOntology hpo = resourceCollection.getHPO();
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
         unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap);
-
-
 
     }
     @Test

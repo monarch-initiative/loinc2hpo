@@ -121,4 +121,19 @@ Additional changes for this version
 * Added classes to model patient phenopacket (phenotype only)
 * Refactored to use phenol 1.0.0
 
+## v1.1.5
+
+* Add feature to copy annotation for one LOINC and paste to multiple selections of similar LOINC
+
+* Add function to annotate LOINC panels
+
+* Add function to convert FHIR messages for LOINC panels
+
+* Add a LOINC list for tests with "unspecified specimen". Messages on those should be not converted to HPO. 
+
+## v1.1.6
+
+* Add feature to allow easy addition of LOINC lists: allow user to change colors of LOINC lists
+
+* Switch to owl only
 
