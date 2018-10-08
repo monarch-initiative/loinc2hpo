@@ -100,6 +100,7 @@ public class ResourceCollection {
             hpoOntologyParser = new HpoOntologyParser(this.hpoOwlPath);
         }
         hpoOntologyParser.parseOntology();
+        hpo = hpoOntologyParser.getOntology();
     }
 
     public Map<TermId, Term> hpoTermMap() throws PhenolException, FileNotFoundException {

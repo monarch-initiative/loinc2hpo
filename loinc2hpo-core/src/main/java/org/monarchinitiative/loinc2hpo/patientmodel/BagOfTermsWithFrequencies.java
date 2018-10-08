@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.patientmodel;
 
 import org.monarchinitiative.phenol.ontology.algo.OntologyAlgorithm;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.LinkedHashMap;
@@ -11,7 +10,7 @@ import java.util.Set;
 
 /**
  * This class models patient HP phenotypes with a list of HPO terms and their counts.
- * A infer function allows inferrence with the hierarchy of HPO.
+ * An infer function allows inference with the hierarchy of HPO.
  */
 
 public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
@@ -21,30 +20,44 @@ public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
     private Map<TermId, Integer> inferred;
     private Ontology hpo;
 
-    public BagOfTermsWithFrequencies(String patientId) {
+    public BagOfTermsWithFrequencies(String patientId, Ontology hpo) {
         this.patientId = patientId;
         this.termCounts = new LinkedHashMap<>();
+        this.hpo = hpo;
     }
 
-    public BagOfTermsWithFrequencies(String patientId, Map<TermId, Integer> termCounts) {
+    public BagOfTermsWithFrequencies(String patientId, Map<TermId, Integer> termCounts, Ontology hpo) {
         this.patientId = patientId;
         this.termCounts = termCounts;
+        this.hpo = hpo;
     }
 
-    public void addTerm(TermId term, int count) {
-        if (termCounts.containsKey(term)) {
-            termCounts.put(term, termCounts.get(term) + count);
+    public void addTerm(TermId termId, int count) {
+        if (termCounts.containsKey(termId)) {
+            termCounts.put(termId, termCounts.get(termId) + count);
         } else {
-            termCounts.put(term, count);
+            termCounts.put(termId, count);
         }
+    }
+
+    public String getPatientId() {
+        return this.patientId;
+    }
+
+    public Map<TermId, Integer> getOriginalTermCounts() {
+        return new LinkedHashMap<TermId, Integer>(termCounts);
+    }
+
+    public Map<TermId, Integer> getInferredTermCounts() {
+        return new LinkedHashMap<TermId, Integer>(inferred);
     }
 
     @Override
     public void infer() {
+        //clone the list of terms so that inferred terms can be added
         this.inferred = new LinkedHashMap<>(termCounts);
-        /**
-         * For every term, find its ancestors (not including original term) and update their counts with the counts of current term.
-         */
+
+        //For every term, find its ancestors (not including original term) and update their counts with the counts of current term.
         termCounts.entrySet().forEach(entry -> {
             Set<TermId> ancesstors = OntologyAlgorithm.getAncestorTerms(hpo, entry.getKey(), false);
             ancesstors.forEach(t -> {
@@ -53,4 +66,15 @@ public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
             });
         });
     }
+
+    @Override
+    public String toString() {
+        int count_ori = this.termCounts.size();
+        int count_infer = this.inferred.size();
+        return String.format("Patient id: %s\n" +
+                "original terms: %d\n" +
+                "after infer: %d",
+                this.patientId, count_ori, count_infer);
+    }
+
 }
