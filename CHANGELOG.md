@@ -139,3 +139,7 @@ Additional changes for this version
 
 * Refactored to use phenol 1.2.6
 
+## v1.1.7
+
+* Add algorithms to model patients
+
