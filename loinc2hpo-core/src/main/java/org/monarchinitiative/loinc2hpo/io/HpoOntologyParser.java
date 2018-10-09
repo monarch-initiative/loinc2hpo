@@ -59,7 +59,7 @@ public class HpoOntologyParser {
         if (hpoOntology !=null) {
             termmap2 = ImmutableMap.copyOf(this.hpoOntology.getTermMap());
             ImmutableMap.Builder<String,Term> termmapBuilder = new ImmutableMap.Builder<>();
-            this.hpoOntology.getTerms().forEach(term -> termmapBuilder.put(term.getName(), term));
+            this.hpoOntology.getTerms().stream().distinct().forEach(term -> termmapBuilder.put(term.getName(), term));
             termmap = termmapBuilder.build();
         }
     }

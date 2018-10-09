@@ -100,7 +100,7 @@ public class ResourceCollection {
             hpoOntologyParser = new HpoOntologyParser(this.hpoOwlPath);
         }
         hpoOntologyParser.parseOntology();
-        hpo = hpoOntologyParser.getOntology();
+        this.hpo = hpoOntologyParser.getOntology();
     }
 
     public Map<TermId, Term> hpoTermMap() throws PhenolException, FileNotFoundException {
@@ -108,9 +108,13 @@ public class ResourceCollection {
             return this.termidTermMap;
         }
 
-        parseHPO();
+        if (this.hpoOntologyParser == null) {
+            parseHPO();
+        }
 
-        return hpoOntologyParser.getTermMap2();
+        this.termidTermMap = hpoOntologyParser.getTermMap2();
+
+        return this.termidTermMap;
     }
 
     public Map<String, Term> hpoTermMapFromName() throws PhenolException, FileNotFoundException {
@@ -118,7 +122,11 @@ public class ResourceCollection {
             return this.termnameTermMap;
         }
 
-        parseHPO();
+        if (this.hpoOntologyParser == null) {
+            parseHPO();
+        }
+
+        this.termnameTermMap = hpoOntologyParser.getTermMap();
 
         return this.termnameTermMap;
     }
@@ -149,7 +157,9 @@ public class ResourceCollection {
             return this.hpo;
         }
 
-        parseHPO();
+        if (this.hpoOntologyParser == null) {
+            parseHPO();
+        }
 
         return this.hpo;
     }
