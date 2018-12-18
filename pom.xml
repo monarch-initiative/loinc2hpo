@@ -18,6 +18,7 @@
         <junit.version>4.12</junit.version>
         <guava.version>23.0</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <hapi-fhir.version>3.6.0</hapi-fhir.version>
     </properties>
 
     <modules>
@@ -206,7 +207,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
-            <version>3.2.0</version>
+            <version>${hapi-fhir.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -225,7 +226,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-structures-dstu3</artifactId>
-            <version>3.2.0</version>
+            <version>${hapi-fhir.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -244,7 +245,7 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
-            <version>3.2.0</version>
+            <version>${hapi-fhir.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
