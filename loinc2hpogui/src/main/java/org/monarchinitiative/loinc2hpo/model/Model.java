@@ -17,7 +17,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import javafx.scene.paint.Color;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 /**
  * Prototype model for LOINC to HPO Biocuration process.
@@ -279,7 +278,7 @@ public class Model {
             return "?";
         }
         if (ontology.getTermMap().get(id)==null) {
-            logger.error(String.format("%s not in map", id.getIdWithPrefix()));
+            logger.error(String.format("%s not in map", id.getValue()));
             return "?";
         }
         return ontology.getTermMap().get(id).getName();
@@ -292,7 +291,7 @@ public class Model {
             return null;
         }
         hpoId= hpoId.substring(3);
-        return new TermId(HPPREFIX,hpoId);
+        return TermId.of(HPPREFIX,hpoId);
     }
 
 

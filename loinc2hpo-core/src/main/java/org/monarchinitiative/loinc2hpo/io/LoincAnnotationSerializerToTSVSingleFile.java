@@ -167,7 +167,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getIdWithPrefix());
+                    builder.append(p.getValue().getHpoTerm().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");
@@ -203,7 +203,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getIdWithPrefix());
+                    builder.append(p.getValue().getHpoTerm().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");

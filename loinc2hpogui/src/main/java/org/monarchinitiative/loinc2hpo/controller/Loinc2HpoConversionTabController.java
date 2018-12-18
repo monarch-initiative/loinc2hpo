@@ -301,7 +301,7 @@ public class Loinc2HpoConversionTabController {
                 testOutcome.getSubjectReference().getReference() : "Unknown subject";
         TermId termId = testOutcome.getOutcome() == null ? null : testOutcome.getOutcome().getId();
         String name = termId == null ? "failed to interpret" : model.termId2HpoName(termId);
-        String id = termId == null ? " " : termId.getIdWithPrefix();
+        String id = termId == null ? " " : termId.getValue();
 
         String display;
         if (testOutcome.getOutcome().isNegated()) {

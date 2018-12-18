@@ -483,7 +483,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             stringBuilder.append("\t" + this.loincScale.toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + this.note);
             stringBuilder.append("\t" + this.flag);
@@ -503,9 +503,9 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.loincId);
         stringBuilder.append("\t" + this.loincScale.toString());
-        stringBuilder.append("\t" + (low == null ? MISSINGVALUE : low.getId().getIdWithPrefix()));
-        stringBuilder.append("\t" + (intermediate == null ? MISSINGVALUE : intermediate.getId().getIdWithPrefix()));
-        stringBuilder.append("\t" + (high == null ? MISSINGVALUE : high.getId().getIdWithPrefix()));
+        stringBuilder.append("\t" + (low == null ? MISSINGVALUE : low.getId().getValue()));
+        stringBuilder.append("\t" + (intermediate == null ? MISSINGVALUE : intermediate.getId().getValue()));
+        stringBuilder.append("\t" + (high == null ? MISSINGVALUE : high.getId().getValue()));
         stringBuilder.append("\t" + intermediateNegated);
         stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
         stringBuilder.append("\t" + this.flag);
@@ -530,7 +530,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             stringBuilder.append("\t" + this.loincScale.toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
             stringBuilder.append("\t" + this.flag);

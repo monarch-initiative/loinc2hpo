@@ -30,17 +30,17 @@ public class BagOfTermsTest {
     public void getOriginalTerms() throws Exception {
         BagOfTerms patient1 = new BagOfTerms(patientId, hpo);
         assertEquals(patient1.getOriginalTerms().size(), 0);
-        patient1.addTerm(new TermId(HP_PREFIX, "0003074"));
+        patient1.addTerm(TermId.of(HP_PREFIX, "0003074"));
         assertEquals(patient1.getOriginalTerms().size(), 1);
-        patient1.addTerm(new TermId(HP_PREFIX, "0011297"));
+        patient1.addTerm(TermId.of(HP_PREFIX, "0011297"));
         assertEquals(patient1.getOriginalTerms().size(), 2);
     }
 
     @Test
     public void getInferedTerms() throws Exception {
         BagOfTerms patient1 = new BagOfTerms(patientId, hpo);
-        patient1.addTerm(new TermId(HP_PREFIX, "0003074"));
-        patient1.addTerm(new TermId(HP_PREFIX, "0011297"));
+        patient1.addTerm(TermId.of(HP_PREFIX, "0003074"));
+        patient1.addTerm(TermId.of(HP_PREFIX, "0011297"));
         assertEquals(patient1.getInferedTerms().size(), 0);
         patient1.infer();
         assertTrue(patient1.getInferedTerms().size() > 2);

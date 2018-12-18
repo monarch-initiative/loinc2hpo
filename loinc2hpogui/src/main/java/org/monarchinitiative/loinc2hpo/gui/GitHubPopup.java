@@ -186,7 +186,7 @@ public class GitHubPopup {
                     "New term label:\n" +
                     "New term comment (if any):\n" +
                     "Your biocurator ID for loinc2hpo (if desired): %s",
-                    hpoTerm.getId().getIdWithPrefix(), hpoTerm.getName(), loincEntry.getLOINC_Number(),
+                    hpoTerm.getId().getValue(), hpoTerm.getName(), loincEntry.getLOINC_Number(),
                     loincEntry.getLongName(), this.biocuratorId);
         } else if (newAnnotation) {
             return String.format("Suggest creating a new term for Loinc: %s [%s] \n" +

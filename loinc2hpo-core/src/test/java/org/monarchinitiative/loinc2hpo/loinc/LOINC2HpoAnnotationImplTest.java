@@ -130,15 +130,15 @@ public class LOINC2HpoAnnotationImplTest {
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
         Code code4low = internalCodes.get("L");
-        assertEquals(low.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4low).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(low.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4low).getHpoTerm().getId().getValue());
         assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4low).isNegated());
 
         Code code4high = internalCodes.get("H");
-        assertEquals(hi.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4high).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(hi.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4high).getHpoTerm().getId().getValue());
         assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4high).isNegated());
 
         Code code4normal = internalCodes.get("N");
-        assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4normal).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(normal.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4normal).getHpoTerm().getId().getValue());
         assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
 
         Code code4Pos = internalCodes.get("POS");
@@ -174,16 +174,16 @@ public class LOINC2HpoAnnotationImplTest {
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         Code code4Pos = internalCodes.get("POS");
-        assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(positive.getId().getValue(), annotation600.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
 
         Code code4high = internalCodes.get("H");
         assertNull(annotation600.getCandidateHpoTerms().get(code4high));
 
-        assertEquals(forCode1.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code1).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(forCode1.getId().getValue(), annotation600.getCandidateHpoTerms().get(code1).getHpoTerm().getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code1).isNegated());
 
-        assertEquals(forCode2.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code2).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(forCode2.getId().getValue(), annotation600.getCandidateHpoTerms().get(code2).getHpoTerm().getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code2).isNegated());
 
     }

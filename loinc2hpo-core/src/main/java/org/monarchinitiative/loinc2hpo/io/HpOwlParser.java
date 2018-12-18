@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedMap;
 import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.owl.OwlImmutableOntologyLoader;
+import org.monarchinitiative.phenol.io.owl.OwlOntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.File;
@@ -31,14 +31,16 @@ public class HpOwlParser {
     public HpoOntology parse() throws PhenolException {
         Ontology ontology;
 
-        final OwlImmutableOntologyLoader loader = new OwlImmutableOntologyLoader(owlFile);
+        //final OwlImmutableOntologyLoader loader = new OwlImmutableOntologyLoader(owlFile);
+        OwlOntologyLoader loader = new OwlOntologyLoader(owlFile);
         ontology = loader.load();
         if (debug) {
             System.err.println(String.format("Parsed a total of %d HP terms",ontology.countAllTerms()));
         }
 
         // hpo root termid
-        TermId hpoRoot = new TermId(new TermPrefix("HP"), "0000001");
+        //TermId hpoRoot = new TermId(new TermPrefix("HP"), "0000001");
+        TermId hpoRoot = TermId.of("HP", "0000001");
 
         return new HpoOntology(
                 (ImmutableSortedMap<String, String>) ontology.getMetaInfo(),

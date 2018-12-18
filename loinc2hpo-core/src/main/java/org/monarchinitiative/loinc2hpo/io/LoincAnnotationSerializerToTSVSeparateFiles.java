@@ -251,9 +251,9 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
             high = annotation.getPositiveHpoTermName();
 
         }
-        stringBuilder.append("\t" + (low == null ? Constants.MISSINGVALUE : low.getIdWithPrefix()));
-        stringBuilder.append("\t" + (normal == null ? Constants.MISSINGVALUE : normal.getIdWithPrefix()));
-        stringBuilder.append("\t" + (high == null ? Constants.MISSINGVALUE : high.getIdWithPrefix()));
+        stringBuilder.append("\t" + (low == null ? Constants.MISSINGVALUE : low.getValue()));
+        stringBuilder.append("\t" + (normal == null ? Constants.MISSINGVALUE : normal.getValue()));
+        stringBuilder.append("\t" + (high == null ? Constants.MISSINGVALUE : high.getValue()));
         stringBuilder.append("\t" + annotation.isNormalOrNegativeInversed());
         stringBuilder.append("\t" + (annotation.getNote() == null ? Constants.MISSINGVALUE : annotation.getNote()));
         stringBuilder.append("\t" + annotation.getFlag());
@@ -298,7 +298,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
             stringBuilder.append("\t" + annotation.getLoincScale().toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + (annotation.getNote() == null ? Constants.MISSINGVALUE : annotation.getNote()));
             stringBuilder.append("\t" + annotation.getFlag());

@@ -22,7 +22,7 @@ public interface LoincAnnotationSerializer {
             return null;
         }
         String id = record.substring(3);
-        return new TermId(prefix, id);
+        return TermId.of(prefix, id);
     }
 
 

@@ -82,7 +82,7 @@ public class BasicLabTestOutcome implements LabTestOutcome {
             return "error => hpoId.getId() is null in testResult";
         }
 
-        return String.format("BasicLabTestOutcome: %s [%s; %s]", hpoId.getId().getIdWithPrefix(),"?", "?");
+        return String.format("BasicLabTestOutcome: %s [%s; %s]", hpoId.getId().getValue(),"?", "?");
     }
 
 
