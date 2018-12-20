@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.kenai.jaffl.annotations.In;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
@@ -64,8 +65,7 @@ public class Loinc2HpoAnnotationsTabController {
         model = m;
     }
 
-    @FXML
-    private void initialize() {
+    @FXML private void initialize() {
         logger.trace("Calling initialize");
         loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
@@ -170,6 +170,7 @@ public class Loinc2HpoAnnotationsTabController {
                         LoincAnnotationSerializationFactory.parseFromFile(path, model.getTermMap2(),
                                 SerializationFormat.TSVSingleFile);
                 model.getLoincAnnotationMap().putAll(annotationMap);
+                refreshTable();
             } catch (Exception e) {
                 logger.error("ERROR!!!!!!!!");
                 return;
@@ -212,14 +213,13 @@ public class Loinc2HpoAnnotationsTabController {
         //if using the LoincAnnotationSerializerTSVSingleFile for serialization
         String tsvSingleFile = pathToOpen + File.separator
                 + Constants.TSVSingleFileFolder + File.separator + Constants.TSVSingleFileName;
-        logger.trace(tsvSingleFile);
         if (new File(tsvSingleFile).exists()) {
         //if (false){
 
             logger.trace("open session from " + pathToOpen);
             try {
                 Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, model.getTermMap2(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
-                logger.trace("annotationMap size (111111): " + annotationMap.size());
+                logger.info("annotationMap size (111111): " + annotationMap.size());
                 model.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
                 Platform.runLater(new Runnable() {
@@ -242,7 +242,7 @@ public class Loinc2HpoAnnotationsTabController {
 
         }
 
-        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        logger.info("Num of annotations in model: " + model.getLoincAnnotationMap().size());
         refreshTable();
         annotateTabController.changeColorLoincTableView();
     }

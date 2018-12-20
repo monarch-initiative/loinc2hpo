@@ -431,16 +431,7 @@ public class AnnotateTabController {
     public void setModel(Model m) {
         logger.trace("Setting model in AnnotateTabeController");
         model=m;
-        if (model.getPathToHpoOboFile()==null) {
-            logger.error("Path to hp.obo file is null. Cannot initialize autocomplete");
-            return;
-        }
-        model.parseOntology();
         termmap = model.getTermMap();
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldLeft, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldMiddle, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldRight, termmap.keySet());
-        logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
     }
 
 
@@ -813,8 +804,8 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
-        if (model.getPathToAutoSavedFolder() != null) {
-            chooser.setInitialDirectory(new File(model.getPathToAutoSavedFolder()));
+        if (model.getPathToGithubAnnotationFolder() != null) {
+            chooser.setInitialDirectory(new File(model.getPathToGithubAnnotationFolder()));
         }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");

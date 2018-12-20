@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 
 import ca.uhn.fhir.parser.DataFormatException;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARNING">
+<Configuration status="INFO">
     <Appenders>
         <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpo.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
@@ -18,7 +18,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="WARNING">
+        <Root level="INFO">
             <AppenderRef ref="LogFile"/>
             <AppenderRef ref="Console"/>
         </Root>

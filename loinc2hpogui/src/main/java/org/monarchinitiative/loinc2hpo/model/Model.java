@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.model;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Singleton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Observation;
@@ -23,6 +24,7 @@ import javafx.scene.paint.Color;
  * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
  * @version 0.1.2 (2017-12-12)
  */
+@Singleton
 public class Model {
     private static final Logger logger = LogManager.getLogger();
 
@@ -42,9 +44,9 @@ public class Model {
     private String pathToJsonFhirFile=null;
     private Queue<Observation> observationQueue = new ArrayDeque<>();
 
-    private String pathToAutoSavedFolder = null;
+    private String pathToGithubAnnotationFolder = null;
 
-    private String pathToLastSession = null;
+    private String pathToAnnotationData = null;
 
     private String pathToHpGitRepo = null;
 
@@ -206,20 +208,20 @@ public class Model {
 
     public void setBiocuratorID(String id){biocuratorID=id;}
 
-    public String getPathToAutoSavedFolder() {
-        return pathToAutoSavedFolder;
+    public String getPathToGithubAnnotationFolder() {
+        return pathToGithubAnnotationFolder;
     }
 
-    public void setPathToAutoSavedFolder(String pathToAutoSavedFolder) {
-        this.pathToAutoSavedFolder = pathToAutoSavedFolder;
+    public void setPathToGithubAnnotationFolder(String pathToGithubAnnotationFolder) {
+        this.pathToGithubAnnotationFolder = pathToGithubAnnotationFolder;
     }
 
-    public String getPathToLastSession() {
-        return pathToLastSession;
+    public String getPathToAnnotationData() {
+        return pathToGithubAnnotationFolder + File.separator + "Data";
     }
 
-    public void setPathToLastSession(String pathToLastSession) {
-        this.pathToLastSession = pathToLastSession;
+    public void setPathToAnnotationData(String pathToLastSession) {
+        this.pathToAnnotationData = pathToLastSession;
     }
 
     public String getPathToLoincCoreTableFile() {
@@ -380,11 +382,11 @@ public class Model {
             if (pathToHpoOwlFile!= null) {
                 bw.write(String.format("hp-owl:%s\n", pathToHpoOwlFile));
             }
-            if (pathToAutoSavedFolder != null) {
-                bw.write(String.format("autosave to:%s\n", pathToAutoSavedFolder));
+            if (pathToGithubAnnotationFolder != null) {
+                bw.write(String.format("autosave to:%s\n", pathToGithubAnnotationFolder));
             }
-            if (pathToLastSession != null) {
-                bw.write(String.format("last session:%s\n", pathToLastSession));
+            if (pathToAnnotationData != null) {
+                bw.write(String.format("last session:%s\n", pathToAnnotationData));
             }
             if (pathToHpGitRepo != null) {
                 bw.write(String.format("hp-repo:%s\n", pathToHpGitRepo));
@@ -426,8 +428,8 @@ public class Model {
                 else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
                 else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
                 else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
-                else if (key.equals("autosave to")) this.pathToAutoSavedFolder = value;
-                else if (key.equals("last session")) this.pathToLastSession = value;
+                else if (key.equals("autosave to")) this.pathToGithubAnnotationFolder = value;
+                else if (key.equals("last session")) this.pathToAnnotationData = value;
                 else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
                 else if (key.equals("loinc-list-color")) {
                     String[] entries = value.split("\\|");
@@ -471,9 +473,6 @@ public class Model {
                 Color.ORANGE.toString(),
                 Color.CHOCOLATE.toString()
                 );
-                //.stream()
-                //.map(color -> "#" + color.substring(2,8).toUpperCase())
-                //.collect(Collectors.toList());
     }
 
 

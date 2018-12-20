@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+@Deprecated
 public class LoincUtil {
     private static final Logger logger = LogManager.getLogger();
 
