@@ -52,7 +52,7 @@ public class Model {
 
     /** The complete HPO ontology. */
     private HpoOntology ontology=null;
-    private static final TermPrefix HPPREFIX = new TermPrefix("HP");
+    private static final String HPPREFIX = "HP";
     /** Key: a loinc code such as 10076-3; value: the corresponding TODO -- what link QnLoinc2HPOAnnotation object .*/
     public Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap =new LinkedHashMap<>();
     private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
