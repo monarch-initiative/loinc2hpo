@@ -804,8 +804,8 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
-        if (model.getPathToGithubAnnotationFolder() != null) {
-            chooser.setInitialDirectory(new File(model.getPathToGithubAnnotationFolder()));
+        if (model.getPathToAnnotationFolder() != null) {
+            chooser.setInitialDirectory(new File(model.getPathToAnnotationFolder()));
         }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");

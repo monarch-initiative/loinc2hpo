@@ -44,7 +44,7 @@ public class Model {
     private String pathToJsonFhirFile=null;
     private Queue<Observation> observationQueue = new ArrayDeque<>();
 
-    private String pathToGithubAnnotationFolder = null;
+    private String pathToAnnotationFolder = null;
 
     private String pathToAnnotationData = null;
 
@@ -198,9 +198,7 @@ public class Model {
     public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
     public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
     }
-    public void setPathToHpGitRepo(String pathToHpGitRepo) {
-        this.pathToHpGitRepo = pathToHpGitRepo;
-    }
+
     public String getPathToHpGitRepo() {
         return pathToHpGitRepo;
     }
@@ -208,20 +206,17 @@ public class Model {
 
     public void setBiocuratorID(String id){biocuratorID=id;}
 
-    public String getPathToGithubAnnotationFolder() {
-        return pathToGithubAnnotationFolder;
+    public String getPathToAnnotationFolder() {
+        return pathToAnnotationFolder;
     }
 
-    public void setPathToGithubAnnotationFolder(String pathToGithubAnnotationFolder) {
-        this.pathToGithubAnnotationFolder = pathToGithubAnnotationFolder;
+    public void setPathToAnnotationFolder(String pathToAnnotationFolder) {
+        this.pathToAnnotationFolder = pathToAnnotationFolder;
     }
 
+    @Deprecated
     public String getPathToAnnotationData() {
-        return pathToGithubAnnotationFolder + File.separator + "Data";
-    }
-
-    public void setPathToAnnotationData(String pathToLastSession) {
-        this.pathToAnnotationData = pathToLastSession;
+        return pathToAnnotationFolder + File.separator + "Data";
     }
 
     public String getPathToLoincCoreTableFile() {
@@ -382,8 +377,8 @@ public class Model {
             if (pathToHpoOwlFile!= null) {
                 bw.write(String.format("hp-owl:%s\n", pathToHpoOwlFile));
             }
-            if (pathToGithubAnnotationFolder != null) {
-                bw.write(String.format("autosave to:%s\n", pathToGithubAnnotationFolder));
+            if (pathToAnnotationFolder != null) {
+                bw.write(String.format("autosave to:%s\n", pathToAnnotationFolder));
             }
             if (pathToAnnotationData != null) {
                 bw.write(String.format("last session:%s\n", pathToAnnotationData));
@@ -428,7 +423,7 @@ public class Model {
                 else if (key.equals("annotationFile")) this.pathToAnnotationFile = value;
                 else if (key.equals("hp-obo")) this.pathToHpoOboFile = value;
                 else if (key.equals("hp-owl")) this.pathToHpoOwlFile = value;
-                else if (key.equals("autosave to")) this.pathToGithubAnnotationFolder = value;
+                else if (key.equals("autosave to")) this.pathToAnnotationFolder = value;
                 else if (key.equals("last session")) this.pathToAnnotationData = value;
                 else if (key.equals("hp-repo")) this.pathToHpGitRepo = value;
                 else if (key.equals("loinc-list-color")) {

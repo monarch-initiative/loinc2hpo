@@ -21,7 +21,7 @@ public class Settings {
     private StringProperty hpoOboPath;
     private StringProperty hpoOwlPath;
     private StringProperty loincCoreTablePath;
-    private StringProperty autoSaveFolderPath;
+    private StringProperty annotationFolder;
     private StringProperty biocuratorID;
     private Map<String, String> userCreatedLoincListsColor;
 
@@ -29,16 +29,16 @@ public class Settings {
         this.hpoOboPath = new SimpleStringProperty();
         this.hpoOwlPath = new SimpleStringProperty();
         this.loincCoreTablePath = new SimpleStringProperty();
-        this.autoSaveFolderPath = new SimpleStringProperty();
+        this.annotationFolder = new SimpleStringProperty();
         this.biocuratorID = new SimpleStringProperty();
         this.userCreatedLoincListsColor = new HashMap<>();
     }
 
-    public Settings(String hpoOboPath, String hpoOwlPath, String loincCoreTablePath, String autoSaveFolderPath, String biocuratorID, Map<String, String> userCreatedLoincListsColor) {
+    public Settings(String hpoOboPath, String hpoOwlPath, String loincCoreTablePath, String annotationFolder, String biocuratorID, Map<String, String> userCreatedLoincListsColor) {
         this.hpoOboPath = new SimpleStringProperty(hpoOboPath);
         this.hpoOwlPath = new SimpleStringProperty(hpoOwlPath);
         this.loincCoreTablePath = new SimpleStringProperty(loincCoreTablePath);
-        this.autoSaveFolderPath = new SimpleStringProperty(autoSaveFolderPath);
+        this.annotationFolder = new SimpleStringProperty(annotationFolder);
         this.biocuratorID = new SimpleStringProperty(biocuratorID);
         this.userCreatedLoincListsColor = userCreatedLoincListsColor;
     }
@@ -64,7 +64,7 @@ public class Settings {
             else if (key.equals("loincTablePath")) settings.setLoincCoreTablePath(value);
             else if (key.equals("hp-obo")) settings.setHpoOboPath(value);
             else if (key.equals("hp-owl")) settings.setHpoOwlPath(value);
-            else if (key.equals("autosave to")) settings.setAutoSaveFolderPath(value);
+            else if (key.equals("autosave to")) settings.setAnnotationFolder(value);
             else if (key.equals("loinc-list-color")) {
                 String[] entries = value.split("\\|");
                 settings.setUserCreatedLoincListsColor(
@@ -85,7 +85,7 @@ public class Settings {
             String pathToLoincCoreTableFile = settings.getLoincCoreTablePath();
             String pathToHpoOboFile = settings.getHpoOboPath();
             String pathToHpoOwlFile = settings.getHpoOwlPath();
-            String pathToAutoSavedFolder = settings.getAutoSaveFolderPath();
+            String pathToAutoSavedFolder = settings.getAnnotationFolder();
             Map<String, String> userCreatedLoincListsColor = settings.getUserCreatedLoincListsColor();
             if (biocuratorID!=null) {
                 bw.write(String.format("biocuratorid:%s\n",biocuratorID));
@@ -162,16 +162,16 @@ public class Settings {
         this.loincCoreTablePath.set(loincCoreTablePath);
     }
 
-    public String getAutoSaveFolderPath() {
-        return autoSaveFolderPath.get();
+    public String getAnnotationFolder() {
+        return annotationFolder.get();
     }
 
-    public StringProperty autoSaveFolderPathProperty() {
-        return autoSaveFolderPath;
+    public StringProperty annotationFolderProperty() {
+        return annotationFolder;
     }
 
-    public void setAutoSaveFolderPath(String autoSaveFolderPath) {
-        this.autoSaveFolderPath.set(autoSaveFolderPath);
+    public void setAnnotationFolder(String annotationFolder) {
+        this.annotationFolder.set(annotationFolder);
     }
 
     public String getBiocuratorID() {
@@ -198,11 +198,11 @@ public class Settings {
         return new SimpleBooleanProperty(this.hpoOboPath.get() != null &&
                                             this.hpoOwlPath.get() != null &&
                                             this.loincCoreTablePath.get() != null &&
-                                            this.autoSaveFolderPath.get() != null);
+                                            this.annotationFolder.get() != null);
     }
 
     public String getLastSession() {
-        return this.autoSaveFolderPath + File.separator + "Data";
+        return this.annotationFolder + File.separator + "Data";
     }
 
 }

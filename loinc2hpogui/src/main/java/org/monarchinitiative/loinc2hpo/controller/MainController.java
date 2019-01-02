@@ -128,14 +128,14 @@ public class MainController {
 //        hpoOboReady.bind(settings.hpoOboPathProperty().isNotEmpty());
 //        hpoOwlReady.bind(settings.hpoOwlPathProperty().isNotEmpty());
 //        loincCoreTableReady.bind(settings.loincCoreTablePathProperty().isNotEmpty());
-//        auto_save_folderReady.bind(settings.autoSaveFolderPathProperty().isNotEmpty());
+//        auto_save_folderReady.bind(settings.annotationFolderProperty().isNotEmpty());
 
         //set auto-save file path if it is not specified
         //set it to the default path. user can still change it
-        if (model.getPathToGithubAnnotationFolder() == null) {
-            model.setPathToGithubAnnotationFolder(Loinc2HpoPlatform.getLOINC2HPODir()
+        if (model.getPathToAnnotationFolder() == null) {
+            model.setPathToAnnotationFolder(Loinc2HpoPlatform.getLOINC2HPODir()
                     + File.separator + "Data");
-            File folder = new File(model.getPathToGithubAnnotationFolder());
+            File folder = new File(model.getPathToAnnotationFolder());
             boolean created = false;
             if (!folder.exists()) {
                 created = folder.mkdir();
@@ -190,7 +190,7 @@ public class MainController {
                     loinc2HPOConversionTabController.setModel(model);
                     annotateTabController.defaultStartUp();
                     defaultStartup();
-                    if (model.getPathToGithubAnnotationFolder() != null) {
+                    if (model.getPathToAnnotationFolder() != null) {
                         openSession(model.getPathToAnnotationData());
                     }
                 });
@@ -216,14 +216,14 @@ public class MainController {
         return model.getPathToLoincCoreTableFile() != null
                 && model.getPathToHpoOwlFile() != null
                 && model.getPathToHpoOboFile() != null
-                && model.getPathToGithubAnnotationFolder() != null;
+                && model.getPathToAnnotationFolder() != null;
     }
 
     private void initializeAllDataSettings() {
         if (model.getPathToLoincCoreTableFile() == null
                 || model.getPathToHpoOboFile() == null
                 || model.getPathToHpoOwlFile() == null
-                || model.getPathToGithubAnnotationFolder() == null) {
+                || model.getPathToAnnotationFolder() == null) {
             Platform.runLater( () -> {
                 annotateTabButton.setDisable(true);
                 Loinc2HPOAnnotationsTabButton.setDisable(true);
@@ -236,7 +236,7 @@ public class MainController {
     }
 
     private void defaultStartup() {
-        if (model.getPathToAnnotationData() != null) {
+        if (model.getPathToAnnotationFolder() != null) {
             openSession(model.getPathToAnnotationData());
         }
     }
@@ -299,7 +299,7 @@ public class MainController {
                     "Try again, or manually set one");
             return;
         }
-        model.setPathToGithubAnnotationFolder(DEFAULTDIRECTORY.getAbsolutePath());
+        model.setPathToAnnotationFolder(DEFAULTDIRECTORY.getAbsolutePath());
         model.writeSettings();
         configurationComplete.set(isConfigurationCompleted());
 
@@ -374,21 +374,6 @@ public class MainController {
         File obo = chooser.showOpenDialog(null);
         if (obo != null) {
             model.setPathToHpOboFile(obo.getAbsolutePath());
-            model.writeSettings();
-            configurationComplete.set(isConfigurationCompleted());
-        }
-
-    }
-
-    @FXML private void setHPORepo(ActionEvent e) {
-
-        e.consume();
-        logger.trace("set HPO repo");
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Choose Human Phenotype Ontology Github repo");
-        File hpo = chooser.showDialog(null);
-        if (hpo != null) {
-            model.setPathToHpGitRepo(hpo.getAbsolutePath());
             model.writeSettings();
             configurationComplete.set(isConfigurationCompleted());
         }
@@ -510,9 +495,12 @@ public class MainController {
         return filename;
     }
 
+    /**
+     * Create new annotation folder, and populate with subdirectories
+     */
     private void createNewSession() {
         logger.trace(autogenerateFileName());
-        String sessionFolderName = model.getPathToGithubAnnotationFolder() + File.separator + autogenerateFileName();
+        String sessionFolderName = model.getPathToAnnotationFolder() + File.separator + autogenerateFileName();
 
         //ask user if default file is okay
         String[] choices = new String[] {"Yes", "No"};
@@ -521,7 +509,7 @@ public class MainController {
         if (choice.isPresent() && choice.get().equals("No")) { //manually create a directory for autosaved data
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose a directory to new session data");
-            directoryChooser.setInitialDirectory(new File(model.getPathToGithubAnnotationFolder()));
+            directoryChooser.setInitialDirectory(new File(model.getPathToAnnotationFolder()));
             File f  = directoryChooser.showDialog(null);
             if (f != null) {
                 sessionFolderName = f.getAbsolutePath();
@@ -529,12 +517,33 @@ public class MainController {
                 return;
             }
         }
-        File sessionFolder = new File(sessionFolderName);
-        if (!sessionFolder.exists()) {
-            sessionFolder.mkdir();
+        if (!Files.exists(Paths.get(sessionFolderName))) {
+            try {
+                Files.createDirectory(Paths.get(sessionFolderName));
+            } catch (IOException e) {
+                PopUps.showWarningDialog("Warning", "Failure to create folders", "No Annotation folder is created");
+                return;
+            }
         }
+
+        try {
+            //create "Data" subdirectory
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data"));
+            //create "Data/LOINC CATEGORY
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "LOINC CATEGORY"));
+            //Create "Data/LoincPanel
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "LoincPanel"));
+            //Create "TSVSingleFile"
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "TSVSingleFile"));
+            //Create "Task"
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Task"));
+        } catch (IOException e) {
+            PopUps.showWarningDialog("Warning", "Failure to create subdirectories for annotation data", "No annotation folder is created");
+            return;
+        }
+
         //update last session infor in model
-        model.setPathToAnnotationData(sessionFolder.getAbsolutePath());
+        model.setPathToAnnotationFolder(sessionFolderName);
         model.writeSettings();
     }
 
@@ -574,7 +583,7 @@ public class MainController {
             return;
         }
 
-        String pathToOpen = model.getPathToGithubAnnotationFolder();
+        String pathToOpen = model.getPathToAnnotationFolder();
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Choose session folder");
@@ -588,7 +597,7 @@ public class MainController {
         }
 
         openSession(pathToOpen);
-        model.setPathToAnnotationData(pathToOpen);
+        model.setPathToAnnotationFolder(pathToOpen);
         model.writeSettings();
     }
 
@@ -891,7 +900,7 @@ public class MainController {
 
         String command = "git pull origin develop && git checkout develop";
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationData());
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -903,7 +912,7 @@ public class MainController {
 
         String command = String.format("git add . && git commit -m \"%s\" && git push origin develop", "update");
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationData());
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -914,7 +923,7 @@ public class MainController {
     public void sendLockingEmail() throws IOException, InterruptedException, CommandExecutionException {
         String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationData());
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -924,7 +933,7 @@ public class MainController {
     public void sendUnlockingEmail() throws IOException, InterruptedException, CommandExecutionException {
         String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationData());
+        TerminalCommand tm = new TerminalCommand(commands, model.getPathToAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
