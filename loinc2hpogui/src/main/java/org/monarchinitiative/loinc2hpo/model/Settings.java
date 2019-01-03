@@ -201,8 +201,5 @@ public class Settings {
                                             this.annotationFolder.get() != null);
     }
 
-    public String getLastSession() {
-        return this.annotationFolder + File.separator + "Data";
-    }
 
 }

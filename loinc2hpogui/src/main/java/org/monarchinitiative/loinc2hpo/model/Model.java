@@ -214,11 +214,6 @@ public class Model {
         this.pathToAnnotationFolder = pathToAnnotationFolder;
     }
 
-    @Deprecated
-    public String getPathToAnnotationData() {
-        return pathToAnnotationFolder + File.separator + "Data";
-    }
-
     public String getPathToLoincCoreTableFile() {
         return pathToLoincCoreTableFile;
     }
@@ -226,7 +221,6 @@ public class Model {
         return pathToHpoOboFile;
     }
     public String getBiocuratorID() {return biocuratorID;}
-    public String getPathToAnnotationFile(){return pathToAnnotationFile;}
     public String getPathToHpoOwlFile(){ return pathToHpoOwlFile;}
 
 

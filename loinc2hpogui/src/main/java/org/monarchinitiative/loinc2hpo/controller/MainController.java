@@ -134,7 +134,7 @@ public class MainController {
         //set it to the default path. user can still change it
         if (model.getPathToAnnotationFolder() == null) {
             model.setPathToAnnotationFolder(Loinc2HpoPlatform.getLOINC2HPODir()
-                    + File.separator + "Data");
+                    + File.separator + "Loinc2HpoAnnotation");
             File folder = new File(model.getPathToAnnotationFolder());
             boolean created = false;
             if (!folder.exists()) {
@@ -191,7 +191,7 @@ public class MainController {
                     annotateTabController.defaultStartUp();
                     defaultStartup();
                     if (model.getPathToAnnotationFolder() != null) {
-                        openSession(model.getPathToAnnotationData());
+                        openSession(model.getPathToAnnotationFolder());
                     }
                 });
 
@@ -237,7 +237,7 @@ public class MainController {
 
     private void defaultStartup() {
         if (model.getPathToAnnotationFolder() != null) {
-            openSession(model.getPathToAnnotationData());
+            openSession(model.getPathToAnnotationFolder());
         }
     }
 
@@ -273,7 +273,7 @@ public class MainController {
 
     @FXML private void setPathToAutoSavedData(ActionEvent e) {
         e.consume();
-        String path2AnnotationDIRECTORY = Loinc2HpoPlatform.getLOINC2HPODir() + File.separator + "Data";
+        String path2AnnotationDIRECTORY = Loinc2HpoPlatform.getLOINC2HPODir() + File.separator + "Loinc2HpoAnnotation";
         File DEFAULTDIRECTORY = new File(path2AnnotationDIRECTORY);
 
         String[] choices = new String[] {"Yes", "No"};
@@ -601,13 +601,19 @@ public class MainController {
         model.writeSettings();
     }
 
+    /**
+     * Open the annotation
+     * @param pathToOpen
+     */
     protected void openSession(String pathToOpen) {
 
+        String dataDir = pathToOpen + File.separator + "Data";
+
         //import annotations
-        loinc2HpoAnnotationsTabController.importLoincAnnotation(pathToOpen);
+        loinc2HpoAnnotationsTabController.importLoincAnnotation(dataDir);
 
         //import the LOINC categories
-        File loinc_category_folder = new File(pathToOpen + File.separator + LOINC_CATEGORY_folder);
+        File loinc_category_folder = new File(dataDir + File.separator + LOINC_CATEGORY_folder);
         if (!loinc_category_folder.exists() || !loinc_category_folder.isDirectory()) {
             return;
         }
@@ -658,13 +664,15 @@ public class MainController {
 
         logger.trace("user wants to save a session");
         //Create a session if it is saved for the first time
-        if (model.getPathToAnnotationData() == null) {
+        if (model.getPathToAnnotationFolder() == null) {
             createNewSession();
         }
 
+        String dataDir = model.getPathToAnnotationFolder() + File.separator + "Data";
+
         // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
         //create folder is not present
-        Path folderTSVSeparated = Paths.get(model.getPathToAnnotationData() + File.separator + Constants.TSVSeparateFilesFolder);
+        Path folderTSVSeparated = Paths.get(dataDir + File.separator + Constants.TSVSeparateFilesFolder);
         if (!Files.exists(folderTSVSeparated)) {
             try {
                 Files.createDirectory(folderTSVSeparated);
@@ -678,7 +686,7 @@ public class MainController {
 
         }
 
-        Path folderTSVSingle = Paths.get(model.getPathToAnnotationData() + File.separator + Constants.TSVSingleFileFolder);
+        Path folderTSVSingle = Paths.get(dataDir + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
             try {
                 Files.createDirectory(folderTSVSingle);
@@ -701,7 +709,7 @@ public class MainController {
             return;
         }
 
-        String pathToLoincCategory = model.getPathToAnnotationData() + File.separator + LOINC_CATEGORY_folder;
+        String pathToLoincCategory = dataDir + File.separator + LOINC_CATEGORY_folder;
         if (!new File(pathToLoincCategory).exists()) {
             new File(pathToLoincCategory).mkdir();
         }

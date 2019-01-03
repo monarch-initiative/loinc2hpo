@@ -339,62 +339,14 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     protected void saveAnnotations() {
-        boolean saveToNewFile = false;
-        String path = model.getPathToAnnotationFile();
-        if (path == null) {
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Choose LOINC Core Table file");
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
-            File f = chooser.showSaveDialog(null);
-            if (f != null) {
-                path = f.getAbsolutePath();
-                model.setPathToAnnotationFile(path);
-                saveToNewFile = true;
-                logger.trace("Save annotation data to new file: ",path);
-            } else {
-                logger.error("Unable to obtain path to a new file to save " +
-                        "annotation data to");
-                return;
-
-            }
-        } else {
-            logger.info("path to destination file: " + path);
-        }
-
         //@TODO: implement saving if necessary
+        throw new UnsupportedOperationException();
     }
 
 
     protected void newAppend() {
-
-        String path = model.getPathToAnnotationFile();
-        if (path == null) {//
-            FileChooser chooser = new FileChooser();
-            chooser.setTitle("Choose LOINC Core Table file");
-            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
-
-            if (path != null && (new File(path).exists())) {
-                logger.trace("append to " + path);
-                chooser.setInitialDirectory(new File(path).getParentFile());
-            }
-
-            File f = chooser.showOpenDialog(null);
-            if (f != null) {
-                path = f.getAbsolutePath();
-                //model.setPathToAnnotationFile(path);
-                logger.trace("Save annotation data to new file: ",path);
-            } else {
-                logger.error("Unable to obtain path to a new file to save " +
-                        "annotation data to");
-                return;
-            }
-        } else {
-            logger.info("path to destination file: " + path);
-        }
-
         //@TODO: implement if necessary
         throw new UnsupportedOperationException();
-
     }
 
     protected void saveAnnotationsAs() {
