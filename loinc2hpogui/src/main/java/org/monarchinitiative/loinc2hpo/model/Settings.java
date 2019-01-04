@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpo.model;
 
+import com.google.inject.Singleton;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Singleton
 public class Settings {
 
     private static Logger logger = LoggerFactory.getLogger(Settings.class);
@@ -24,6 +26,7 @@ public class Settings {
     private StringProperty annotationFolder;
     private StringProperty biocuratorID;
     private Map<String, String> userCreatedLoincListsColor;
+    private BooleanProperty isComplete = new SimpleBooleanProperty(false);
 
     public Settings() {
         this.hpoOboPath = new SimpleStringProperty();
@@ -43,8 +46,7 @@ public class Settings {
         this.userCreatedLoincListsColor = userCreatedLoincListsColor;
     }
 
-    public static Settings loadSettings(String settingsPath) throws IOException {
-        Settings settings = new Settings();
+    public static Settings loadSettings(Settings settings, String settingsPath) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(settingsPath));
         String line = null;
@@ -136,6 +138,7 @@ public class Settings {
 
     public void setHpoOboPath(String hpoOboPath) {
         this.hpoOboPath.set(hpoOboPath);
+        this.isComplete.set(status());
     }
 
     public String getHpoOwlPath() {
@@ -148,6 +151,7 @@ public class Settings {
 
     public void setHpoOwlPath(String hpoOwlPath) {
         this.hpoOwlPath.set(hpoOwlPath);
+        this.isComplete.set(status());
     }
 
     public String getLoincCoreTablePath() {
@@ -160,6 +164,7 @@ public class Settings {
 
     public void setLoincCoreTablePath(String loincCoreTablePath) {
         this.loincCoreTablePath.set(loincCoreTablePath);
+        this.isComplete.set(status());
     }
 
     public String getAnnotationFolder() {
@@ -172,6 +177,7 @@ public class Settings {
 
     public void setAnnotationFolder(String annotationFolder) {
         this.annotationFolder.set(annotationFolder);
+        this.isComplete.set(status());
     }
 
     public String getBiocuratorID() {
@@ -184,6 +190,7 @@ public class Settings {
 
     public void setBiocuratorID(String biocuratorID) {
         this.biocuratorID.set(biocuratorID);
+        this.isComplete.set(status());
     }
 
     public Map<String, String> getUserCreatedLoincListsColor() {
@@ -194,11 +201,28 @@ public class Settings {
         this.userCreatedLoincListsColor = userCreatedLoincListsColor;
     }
 
-    public BooleanProperty isComplete() {
-        return new SimpleBooleanProperty(this.hpoOboPath.get() != null &&
-                                            this.hpoOwlPath.get() != null &&
-                                            this.loincCoreTablePath.get() != null &&
-                                            this.annotationFolder.get() != null);
+    public BooleanProperty isCompleteProperty() {
+        return isComplete;
+    }
+
+
+    public boolean status() {
+        return this.hpoOboPath.get() != null &&
+                this.hpoOwlPath.get() != null &&
+                this.loincCoreTablePath.get() != null &&
+                this.annotationFolder.get() != null;
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("hp.owl: " + hpoOwlPath);
+        builder.append("\n");
+        builder.append("hp.obo: " + hpoOboPath);
+        builder.append("\n");
+        builder.append("loincCoreTable: " + loincCoreTablePath);
+        builder.append("\n");
+        builder.append("annotationFolder: " + annotationFolder);
+        return builder.toString();
     }
 
 

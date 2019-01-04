@@ -20,6 +20,9 @@ public class Constants {
     //folder for LOINC categories
     public static final String LOINCCategory = "LOINC CATEGORY";
 
+    //folder for Data folder
+    public static final String DATAFOLDER = "DATA";
+
 
     public static final String LOINCSYSTEM = "http://loinc.org";
     //public static final String HAPIFHIRTESTSERVER = "http://fhirtest.uhn.ca/baseDstu3";

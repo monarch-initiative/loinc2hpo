@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.Settings;
 
 /**
  * A helper class that displays the settings for this project
@@ -15,12 +16,12 @@ import org.monarchinitiative.loinc2hpo.model.Model;
  */
 public class SettingsViewFactory {
 
-    private static String getHTML(Model model) {
+    private static String getHTML(Settings settings) {
         String sb = "<html><body>\n" +
                 inlineCSS() +
                 "<h1>LOINC2HPO Biocuration App Help</h1>" +
                 "<p><i>Loinc2Hpo</i> settings:</p>" +
-                setup(model) +
+                setup(settings) +
                 "</body></html>";
         return sb;
 
@@ -37,19 +38,16 @@ public class SettingsViewFactory {
                 "  </style></head>";
     }
 
-    private static String setup(Model model) {
+    private static String setup(Settings settings) {
         StringBuilder sb = new StringBuilder();
         sb.append("\n\nMandatory Settings:\n");
-        sb.append(String.format("<li>Path to LOINC Core Table: %s</li>",model.getPathToLoincCoreTableFile()));
-        sb.append(String.format("<li>Path to <tt>hp.obo</tt> file: %s</li>",model.getPathToHpoOboFile()));
-        sb.append(String.format("<li>Path to <tt>hp.owl</tt> file: %s</li>",model.getPathToHpoOwlFile()));
-        sb.append(String.format("<li>Path to auto-saved file: %s</li>",model.getPathToAnnotationFolder()));
+        sb.append(String.format("<li>Path to LOINC Core Table: %s</li>",settings.getLoincCoreTablePath()));
+        sb.append(String.format("<li>Path to <tt>hp.obo</tt> file: %s</li>",settings.getHpoOboPath()));
+        sb.append(String.format("<li>Path to <tt>hp.owl</tt> file: %s</li>",settings.getHpoOwlPath()));
+        sb.append(String.format("<li>Path to annotation file: %s</li>",settings.getAnnotationFolder()));
 
         sb.append("\n\nOptional Settings:\n");
-        //sb.append(String.format("<li>Path to annotation file: %s</li>",model.getPathToAnnotationFile()));
-        sb.append(String.format("<li>Path to <tt>hp Github repo</tt> file: %s</li>",model.getPathToHpGitRepo()));
-        sb.append(String.format("<li>Path to last session: %s</li>",model.getPathToAnnotationFolder()));
-        sb.append(String.format("<li>Biocurator ID: %s</li>",model.getBiocuratorID()));
+        sb.append(String.format("<li>Biocurator ID: %s</li>",settings.getBiocuratorID()));
         return String.format("<ul>%s</ul>",sb.toString());
 
     }
@@ -60,7 +58,7 @@ public class SettingsViewFactory {
 
 
     /** Open a dialog that provides concise help for using PhenoteFX. */
-    public static void openSettingsDialog(Model model) {
+    public static void openSettingsDialog(Settings settings) {
         Stage window;
         String windowTitle = "LOINC2HPO Biocuration App Settings";
         window = new Stage();
@@ -73,7 +71,7 @@ public class SettingsViewFactory {
         vbox.setPrefHeight(600);
         vbox.setPrefWidth(800);
         WebView wview = new WebView();
-        wview.getEngine().loadContent(getHTML(model));
+        wview.getEngine().loadContent(getHTML(settings));
 
         pane.getChildren().add(vbox);
         HBox hbox = new HBox();

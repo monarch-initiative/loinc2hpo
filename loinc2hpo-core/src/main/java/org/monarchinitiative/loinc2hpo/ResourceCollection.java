@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Singleton;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;

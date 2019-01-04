@@ -358,7 +358,6 @@ public class Loinc2HpoAnnotationsTabController {
         File f = chooser.showSaveDialog(null);
         if (f != null) {
             path = f.getAbsolutePath();
-            model.setPathToAnnotationFile(path);
             logger.trace("Save annotation data to new file: ",path);
         } else {
             logger.error("Unable to obtain path to a new file to save " +
@@ -375,7 +374,6 @@ public class Loinc2HpoAnnotationsTabController {
     protected void clear() {
         model.loincAnnotationMap.clear();
         loincAnnotationTableView.getItems().clear();
-        model.setPathToAnnotationFile(null);
     }
 
 }

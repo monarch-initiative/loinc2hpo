@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.model;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,8 @@ import javafx.scene.paint.Color;
 @Singleton
 public class Model {
     private static final Logger logger = LogManager.getLogger();
+
+    @Inject Settings settings;
 
     private String pathToLoincCoreTableFile=null;
     /** We save a few settings in a file that we store in ~/.loinc2hpo/loinc2hpo.settings. This variable should
@@ -78,7 +81,6 @@ public class Model {
     //session changes whenever one of the following functions are called:
     //
     private boolean sessionChanged = false;
-
 
     public boolean isSessionChanged() {
         return sessionChanged;
@@ -189,40 +191,9 @@ public class Model {
         return this.labels;
     }
 
-
-    public void setPathToLoincCoreTableFile(String pathToLoincCoreTableFile) {
-        this.pathToLoincCoreTableFile = pathToLoincCoreTableFile;
-    }
-    public void setPathToSettingsFile(String p) { this.pathToSettingsFile=p;}
-    public void setPathToAnnotationFile(String p) {pathToAnnotationFile=p;}
-    public void setPathToHpOboFile(String p) { pathToHpoOboFile=p;}
-    public void setPathToHpOwlFile(String p) { pathToHpoOwlFile = p;
-    }
-
     public String getPathToHpGitRepo() {
         return pathToHpGitRepo;
     }
-
-
-    public void setBiocuratorID(String id){biocuratorID=id;}
-
-    public String getPathToAnnotationFolder() {
-        return pathToAnnotationFolder;
-    }
-
-    public void setPathToAnnotationFolder(String pathToAnnotationFolder) {
-        this.pathToAnnotationFolder = pathToAnnotationFolder;
-    }
-
-    public String getPathToLoincCoreTableFile() {
-        return pathToLoincCoreTableFile;
-    }
-    public String getPathToHpoOboFile() {
-        return pathToHpoOboFile;
-    }
-    public String getBiocuratorID() {return biocuratorID;}
-    public String getPathToHpoOwlFile(){ return pathToHpoOwlFile;}
-
 
     public void setFhirFilePath(String p) { pathToJsonFhirFile=p;}
     public String getPathToJsonFhirFile() { return pathToJsonFhirFile; }
@@ -323,8 +294,10 @@ public class Model {
 
     /** Parse the {@code hp.obo} file. This will initialize {@link #ontology}. */
     public void parseOntology() {
-        if (this.pathToHpoOboFile==null) {
-            logger.error("Attempt to parse hp.obo file with null path to file");
+        this.pathToHpoOboFile = settings.getHpoOboPath();
+        this.pathToHpoOwlFile = settings.getHpoOwlPath();
+        if (this.pathToHpoOwlFile==null) {
+            logger.error("Attempt to parse hp.owl file with null path to file");
             return;
         }
         HpoOntologyParser parser = new HpoOntologyParser(pathToHpoOwlFile);
@@ -344,10 +317,6 @@ public class Model {
 
     public Map<TermId, Term> getTermMap2() { return termmap2; }
 
-
-    public HpoOntology getOntology() {
-        return ontology;
-    }
 
     /** Write a few settings to a file in the user's .loinc2hpo directory. */
     public void writeSettings() {

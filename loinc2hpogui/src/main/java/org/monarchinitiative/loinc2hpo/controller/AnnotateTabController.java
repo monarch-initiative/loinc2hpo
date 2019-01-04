@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.kenai.jaffl.annotations.In;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -34,6 +35,7 @@ import javafx.stage.*;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
@@ -42,15 +44,15 @@ import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.NetPostException;
 import org.monarchinitiative.loinc2hpo.github.GitHubLabelRetriever;
 import org.monarchinitiative.loinc2hpo.github.GitHubPoster;
-import org.monarchinitiative.loinc2hpo.gui.GitHubPopup;
-import org.monarchinitiative.loinc2hpo.gui.Main;
-import org.monarchinitiative.loinc2hpo.gui.PopUps;
+import org.monarchinitiative.loinc2hpo.gui.*;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.Settings;
 import org.monarchinitiative.loinc2hpo.util.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
@@ -59,8 +61,6 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import org.monarchinitiative.loinc2hpo.gui.ColorUtils;
 
 
 @Singleton
@@ -72,6 +72,15 @@ public class AnnotateTabController {
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private Settings settings;
+
+    @Inject
+    private ResourceCollection resourceCollection;
+
+    @Inject
+    private AppResources appResources;
 
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
@@ -103,7 +112,7 @@ public class AnnotateTabController {
     private HPO_Class_Found hpo_drag_and_drop;
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
-    private ImmutableMap<String,Term> termmap;
+    private Map<String,Term> termmap;
     // TODO currently, this list is taking both HPO_CLass_Found and String at different parts of the app.
     @FXML private ListView<HPO_Class_Found> hpoListView;
     private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
@@ -400,8 +409,10 @@ public class AnnotateTabController {
         Platform.runLater(()->initHPOmodelButton(null));
         List<String> DEFAULTGROUPS = Arrays.asList(LOINCWAITING4NEWHPO, LOINCUNABLE2ANNOTATE, UNSPECIFIEDSPECIMEN, LOINC4QC);
         for(int i = 0; i < DEFAULTGROUPS.size(); i++) {
-            if (!model.getUserCreatedLoincListsColor().containsKey(DEFAULTGROUPS.get(i))) {
-                model.addOrUpdateUserCreatedLoincListColor(DEFAULTGROUPS.get(i), model.defaultColorList().get(i + 1));
+            if (!settings.getUserCreatedLoincListsColor()
+                    .containsKey(DEFAULTGROUPS.get(i))) {
+                model.addOrUpdateUserCreatedLoincListColor(DEFAULTGROUPS.get(i),
+                        model.defaultColorList().get(i + 1));
                 logger.info(DEFAULTGROUPS.get(i) + "::::" + model.defaultColorList().get(i + 1));
             }
         }
@@ -432,6 +443,7 @@ public class AnnotateTabController {
         logger.trace("Setting model in AnnotateTabeController");
         model=m;
         termmap = model.getTermMap();
+        //termmap = appResources.getTermnameTermMap();
     }
 
 
@@ -687,7 +699,7 @@ public class AnnotateTabController {
 
     @FXML private void initLOINCtable(ActionEvent e) {
         logger.trace("init LOINC table");
-        String loincCoreTableFile=model.getPathToLoincCoreTableFile();
+        String loincCoreTableFile = settings.getLoincCoreTablePath();
         if (loincCoreTableFile==null) {
             PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
             return;
@@ -715,7 +727,7 @@ public class AnnotateTabController {
 
     @FXML private void initHPOmodelButton(ActionEvent e){
 
-        String pathToHPO = this.model.getPathToHpoOwlFile();
+        String pathToHPO = settings.getHpoOwlPath();
         logger.info("pathToHPO: " + pathToHPO);
         //org.apache.jena.rdf.model.Model hpoModel = SparqlQuery.getOntologyModel(pathToHPO);
         //SparqlQuery.setHPOmodel(hpoModel);
@@ -804,8 +816,8 @@ public class AnnotateTabController {
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
-        if (model.getPathToAnnotationFolder() != null) {
-            chooser.setInitialDirectory(new File(model.getPathToAnnotationFolder()));
+        if (settings.getAnnotationFolder() != null) {
+            chooser.setInitialDirectory(new File(settings.getAnnotationFolder()));
         }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
@@ -931,7 +943,7 @@ public class AnnotateTabController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (observable != null) {
-                    final String colorString = model.getUserCreatedLoincListsColor().get(newValue);
+                    final String colorString = settings.getUserCreatedLoincListsColor().get(newValue);
                     if (colorString != null) {
                         final Color color = Color.web(colorString);
                         colorPicker.setValue(color);
@@ -954,7 +966,7 @@ public class AnnotateTabController {
             TextField name = new TextField(userCreatedLoincLists.get(i));
             gridPane.add(name, 0, i);
             TextField color = new TextField();
-            color.setBackground(new Background(new BackgroundFill(Color.web(model.getUserCreatedLoincListsColor().get(name.getText())), null, null)));
+            color.setBackground(new Background(new BackgroundFill(Color.web(settings.getUserCreatedLoincListsColor().get(name.getText())), null, null)));
             gridPane.add(color, 1, i);
             gridPaneColors.put(name.getText(), color);
             logger.trace("color" + color.getBackground().getFills().toString());
@@ -963,10 +975,10 @@ public class AnnotateTabController {
 
         colorPicker.setOnAction(t -> {
             model.addOrUpdateUserCreatedLoincListColor(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
-            logger.trace("new color: " + model.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
+            logger.trace("new color: " + settings.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
             gridPaneColors.get(loincGroupCombo.getSelectionModel().getSelectedItem()).setBackground(new Background(new BackgroundFill(colorPicker.getValue(), null, null)));
             changeColorLoincTableView();
-            model.writeSettings();
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         });
 
         root.getChildren().addAll(toolBar, gridPane);
@@ -1440,11 +1452,11 @@ public class AnnotateTabController {
 
         //add some meta data, such as date, created by, and version
         if (createAnnotationButton.getText().equals("Create annotation")) { //create for the first time
-            builder.setCreatedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+            builder.setCreatedBy(settings.getBiocuratorID() == null? MISSINGVALUE:settings.getBiocuratorID())
                 .setCreatedOn(LocalDateTime.now().withNano(0))
                 .setVersion(0.1);
         } else { //editing mode
-            builder.setLastEditedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+            builder.setLastEditedBy(settings.getBiocuratorID() == null? MISSINGVALUE:settings.getBiocuratorID())
                     .setLastEditedOn(LocalDateTime.now().withNano(0))
                     .setCreatedBy(model.getLoincAnnotationMap().get(loincCode).getCreatedBy())
                     .setCreatedOn(model.getLoincAnnotationMap().get(loincCode).getCreatedOn())
@@ -1677,7 +1689,7 @@ public class AnnotateTabController {
                                     .collect(Collectors.toList());
                             if (!inList.isEmpty()) {
                                 List<Color> colors = inList.stream()
-                                    .map(l -> model.getUserCreatedLoincListsColor().get(l))
+                                    .map(l -> settings.getUserCreatedLoincListsColor().get(l))
                                     .filter(Objects::nonNull)
                                     .map(Color::web)
                                     .collect(Collectors.toList());
@@ -1889,8 +1901,8 @@ public class AnnotateTabController {
         initializeGitHubLabelsIfNecessary();
         popup.setLabels(model.getGithublabels());
         popup.setupGithubUsernamePassword(githubUsername, githubPassword);
-        popup.setBiocuratorId(model.getBiocuratorID());
-        logger.debug("get biocurator id from model: " + model.getBiocuratorID());
+        popup.setBiocuratorId(settings.getBiocuratorID());
+        logger.debug("get biocurator id from model: " + settings.getBiocuratorID());
         popup.displayWindow(Main.getPrimarystage());
         String githubissue = popup.retrieveGitHubIssue();
         if (githubissue == null) {
@@ -1937,8 +1949,8 @@ public class AnnotateTabController {
         initializeGitHubLabelsIfNecessary();
         popup.setLabels(model.getGithublabels());
         popup.setupGithubUsernamePassword(githubUsername, githubPassword);
-        popup.setBiocuratorId(model.getBiocuratorID());
-        logger.debug("get biocurator id from model: " + model.getBiocuratorID());
+        popup.setBiocuratorId(settings.getBiocuratorID());
+        logger.debug("get biocurator id from model: " + settings.getBiocuratorID());
         popup.displayWindow(Main.getPrimarystage());
         String githubissue = popup.retrieveGitHubIssue();
         if (githubissue == null) {

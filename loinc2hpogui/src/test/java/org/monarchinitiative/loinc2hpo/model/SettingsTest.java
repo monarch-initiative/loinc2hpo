@@ -10,7 +10,7 @@ public class SettingsTest {
 
     @Test
     public void loadSettings() throws Exception {
-        settings = Settings.loadSettings(settingsPath);
+        Settings.loadSettings(settings, settingsPath);
         System.out.println(settings.getAnnotationFolder());
         System.out.println(settings.getBiocuratorID());
         System.out.println(settings.getHpoOboPath());
