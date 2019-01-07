@@ -394,7 +394,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -410,7 +410,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
@@ -450,7 +450,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -525,7 +525,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -642,11 +642,11 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -741,7 +741,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -761,7 +761,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -864,10 +864,10 @@
             <artifactId>xml-apis</artifactId>
             <version>1.4.01</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-model -->
+        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-appTempData -->
         <dependency>
             <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
+            <artifactId>maven-appTempData</artifactId>
             <version>3.5.2</version>
             <exclusions>
                 <exclusion>
@@ -894,10 +894,10 @@
             <artifactId>doxia-logging-api</artifactId>
             <version>1.8</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-decoration-model -->
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-decoration-appTempData -->
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-decoration-model</artifactId>
+            <artifactId>doxia-decoration-appTempData</artifactId>
             <version>1.8</version>
             <exclusions>
                 <exclusion>

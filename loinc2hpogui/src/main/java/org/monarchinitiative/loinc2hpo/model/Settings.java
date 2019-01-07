@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Singleton
 public class Settings {
 
     private static Logger logger = LoggerFactory.getLogger(Settings.class);

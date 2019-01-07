@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.gui.Loinc2HpoPlatform;
 
+import javax.inject.Singleton;
+
 import static org.junit.Assert.*;
 
 @Ignore
@@ -18,8 +20,10 @@ public class AppResourcesTest {
     @Inject
     static Injector injector = Guice.createInjector();
 
+    @Singleton
     static ResourceCollection resourceCollection = injector.getInstance(ResourceCollection.class);
 
+    @Singleton
     static Settings settings = injector.getInstance(Settings.class);
 
     static AppResources appResources;
@@ -28,7 +32,9 @@ public class AppResourcesTest {
     public static void setup() throws Exception {
         String settingsPath = Loinc2HpoPlatform.getPathToSettingsFile();
         Settings.loadSettings(settings, settingsPath);
+        System.out.println(settings);
         appResources = injector.getInstance(AppResources.class);
+        appResources.init();
     }
 
     @Test

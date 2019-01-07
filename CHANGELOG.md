@@ -118,7 +118,7 @@ Additional changes for this version
 
 * Prevent app from crashing when user's local HPO is outdated
 
-* Added classes to model patient phenopacket (phenotype only)
+* Added classes to appTempData patient phenopacket (phenotype only)
 * Refactored to use phenol 1.0.0
 
 ## v1.1.5
@@ -141,5 +141,5 @@ Additional changes for this version
 
 ## v1.1.7
 
-* Add algorithms to model patients
+* Add algorithms to appTempData patients
 

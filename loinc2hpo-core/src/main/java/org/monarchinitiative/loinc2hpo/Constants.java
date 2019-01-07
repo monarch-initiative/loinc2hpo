@@ -21,7 +21,7 @@ public class Constants {
     public static final String LOINCCategory = "LOINC CATEGORY";
 
     //folder for Data folder
-    public static final String DATAFOLDER = "DATA";
+    public static final String DATAFOLDER = "Data";
 
 
     public static final String LOINCSYSTEM = "http://loinc.org";

@@ -24,7 +24,7 @@ Follow the steps to start the curation process.
 
 - Import LOINC codes. If you have configured the app properly, you should be able to see there are contents in the LOINC table. You can always click **"Initialize Loinc Table"** on the left upper corner to import Loinc codes from the Loinc Core Table file. Try using the "Search" function to select some Loinc codes, e.g. try searching for "10449-7" and then "glucose" (You will get one result for "10449-7" and many results for "glucose").
 
-- Import HPO. Click "Initialize HPO model" on the left upper corner to import all HPO terms to the app. If you configured the app properly, this will automatically run when you start the app.
+- Import HPO. Click "Initialize HPO appTempData" on the left upper corner to import all HPO terms to the app. If you configured the app properly, this will automatically run when you start the app.
 
 - After completing the above steps, you should be able to start annotating LOINC codes!
   - Go to the Loinc Table in the bottom half of the tab, and choose the LOINC code that you want to annotate. When you click the **"Auto Query"** button or double click on the LOINC code, the app will automatically find candidate HPO terms for you, listed from the most likely term to the least likely.

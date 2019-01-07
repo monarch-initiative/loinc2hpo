@@ -11,8 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -21,12 +19,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckComboBox;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 public class GitHubPopup {
 
     private static final Logger logger = LogManager.getLogger();
@@ -165,7 +163,7 @@ public class GitHubPopup {
     }
 
     /** This is used if the user has alreay entered their GitHub name and password (they are stored in the
-     * {@link org.monarchinitiative.loinc2hpo.model.Model} object.
+     * {@link AppTempData} object.
      * @param ghuname
      * @param ghpword
      */

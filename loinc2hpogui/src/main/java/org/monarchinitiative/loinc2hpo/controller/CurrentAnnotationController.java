@@ -22,7 +22,8 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
 
 import java.util.Map;
 
@@ -30,13 +31,14 @@ import java.util.Map;
 public class CurrentAnnotationController{
     private static final Logger logger = LogManager.getLogger();
 
-    private Model model;
+    private AppTempData appTempData;
 
     private LoincEntry currentLoincEntry = null;
     private LOINC2HpoAnnotationImpl currentAnnotation = null;
 
     @Inject AnnotateTabController annotateTabController;
     @Inject MainController mainController;
+    @Inject AppResources appResources;
 
     @FXML private BorderPane currentAnnotationPane;
 
@@ -114,13 +116,13 @@ public class CurrentAnnotationController{
 
     private void populateTables(){
 
-        if (model == null) {
-            logger.error("model is null.");
+        if (appTempData == null) {
+            logger.error("appTempData is null.");
             return;
         }
 
-        this.currentAnnotation = model.getCurrentAnnotation();
-        LoincEntry currentLoincEntry = model.getLoincEntryMap().get(currentAnnotation.getLoincId());
+        this.currentAnnotation = appTempData.getCurrentAnnotation();
+        LoincEntry currentLoincEntry = appResources.getLoincEntryMap().get(currentAnnotation.getLoincId());
         annotationTitle.setText(String.format("Annotations for Loinc: %s[%s]", currentLoincEntry.getLOINC_Number(), currentLoincEntry.getLongName()));
 
 
@@ -166,13 +168,13 @@ public class CurrentAnnotationController{
 
     }
 
-    public void setModel(Model model) {
-        if (model == null) {
-            logger.trace("model for CurrentAnnotationController is set to null");
+    public void setAppTempData(AppTempData appTempData) {
+        if (appTempData == null) {
+            logger.trace("appTempData for CurrentAnnotationController is set to null");
             return;
         }
-        this.model = model;
-        logger.info("model for CurrentAnnotationController is set");
+        this.appTempData = appTempData;
+        logger.info("appTempData for CurrentAnnotationController is set");
     }
 
 

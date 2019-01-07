@@ -165,4 +165,23 @@ public class ResourceCollection {
         return this.hpo;
     }
 
+    public String getLoincEntryPath() {
+        return loincEntryPath;
+    }
+
+    public String getHpoOboPath() {
+        return hpoOboPath;
+    }
+
+    public String getHpoOwlPath() {
+        return hpoOwlPath;
+    }
+
+    public String getAnnotationMapPath() {
+        return annotationMapPath;
+    }
+
+    public String getLoincPanelPath() {
+        return loincPanelPath;
+    }
 }

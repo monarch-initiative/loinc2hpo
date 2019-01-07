@@ -9,9 +9,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpo.model.Model;
-
-import java.io.File;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
 
 @Singleton
 /**
@@ -21,7 +19,7 @@ import java.io.File;
 public class SetupTabController {
     private static final Logger logger = LogManager.getLogger();
 
-    private Model model=null;
+    private AppTempData appTempData =null;
 
     @FXML private TextFlow textflow;
 
@@ -31,8 +29,8 @@ public class SetupTabController {
         initTextFlow();
     }
 
-    public void setModel(Model m) {
-        model=m;
+    public void setAppTempData(AppTempData m) {
+        appTempData =m;
     }
 
 

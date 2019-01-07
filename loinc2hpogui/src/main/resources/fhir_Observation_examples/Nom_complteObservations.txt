@@ -85,7 +85,7 @@
       {
         "system": "http://loinc.org",
         "code": "10294-7",
-        "display": "Tube or drain Vendor model number",
+        "display": "Tube or drain Vendor appTempData number",
         "userSelected": false
       }
     ],
@@ -462,7 +462,7 @@
       {
         "system": "http://loinc.org",
         "code": "10297-0",
-        "display": "Urine tube Vendor model number",
+        "display": "Urine tube Vendor appTempData number",
         "userSelected": false
       }
     ],

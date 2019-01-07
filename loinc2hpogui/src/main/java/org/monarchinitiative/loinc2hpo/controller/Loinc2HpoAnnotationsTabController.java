@@ -2,13 +2,11 @@ package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.kenai.jaffl.annotations.In;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
@@ -22,7 +20,8 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.gui.PopUps;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory.SerializationFormat;
 
 import java.io.*;
@@ -32,12 +31,14 @@ import java.util.Map;
 @Singleton
 public class Loinc2HpoAnnotationsTabController {
     private static final Logger logger = LogManager.getLogger();
-    private Model model = null;
+    private AppTempData appTempData = null;
     /** Reference to the second tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject
     private AnnotateTabController annotateTabController;
     @Inject
     private MainController mainController;
+    @Inject
+    private AppResources appResources;
 
     /** This is the message users will see if they open the analysis tab before they have entered the genes
      * and started the analysis of the viewpoints. */
@@ -61,8 +62,8 @@ public class Loinc2HpoAnnotationsTabController {
 
     //@FXML private WebView wview;
 
-    public void setModel(Model m) {
-        model = m;
+    public void setAppTempData(AppTempData m) {
+        appTempData = m;
     }
 
     @FXML private void initialize() {
@@ -106,7 +107,7 @@ public class Loinc2HpoAnnotationsTabController {
         String html = "<html><body>\n" +
                 inlineCSS() +
                 "<h1>LOINC2HPO Biocuration: Summary</h1>";
-        if (model!=null) {
+        if (appTempData !=null) {
             return html + getLoincAnnotationData() + "</body></html>";
         } else {
             return html + "</body></html>";
@@ -119,8 +120,8 @@ public class Loinc2HpoAnnotationsTabController {
     private String getLoincAnnotationData() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(String.format("<li>Number of HPO Terms: %d</li>",model.getOntologyTermCount()));
-        sb.append(String.format("<li>Number of annotation LOINC codes: %d</li>",model.getLoincAnnotationCount()));
+        sb.append(String.format("<li>Number of HPO Terms: %d</li>",appResources.getHpo().countNonObsoleteTerms()));
+        sb.append(String.format("<li>Number of annotation LOINC codes: %d</li>",appResources.getLoincAnnotationMap().size()));
         return String.format("<ul>%s</ul>",sb.toString());
     }
 
@@ -144,7 +145,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
     public void refreshTable() {
-        Map<LoincId,LOINC2HpoAnnotationImpl> testmap = model.getLoincAnnotationMap();
+        Map<LoincId,LOINC2HpoAnnotationImpl> testmap = appResources.getLoincAnnotationMap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -156,7 +157,7 @@ public class Loinc2HpoAnnotationsTabController {
      * This method set up the filename for annotations data and call the following function to import data
      */
     public void importLoincAnnotation() {
-        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        logger.debug("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
 
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TSV files (*.txt)", "*.tsv"));
@@ -167,9 +168,10 @@ public class Loinc2HpoAnnotationsTabController {
 
             try {
                 Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
-                        LoincAnnotationSerializationFactory.parseFromFile(path, model.getTermMap2(),
+                        LoincAnnotationSerializationFactory.parseFromFile(path,
+                                appResources.getTermidTermMap(),
                                 SerializationFormat.TSVSingleFile);
-                model.getLoincAnnotationMap().putAll(annotationMap);
+                appResources.getLoincAnnotationMap().putAll(annotationMap);
                 refreshTable();
             } catch (Exception e) {
                 logger.error("ERROR!!!!!!!!");
@@ -178,7 +180,7 @@ public class Loinc2HpoAnnotationsTabController {
 
 
         }
-        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        logger.debug("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
         refreshTable();
 
         annotateTabController.changeColorLoincTableView();
@@ -187,20 +189,20 @@ public class Loinc2HpoAnnotationsTabController {
 
     public void importLoincAnnotation(String pathToOpen) {
 
-        logger.debug("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        logger.debug("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
 
         /**
         //if using the LoincAnnotationSerializerToTSVSingleFile for serialization
         String basicAnnotationsFilePath = pathToOpen + File.separator + Constants.TSVSeparateFilesBasic;
-        LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
-        LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
+        LoincAnnotationSerializationFactory.setLoincEntryMap(appTempData.getLoincEntryMap());
+        LoincAnnotationSerializationFactory.setHpoTermMap(appTempData.getTermMap2());
         if (new File(basicAnnotationsFilePath).exists()) {
             try {
                 //import basic annotations
                 Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap =
-                        LoincAnnotationSerializationFactory.parseFromFile(pathToOpen, model.getTermMap2(),
+                        LoincAnnotationSerializationFactory.parseFromFile(pathToOpen, appTempData.getTermMap2(),
                                 LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile);
-                model.getLoincAnnotationMap().putAll(deserializedMap);
+                appTempData.getLoincAnnotationMap().putAll(deserializedMap);
             } catch (Exception e) {
                 logger.error("error during deserialization");
             }
@@ -218,9 +220,9 @@ public class Loinc2HpoAnnotationsTabController {
 
             logger.trace("open session from " + pathToOpen);
             try {
-                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, model.getTermMap2(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
                 logger.info("annotationMap size (111111): " + annotationMap.size());
-                model.getLoincAnnotationMap().putAll(annotationMap);
+                appResources.getLoincAnnotationMap().putAll(annotationMap);
             } catch (Exception e) {
                 Platform.runLater(new Runnable() {
                     @Override
@@ -242,7 +244,7 @@ public class Loinc2HpoAnnotationsTabController {
 
         }
 
-        logger.info("Num of annotations in model: " + model.getLoincAnnotationMap().size());
+        logger.info("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
         refreshTable();
         annotateTabController.changeColorLoincTableView();
     }
@@ -252,12 +254,12 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML
     private void handleReview(ActionEvent event) {
 
-        if (model.getLoincEntryMap() == null || model.getLoincEntryMap().isEmpty()) {
+        if (appResources.getLoincEntryMap() == null || appResources.getLoincEntryMap().isEmpty()) {
             PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
             return;
         }
-        if (model.getTermMap() == null || model.getTermMap().isEmpty()) {
-            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
+        if (appResources.getTermidTermMap() == null || appResources.getTermidTermMap().isEmpty()) {
+            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO appTempData\" first.", "HPO not imported");
             return;
         }
         LOINC2HpoAnnotationImpl selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
@@ -271,12 +273,12 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML
     private void handleEdit(ActionEvent event) {
 
-        if (model.getLoincEntryMap() == null || model.getLoincEntryMap().isEmpty()) {
+        if (appResources.getLoincEntryMap() == null || appResources.getLoincEntryMap().isEmpty()) {
             PopUps.showInfoMessage("The loinc number is not found. Try clicking \"Initialize LOINC Table\"", "Loinc Not Found");
             return;
         }
-        if (model.getTermMap() == null || model.getTermMap().isEmpty()) {
-            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO model\" first.", "HPO not imported");
+        if (appResources.getTermidTermMap() == null || appResources.getTermidTermMap().isEmpty()) {
+            PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO appTempData\" first.", "HPO not imported");
             return;
         }
 
@@ -298,8 +300,8 @@ public class Loinc2HpoAnnotationsTabController {
                     .getSelectedItem();
             if (toDelete != null) {
                 loincAnnotationTableView.getItems().remove(toDelete);
-                model.getLoincAnnotationMap().remove(toDelete.getLoincId());
-                model.setSessionChanged(true);
+                appResources.getLoincAnnotationMap().remove(toDelete.getLoincId());
+                appTempData.setSessionChanged(true);
             }
         }
         event.consume();
@@ -323,9 +325,9 @@ public class Loinc2HpoAnnotationsTabController {
 
             if (!f.exists() || overwrite) {
                 try {
-                    LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
-                    LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
-                    LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(),
+                    LoincAnnotationSerializationFactory.setHpoTermMap(appResources.getTermidTermMap());
+                    LoincAnnotationSerializationFactory.setLoincEntryMap(appResources.getLoincEntryMap());
+                    LoincAnnotationSerializationFactory.serializeToFile(appResources.getLoincAnnotationMap(),
                             LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, path);
                 } catch (IOException e1) {
                     PopUps.showWarningDialog("Error message",
@@ -372,7 +374,7 @@ public class Loinc2HpoAnnotationsTabController {
     }
 
     protected void clear() {
-        model.loincAnnotationMap.clear();
+        appResources.getLoincAnnotationMap().clear();
         loincAnnotationTableView.getItems().clear();
     }
 

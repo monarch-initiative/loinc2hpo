@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.model;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.codehaus.plexus.logging.LoggerManager;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -12,7 +13,10 @@ import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -21,9 +25,9 @@ import java.util.stream.Collectors;
 /**
  * The class manages all resources required for this app.
  */
-@Singleton
 public class AppResources {
 
+    private final static Logger logger = LoggerFactory.getLogger(AppResources.class);
     private HpoOntology hpo;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
@@ -39,7 +43,9 @@ public class AppResources {
     public AppResources(ResourceCollection resourceCollection, Settings settings) {
         this.resourceCollection = resourceCollection;
         this.settings = settings;
+    }
 
+    public void init() {
         this.resourceCollection.setHpoOboPath(settings.getHpoOboPath());
         this.resourceCollection.setHpoOwlPath(settings.getHpoOwlPath());
         this.resourceCollection.setLoincEntryPath(settings.getLoincCoreTablePath());
@@ -50,10 +56,13 @@ public class AppResources {
         this.resourceCollection.setAnnotationMapPath(annotationFilePath);
     }
 
-    private void init() {
-
+    public ResourceCollection getResourceCollection() {
+        return resourceCollection;
     }
 
+    public Settings getSettings() {
+        return settings;
+    }
 
     public HpoOntology getHpo() {
 
