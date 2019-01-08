@@ -63,23 +63,14 @@ public class MainController {
     //  path to auto-saved folder
     private BooleanProperty configurationComplete = new SimpleBooleanProperty
             (false);
-    private BooleanProperty hpoOwlReady = new SimpleBooleanProperty(false);
-    private BooleanProperty hpoOboReady = new SimpleBooleanProperty(false);
-    private BooleanProperty loincCoreTableReady = new SimpleBooleanProperty(false);
-    private BooleanProperty auto_save_folderReady = new SimpleBooleanProperty(false);
 
-    //The following is the data that needs to be tracked
-    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap_Copy;
-    private Map<String, Set<LoincId>> loincCategories_Copy;
-
-    //@Inject private SetupTabController setupTabController;
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
     @Inject private Injector injector;
     @Inject private AppTempData appTempData;
     //manages all resources
-    @Inject private ResourceCollection resources;
+
     @Inject private Settings settings;
     private AppResources appResources;
 
@@ -114,7 +105,7 @@ public class MainController {
         //once configure is done, enable all tabs
         configurationComplete.addListener((observable, oldValue, newValue) -> {
             logger.info(String.format("configurationComplete state change. old: %s; new; %s", oldValue, newValue));
-            if (newValue) {
+            if (observable != null && newValue) {
                 logger.info("configuration is completed");
                 annotateTabButton.setDisable(false);
                 Loinc2HPOAnnotationsTabButton.setDisable(false);
@@ -125,16 +116,12 @@ public class MainController {
                 appResources.init();
 
                 annotateTabController.setAppTempData(appTempData);
-                //currentAnnotationController.setAppTempData(appTempData);
                 loinc2HpoAnnotationsTabController.setAppTempData(appTempData);
                 loinc2HPOConversionTabController.setAppTempData(appTempData);
 
-                logger.info("loinc core table: " + settings.getLoincCoreTablePath());
                 annotateTabController.defaultStartUp();
-                defaultStartup();
-                if (settings.getAnnotationFolder() != null) {
-                    openSession(settings.getAnnotationFolder());
-                }
+                openSession(settings.getAnnotationFolder());
+
             }
         });
 
@@ -143,18 +130,13 @@ public class MainController {
 //        appTempData.setPathToSettingsFile(settingsFile.getAbsolutePath());
         try {
             Settings.loadSettings(settings, settingsFile.getPath());
-            logger.info("settings: " + settings.hashCode());
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-        //appTempData.inputSettings(settingsFile.getAbsolutePath());
+
         configurationComplete.set(settings.isCompleteProperty().getValue());
         configurationComplete.bind(settings.isCompleteProperty());
-//        hpoOboReady.bind(settings.hpoOboPathProperty().isNotEmpty());
-//        hpoOwlReady.bind(settings.hpoOwlPathProperty().isNotEmpty());
-//        loincCoreTableReady.bind(settings.loincCoreTablePathProperty().isNotEmpty());
-//        auto_save_folderReady.bind(settings.annotationFolderProperty().isNotEmpty());
 
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
@@ -189,14 +171,6 @@ public class MainController {
         clearMenu.setVisible(false);
         updateHpoButton.setVisible(false);
     }
-
-    private void defaultStartup() {
-        if (settings.getAnnotationFolder() != null) {
-            openSession(settings.getAnnotationFolder());
-        }
-
-    }
-
 
     public void saveBeforeExit() {
         logger.trace("SaveBeforeExit() is called");

@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -83,7 +84,11 @@ public class AnnotateTabController {
     @Inject private MainController mainController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
+    //observable map for LOINC entries
+    private ObservableMap<LoincId, LoincEntry> loincMap = FXCollections.observableHashMap();
 
+    //observable map for annotations
+    private ObservableMap<LoincId, LOINC2HpoAnnotationImpl> annotationsMap = FXCollections.observableHashMap();
 
     //private final Stage primarystage;
     @FXML private Button initLOINCtableButton;
@@ -105,7 +110,7 @@ public class AnnotateTabController {
     @FXML private TextField annotationTextFieldRight;
     @FXML private CheckBox inverseChecker;
     @FXML private Button addCodedAnnotationButton;
-    private HPO_Class_Found hpo_drag_and_drop;
+
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
     private Map<String,Term> termmap;
@@ -398,6 +403,7 @@ public class AnnotateTabController {
                 }
             }
         });
+        initTableStructure();
     }
 
     void defaultStartUp() {
@@ -412,8 +418,6 @@ public class AnnotateTabController {
                 logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
             }
         }
-        logger.info("default colors in appTempData:");
-        //appTempData.defaultColorList().forEach(System.out::println);
         logger.trace("default color for LOINC lists is set");
     }
 
@@ -698,19 +702,14 @@ public class AnnotateTabController {
     }
 
     private void initLOINCtable() {
-        logger.trace("init LOINC table");
-        String loincCoreTableFile = settings.getLoincCoreTablePath();
-        if (loincCoreTableFile==null) {
-            PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
-            return;
-        }
-        this.loincmap = LoincEntry.getLoincEntryList(loincCoreTableFile);
-        int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
-        List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
+
+        this.loincmap = ImmutableMap.copyOf(appResources.getLoincEntryMap());
+        //int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
+        //List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
+        List<LoincEntry> lst = loincmap.values().asList();
         loincTableView.getItems().clear(); // remove any previous entries
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        initTableStructure();
 
         if (this.loincmap.isEmpty()) {
             Platform.runLater(() -> {
