@@ -76,7 +76,6 @@ public class MainController {
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
-    @Inject private CurrentAnnotationController currentAnnotationController;
     @Inject private Injector injector;
     @Inject private AppTempData appTempData;
     //manages all resources
@@ -126,9 +125,10 @@ public class MainController {
                 appResources.init();
 
                 annotateTabController.setAppTempData(appTempData);
-                currentAnnotationController.setAppTempData(appTempData);
+                //currentAnnotationController.setAppTempData(appTempData);
                 loinc2HpoAnnotationsTabController.setAppTempData(appTempData);
                 loinc2HPOConversionTabController.setAppTempData(appTempData);
+
                 logger.info("loinc core table: " + settings.getLoincCoreTablePath());
                 annotateTabController.defaultStartUp();
                 defaultStartup();

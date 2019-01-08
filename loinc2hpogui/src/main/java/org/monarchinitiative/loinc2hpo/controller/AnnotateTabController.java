@@ -47,7 +47,7 @@ import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
+import org.monarchinitiative.loinc2hpo.model.AdvancedAnnotationTableComponent;
 import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.model.Settings;
@@ -58,6 +58,7 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -132,11 +133,11 @@ public class AnnotateTabController {
 
     @FXML private Button modeButton;
     @FXML private TitledPane advancedAnnotationTitledPane;
-    @FXML private TableView<AdvantagedAnnotationTableComponent> advancedAnnotationTable;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationSystem;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationCode;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationHpo;
-    private ObservableList<AdvantagedAnnotationTableComponent> tempAdvancedAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvancedAnnotationTableComponent> advancedAnnotationTable;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationSystem;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationCode;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationHpo;
+    private ObservableList<AdvancedAnnotationTableComponent> tempAdvancedAnnotations = FXCollections.observableArrayList();
 
     //candidate HPO classes found by Sparql query
     //@FXML private TableView<HPO_Class_Found> candidateHPOList;
@@ -177,7 +178,7 @@ public class AnnotateTabController {
     private BooleanProperty isPresentOrd = new SimpleBooleanProperty(false);
 
 
-    @Inject private CurrentAnnotationController currentAnnotationController;
+    //@Inject private CurrentAnnotationController currentAnnotationController;
 
     @FXML private void initialize() {
         if (appTempData != null) {   //weird line. appTempData is set by main controller; this line never runs
@@ -1509,7 +1510,7 @@ public class AnnotateTabController {
             //popup an alert
             issueDetected = true;
             userConfirmed = PopUps.getBooleanFromUser("Are you sure you want to create an annotation without any HPO terms?",
-                    "AdvantagedAnnotationTableComponent without HPO terms", "No HPO Alert");
+                    "AdvancedAnnotationTableComponent without HPO terms", "No HPO Alert");
         }
         */
 
@@ -1804,7 +1805,7 @@ public class AnnotateTabController {
 
         if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
 
-        AdvantagedAnnotationTableComponent annotation = null;
+        AdvancedAnnotationTableComponent annotation = null;
         String system = annotationTextFieldLeft.getText().trim().toLowerCase();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
         Code code = null;
@@ -1815,7 +1816,7 @@ public class AnnotateTabController {
         Term hpoterm = appResources.getTermnameTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -1831,7 +1832,7 @@ public class AnnotateTabController {
         event.consume();
         logger.debug("user wants to delete an annotation");
         logger.debug("tempAdvancedAnnotations size: " + tempAdvancedAnnotations.size());
-        AdvantagedAnnotationTableComponent selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
+        AdvancedAnnotationTableComponent selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
         if (selectedToDelete != null) {
             tempAdvancedAnnotations.remove(selectedToDelete);
         }
@@ -2024,22 +2025,30 @@ public class AnnotateTabController {
     @FXML
     protected void showAllAnnotations(ActionEvent event) {
         event.consume();
+        LoincEntry loincEntry2Review;
+        LOINC2HpoAnnotationImpl annotation2Review;
 
-        LoincEntry loincEntry2Review = getLoincIdSelected();
+        loincEntry2Review = loincTableView.getSelectionModel().getSelectedItem();
         if (loincEntry2Review == null) {
             PopUps.showInfoMessage("There is no annotation to review. Select a loinc entry and try again",
                     "No content to show");
             return;
-        }
-        if (appResources.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()) != null) {
-            logger.debug("The annotation to review is already added to the annotation map");
-            //currentAnnotationController.setCurrentAnnotation(appTempData.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
-            appTempData.setCurrentAnnotation(appResources.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
         } else {
+            annotation2Review = appResources.getLoincAnnotationMap().
+                    get(loincEntry2Review.getLOINC_Number());
+        }
+
+
+        if (annotation2Review == null) {
             logger.debug("currently selected loinc has no annotation. A temporary annotation is being created for " + loincEntry2Review.getLOINC_Number());
             PopUps.showInfoMessage("Currently selected loinc code has not been annotated.",
                     "No content to show");
             return;
+
+        } else {
+            logger.debug("The annotation to review is already added to the annotation map");
+
+            appTempData.setCurrentAnnotation(appResources.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
             //currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
             //appTempData.setCurrentAnnotation(createCurrentAnnotation());
         }
@@ -2055,17 +2064,22 @@ public class AnnotateTabController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/currentAnnotation.fxml"));
-
-//            This sets the same controller factory (Callback) as above using method reference syntax (in single line)
-//            fxmlLoader.setControllerFactory(injector::getInstance);
-
             fxmlLoader.setControllerFactory(// Callback
                  (clazz) -> { return injector.getInstance(clazz); }
             );
 
+            CurrentAnnotationController currentAnnotationController = injector.getInstance(CurrentAnnotationController.class);
+            currentAnnotationController.setData(loincEntry2Review, annotation2Review);
+            //tell the new window how to handle "edit" button
+            Consumer<LOINC2HpoAnnotationImpl> edithook = (t) -> {
+                editCurrentAnnotation(t);
+                mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
+                window.close();
+            };
+            currentAnnotationController.setEditHook(edithook);
+
             root = fxmlLoader.load();
             Scene scene = new Scene(root, 800, 600);
-
             window.setScene(scene);
             window.show();
 
@@ -2119,7 +2133,7 @@ public class AnnotateTabController {
         //remember: advanced annotation == not using internal codes
         for (Map.Entry<Code, HpoTerm4TestOutcome> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
             if (!entry.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM)) {
-                tempAdvancedAnnotations.add(new AdvantagedAnnotationTableComponent(entry.getKey(), entry.getValue()));
+                tempAdvancedAnnotations.add(new AdvancedAnnotationTableComponent(entry.getKey(), entry.getValue()));
             }
         }
 
