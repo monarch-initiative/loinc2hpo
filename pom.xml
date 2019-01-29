@@ -14,9 +14,9 @@
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
         <ontolib.version>0.3</ontolib.version>
-        <phenol.version>1.3.1-SNAPSHOT</phenol.version>
+        <phenol.version>1.3.2</phenol.version>
         <junit.version>4.12</junit.version>
-        <guava.version>23.0</guava.version>
+        <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>3.6.0</hapi-fhir.version>
     </properties>
@@ -25,10 +25,6 @@
         <module>loinc2hpo-core</module>
         <module>loinc2hpogui</module>
     </modules>
-
-
-
-
 
 
     <dependencies>
@@ -91,7 +87,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <version>1.11</version>
         </dependency>
 
 
@@ -138,6 +134,10 @@
                 <exclusion>
                     <groupId>org.jgrapht</groupId>
                     <artifactId>jgrapht-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.yaml</groupId>
+                    <artifactId>snakeyaml</artifactId>
                 </exclusion>
                 <!--<exclusion>-->
                     <!--<groupId>net.sourceforge.owlapi</groupId>-->
@@ -220,6 +220,10 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -398,7 +402,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>commons-collections</groupId>
@@ -414,11 +418,19 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
                     <artifactId>maven-settings</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-decoration-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-model</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -454,11 +466,15 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-component-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-model</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -529,11 +545,15 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-component-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-decoration-model</artifactId>
                 </exclusion>
 
             </exclusions>
@@ -576,7 +596,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -646,11 +666,11 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
-                    <artifactId>doxia-decoration-model</artifactId>
+                    <artifactId>doxia-decoration-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -659,6 +679,14 @@
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-component-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven.doxia</groupId>
+                    <artifactId>doxia-decoration-model</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-model</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -745,7 +773,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
-                    <artifactId>maven-model</artifactId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -762,6 +790,10 @@
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
                     <artifactId>plexus-interpolation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.maven</groupId>
+                    <artifactId>maven-appTempData</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
@@ -784,6 +816,10 @@
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
                     <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -839,6 +875,25 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-decoration-model -->
+        <dependency>
+            <groupId>org.apache.maven.doxia</groupId>
+            <artifactId>doxia-decoration-model</artifactId>
+            <version>1.8.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-component-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -868,18 +923,6 @@
             <artifactId>xml-apis</artifactId>
             <version>1.4.01</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-model -->
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>3.5.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
         <dependency>
             <groupId>commons-collections</groupId>
@@ -897,22 +940,6 @@
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-logging-api</artifactId>
             <version>1.8</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-decoration-model -->
-        <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-decoration-model</artifactId>
-            <version>1.8</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-utils</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.plexus</groupId>
-                    <artifactId>plexus-component-annotations</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-component-annotations -->
         <dependency>
@@ -953,9 +980,18 @@
             <!--<artifactId>poi-ooxml</artifactId>-->
             <!--<version>3.17</version>-->
         <!--</dependency>-->
-
-
-
+        <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-model -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.6.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.plexus</groupId>
+                    <artifactId>plexus-utils</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -1212,7 +1248,6 @@
                             <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
                         </manifest>
                     </archive>
-
                 </configuration>
                 <executions>
                     <execution>

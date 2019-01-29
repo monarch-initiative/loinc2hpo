@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpo.io;
+package org.monarchinitiative.loinc2hpo.gui;
 
 
 import javafx.scene.control.Alert;
@@ -40,43 +40,13 @@ public class Loinc2HpoPlatform {
         }
     }
 
-    /**
-     * Get the absolute path to the viewpoint file, which is a serialized Java file (suffix {@code .ser}).
-     * @param basename The plain viewpoint name, e.g., human37cd4
-     * @return the absolute path,e.g., /home/user/data/immunology/human37cd4.ser
-     */
-    public static String getAbsoluteProjectPath(String basename) {
-        File dir = getLOINC2HPODir();
-        return new String(dir + File.separator + basename + ".ser");
-    }
-
-
-    public static String getLocalHpoOboPath() {
-        File dir = getLOINC2HPODir();
-        return new String(dir + File.separator + "hp.obo");
-    }
-
-    public static String getLocalHpoOwlPath() {
-        File dir = getLOINC2HPODir();
-        return new String(dir + File.separator + "hp.owl");
-    }
-
-    /**
-     * Get the absolute path to the log file.
-     * @return the absolute path,e.g., /home/user/.vpvgui/vpvgui.log
-     */
-    public static String getAbsoluteLogPath() {
-        File dir = getLOINC2HPODir();
-        return new String(dir + File.separator +  "loinc2hpo.log");
-    }
-
     /** Return the absolute path to the settings file, which is kept in the .loinc2hpo directory in the
      * user's home directory. For simplicity assume one user per account etc. The file is a simple key:value file.
      * @return
      */
     public static String getPathToSettingsFile() {
         File dir = getLOINC2HPODir();
-        return new String(dir + File.separator + "loinc2hpo.settings");
+        return dir + File.separator + "loinc2hpo.settings";
     }
 
     /* Based on this post: http://www.mkyong.com/java/how-to-detect-os-in-java-systemgetpropertyosname/ */
@@ -98,9 +68,6 @@ public class Loinc2HpoPlatform {
         return figureOutPlatform().equals(CurrentPlatform.OSX);
     }
 
-
-
-
     private enum CurrentPlatform {
         LINUX("Linux"),
         WINDOWS("Windows"),
@@ -114,5 +81,4 @@ public class Loinc2HpoPlatform {
         @Override
         public String toString() { return this.name; }
     }
-
 }

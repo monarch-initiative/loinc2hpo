@@ -20,20 +20,20 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.fhir.FhirServer;
 import org.monarchinitiative.loinc2hpo.fhir.FhirServerDstu3Impl;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
 
 import java.util.List;
 
 public class FhirServerPopup {
 
     private static final Logger logger = LogManager.getLogger();
-    private Model model;
+    private AppTempData appTempData;
     private String base;
     private FhirServer fhirServerl;
     private List<Patient> patientList;
 
-    public FhirServerPopup(Model model) {
-        this.model = model;
+    public FhirServerPopup(AppTempData appTempData) {
+        this.appTempData = appTempData;
     }
 
     public void displayWindow() {
@@ -52,12 +52,12 @@ public class FhirServerPopup {
         baseUrlHBox.setSpacing(10);
         Label baseUrl = new Label("base URL");
         ComboBox<String> urlSelections = new ComboBox<>();
-        urlSelections.getItems().addAll(model.getFhirServers());
+        urlSelections.getItems().addAll(appTempData.getFhirServers());
         urlSelections.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (observable != null && newValue != null) {
-                    model.setFhirServer(newValue);
+                    appTempData.setFhirServer(newValue);
                     fhirServerl = new FhirServerDstu3Impl(newValue);
                 } else {
                     //do nothing

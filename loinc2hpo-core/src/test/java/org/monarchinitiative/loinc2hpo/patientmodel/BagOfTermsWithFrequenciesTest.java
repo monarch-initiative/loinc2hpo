@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.monarchinitiative.phenol.ontology.data.TermPrefix;
 
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public class BagOfTermsWithFrequenciesTest {
 
     public static Ontology hpo;
     private final String patientId = "patient001";
-    private final TermPrefix HP_PREFIX = new TermPrefix("HP");
+    private final String HP_PREFIX = "HP";
 
     @BeforeClass
     public static void setup() throws Exception {

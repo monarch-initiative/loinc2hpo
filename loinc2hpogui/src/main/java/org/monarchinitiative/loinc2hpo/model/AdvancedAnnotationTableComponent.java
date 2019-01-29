@@ -7,7 +7,7 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
  * This class is for data visualization in GUI only. It simply keeps a record of a code and its corresponding hpoTerm4TestOutcome term
  * wrapped in HpoTerm4TestOutcome
  */
-public class AdvantagedAnnotationTableComponent {
+public class AdvancedAnnotationTableComponent {
     private Code code;
     private String hpo_term; //this is the hpoTerm4TestOutcome term name. No need for this one because it can be accessed from the following
     private HpoTerm4TestOutcome hpoTerm4TestOutcome;
@@ -21,14 +21,14 @@ public class AdvantagedAnnotationTableComponent {
     }
 
     @Deprecated
-    public AdvantagedAnnotationTableComponent(Code code, String hpo_term, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
+    public AdvancedAnnotationTableComponent(Code code, String hpo_term, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
         this.code = code;
         this.hpo_term = hpo_term;
         this.hpoTerm4TestOutcome = hpoTerm4TestOutcome;
     }
 
     //This is the preferred constructor.
-    public AdvantagedAnnotationTableComponent(Code code, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
+    public AdvancedAnnotationTableComponent(Code code, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
         this.code = code;
         if (hpoTerm4TestOutcome != null )
             this.hpo_term = hpoTerm4TestOutcome.getHpoTerm().getName();

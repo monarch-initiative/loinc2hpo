@@ -1,18 +1,16 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-//import javassist.CodeConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
@@ -21,47 +19,46 @@ import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AdvancedAnnotationTableComponent;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Singleton
 public class CurrentAnnotationController{
     private static final Logger logger = LogManager.getLogger();
 
-    private Model model;
-
-    private LoincEntry currentLoincEntry = null;
-    private LOINC2HpoAnnotationImpl currentAnnotation = null;
-
-    @Inject AnnotateTabController annotateTabController;
-    @Inject MainController mainController;
+    private BooleanProperty dataReady;
+    private LoincEntry currentLoinc;
+    private LOINC2HpoAnnotationImpl currentAnnotation;
 
     @FXML private BorderPane currentAnnotationPane;
 
     @FXML private Label annotationTitle;
     @FXML private TextField internalCodingSystem;
 
-    private ObservableList<AdvantagedAnnotationTableComponent> internalCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<AdvantagedAnnotationTableComponent> internalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeInternalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoInternalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedInternalTableview;
+    private ObservableList<AdvancedAnnotationTableComponent> internalCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvancedAnnotationTableComponent> internalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> codeInternalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> hpoInternalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, Boolean> inversedInternalTableview;
 
-    private ObservableList<AdvantagedAnnotationTableComponent> externalCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<AdvantagedAnnotationTableComponent> externalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> systemExternalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeExternalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoExternalTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedExternalTableview;
+    private ObservableList<AdvancedAnnotationTableComponent> externalCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvancedAnnotationTableComponent> externalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> systemExternalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> codeExternalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> hpoExternalTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, Boolean> inversedExternalTableview;
 
-    private ObservableList<AdvantagedAnnotationTableComponent> interpretationCodeAnnotations = FXCollections.observableArrayList();
-    @FXML private TableView<AdvantagedAnnotationTableComponent> interpretationTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> systemInterpretTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> codeInterpretTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> hpoInterpretTableview;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, Boolean> inversedInterpretTableview;
+    private ObservableList<AdvancedAnnotationTableComponent> interpretationCodeAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvancedAnnotationTableComponent> interpretationTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> systemInterpretTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> codeInterpretTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> hpoInterpretTableview;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, Boolean> inversedInterpretTableview;
+
+    private Consumer<LOINC2HpoAnnotationImpl> editHook;
+    //private Consumer<LOINC2HpoAnnotationImpl> saveHook;
 
 
 
@@ -72,7 +69,12 @@ public class CurrentAnnotationController{
 
         initTableStructure();
 
-        populateTables();
+        dataReady = new SimpleBooleanProperty(false);
+        dataReady.addListener((obj, oldvalue, newvalue) -> {
+            if (newvalue) {
+                populateTables();
+            }
+        });
 
     }
 
@@ -114,88 +116,46 @@ public class CurrentAnnotationController{
 
     private void populateTables(){
 
-        if (model == null) {
-            logger.error("model is null.");
-            return;
-        }
-
-        this.currentAnnotation = model.getCurrentAnnotation();
-        LoincEntry currentLoincEntry = model.getLoincEntryMap().get(currentAnnotation.getLoincId());
-        annotationTitle.setText(String.format("Annotations for Loinc: %s[%s]", currentLoincEntry.getLOINC_Number(), currentLoincEntry.getLongName()));
+        annotationTitle.setText(String.format("Annotations for Loinc: %s[%s]", currentLoinc.getLOINC_Number(), currentLoinc.getLongName()));
 
 
         internalCodeAnnotations.clear();
         currentAnnotation.getCandidateHpoTerms().entrySet()
             .stream()
             .filter(p -> p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
-            .map(p -> new AdvantagedAnnotationTableComponent(p.getKey(), p.getValue()))
+            .map(p -> new AdvancedAnnotationTableComponent(p.getKey(), p.getValue()))
             .forEach(internalCodeAnnotations::add);
 
         externalCodeAnnotations.clear();
         currentAnnotation.getCandidateHpoTerms().entrySet().stream()
                 .filter(p -> !p.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM))
-                .map(p -> new AdvantagedAnnotationTableComponent(p.getKey(), p.getValue()))
+                .map(p -> new AdvancedAnnotationTableComponent(p.getKey(), p.getValue()))
                 .forEach(externalCodeAnnotations::add);
 
         interpretationCodeAnnotations.clear();
         for (Map.Entry<Code, Code> entry: CodeSystemConvertor.getCodeConversionMap().entrySet()) {
-            logger.debug("key: " + entry.getKey() + "\nvalue: " + entry.getValue());
             HpoTerm4TestOutcome result = currentAnnotation.loincInterpretationToHPO(entry.getValue());
-            logger.debug("result is null? " + (result == null));
             if (result != null) {
-                AdvantagedAnnotationTableComponent annotation = new AdvantagedAnnotationTableComponent(entry.getKey(), result);
+                AdvancedAnnotationTableComponent annotation = new AdvancedAnnotationTableComponent(entry.getKey(), result);
                 interpretationCodeAnnotations.add(annotation);
-                logger.debug("interpretationCodeAnnotations size: " + interpretationCodeAnnotations.size());
             }
         }
-
-        logger.debug("internalTableview is null: " + (internalTableview == null));
-        logger.debug("internalCodeAnnotations is null: " + (internalTableview == null));
-        logger.debug("internal annotation size: " + internalCodeAnnotations.size());
-        internalCodeAnnotations.forEach(logger::info);
-
-
-        logger.trace("exit initInternalTableview()");
-
-
-    }
-    private void ExternalTableview(){
-
-    }
-    private void initInterpretTableview(){
-
     }
 
-    public void setModel(Model model) {
-        if (model == null) {
-            logger.trace("model for CurrentAnnotationController is set to null");
-            return;
-        }
-        this.model = model;
-        logger.info("model for CurrentAnnotationController is set");
-    }
-
-
-    public void setCurrentLoincEntry(LoincEntry currentLoinc) {
-        this.currentLoincEntry = currentLoinc;
-    }
-
-    public void setCurrentAnnotation(LOINC2HpoAnnotationImpl currentAnnotation) {
+    public void setData(LoincEntry loincEntry, LOINC2HpoAnnotationImpl currentAnnotation) {
+        this.currentLoinc = loincEntry;
         this.currentAnnotation = currentAnnotation;
+        dataReady.set(true);
         logger.info("current annotation is set successfully for: " + this.currentAnnotation.getLoincId());
-        initTableStructure();
+    }
+
+    public void setEditHook(Consumer<LOINC2HpoAnnotationImpl> edit) {
+        this.editHook = edit;
     }
 
     @FXML
     void handleEdit(ActionEvent event) {
-
-        logger.debug("user wants to edit current annotation");
-        annotateTabController.editCurrentAnnotation(currentAnnotation);
-        mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
-
-        Node source = (Node)  event.getSource();
-        Stage stage  = (Stage) source.getScene().getWindow();
-        stage.close();
+        this.editHook.accept(currentAnnotation);
         event.consume();
     }
 

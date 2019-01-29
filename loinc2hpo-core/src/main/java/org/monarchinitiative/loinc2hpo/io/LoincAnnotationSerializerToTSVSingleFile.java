@@ -45,7 +45,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     @Override
     public void serialize(Map<LoincId, LOINC2HpoAnnotationImpl> annotationmap, String filepath) throws IOException {
 
-
+        logger.info("file path: " + filepath);
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(filepath));
         writer.write(header);
@@ -68,7 +68,8 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
-        reader.lines().forEach(serialized -> {
+
+        reader.lines().filter(l -> !l.isEmpty()).forEach(serialized -> {
             String[] elements = serialized.split("\\t");
             if (elements.length == 13 && !serialized.startsWith("loincId")) {
                 try {
