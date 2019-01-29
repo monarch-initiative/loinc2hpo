@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.*;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public class HpoOntologyParser {
     private String hpoOboPath =null;
     private String hpoOwlPath = null;
     private boolean isObo = false;
-    private HpoOntology hpoOntology;
+    private Ontology hpoOntology;
 
 
     /** Map of all of the Phenotypic abnormality terms (i.e., not the inheritance terms). */
@@ -45,14 +44,8 @@ public class HpoOntologyParser {
      * @throws PhenolException, OWLOntologyCreationException
      */
     public void parseOntology() throws PhenolException, FileNotFoundException {
-        if (isObo) {
-            HpOboParser hpoOboParser = new HpOboParser(new File(hpoOboPath));
-            logger.debug("ontology path: " + hpoOboPath);
-            this.hpoOntology = hpoOboParser.parse();
-        } else {
-            HpOwlParser hpoOwlParser = new HpOwlParser(new File(hpoOwlPath));
-            this.hpoOntology = hpoOwlParser.parse();
-        }
+        logger.debug("ontology path: " + hpoOboPath);
+        this.hpoOntology = OntologyLoader.loadOntology(new File(hpoOboPath));
     }
 
     private void initTermMaps() {
@@ -64,7 +57,7 @@ public class HpoOntologyParser {
         }
     }
 
-    public HpoOntology getOntology() {
+    public Ontology getOntology() {
 
         return this.hpoOntology;
 

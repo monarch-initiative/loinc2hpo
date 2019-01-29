@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Singleton;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
@@ -11,20 +10,16 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
 import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This class manages all resources that are required for this app. Whenever a new resource is required, just call a getter to retrieve it.
@@ -40,7 +35,7 @@ public class ResourceCollection {
     private String loincPanelPath;
     //private String loincPanelAnnotationPath;
     private HpoOntologyParser hpoOntologyParser;
-    private HpoOntology hpo;
+    private Ontology hpo;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
@@ -153,7 +148,7 @@ public class ResourceCollection {
 
     }
 
-    public HpoOntology getHPO() throws PhenolException, FileNotFoundException {
+    public Ontology getHPO() throws PhenolException, FileNotFoundException {
         if (this.hpo != null) {
             return this.hpo;
         }

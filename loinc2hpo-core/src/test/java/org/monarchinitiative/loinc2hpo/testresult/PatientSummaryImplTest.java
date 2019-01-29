@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.jgrapht.alg.util.UnionFind;
 import org.junit.BeforeClass;
@@ -10,17 +9,14 @@ import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFaker;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFakerImpl;
-import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +44,7 @@ public class PatientSummaryImplTest {
 
         hpoTermMap = resourceCollection.hpoTermMapFromName();
         hpoTermMap2 = resourceCollection.hpoTermMap();
-        HpoOntology hpo = resourceCollection.getHPO();
+        Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
         hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap).getUnionFind();

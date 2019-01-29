@@ -10,13 +10,12 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
 import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 public class AppResources {
 
     private final static Logger logger = LoggerFactory.getLogger(AppResources.class);
-    private HpoOntology hpo;
+    private Ontology hpo;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
     private Map<LoincId, LoincEntry> loincEntryMap;
@@ -64,7 +63,7 @@ public class AppResources {
         return settings;
     }
 
-    public HpoOntology getHpo() {
+    public Ontology getHpo() {
 
         if (this.hpo != null) {
             return this.hpo;
