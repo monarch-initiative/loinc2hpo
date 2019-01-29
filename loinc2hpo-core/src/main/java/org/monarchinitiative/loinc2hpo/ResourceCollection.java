@@ -128,8 +128,8 @@ public class ResourceCollection {
     }
 
     public Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap() throws Exception {
-        if (this.annotationMapPath == null) {
-            return null;
+        if (this.loincAnnotationMap != null) {
+            return this.loincAnnotationMap;
         }
 
         this.loincAnnotationMap = LoincAnnotationSerializationFactory.parseFromFile(this.annotationMapPath, hpoTermMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);

@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.model;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.codehaus.plexus.logging.LoggerManager;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 /**
  * The class manages all resources required for this app.
  */
+@Singleton
 public class AppResources {
 
     private final static Logger logger = LoggerFactory.getLogger(AppResources.class);
