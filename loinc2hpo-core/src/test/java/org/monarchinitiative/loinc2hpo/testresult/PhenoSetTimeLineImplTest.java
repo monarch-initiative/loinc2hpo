@@ -26,7 +26,7 @@ public class PhenoSetTimeLineImplTest {
     private static Map<String, Term> hpoTermMap;
     private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static UnionFind<Term> hpoTermUnionFind;
+    private static UnionFind<TermId> hpoTermUnionFind;
 
     @BeforeClass
     public static void setup() throws Exception{
@@ -37,7 +37,7 @@ public class PhenoSetTimeLineImplTest {
         Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
-        hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap).getUnionFind();
+        hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap).getUnionFind();
     }
 
     @Before
@@ -48,31 +48,31 @@ public class PhenoSetTimeLineImplTest {
         //create a few phenotype components
         PhenotypeComponent c1 = new PhenotypeComponentImpl.Builder()
                 .start(dateFormat.parse("2016-09-30 09:30:00"))
-                .hpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .hpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .isNegated(false)
                 .build();
 
         PhenotypeComponent c2 = new PhenotypeComponentImpl.Builder()
                 .start(dateFormat.parse("2017-09-30 09:30:00"))
-                .hpoTerm(hpoTermMap.get("Hypoglycemia"))
+                .hpoTerm(hpoTermMap.get("Hypoglycemia").getId())
                 .isNegated(false)
                 .build();
 
         PhenotypeComponent c3 = new PhenotypeComponentImpl.Builder()
                 .start(dateFormat.parse("2018-09-30 09:30:00"))
-                .hpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .hpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .isNegated(false)
                 .build();
 
         PhenotypeComponent c4 = new PhenotypeComponentImpl.Builder()
                 .start(dateFormat.parse("2019-09-30 09:30:00"))
-                .hpoTerm(hpoTermMap.get("Hypoglycemia"))
+                .hpoTerm(hpoTermMap.get("Hypoglycemia").getId())
                 .isNegated(false)
                 .build();
 
         PhenotypeComponent c5 = new PhenotypeComponentImpl.Builder()
                 .start(dateFormat.parse("2020-09-30 09:30:00"))
-                .hpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration"))
+                .hpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration").getId())
                 .isNegated(true)
                 .build();
 
@@ -99,8 +99,8 @@ public class PhenoSetTimeLineImplTest {
 
     @Test
     public void current() throws Exception {
-        assertEquals("Hyperglycemia", glucosetimeLine.current(dateFormat.parse("2016-12-30 10:33:33")).abnormality().getName());
-        assertEquals("Hypoglycemia", glucosetimeLine.current(dateFormat.parse("2017-12-30 10:33:33")).abnormality().getName());
+        assertEquals(hpoTermMap.get("Hyperglycemia").getId(), glucosetimeLine.current(dateFormat.parse("2016-12-30 10:33:33")).abnormality());
+        assertEquals(hpoTermMap.get("Hypoglycemia").getId(), glucosetimeLine.current(dateFormat.parse("2017-12-30 10:33:33")).abnormality());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class PhenoSetTimeLineImplTest {
         Date date3 = dateFormat.parse("2017-10-30 10:33:33");
         assertNotNull(glucosetimeLine.persistDuring(date1, date2));
         assertNull(glucosetimeLine.persistDuring(date2, date3));
-        assertEquals("Hyperglycemia", glucosetimeLine.persistDuring(date1, date2).abnormality().getName());
+        assertEquals(hpoTermMap.get("Hyperglycemia").getId(), glucosetimeLine.persistDuring(date1, date2).abnormality());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class PhenoSetTimeLineImplTest {
         assertEquals(1, glucosetimeLine.occurredDuring(date0, date1).size());
         assertEquals(2, glucosetimeLine.occurredDuring(date0, date3).size());
         glucosetimeLine.occurredDuring(date0, date5).forEach(p -> {
-            System.out.println(p.abnormality().getName() + "\t" + p.effectiveStart() + "\t" + p.effectiveEnd());
+            System.out.println(p.abnormality().getValue() + "\t" + p.effectiveStart() + "\t" + p.effectiveEnd());
         });
 
     }

@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.testresult;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.jgrapht.alg.util.UnionFind;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
 import java.util.ArrayList;
@@ -18,9 +19,9 @@ public class PatientSummaryImpl implements PatientSummary{
     private Patient patient;
     private List<LabTest> labTests;
     private List<PhenoSetTimeLine> phenoSetTimeLines;
-    private UnionFind<Term> hpoTermUnionFind;
+    private UnionFind<TermId> hpoTermUnionFind;
 
-    public PatientSummaryImpl(Patient patient, UnionFind<Term> hpoTermUnionFind){
+    public PatientSummaryImpl(Patient patient, UnionFind<TermId> hpoTermUnionFind){
         this.patient = patient;
         this.labTests = new ArrayList<>();
         this.phenoSetTimeLines = new ArrayList<>();
@@ -66,11 +67,11 @@ public class PatientSummaryImpl implements PatientSummary{
             return;
         }
 
-        Term newterm = test.outcome().getHpoTerm();
+        TermId newterm = test.outcome().getId();
         PhenotypeComponent newComponent = new PhenotypeComponentImpl.Builder()
                 .start(test.effectiveStart())
                 //default end time
-                .hpoTerm(test.outcome().getHpoTerm())
+                .hpoTerm(test.outcome().getId())
                 .isNegated(test.outcome().isNegated()).build();
 
         boolean timeLineFound = false;

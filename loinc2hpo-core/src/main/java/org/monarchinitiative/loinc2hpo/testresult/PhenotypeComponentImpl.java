@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -11,14 +12,14 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
 
     private Date start;
     private Date end;
-    private Term hpoTerm;
+    private TermId hpoTerm;
     private boolean isNegated;
 
     private PhenotypeComponentImpl() {
 
     }
 
-    private PhenotypeComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull Term hpoTerm, boolean isNegated) {
+    private PhenotypeComponentImpl(@NotNull Date start, @Nullable Date end, @NotNull TermId hpoTerm, boolean isNegated) {
         this.start = start;
         this.end = end;
         this.hpoTerm = hpoTerm;
@@ -56,7 +57,7 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
 
 
     @Override
-    public Term abnormality() {
+    public TermId abnormality() {
         return this.hpoTerm;
     }
 
@@ -78,7 +79,7 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
     public static class Builder {
         private Date start;
         private Date end;
-        private Term hpoTerm;
+        private TermId hpoTerm;
         private boolean isNegated;
 
         protected Builder() {
@@ -109,7 +110,7 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
             return this;
         }
 
-        protected Builder hpoTerm(Term hpoTerm) {
+        protected Builder hpoTerm(TermId hpoTerm) {
             this.hpoTerm = hpoTerm;
             return this;
         }

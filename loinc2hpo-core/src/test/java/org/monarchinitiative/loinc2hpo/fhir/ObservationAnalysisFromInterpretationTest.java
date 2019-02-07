@@ -66,10 +66,10 @@ public class ObservationAnalysisFromInterpretationTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
                 .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi);
+                .setHighValueHpoTerm(hi.getId());
 
         LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
@@ -89,9 +89,9 @@ public class ObservationAnalysisFromInterpretationTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
+                .setHighValueHpoTerm(positive.getId())
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 

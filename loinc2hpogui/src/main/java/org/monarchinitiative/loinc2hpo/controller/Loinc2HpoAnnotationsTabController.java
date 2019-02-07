@@ -23,6 +23,7 @@ import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory.SerializationFormat;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
 import java.util.Map;
@@ -215,15 +216,9 @@ public class Loinc2HpoAnnotationsTabController {
         //if using the LoincAnnotationSerializerTSVSingleFile for serialization
         String tsvSingleFile = pathToOpen + File.separator
                 + Constants.TSVSingleFileFolder + File.separator + Constants.TSVSingleFileName;
-        if (new File(tsvSingleFile).exists()) {
-        //if (false){
 
-            logger.trace("open session from " + pathToOpen);
-            try {
-                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
-                logger.info("annotationMap size (111111): " + annotationMap.size());
-                appResources.getLoincAnnotationMap().putAll(annotationMap);
-            } catch (Exception e) {
+        try {
+            if (hasUnrecognizedTermId(tsvSingleFile)) {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -237,10 +232,37 @@ public class Loinc2HpoAnnotationsTabController {
                         stage.showAndWait();
                     }
                 });
-                //return;
             }
+        } catch (Exception e) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    Alert alert1 = new Alert(Alert.AlertType.WARNING);
+                    alert1.setHeaderText("IOException");
+                    alert1.setContentText("Cannot read the annotation file. Exiting.");
+                    alert1.setTitle("Warning");
+                    Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
+                    stage.setAlwaysOnTop(true);
+                    stage.showAndWait();
+                }
+            });
+            System.exit(1);
+        }
 
-        } else {
+        if (new File(tsvSingleFile).exists()) {
+        //if (false){
+
+            logger.trace("open session from " + pathToOpen);
+
+            //TODO: check whether hp.obo has all terms in the annotation file
+            try {
+                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
+                logger.info("annotationMap size (111111): " + annotationMap.size());
+                appResources.getLoincAnnotationMap().putAll(annotationMap);
+            } catch (Exception e) {
+                logger.error("This error should not happen.");
+                System.exit(1);
+            }
 
         }
 
@@ -249,7 +271,21 @@ public class Loinc2HpoAnnotationsTabController {
         annotateTabController.changeColorLoincTableView();
     }
 
-    
+    private boolean hasUnrecognizedTermId(String annotationFile) throws Exception {
+        BufferedReader reader = new BufferedReader(new FileReader(annotationFile));
+        String line = reader.readLine(); //skip header
+
+        while(line != null) {
+            line = reader.readLine();
+            TermId termid = TermId.of(line.split(",")[4]);
+            if (!appResources.getTermidTermMap().containsKey(termid)) {
+                return true;
+            }
+        }
+
+        reader.close();
+        return false;
+    }
 
     @FXML
     private void handleReview(ActionEvent event) {

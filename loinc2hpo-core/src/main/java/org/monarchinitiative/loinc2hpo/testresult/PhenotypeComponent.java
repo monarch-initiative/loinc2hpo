@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
+
 import java.util.Date;
 
 public interface PhenotypeComponent {
@@ -44,7 +45,7 @@ public interface PhenotypeComponent {
      * Phenotype abnormality
      * @return
      */
-    Term abnormality();
+    TermId abnormality();
 
     /**
      * Is the abnormality negated
