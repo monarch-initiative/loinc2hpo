@@ -1421,22 +1421,22 @@ public class AnnotateTabController {
                 .setFlag(flagForAnnotation.isSelected());
         //add the basic annotations
         if (loincScale == LoincScale.Qn) {
-            builder.setLowValueHpoTerm(low)
-                    .setIntermediateValueHpoTerm(normal)
-                    .setHighValueHpoTerm(high)
+            builder.setLowValueHpoTerm(low.getId())
+                    .setIntermediateValueHpoTerm(normal.getId())
+                    .setHighValueHpoTerm(high.getId())
                     .setIntermediateNegated(appTempData.isInversedBasicMode());
         } else if (loincScale == LoincScale.Ord && loincTableView.getSelectionModel().getSelectedItem().isPresentOrd()) {
-            builder.setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
-                    .setPosValueHpoTerm(high);
+            builder.setNegValueHpoTerm(normal.getId(), appTempData.isInversedBasicMode())
+                    .setPosValueHpoTerm(high.getId());
         } else { //
             boolean choice = PopUps.getBooleanFromUser("Current Loinc should be annotated in advanced mode. Click Yes if you still want to keep current annotations?", "LOINC type mismatch", "Warning");
             if (choice) {
-                builder.setLowValueHpoTerm(low)
-                        .setIntermediateValueHpoTerm(normal)
-                        .setHighValueHpoTerm(high)
+                builder.setLowValueHpoTerm(low.getId())
+                        .setIntermediateValueHpoTerm(normal.getId())
+                        .setHighValueHpoTerm(high.getId())
                         .setIntermediateNegated(appTempData.isInversedBasicMode())
-                        .setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
-                        .setPosValueHpoTerm(high);
+                        .setNegValueHpoTerm(normal.getId(), appTempData.isInversedBasicMode())
+                        .setPosValueHpoTerm(high.getId());
             }
         }
 
@@ -1815,7 +1815,7 @@ public class AnnotateTabController {
         Term hpoterm = appResources.getTermnameTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm.getId(), inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -2069,6 +2069,7 @@ public class AnnotateTabController {
 
             CurrentAnnotationController currentAnnotationController = injector.getInstance(CurrentAnnotationController.class);
             currentAnnotationController.setData(loincEntry2Review, annotation2Review);
+            currentAnnotationController.setTermMap(appResources.getTermidTermMap());
             //tell the new window how to handle "edit" button
             Consumer<LOINC2HpoAnnotationImpl> edithook = (t) -> {
                 editCurrentAnnotation(t);
@@ -2114,15 +2115,15 @@ public class AnnotateTabController {
         }
 
         if (hpoLow != null) {
-            String hpoLowTermName = hpoLow.getHpoTerm().getName();
+            String hpoLowTermName = appResources.getTermidTermMap().get(hpoLow.getId()).getName();
             annotationTextFieldLeft.setText(hpoLowTermName);
         }
         if (hpoHigh != null) {
-            String hpoHighTermName = hpoHigh.getHpoTerm().getName();
+            String hpoHighTermName = appResources.getTermidTermMap().get(hpoHigh.getId()).getName();
             annotationTextFieldRight.setText(hpoHighTermName);
         }
         if (hpoNormal != null) {
-            String hpoNormalTermName = hpoNormal.getHpoTerm().getName();
+            String hpoNormalTermName = appResources.getTermidTermMap().get(hpoNormal.getId()).getName();
             boolean isnegated = hpoNormal.isNegated();
             annotationTextFieldMiddle.setText(hpoNormalTermName);
             inverseChecker.setSelected(isnegated);

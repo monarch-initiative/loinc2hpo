@@ -31,7 +31,7 @@ public class AdvancedAnnotationTableComponent {
     public AdvancedAnnotationTableComponent(Code code, HpoTerm4TestOutcome hpoTerm4TestOutcome) {
         this.code = code;
         if (hpoTerm4TestOutcome != null )
-            this.hpo_term = hpoTerm4TestOutcome.getHpoTerm().getName();
+            this.hpo_term = hpoTerm4TestOutcome.getId().getValue();
         this.hpoTerm4TestOutcome = hpoTerm4TestOutcome;
     }
 
@@ -56,7 +56,7 @@ public class AdvancedAnnotationTableComponent {
     public String toString() {
         if (this.hpoTerm4TestOutcome != null) {
             String negate = this.hpoTerm4TestOutcome.isNegated() ? "not " : "";
-            return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTerm4TestOutcome.getHpoTerm().getName();
+            return this.code.getSystem() + ": " + this.code.getCode() + " -> " + negate + this.hpoTerm4TestOutcome.getId().getValue();
 
         } else {
             return this.code.getSystem() + ": " + this.code.getCode() + " -> No annotation";

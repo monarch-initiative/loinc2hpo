@@ -1,6 +1,8 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.kenai.jaffl.annotations.In;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -20,6 +22,9 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.AdvancedAnnotationTableComponent;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
+import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -60,7 +65,14 @@ public class CurrentAnnotationController{
     private Consumer<LOINC2HpoAnnotationImpl> editHook;
     //private Consumer<LOINC2HpoAnnotationImpl> saveHook;
 
+//    @Inject
+//    private AppResources appResources;
 
+    Map<TermId, Term> termMap;
+
+    public void setTermMap(Map<TermId, Term> loincTermMap) {
+        termMap = loincTermMap;
+    }
 
     @FXML private void initialize() {
 
@@ -83,8 +95,15 @@ public class CurrentAnnotationController{
         codeInternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode())
         );
-        hpoInternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
+        hpoInternalTableview.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().getHpoTerm4TestOutcome().getId();
+            if (termMap.containsKey(termId)) {
+                return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            } else {
+                return new ReadOnlyStringWrapper(termId.getValue());
+            }
+        });
+
         inversedInternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         internalTableview.setItems(internalCodeAnnotations);
@@ -95,8 +114,14 @@ public class CurrentAnnotationController{
         codeExternalTableview.setSortable(true);
         codeExternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode()));
-        hpoExternalTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
+        hpoExternalTableview.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().getHpoTerm4TestOutcome().getId();
+            if (termMap.containsKey(termId)) {
+                return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            } else {
+                return new ReadOnlyStringWrapper(termId.getValue());
+            }
+        });
         inversedExternalTableview.setCellValueFactory(cdf ->
                 new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         externalTableview.setItems(externalCodeAnnotations);
@@ -107,8 +132,14 @@ public class CurrentAnnotationController{
         codeInterpretTableview.setSortable(true);
         codeInterpretTableview.setCellValueFactory(cdf ->
                 new ReadOnlyStringWrapper(cdf.getValue().getCode().getCode()));
-        hpoInterpretTableview.setCellValueFactory(cdf ->
-                new ReadOnlyStringWrapper(cdf.getValue().getHpoTerm4TestOutcome().getHpoTerm().getName()));
+        hpoInterpretTableview.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().getHpoTerm4TestOutcome().getId();
+            if (termMap.containsKey(termId)) {
+                return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            } else {
+                return new ReadOnlyStringWrapper(termId.getValue());
+            }
+        });
         inversedInterpretTableview.setCellValueFactory(cdf ->
                 new ReadOnlyBooleanWrapper(cdf.getValue().getHpoTerm4TestOutcome().isNegated()));
         interpretationTableview.setItems(interpretationCodeAnnotations);

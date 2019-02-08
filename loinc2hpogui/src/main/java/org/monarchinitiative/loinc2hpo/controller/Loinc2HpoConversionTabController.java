@@ -301,7 +301,7 @@ public class Loinc2HpoConversionTabController {
         //It is fine to use the subject for display purposes, but for computation we should use identifier as subject is not guaranteed unique
         String subject = testOutcome.getSubjectReference() != null && testOutcome.getSubjectReference().getReference() != null ?
                 testOutcome.getSubjectReference().getReference() : "Unknown subject";
-        TermId termId = testOutcome.getOutcome() == null ? null : testOutcome.getOutcome().getHpoTerm().getId();
+        TermId termId = testOutcome.getOutcome() == null ? null : testOutcome.getOutcome().getId();
         String name;
         if (termId != null) {
             name = appResources.getTermidTermMap().get(termId).getName();

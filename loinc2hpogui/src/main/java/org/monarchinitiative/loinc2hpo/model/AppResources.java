@@ -136,13 +136,17 @@ public class AppResources {
         throw new UnsupportedOperationException();
     }
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> getLoincAnnotationMap() throws Exception {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> getLoincAnnotationMap(){
         if (this.loincPanelMap != null) {
             return this.loincAnnotationMap;
         }
 
 
-        this.loincAnnotationMap = resourceCollection.annotationMap();
+        try {
+            this.loincAnnotationMap = resourceCollection.annotationMap();
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing the annotation map");
+        }
 
         return this.loincAnnotationMap;
     }
