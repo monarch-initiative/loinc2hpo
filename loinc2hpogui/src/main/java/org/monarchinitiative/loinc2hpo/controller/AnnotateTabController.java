@@ -54,6 +54,7 @@ import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.model.Settings;
 import org.monarchinitiative.loinc2hpo.util.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
 import java.io.*;
@@ -418,6 +419,7 @@ public class AnnotateTabController {
                 logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
             }
         }
+        changeColorLoincTableView();
         logger.trace("default color for LOINC lists is set");
     }
 
@@ -1385,9 +1387,9 @@ public class AnnotateTabController {
         }
 
         //We don't have to force every loinc code to have three phenotypes
-        Term low = termmap.get(hpoLo);
-        Term normal = termmap.get(hpoNormal);
-        Term high = termmap.get(hpoHi);
+        TermId low = termmap.containsKey(hpoLo) ? termmap.get(hpoLo).getId() : null;
+        TermId normal = termmap.containsKey(hpoNormal) ? termmap.get(hpoNormal).getId() : null;
+        TermId high = termmap.containsKey(hpoHi) ? termmap.get(hpoHi).getId() : null;
         //logger.debug((String.format("Terms found: lo- %s; normal- %s; hi- %s", low.getName(), normal.getName(), high.getName())));
 
         //Warning user that there is something wrong
@@ -1421,22 +1423,22 @@ public class AnnotateTabController {
                 .setFlag(flagForAnnotation.isSelected());
         //add the basic annotations
         if (loincScale == LoincScale.Qn) {
-            builder.setLowValueHpoTerm(low.getId())
-                    .setIntermediateValueHpoTerm(normal.getId())
-                    .setHighValueHpoTerm(high.getId())
+            builder.setLowValueHpoTerm(low)
+                    .setIntermediateValueHpoTerm(normal)
+                    .setHighValueHpoTerm(high)
                     .setIntermediateNegated(appTempData.isInversedBasicMode());
         } else if (loincScale == LoincScale.Ord && loincTableView.getSelectionModel().getSelectedItem().isPresentOrd()) {
-            builder.setNegValueHpoTerm(normal.getId(), appTempData.isInversedBasicMode())
-                    .setPosValueHpoTerm(high.getId());
+            builder.setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
+                    .setPosValueHpoTerm(high);
         } else { //
             boolean choice = PopUps.getBooleanFromUser("Current Loinc should be annotated in advanced mode. Click Yes if you still want to keep current annotations?", "LOINC type mismatch", "Warning");
             if (choice) {
-                builder.setLowValueHpoTerm(low.getId())
-                        .setIntermediateValueHpoTerm(normal.getId())
-                        .setHighValueHpoTerm(high.getId())
+                builder.setLowValueHpoTerm(low)
+                        .setIntermediateValueHpoTerm(normal)
+                        .setHighValueHpoTerm(high)
                         .setIntermediateNegated(appTempData.isInversedBasicMode())
-                        .setNegValueHpoTerm(normal.getId(), appTempData.isInversedBasicMode())
-                        .setPosValueHpoTerm(high.getId());
+                        .setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
+                        .setPosValueHpoTerm(high);
             }
         }
 
