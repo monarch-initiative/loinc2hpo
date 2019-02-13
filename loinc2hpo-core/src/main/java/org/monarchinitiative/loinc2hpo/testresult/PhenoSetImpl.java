@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.jgrapht.alg.util.UnionFind;
-import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
 import java.util.HashSet;
@@ -9,22 +9,22 @@ import java.util.Set;
 
 public class PhenoSetImpl implements PhenoSet {
 
-    private Set<Term> termSet; //tracks how hpo terms that are used in a time line. Note that it is not a complete set of a phenoset terms
-    private UnionFind<Term> hpoTermUnionFind;
+    private Set<TermId> termSet; //tracks how hpo terms that are used in a time line. Note that it is not a complete set of a phenoset terms
+    private UnionFind<TermId> hpoTermUnionFind;
 
-    public PhenoSetImpl(UnionFind<Term> hpoTermUnionFind) {
+    public PhenoSetImpl(UnionFind<TermId> hpoTermUnionFind) {
 
         this.termSet = new HashSet<>();
         this.hpoTermUnionFind = hpoTermUnionFind;
     }
 
     @Override
-    public Set<Term> getSet() {
+    public Set<TermId> getSet() {
         return new HashSet<>(this.termSet);
     }
 
     @Override
-    public boolean sameSet(Term term) {
+    public boolean sameSet(TermId term) {
         if (termSet.isEmpty()) {
             return false;
         } else {
@@ -34,12 +34,12 @@ public class PhenoSetImpl implements PhenoSet {
     }
 
     @Override
-    public boolean hasOccurred(Term term) {
+    public boolean hasOccurred(TermId term) {
         return !this.termSet.isEmpty() && this.termSet.contains(term);
     }
 
     @Override
-    public void add(Term hpoTerm) {
+    public void add(TermId hpoTerm) {
         this.termSet.add(hpoTerm);
     }
 }

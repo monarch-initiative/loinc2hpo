@@ -23,8 +23,12 @@ import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory.SerializationFormat;
+import org.monarchinitiative.loinc2hpo.util.AnnotationQC;
+import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -37,7 +41,7 @@ public class Loinc2HpoAnnotationsTabController {
     private AnnotateTabController annotateTabController;
     @Inject
     private MainController mainController;
-    @Inject
+
     private AppResources appResources;
 
     /** This is the message users will see if they open the analysis tab before they have entered the genes
@@ -66,21 +70,58 @@ public class Loinc2HpoAnnotationsTabController {
         appTempData = m;
     }
 
-    @FXML private void initialize() {
-        logger.trace("Calling initialize");
+    public void setAppResources(AppResources appResources) {
+        this.appResources = appResources;
+        initializeTable();
+        refreshTable();
+    }
+
+    public void initializeTable() {
+logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
+        Map<TermId, Term> termMap = appResources.getTermidTermMap();
         loincAnnotationTableView.setEditable(false);
         loincNumberColumn.setSortable(true);
         loincNumberColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincId().toString()));
         loincScaleColumn.setSortable(true);
         loincScaleColumn.setCellValueFactory(cdf -> new ReadOnlyStringWrapper(cdf.getValue().getLoincScale().toString()));
         belowNormalHpoColumn.setSortable(true);
-        belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueLow() == null ? new ReadOnlyStringWrapper("\" \"") : new ReadOnlyStringWrapper(cdf.getValue().whenValueLow().getName()));
+        //belowNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueLow() == null ? new ReadOnlyStringWrapper("\" \"") : new ReadOnlyStringWrapper(termMap.get(cdf.getValue().whenValueLow()).getName()));
+        belowNormalHpoColumn.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().whenValueLow();
+            if (termId == null) { //no annotation for low
+                return new ReadOnlyStringWrapper("\" \"");
+            } else if (!termMap.containsKey(termId)) { //annotation termid not found in current hpo
+                return new ReadOnlyStringWrapper(termId.getValue());
+            } else { //show term name
+                return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            }
+        });
         notAbnormalHpoColumn.setSortable(true);
-        notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueNormalOrNegative() == null ? new ReadOnlyStringWrapper("\" \"")
-                : new ReadOnlyStringWrapper(cdf.getValue().whenValueNormalOrNegative().getName()));
+        //notAbnormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueNormalOrNegative() == null ? new ReadOnlyStringWrapper("\" \"")
+        //        : new ReadOnlyStringWrapper(cdf.getValue().whenValueNormalOrNegative().getName()));
+        notAbnormalHpoColumn.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().whenValueNormalOrNegative();
+            if (termId == null) { //no annotation
+                return new ReadOnlyStringWrapper("\" \"");
+            } else if (!termMap.containsKey(termId)){//previously annotated with a term not found in current hpo
+                    return new ReadOnlyStringWrapper(termId.getValue());
+            } else { //annotated with a term present in current hpo
+                    return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            }
+        });
         aboveNormalHpoColumn.setSortable(true);
-        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueHighOrPositive() == null ? new ReadOnlyStringWrapper("\" \"")
-        : new ReadOnlyStringWrapper(cdf.getValue().whenValueHighOrPositive().getName()));
+//        aboveNormalHpoColumn.setCellValueFactory(cdf -> cdf.getValue().whenValueHighOrPositive() == null ? new ReadOnlyStringWrapper("\" \"")
+//        : new ReadOnlyStringWrapper(cdf.getValue().whenValueHighOrPositive().getName()));
+        aboveNormalHpoColumn.setCellValueFactory(cdf -> {
+            TermId termId = cdf.getValue().whenValueHighOrPositive();
+            if (termId == null) { //no annotation
+                return new ReadOnlyStringWrapper("\" \"");
+            } else if (!termMap.containsKey(termId)){//previously annotated with a term not found in current hpo
+                return new ReadOnlyStringWrapper(termId.getValue());
+            } else { //annotated with a term present in current hpo
+                return new ReadOnlyStringWrapper(termMap.get(termId).getName());
+            }
+        });
         loincFlagColumn.setSortable(true);
         loincFlagColumn.setCellValueFactory(cdf -> cdf.getValue() != null && cdf.getValue().getFlag() ?
                 new ReadOnlyStringWrapper("Y") : new ReadOnlyStringWrapper(""));
@@ -215,41 +256,35 @@ public class Loinc2HpoAnnotationsTabController {
         //if using the LoincAnnotationSerializerTSVSingleFile for serialization
         String tsvSingleFile = pathToOpen + File.separator
                 + Constants.TSVSingleFileFolder + File.separator + Constants.TSVSingleFileName;
-        if (new File(tsvSingleFile).exists()) {
-        //if (false){
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new HashMap<>();
 
-            logger.trace("open session from " + pathToOpen);
-            try {
-                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
-                logger.info("annotationMap size (111111): " + annotationMap.size());
-                appResources.getLoincAnnotationMap().putAll(annotationMap);
-            } catch (Exception e) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
-                        Alert alert1 = new Alert(Alert.AlertType.WARNING);
-                        alert1.setHeaderText("Error loading annotation data");
-                        alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.");
-                        alert1.setTitle("Warning");
-                        Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
-                        stage.setAlwaysOnTop(true);
-                        stage.showAndWait();
-                    }
-                });
-                //return;
-            }
-
-        } else {
-
+        try {
+            annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        if (AnnotationQC.hasUnrecognizedTermId(annotationMap, appResources.getHpo())) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
+                    Alert alert1 = new Alert(Alert.AlertType.WARNING);
+                    alert1.setHeaderText("Error loading annotation data");
+                    alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.");
+                    alert1.setTitle("Warning");
+                    Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
+                    stage.setAlwaysOnTop(true);
+                    stage.showAndWait();
+                }
+            });
+        }
+
+        appResources.getLoincAnnotationMap().putAll(annotationMap);
         logger.info("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
         refreshTable();
         annotateTabController.changeColorLoincTableView();
     }
-
-    
 
     @FXML
     private void handleReview(ActionEvent event) {

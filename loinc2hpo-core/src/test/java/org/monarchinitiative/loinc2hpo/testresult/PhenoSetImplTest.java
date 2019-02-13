@@ -36,7 +36,7 @@ public class PhenoSetImplTest {
         Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
-        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap);
+        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap);
 
     }
     @Test
@@ -46,9 +46,9 @@ public class PhenoSetImplTest {
 
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");
-        assertFalse(phenoSet.sameSet(term2));
-        phenoSet.add(term1);
-        assertTrue(phenoSet.sameSet(term2));
+        assertFalse(phenoSet.sameSet(term2.getId()));
+        phenoSet.add(term1.getId());
+        assertTrue(phenoSet.sameSet(term2.getId()));
 
 
     }
@@ -59,12 +59,12 @@ public class PhenoSetImplTest {
 
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");
-        assertFalse(phenoSet.hasOccurred(term1));
-        phenoSet.add(term1);
-        assertTrue(phenoSet.hasOccurred(term1));
-        assertFalse(phenoSet.hasOccurred(term2));
-        phenoSet.add(term2);
-        assertTrue(phenoSet.hasOccurred(term2));
+        assertFalse(phenoSet.hasOccurred(term1.getId()));
+        phenoSet.add(term1.getId());
+        assertTrue(phenoSet.hasOccurred(term1.getId()));
+        assertFalse(phenoSet.hasOccurred(term2.getId()));
+        phenoSet.add(term2.getId());
+        assertTrue(phenoSet.hasOccurred(term2.getId()));
     }
 
 

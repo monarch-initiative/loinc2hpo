@@ -31,6 +31,7 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.model.Settings;
+import org.monarchinitiative.loinc2hpo.util.AnnotationQC;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -97,7 +98,7 @@ public class MainController {
     @FXML private MenuItem updateHpoButton;
 
     @FXML private void initialize() {
-
+logger.trace("MainController initialize() called");
         annotateTabButton.setDisable(true);
         Loinc2HPOAnnotationsTabButton.setDisable(true);
         Loinc2HpoConversionTabButton.setDisable(true);
@@ -115,13 +116,28 @@ public class MainController {
                 //@TODO: figure out how to control init after construction
                 appResources.init();
 
+                if (AnnotationQC.hasUnrecognizedTermId(appResources.getLoincAnnotationMap(), appResources.getHpo())) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
+                            Alert alert1 = new Alert(Alert.AlertType.WARNING);
+                            alert1.setHeaderText("Error loading annotation data");
+                            alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.");
+                            alert1.setTitle("Warning");
+                            Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
+                            stage.setAlwaysOnTop(true);
+                            stage.showAndWait();
+                        }
+                    });
+                }
+
                 annotateTabController.setAppTempData(appTempData);
                 loinc2HpoAnnotationsTabController.setAppTempData(appTempData);
                 loinc2HPOConversionTabController.setAppTempData(appTempData);
+                loinc2HpoAnnotationsTabController.setAppResources(appResources);
 
                 annotateTabController.defaultStartUp();
-                openSession(settings.getAnnotationFolder());
-
             }
         });
 

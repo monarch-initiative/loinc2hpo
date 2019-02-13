@@ -38,7 +38,7 @@ public class PhenotypeComponentImplTest {
         Date start = dateFormat.parse("2016-09-30 09:30:00");
         testComponent = new PhenotypeComponentImpl.Builder()
                 .start(start)
-                .hpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .hpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .isNegated(false)
                 .build();
 
@@ -66,7 +66,7 @@ public class PhenotypeComponentImplTest {
 
     @Test
     public void abnormality() throws Exception {
-        assertEquals("Hyperglycemia", testComponent.abnormality().getName());
+        assertEquals(hpoTermMap.get("Hyperglycemia").getId(), testComponent.abnormality());
     }
 
     @Test

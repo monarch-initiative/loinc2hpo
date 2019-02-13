@@ -38,7 +38,7 @@ public class PhenoSetUnionFindTest {
         Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
-        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap);
+        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap);
 
     }
 
@@ -46,9 +46,9 @@ public class PhenoSetUnionFindTest {
     public void test1() throws Exception {
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");
-        assertTrue(unionFind.getUnionFind().inSameSet(term1, term2));
+        assertTrue(unionFind.getUnionFind().inSameSet(term1.getId(), term2.getId()));
         Term term3 = hpoTermMap.get("Nitrituria");
-        assertFalse(unionFind.getUnionFind().inSameSet(term1, term3));
+        assertFalse(unionFind.getUnionFind().inSameSet(term1.getId(), term3.getId()));
     }
 
 }

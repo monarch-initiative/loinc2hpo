@@ -64,9 +64,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
-                .setHighValueHpoTerm(hi)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
+                .setHighValueHpoTerm(hi.getId())
                 .setIntermediateNegated(true)
                 .build();
         testmap.put(loincId, glucoseAnnotation);
@@ -85,9 +85,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive, false))
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive.getId(), false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);

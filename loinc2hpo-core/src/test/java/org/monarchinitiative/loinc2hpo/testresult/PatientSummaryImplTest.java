@@ -31,7 +31,7 @@ public class PatientSummaryImplTest {
     private static Map<String, Term> hpoTermMap;
     private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static UnionFind<Term> hpoTermUnionFind;
+    private static UnionFind<TermId> hpoTermUnionFind;
     private static FhirResourceFaker resourceGenerator;
     private static List<Patient> randPatients;
 
@@ -47,7 +47,7 @@ public class PatientSummaryImplTest {
         Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
-        hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap).getUnionFind();
+        hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(s -> s.getId()).collect(Collectors.toSet()), annotationMap).getUnionFind();
 
         String path = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
         Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
@@ -58,7 +58,7 @@ public class PatientSummaryImplTest {
         LabTest test1 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2016-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hyperglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hyperglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -66,7 +66,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2016-10-21 10:30:00"))
                 .loincId(new LoincId("2276-4"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Decreased serum ferritin"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Decreased serum ferritin").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -87,7 +87,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -99,7 +99,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -109,7 +109,7 @@ public class PatientSummaryImplTest {
         LabTest test3 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2018-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hyperglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hyperglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -123,7 +123,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -145,7 +145,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -162,7 +162,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();
@@ -175,7 +175,7 @@ public class PatientSummaryImplTest {
         LabTest test2 = new LabTestImpl.Builder()
                 .effectiveStart(dateFormat.parse("2017-10-20 10:30:00"))
                 .loincId(new LoincId("15074-7"))
-                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia"), false))
+                .outcome(new HpoTerm4TestOutcome(hpoTermMap.get("Hypoglycemia").getId(), false))
                 .patient(patient)
                 .resourceId("unknown resource id")
                 .build();

@@ -40,13 +40,15 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         }
         LabTestOutcome systolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(systolic);
         LabTestOutcome dystolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(dystolic);
-        if (systolicOutcome.getOutcome().getHpoTerm().getName().equals("Elevated systolic blood pressure") ||
-                dystolicOutcome.getOutcome().getHpoTerm().getName().equals("Elevated diastolic blood pressure")){
+        //"Elevated systolic blood pressure" or "Elevated diastolic blood pressure"
+        if (systolicOutcome.getOutcome().getId().getValue().equals("HP:0004421") ||
+                dystolicOutcome.getOutcome().getId().getValue().equals("HP:0005117")){
             Code high = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get("H");
             return loincAnnotationMap.get(panelId).loincInterpretationToHPO(high);
         }
-        if (systolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypotension") &&
-                dystolicOutcome.getOutcome().getHpoTerm().getName().equals("Hypotension")) {
+        //"Hypotension"
+        if (systolicOutcome.getOutcome().getId().getValue().equals("HP:0002615") &&
+                dystolicOutcome.getOutcome().getId().getValue().equals("HP:0002615")) {
             Code low = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM).get("L");
             return loincAnnotationMap.get(panelId).loincInterpretationToHPO(low);
         }

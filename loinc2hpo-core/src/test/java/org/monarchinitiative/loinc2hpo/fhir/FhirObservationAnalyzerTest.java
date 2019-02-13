@@ -89,9 +89,9 @@ public class FhirObservationAnalyzerTest {
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(hpoTermMap.get("Hypoglycemia"))
-                .setIntermediateValueHpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration"))
-                .setHighValueHpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .setLowValueHpoTerm(hpoTermMap.get("Hypoglycemia").getId())
+                .setIntermediateValueHpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration").getId())
+                .setHighValueHpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .setIntermediateNegated(true)
                 .build();
 

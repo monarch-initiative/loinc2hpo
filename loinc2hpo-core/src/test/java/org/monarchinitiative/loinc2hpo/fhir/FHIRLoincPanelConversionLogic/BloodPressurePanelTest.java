@@ -74,7 +74,7 @@ public class BloodPressurePanelTest {
     public void getHPOforObservation() throws Exception {
         HpoTerm4TestOutcome outcome = bpPanel.getHPOforObservation();
         assertNotNull(outcome);
-        System.out.println(outcome.getHpoTerm().getName());
+        System.out.println(outcome.getId().getValue());
 
     }
 

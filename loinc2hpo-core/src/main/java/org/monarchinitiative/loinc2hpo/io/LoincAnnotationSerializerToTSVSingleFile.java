@@ -119,7 +119,8 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     } else {
                         coding = Code.getNewCode().setCode(code).setSystem(system);
                     }
-                    HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(hpoTermMap.get(termId), inverse);
+
+                    HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(termId, inverse);
                     builders.get(loincId).addAdvancedAnnotation(coding, annotate);
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -168,7 +169,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getValue());
+                    builder.append(p.getValue().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");
@@ -204,7 +205,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getValue());
+                    builder.append(p.getValue().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");

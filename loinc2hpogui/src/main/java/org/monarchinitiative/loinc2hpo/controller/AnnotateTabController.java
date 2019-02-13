@@ -54,6 +54,7 @@ import org.monarchinitiative.loinc2hpo.model.AppTempData;
 import org.monarchinitiative.loinc2hpo.model.Settings;
 import org.monarchinitiative.loinc2hpo.util.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
 import java.io.*;
@@ -418,6 +419,7 @@ public class AnnotateTabController {
                 logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
             }
         }
+        changeColorLoincTableView();
         logger.trace("default color for LOINC lists is set");
     }
 
@@ -1385,9 +1387,9 @@ public class AnnotateTabController {
         }
 
         //We don't have to force every loinc code to have three phenotypes
-        Term low = termmap.get(hpoLo);
-        Term normal = termmap.get(hpoNormal);
-        Term high = termmap.get(hpoHi);
+        TermId low = termmap.containsKey(hpoLo) ? termmap.get(hpoLo).getId() : null;
+        TermId normal = termmap.containsKey(hpoNormal) ? termmap.get(hpoNormal).getId() : null;
+        TermId high = termmap.containsKey(hpoHi) ? termmap.get(hpoHi).getId() : null;
         //logger.debug((String.format("Terms found: lo- %s; normal- %s; hi- %s", low.getName(), normal.getName(), high.getName())));
 
         //Warning user that there is something wrong
@@ -1815,7 +1817,7 @@ public class AnnotateTabController {
         Term hpoterm = appResources.getTermnameTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm.getId(), inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
@@ -2069,6 +2071,7 @@ public class AnnotateTabController {
 
             CurrentAnnotationController currentAnnotationController = injector.getInstance(CurrentAnnotationController.class);
             currentAnnotationController.setData(loincEntry2Review, annotation2Review);
+            currentAnnotationController.setTermMap(appResources.getTermidTermMap());
             //tell the new window how to handle "edit" button
             Consumer<LOINC2HpoAnnotationImpl> edithook = (t) -> {
                 editCurrentAnnotation(t);
@@ -2114,15 +2117,15 @@ public class AnnotateTabController {
         }
 
         if (hpoLow != null) {
-            String hpoLowTermName = hpoLow.getHpoTerm().getName();
+            String hpoLowTermName = appResources.getTermidTermMap().get(hpoLow.getId()).getName();
             annotationTextFieldLeft.setText(hpoLowTermName);
         }
         if (hpoHigh != null) {
-            String hpoHighTermName = hpoHigh.getHpoTerm().getName();
+            String hpoHighTermName = appResources.getTermidTermMap().get(hpoHigh.getId()).getName();
             annotationTextFieldRight.setText(hpoHighTermName);
         }
         if (hpoNormal != null) {
-            String hpoNormalTermName = hpoNormal.getHpoTerm().getName();
+            String hpoNormalTermName = appResources.getTermidTermMap().get(hpoNormal.getId()).getName();
             boolean isnegated = hpoNormal.isNegated();
             annotationTextFieldMiddle.setText(hpoNormalTermName);
             inverseChecker.setSelected(isnegated);
