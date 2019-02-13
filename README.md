@@ -1,4 +1,9 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/709c959bb0024403a667affaf2b9f476)](https://www.codacy.com/app/peter.robinson/loinc2hpo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=monarch-initiative/loinc2hpo&amp;utm_campaign=Badge_Grade)
+# LOINC2HPO annotation
+If you want to access the LOINC to HPO mapping, refer to [loinc2hpoAnnotation repo](https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation).
+
+If you want to contribute to LOINC to HPO mapping, read below.
+
 # org.monarchinitiative.loinc2hpo
 Java library to map LOINC-encoded test results to Human Phenotype Ontology.
 
