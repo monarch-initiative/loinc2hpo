@@ -61,9 +61,9 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     @Override
     public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
-        if (hpoTermMap == null) {
-            throw new NullPointerException("hpoTermMap is not provided yet");
-        }
+//        if (hpoTermMap == null) {
+//            throw new NullPointerException("hpoTermMap is not provided yet");
+//        }
 
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new LinkedHashMap<>();

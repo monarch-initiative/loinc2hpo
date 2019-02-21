@@ -143,12 +143,10 @@ logger.trace("MainController initialize() called");
 
         //read in settings from file
         File settingsFile = getPathToSettingsFileAndEnsurePathExists();
-//        appTempData.setPathToSettingsFile(settingsFile.getAbsolutePath());
         try {
             Settings.loadSettings(settings, settingsFile.getPath());
         } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            logger.trace("okay, this is the first time you use it. Configure the settings now");
         }
 
         configurationComplete.set(settings.isCompleteProperty().getValue());
