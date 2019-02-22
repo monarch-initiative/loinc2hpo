@@ -1807,7 +1807,7 @@ public class AnnotateTabController {
         if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
 
         AdvancedAnnotationTableComponent annotation = null;
-        String system = annotationTextFieldLeft.getText().trim().toLowerCase();
+        String system = annotationTextFieldLeft.getText().trim();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
         Code code = null;
         if ( !system.isEmpty() && !codeId.isEmpty()) {
