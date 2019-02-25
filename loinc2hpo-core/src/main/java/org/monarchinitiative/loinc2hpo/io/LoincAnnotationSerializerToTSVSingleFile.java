@@ -61,10 +61,6 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     @Override
     public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
-//        if (hpoTermMap == null) {
-//            throw new NullPointerException("hpoTermMap is not provided yet");
-//        }
-
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
@@ -148,7 +144,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
 
-    private String annotationToString(LOINC2HpoAnnotationImpl annotation) {
+    public String annotationToString(LOINC2HpoAnnotationImpl annotation) {
         StringBuilder builder = new StringBuilder();
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 

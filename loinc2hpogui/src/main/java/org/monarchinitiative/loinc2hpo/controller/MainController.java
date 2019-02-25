@@ -123,7 +123,7 @@ logger.trace("MainController initialize() called");
                             //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
                             Alert alert1 = new Alert(Alert.AlertType.WARNING);
                             alert1.setHeaderText("Error loading annotation data");
-                            alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.");
+                            alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.\n" + AnnotationQC.unrecognizedTermId(appResources.getLoincAnnotationMap(), appResources.getHpo()));
                             alert1.setTitle("Warning");
                             Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
                             stage.setAlwaysOnTop(true);
@@ -474,7 +474,7 @@ logger.trace("MainController initialize() called");
             }
         }
         appResources.getLoincAnnotationMap().clear();
-        appTempData.getUserCreatedLoincLists().values().forEach(p -> p.clear());
+        appResources.getUserCreatedLoincLists().values().forEach(p -> p.clear());
         createNewSession();
         appTempData.setSessionChanged(false);
         e.consume();
@@ -558,7 +558,8 @@ logger.trace("MainController initialize() called");
                         annotateTabController.userCreatedLoincLists.add
                                 (categoryName);
                     }
-                    appTempData.addUserCreatedLoincList(categoryName, loincIds);
+                    appResources.getUserCreatedLoincLists().put(categoryName, loincIds);
+                    logger.info("loinc list: " + categoryName);
                 } catch (FileNotFoundException e1) {
                     logger.error("file not found:" + file.getAbsolutePath());
                 }
@@ -623,10 +624,10 @@ logger.trace("MainController initialize() called");
         if (!new File(pathToLoincCategory).exists()) {
             new File(pathToLoincCategory).mkdir();
         }
-        appTempData.getUserCreatedLoincLists().entrySet()
+        appResources.getUserCreatedLoincLists().entrySet()
                 .forEach(p -> {
                     String path = pathToLoincCategory + File.separator + p.getKey() + ".txt";
-                    Set<LoincId> loincIds = appTempData.getUserCreatedLoincLists().get(p.getKey());
+                    Set<LoincId> loincIds = appResources.getUserCreatedLoincLists().get(p.getKey());
                     StringBuilder builder = new StringBuilder();
                     loincIds.forEach(l -> {
                         builder.append (l);

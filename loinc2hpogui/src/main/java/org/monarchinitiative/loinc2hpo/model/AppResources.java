@@ -34,6 +34,7 @@ public class AppResources {
     private Map<String, LoincEntry> loincEntryMapFromName;
     private Map<LoincId, LoincPanel> loincPanelMap;
     private Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap;
+    private Map<String, Set<LoincId>> userCreatedLoincLists;
     private Map<String, String> userCreatedLoincListsColor;
     private ResourceCollection resourceCollection;
     private Settings settings;
@@ -160,4 +161,16 @@ public class AppResources {
 
         return userCreatedLoincListsColor;
     }
+
+    public Map<String, Set<LoincId>> getUserCreatedLoincLists() {
+        if (this.userCreatedLoincLists != null) {
+            return this.userCreatedLoincLists;
+        }
+
+        String loincCategoriesDirPath = settings.getAnnotationFolder() + File.separator + Constants.DATAFOLDER + File.separator + Constants.LOINCCategory;
+        resourceCollection.setLoincCategoriesDirPath(loincCategoriesDirPath);
+        this.userCreatedLoincLists = resourceCollection.getLoincCategories();
+        return this.userCreatedLoincLists;
+    }
+
 }

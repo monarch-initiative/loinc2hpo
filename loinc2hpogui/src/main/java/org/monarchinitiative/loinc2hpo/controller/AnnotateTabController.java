@@ -265,11 +265,10 @@ public class AnnotateTabController {
                         logger.trace(c + " was added");
                         c.getAddedSubList()
                             .stream()
-                            .filter(p -> !appTempData.getUserCreatedLoincLists().containsKey(p))
                             .forEach(p -> {
-
-                                appTempData.addUserCreatedLoincList(p, new LinkedHashSet<>());
-
+                                //putIfAbsent is important to prevent overwritten
+                                appResources.getUserCreatedLoincLists().putIfAbsent(p, new LinkedHashSet<>());
+                                //appTempData.addUserCreatedLoincList(p, new LinkedHashSet<>());
                                 MenuItem newListMenuItem = new MenuItem(p);
                                 groupUngroup2LoincListButton.getItems().add(newListMenuItem);
                                 newListMenuItem.setOnAction((event -> {
@@ -277,12 +276,12 @@ public class AnnotateTabController {
                                     if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
                                         LoincId loincId = loincTableView.getSelectionModel()
                                                 .getSelectedItem().getLOINC_Number();
-                                        if (appTempData.getUserCreatedLoincLists().get(p).contains(loincId)) {
-                                            appTempData.getUserCreatedLoincLists().get(p)
+                                        if (appResources.getUserCreatedLoincLists().get(p).contains(loincId)) {
+                                            appResources.getUserCreatedLoincLists().get(p)
                                                     .remove(loincId);
                                             logger.trace(String.format("LOINC: %s removed from %s", loincId, p));
                                         } else {
-                                            appTempData.getUserCreatedLoincLists().get(p)
+                                            appResources.getUserCreatedLoincLists().get(p)
                                                     .add(loincId);
                                             logger.trace(String.format("LOINC: %s added to %s", loincId, p));
                                         }
@@ -297,7 +296,7 @@ public class AnnotateTabController {
                                 newExportMenuItem.setOnAction((event -> {
                                     logger.trace("action detected");
                                     if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
-                                        Set<LoincId> loincIds = appTempData.getUserCreatedLoincLists().get(p);
+                                        Set<LoincId> loincIds = appResources.getUserCreatedLoincLists().get(p);
                                         if (loincIds.isEmpty()) {
                                             return;
                                         }
@@ -346,7 +345,7 @@ public class AnnotateTabController {
                                                 malformed.add(l);
                                             }
                                             if (appResources.getLoincEntryMap().containsKey(loincId)) {
-                                                appTempData.getUserCreatedLoincLists().get(p).add(loincId);
+                                                appResources.getUserCreatedLoincLists().get(p).add(loincId);
                                             } else {
                                                 notFound.add(l);
                                             }
@@ -412,15 +411,16 @@ public class AnnotateTabController {
         Platform.runLater(()->initHPOmodelButton(null));
         List<String> DEFAULTGROUPS = Arrays.asList(LOINCWAITING4NEWHPO, LOINCUNABLE2ANNOTATE, UNSPECIFIEDSPECIMEN, LOINC4QC);
         for(int i = 0; i < DEFAULTGROUPS.size(); i++) {
-            if (!settings.getUserCreatedLoincListsColor()
-                    .containsKey(DEFAULTGROUPS.get(i))) {
-                appTempData.addOrUpdateUserCreatedLoincListColor(DEFAULTGROUPS.get(i),
+            settings.getUserCreatedLoincListsColor().putIfAbsent(DEFAULTGROUPS.get(i),
                         appTempData.defaultColorList().get(i + 1));
-                logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
-            }
+            logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
+
         }
-        changeColorLoincTableView();
         logger.trace("default color for LOINC lists is set");
+        logger.trace("loinc categories: " + appResources.getUserCreatedLoincLists().keySet());
+        userCreatedLoincLists.addAll(appResources.getUserCreatedLoincLists().keySet());
+        changeColorLoincTableView();
+
     }
 
     private void noLoincEntryAlert(){
@@ -919,7 +919,7 @@ public class AnnotateTabController {
         Random rand = new Random();
         double[] randColorValues = rand.doubles(3, 0, 1).toArray();
         Color randColor = Color.color(randColorValues[0], randColorValues[1], randColorValues[2]);
-        appTempData.addOrUpdateUserCreatedLoincListColor(nameOfList, ColorUtils.colorValue(randColor));
+        settings.getUserCreatedLoincListsColor().put(nameOfList, ColorUtils.colorValue(randColor));
     }
 
     @FXML
@@ -972,7 +972,7 @@ public class AnnotateTabController {
 
 
         colorPicker.setOnAction(t -> {
-            appTempData.addOrUpdateUserCreatedLoincListColor(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
+            settings.getUserCreatedLoincListsColor().put(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
             logger.trace("new color: " + settings.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
             gridPaneColors.get(loincGroupCombo.getSelectionModel().getSelectedItem()).setBackground(new Background(new BackgroundFill(colorPicker.getValue(), null, null)));
             changeColorLoincTableView();
@@ -990,7 +990,7 @@ public class AnnotateTabController {
      */
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
-        if (!appTempData.getUserCreatedLoincLists().isEmpty()) {
+        if (!appResources.getUserCreatedLoincLists().isEmpty()) {
             logger.trace("initializeUserCreatedLoincListsIfNecessary(): 1111");
             return;
         }
@@ -1662,11 +1662,13 @@ public class AnnotateTabController {
 
     }
 
-
     //change the color of rows to green after the loinc code has been annotated
     void changeColorLoincTableView(){
         logger.debug("enter changeColorLoincTableView");
-        logger.info("appTempData size: " + appResources.getLoincAnnotationMap().size());
+        logger.info("annotated LOINC count: " + appResources.getLoincAnnotationMap().size());
+        logger.info("num Loinc Categories: " + appResources.getUserCreatedLoincLists().keySet());
+        logger.info("unable_to_annotate: " + appResources.getUserCreatedLoincLists().get("unspecified_specimen").size());
+        logger.info("colors: " + appResources.getUserCreatedLoincListsColor().values());
         loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
             @Override
             protected void updateItem(String item, boolean empty){
@@ -1681,7 +1683,7 @@ public class AnnotateTabController {
                         } else {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             LoincId loincId = new LoincId(item);
-                            List<String> inList = appTempData.getUserCreatedLoincLists().entrySet()
+                            List<String> inList = appResources.getUserCreatedLoincLists().entrySet()
                                     .stream()
                                     .filter(entry -> entry.getValue().contains(loincId))
                                     .map(entry -> entry.getKey())
@@ -1807,7 +1809,7 @@ public class AnnotateTabController {
         if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
 
         AdvancedAnnotationTableComponent annotation = null;
-        String system = annotationTextFieldLeft.getText().trim().toLowerCase();
+        String system = annotationTextFieldLeft.getText().trim();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
         Code code = null;
         if ( !system.isEmpty() && !codeId.isEmpty()) {
