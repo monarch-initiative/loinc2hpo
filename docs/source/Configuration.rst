@@ -8,9 +8,11 @@ Mandatory Settings
 
 * Download the Loinc Core Table from `loinc.org <https://loinc.org/downloads/loinc/>`_. Follow instructions from the loinc.org website. You need to register before you can download the document. The current version is *Loinc Version 2.63* (2017/12/15 release).
 
-* Configure the path to the Loinc core table. From the menu bar, click **"Configuration"** - **"Set path to Loinc Core Table file"** and point to the Loinc Core Table file downloaded from last step.
+* Configure the path to the Loinc core table. From the menu bar, click **"Configuration"** - **"Set path to Loinc Core Table file"** and point to the LoincTableCore.csv file.
 
 * Download HPO file. From the menu bar, click **"Configuration"** - **"Download HPO file"**. The files (HPO in .obo and .owl formats) will be automatically downloaded.
+
+* Set the path to auto-saved data. First clone the repository for loinc2hpoAnnotation from Github (https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation)[https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation]. Then from the menu bar, click **"Configuration"** - **"Set path to Auto-saved Data"**, point to the loinc2hpoAnnotation folder.
 
 **Restart the app to apply all settings**
 
@@ -19,10 +21,6 @@ Optional Settings
 -----------------
 The following setting are strongly recommended. Not specifying them will not
 affect the operation of the app. 
-
-* Change the directory for auto-saved data. The default directory for auto-saved data is located at ~/.loinc2hpo/Data. If you want to change this setting, click **Configuration** - **Set path to Autosaved Data** to select your desired directory.
-
-  **Note:** this step is mandatory if you want to use and push your annotations to `loinc2hpoAnnotation <https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation>`_. Follow instructions there to set up the path properly.
 
 * Set biocurator ID. From the menu bar, click **"Configuration"** - **"Set biocurator ID"**, specify your biocurator ID. If you are not assigned one, create one for yourself with the following format: organization name first followed by `:`, then your name/id.
 
