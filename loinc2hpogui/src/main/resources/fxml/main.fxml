@@ -57,7 +57,6 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Show settings" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#setHPORepo" text="Set HPO repo" />
                         <MenuItem mnemonicParsing="false" onAction="#changeHpoOwlTo" text="Change hpo.owl" />
                         <MenuItem mnemonicParsing="false" onAction="#changeHpoOboTo" text="Change hpo.obo" />
                   </items>

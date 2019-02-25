@@ -1,13 +1,11 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableMapValue;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,16 +21,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.wagon.CommandExecutionException;
 import org.monarchinitiative.loinc2hpo.Constants;
+import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.command.VersionCommand;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpo.gui.HelpViewFactory;
-import org.monarchinitiative.loinc2hpo.gui.PopUps;
-import org.monarchinitiative.loinc2hpo.gui.RestartApp;
-import org.monarchinitiative.loinc2hpo.gui.SettingsViewFactory;
+import org.monarchinitiative.loinc2hpo.gui.*;
 import org.monarchinitiative.loinc2hpo.io.*;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
+import org.monarchinitiative.loinc2hpo.model.Settings;
+import org.monarchinitiative.loinc2hpo.util.AnnotationQC;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -44,6 +43,10 @@ import java.util.stream.Collectors;
 
 import static org.monarchinitiative.loinc2hpo.gui.PopUps.getStringFromUser;
 
+/**
+ * The class provides an entry to the app. Its main responsibility is to manage settings and loading resources.
+ */
+
 @Singleton
 public class MainController {
     private static final Logger logger = LogManager.getLogger();
@@ -51,7 +54,7 @@ public class MainController {
     private final static String HP_OBO_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.obo";
     //It appears Jena Sparql API does not like obo, so also download hp.owl
     private final static String HP_OWL_URL ="https://raw.githubusercontent.com/obophenotype/human-phenotype-ontology/master/hp.owl";
-    private Model model=null;
+
     private final String LOINC_CATEGORY_folder = "LOINC CATEGORY";
 
     //use it to track whether configurations are complete
@@ -59,19 +62,19 @@ public class MainController {
     //  path to Loinc Core Table
     //  path to HPO files
     //  path to auto-saved folder
-    private ObservableMapValue<String, Boolean> configurationsState;
     private BooleanProperty configurationComplete = new SimpleBooleanProperty
             (false);
 
-    //The following is the data that needs to be tracked
-    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap_Copy;
-    private Map<String, Set<LoincId>> loincCategories_Copy;
-
-    @Inject private SetupTabController setupTabController;
     @Inject private AnnotateTabController annotateTabController;
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     @Inject private Loinc2HpoConversionTabController loinc2HPOConversionTabController;
-    @Inject private CurrentAnnotationController currentAnnotationController;
+    @Inject private Injector injector;
+    @Inject private AppTempData appTempData;
+    //manages all resources
+
+    @Inject private Settings settings;
+    private AppResources appResources;
+
 
     @FXML private BorderPane boardPane;
 
@@ -94,79 +97,61 @@ public class MainController {
 
     @FXML private MenuItem updateHpoButton;
 
-
-
     @FXML private void initialize() {
-        Platform.runLater(() -> {
-            annotateTabButton.setDisable(true);
-            Loinc2HPOAnnotationsTabButton.setDisable(true);
-            Loinc2HpoConversionTabButton.setDisable(true);
-        });
+logger.trace("MainController initialize() called");
+        annotateTabButton.setDisable(true);
+        Loinc2HPOAnnotationsTabButton.setDisable(true);
+        Loinc2HpoConversionTabButton.setDisable(true);
 
-        configurationComplete.addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue.booleanValue()) {
-                    Platform.runLater(() -> {
-                        annotateTabButton.setDisable(false);
-                        Loinc2HPOAnnotationsTabButton.setDisable(false);
-                        Loinc2HpoConversionTabButton.setDisable(false);
+        //once configure is done, enable all tabs
+        configurationComplete.addListener((observable, oldValue, newValue) -> {
+            logger.info(String.format("configurationComplete state change. old: %s; new; %s", oldValue, newValue));
+            if (observable != null && newValue) {
+                logger.info("configuration is completed");
+                annotateTabButton.setDisable(false);
+                Loinc2HPOAnnotationsTabButton.setDisable(false);
+                Loinc2HpoConversionTabButton.setDisable(false);
+
+                appResources = injector.getInstance(AppResources.class);
+                //@TODO: figure out how to control init after construction
+                appResources.init();
+
+                if (AnnotationQC.hasUnrecognizedTermId(appResources.getLoincAnnotationMap(), appResources.getHpo())) {
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Alert alert = new Alert(Alert.AlertType.WARNING, "I Warn You!", ButtonType.OK, ButtonType.CANCEL);
+                            Alert alert1 = new Alert(Alert.AlertType.WARNING);
+                            alert1.setHeaderText("Error loading annotation data");
+                            alert1.setContentText("This is typically due to that HPO is outdated. Update your local copy of HPO and restart this app.\n" + AnnotationQC.unrecognizedTermId(appResources.getLoincAnnotationMap(), appResources.getHpo()));
+                            alert1.setTitle("Warning");
+                            Stage stage = (Stage) alert1.getDialogPane().getScene().getWindow();
+                            stage.setAlwaysOnTop(true);
+                            stage.showAndWait();
+                        }
                     });
                 }
+
+                annotateTabController.setAppTempData(appTempData);
+                loinc2HpoAnnotationsTabController.setAppTempData(appTempData);
+                loinc2HPOConversionTabController.setAppTempData(appTempData);
+                loinc2HpoAnnotationsTabController.setAppResources(appResources);
+
+                annotateTabController.defaultStartUp();
             }
         });
 
-        this.model = new Model();
         //read in settings from file
-        File settings = getPathToSettingsFileAndEnsurePathExists();
-        model.setPathToSettingsFile(settings.getAbsolutePath());
-        if (settings.exists()) {
-            model.inputSettings(settings.getAbsolutePath());
-            configurationComplete.setValue(isConfigurationCompleted());
-        }
-        //set auto-save file path if it is not specified
-        //set it to the default path. user can still change it
-        if (model.getPathToAutoSavedFolder() == null) {
-            model.setPathToAutoSavedFolder(Loinc2HpoPlatform.getLOINC2HPODir()
-                    + File.separator + "Data");
-            File folder = new File(model.getPathToAutoSavedFolder());
-            boolean created = false;
-            if (!folder.exists()) {
-                created = folder.mkdir();
-            }
-            if (created) {
-                model.writeSettings();
-            }
-            configurationComplete.set(isConfigurationCompleted());
+        File settingsFile = getPathToSettingsFileAndEnsurePathExists();
+        try {
+            Settings.loadSettings(settings, settingsFile.getPath());
+        } catch (IOException e) {
+            logger.trace("okay, this is the first time you use it. Configure the settings now");
         }
 
+        configurationComplete.set(settings.isCompleteProperty().getValue());
+        configurationComplete.bind(settings.isCompleteProperty());
 
-        if (setupTabController==null) {
-            logger.error("setupTabController is null");
-            return;
-        }
-        setupTabController.setModel(model);
-        if (annotateTabController==null) {
-            logger.error("annotate Controller is null");
-            return;
-        }
-        annotateTabController.setModel(model);
-        if (loinc2HpoAnnotationsTabController==null) {
-            logger.error("loinc2HpoAnnotationsTabController is null");
-            return;
-        }
-        if (loinc2HPOConversionTabController == null) {
-            logger.error("loinc2HPOConversionTabController is null");
-            return;
-        }
-        currentAnnotationController.setModel(model);
-        if (model == null) {
-            logger.error("main controller model is null");
-            return;
-        }
-
-        loinc2HpoAnnotationsTabController.setModel(model);
-        loinc2HPOConversionTabController.setModel(model);
         if (Loinc2HpoPlatform.isMacintosh()) {
             loincmenubar.useSystemMenuBarProperty().set(true);
         }
@@ -175,33 +160,21 @@ public class MainController {
         //control how menu items should be shown
         importAnnotationButton.setDisable(true);
         exportMenu.setDisable(true);
-        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
-            @Override
-            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue) {
+        tabPane.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
 
-                if(newValue.equals(Loinc2HPOAnnotationsTabButton)) {
-                    importAnnotationButton.setDisable(false);
-                    exportMenu.setDisable(false);
-                    clearMenu.setDisable(false);
-                } else {
-                    importAnnotationButton.setDisable(true);
-                    exportMenu.setDisable(true);
-                    clearMenu.setDisable(true);
-                }
-
-
+            if(newValue.equals(Loinc2HPOAnnotationsTabButton)) {
+                importAnnotationButton.setDisable(false);
+                exportMenu.setDisable(false);
+                clearMenu.setDisable(false);
+            } else {
+                importAnnotationButton.setDisable(true);
+                exportMenu.setDisable(true);
+                clearMenu.setDisable(true);
             }
+
+
         });
-
-        if (configurationComplete.get()) {
-            annotateTabController.defaultStartUp();
-            defaultStartup();
-
-            if (model.getPathToLastSession() != null) {
-                openSession(model.getPathToLastSession());
-            }
-        }
-
 
         //@TODO: to decide whether to remove the following menuitems
         importLoincCategory.setVisible(false);
@@ -213,36 +186,6 @@ public class MainController {
         updateHpoButton.setVisible(false);
     }
 
-    private boolean isConfigurationCompleted() {
-        return model.getPathToLoincCoreTableFile() != null
-                && model.getPathToHpoOwlFile() != null
-                && model.getPathToHpoOboFile() != null
-                && model.getPathToAutoSavedFolder() != null;
-    }
-
-    private void initializeAllDataSettings() {
-        if (model.getPathToLoincCoreTableFile() == null
-                || model.getPathToHpoOboFile() == null
-                || model.getPathToHpoOwlFile() == null
-                || model.getPathToAutoSavedFolder() == null) {
-            Platform.runLater( () -> {
-                annotateTabButton.setDisable(true);
-                Loinc2HPOAnnotationsTabButton.setDisable(true);
-                Loinc2HpoConversionTabButton.setDisable(true);
-                return;
-            });
-        }
-        annotateTabController.defaultStartUp();
-        this.defaultStartup();
-    }
-
-    private void defaultStartup() {
-        if (model.getPathToLastSession() != null) {
-            openSession(model.getPathToLastSession());
-        }
-    }
-
-
     public void saveBeforeExit() {
         logger.trace("SaveBeforeExit() is called");
         if (isSessionDataChanged()) {
@@ -253,57 +196,29 @@ public class MainController {
     }
 
     /**
-     * @TODO: complete this feature in future when high efficiency is needed
-     * Method: create a copy of session data when it starts; before exiting, compare data to see whether it changed
-     */
-    private void initTrackedData() {
-        annotationMap_Copy = new LinkedHashMap<>(model.getLoincAnnotationMap());
-        loincCategories_Copy = new LinkedHashMap<>(model.getUserCreatedLoincLists());
-    }
-
-
-    /**
      * The function determines whether the data in annotations map and loincCategories has changed
      * @return
      */
     public boolean isSessionDataChanged() {
         //Lazy implementation
         //whenever createAnnotation, saveAnnotation, group/ungroup loinc or create loinc list are called, it return true
-        return model.isSessionChanged();
+        return appTempData.isSessionChanged();
     }
 
     @FXML private void setPathToAutoSavedData(ActionEvent e) {
         e.consume();
-        String path2DEFAULTDIRECTORY = Loinc2HpoPlatform.getLOINC2HPODir() + File.separator + "Data";
-        File DEFAULTDIRECTORY = new File(path2DEFAULTDIRECTORY);
+        File annotationDIRECTORY;
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Choose a directory to save annotation data");
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        annotationDIRECTORY  = directoryChooser.showDialog(null);
 
-        String[] choices = new String[] {"Yes", "No"};
-        Optional<String> choice = PopUps.getToggleChoiceFromUser(choices,
-                "Default path: " + path2DEFAULTDIRECTORY, "Set Path to Auto-saved Data");
-        if (choice.isPresent() && choice.get().equals("No")) { //manually create a directory for autosaved data
-            DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setTitle("Choose a directory to save session data");
-            directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-            DEFAULTDIRECTORY  = directoryChooser.showDialog(null);
-        }
-
-        if (DEFAULTDIRECTORY == null) {
+        if (annotationDIRECTORY == null) {
             return;
         }
 
-        if (!DEFAULTDIRECTORY.exists()) {
-            DEFAULTDIRECTORY.mkdir();
-        }
-        //Warn user if the above settings failed
-        if (!DEFAULTDIRECTORY.exists()){
-            PopUps.showWarningDialog("Error", "Failure to set the default folder",
-                    "Try again, or manually set one");
-            return;
-        }
-        model.setPathToAutoSavedFolder(DEFAULTDIRECTORY.getAbsolutePath());
-        model.writeSettings();
-        configurationComplete.set(isConfigurationCompleted());
-
+        settings.setAnnotationFolder(annotationDIRECTORY.getAbsolutePath());
+        Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
     }
 
     @FXML public void downloadHPO(ActionEvent e) {
@@ -338,17 +253,14 @@ public class MainController {
             String fullpath=String.format("%s%shp.obo",dirpath,File.separator);
             String fullpath_owl = String.format("%s%shp.owl", dirpath, File
                     .separator);
-            model.setPathToHpOboFile(fullpath);
-            model.setPathToHpOwlFile(fullpath_owl);
-            model.writeSettings();
-            configurationComplete.set(isConfigurationCompleted());
+            settings.setHpoOboPath(fullpath);
+            settings.setHpoOwlPath(fullpath_owl);
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         });
         hpodownload.setOnFailed(event -> {
             window.close();
             logger.error("Unable to download HPO obo file");
         });
-       // Thread thread = new Thread(hpodownload);
-        //thread.start();
 
         e.consume();
     }
@@ -360,9 +272,8 @@ public class MainController {
         chooser.setTitle("Choose HPO OWL file");
         File owl = chooser.showOpenDialog(null);
         if (owl != null) {
-            model.setPathToHpOwlFile(owl.getAbsolutePath());
-            model.writeSettings();
-            configurationComplete.set(isConfigurationCompleted());
+            settings.setHpoOwlPath(owl.getAbsolutePath());
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         }
 
     }
@@ -376,24 +287,8 @@ public class MainController {
         chooser.setTitle("Choose HPO OBO file");
         File obo = chooser.showOpenDialog(null);
         if (obo != null) {
-            model.setPathToHpOboFile(obo.getAbsolutePath());
-            model.writeSettings();
-            configurationComplete.set(isConfigurationCompleted());
-        }
-
-    }
-
-    @FXML private void setHPORepo(ActionEvent e) {
-
-        e.consume();
-        logger.trace("set HPO repo");
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Choose Human Phenotype Ontology Github repo");
-        File hpo = chooser.showDialog(null);
-        if (hpo != null) {
-            model.setPathToHpGitRepo(hpo.getAbsolutePath());
-            model.writeSettings();
-            configurationComplete.set(isConfigurationCompleted());
+            settings.setHpoOboPath(obo.getAbsolutePath());
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         }
 
     }
@@ -404,13 +299,12 @@ public class MainController {
         File f = chooser.showOpenDialog(null);
         if (f != null) {
             String path = f.getAbsolutePath();
-            model.setPathToLoincCoreTableFile(path);
+            settings.setLoincCoreTablePath(path);
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
             logger.trace(String.format("Setting path to LOINC Core Table file to %s",path));
         } else {
             logger.error("Unable to obtain path to LOINC Core Table file");
         }
-        model.writeSettings();
-        configurationComplete.set(isConfigurationCompleted());
         e.consume();
     }
 
@@ -466,12 +360,13 @@ public class MainController {
     }
 
     @FXML private void setBiocuratorID(ActionEvent e) {
-        String prompText = (model.getBiocuratorID() == null || model.getBiocuratorID().isEmpty())
-                ? "e.g., MGM:rrabbit" : model.getBiocuratorID();
+        String current = settings.getBiocuratorID();
+        String prompText = (current == null || current.isEmpty())
+                ? "e.g., MGM:rrabbit" : current;
         String bcid=getStringFromUser("Biocurator ID", prompText, "Enter biocurator ID");
         if (bcid!=null && bcid.indexOf(":")>0) {
-            model.setBiocuratorID(bcid);
-            model.writeSettings();
+            settings.setBiocuratorID(bcid);
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         } else {
             logger.error(String.format("Invalid biocurator ID; must be of the form MGM:rrabbit; you tried: \"%s\"",
                     bcid!=null?bcid:""));
@@ -497,25 +392,28 @@ public class MainController {
 
     /** Open a help dialog */
     @FXML private void openSettingsDialog() {
-        SettingsViewFactory.openSettingsDialog(this.model);
+        SettingsViewFactory.openSettingsDialog(settings);
     }
 
 
     private String autogenerateFileName() {
 
         String filename = null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         Date date = new Date();
         filename = format.format(date);
         //Calendar cal = Calendar.getInstance();
         //filename = format.format(cal);
 
-        return filename;
+        return "Loinc2HpoAnnotation_" + filename;
     }
 
+    /**
+     * Create new annotation folder, and populate with subdirectories
+     */
     private void createNewSession() {
         logger.trace(autogenerateFileName());
-        String sessionFolderName = model.getPathToAutoSavedFolder() + File.separator + autogenerateFileName();
+        String sessionFolderName = System.getProperty("user.home") + File.separator + autogenerateFileName();
 
         //ask user if default file is okay
         String[] choices = new String[] {"Yes", "No"};
@@ -524,7 +422,6 @@ public class MainController {
         if (choice.isPresent() && choice.get().equals("No")) { //manually create a directory for autosaved data
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Choose a directory to new session data");
-            directoryChooser.setInitialDirectory(new File(model.getPathToAutoSavedFolder()));
             File f  = directoryChooser.showDialog(null);
             if (f != null) {
                 sessionFolderName = f.getAbsolutePath();
@@ -532,13 +429,34 @@ public class MainController {
                 return;
             }
         }
-        File sessionFolder = new File(sessionFolderName);
-        if (!sessionFolder.exists()) {
-            sessionFolder.mkdir();
+        if (!Files.exists(Paths.get(sessionFolderName))) {
+            try {
+                Files.createDirectory(Paths.get(sessionFolderName));
+            } catch (IOException e) {
+                PopUps.showWarningDialog("Warning", "Failure to create folders", "No Annotation folder is created. Try a different folder.");
+                return;
+            }
         }
-        //update last session infor in model
-        model.setPathToLastSession(sessionFolder.getAbsolutePath());
-        model.writeSettings();
+
+        try {
+            //create "Data" subdirectory
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data"));
+            //create "Data/LOINC CATEGORY
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "LOINC CATEGORY"));
+            //Create "Data/LoincPanel
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "LoincPanel"));
+            //Create "TSVSingleFile"
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Data" + File.separator + "TSVSingleFile"));
+            //Create "Task"
+            Files.createDirectory(Paths.get(sessionFolderName + File.separator + "Task"));
+        } catch (IOException e) {
+            PopUps.showWarningDialog("Warning", "Failure to create subdirectories for annotation data", "No annotation folder is created");
+            return;
+        }
+
+        //update last session infor in appTempData
+        settings.setAnnotationFolder(sessionFolderName);//.setPathToAnnotationFolder(sessionFolderName);
+        Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
     }
 
     @FXML
@@ -547,7 +465,7 @@ public class MainController {
      */
     private void handleNewSession(ActionEvent e) {
 
-        if (model.isSessionChanged()) {
+        if (appTempData.isSessionChanged()) {
             boolean toSave = PopUps.getBooleanFromUser("Session has been changed. Save changes? " +
                             "If you choose No, all current changes will be lost.",
                     "Save session data", "Confirmation");
@@ -555,10 +473,10 @@ public class MainController {
                 handleSaveSession(null);
             }
         }
-        model.getLoincAnnotationMap().clear();
-        model.getUserCreatedLoincLists().values().forEach(p -> p.clear());
+        appResources.getLoincAnnotationMap().clear();
+        appResources.getUserCreatedLoincLists().values().forEach(p -> p.clear());
         createNewSession();
-        model.setSessionChanged(false);
+        appTempData.setSessionChanged(false);
         e.consume();
     }
 
@@ -566,23 +484,21 @@ public class MainController {
     private void handleOpenSession(ActionEvent e){
         e.consume();
 
-        if (model.getLoincEntryMap() == null) {
+        if (appResources.getLoincEntryMap() == null) {
             PopUps.showWarningDialog("NO LOINC", "LOINC table Not Initialized",
                     "click init Loinc button to import Loinc table");
             return;
         }
-        if (model.getTermMap() == null) {
+        if (appResources.getTermidTermMap() == null) {
             PopUps.showWarningDialog("NO HPO", "HPO Not Initialized",
                     "click init HPO button to import HPO");
             return;
         }
 
-        String pathToOpen = model.getPathToAutoSavedFolder();
-
+        String pathToOpen;
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Choose session folder");
-        directoryChooser.setInitialDirectory(pathToOpen != null ?
-                new File(pathToOpen) : new File(System.getProperty("user.home")));
+        directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File f  = directoryChooser.showDialog(null);
         if (f != null) {
             pathToOpen = f.getAbsolutePath();
@@ -591,17 +507,23 @@ public class MainController {
         }
 
         openSession(pathToOpen);
-        model.setPathToLastSession(pathToOpen);
-        model.writeSettings();
+        settings.setAnnotationFolder(pathToOpen);
+        Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
     }
 
+    /**
+     * Open the annotation
+     * @param pathToOpen
+     */
     protected void openSession(String pathToOpen) {
 
+        String dataDir = pathToOpen + File.separator + "Data";
+
         //import annotations
-        loinc2HpoAnnotationsTabController.importLoincAnnotation(pathToOpen);
+        loinc2HpoAnnotationsTabController.importLoincAnnotation(dataDir);
 
         //import the LOINC categories
-        File loinc_category_folder = new File(pathToOpen + File.separator + LOINC_CATEGORY_folder);
+        File loinc_category_folder = new File(dataDir + File.separator + LOINC_CATEGORY_folder);
         if (!loinc_category_folder.exists() || !loinc_category_folder.isDirectory()) {
             return;
         }
@@ -611,19 +533,23 @@ public class MainController {
             return;
         } else {
             for (File file : files) {
+                if (!file.getName().endsWith(".txt")) {
+                    continue;
+                }
+                if (file.getName().endsWith("DS_Store.txt")){
+                    continue;
+                }
                 try {
                     LoincOfInterest loincCategory = new LoincOfInterest(file.getAbsolutePath());
                     Set<String> loincIdStrings = loincCategory.getLoincOfInterest();
-                    String categoryName = file.getName();
-                    if (categoryName.endsWith(".txt")) {
-                        categoryName = categoryName.substring(0, file.getName().length() - 4);
-                    }
+                    String categoryName = file.getName().substring(0, file.getName().length() - 4);;
 
                     Set<LoincId> loincIds = loincIdStrings.stream().map(p -> {
                         try {
                             return new LoincId(p);
                         } catch (MalformedLoincCodeException e1) {
-                            logger.error("This should never happen since the loincids are automatically saved");
+                            logger.error("malformed LOINC id: " + p);
+                            logger.error("in:" + file.getAbsolutePath());
                         }
                         return null;
                     }).collect(Collectors.toSet());
@@ -632,9 +558,10 @@ public class MainController {
                         annotateTabController.userCreatedLoincLists.add
                                 (categoryName);
                     }
-                    model.addUserCreatedLoincList(categoryName, loincIds);
+                    appResources.getUserCreatedLoincLists().put(categoryName, loincIds);
+                    logger.info("loinc list: " + categoryName);
                 } catch (FileNotFoundException e1) {
-                    logger.error("This should never happen since the folder is autogenerated.");
+                    logger.error("file not found:" + file.getAbsolutePath());
                 }
             }
             annotateTabController.changeColorLoincTableView();
@@ -648,13 +575,15 @@ public class MainController {
 
         logger.trace("user wants to save a session");
         //Create a session if it is saved for the first time
-        if (model.getPathToLastSession() == null) {
+        if (settings.getAnnotationFolder() == null) {
             createNewSession();
         }
 
+        String dataDir = settings.getAnnotationFolder() + File.separator + "Data";
+
         // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
         //create folder is not present
-        Path folderTSVSeparated = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSeparateFilesFolder);
+        Path folderTSVSeparated = Paths.get(dataDir + File.separator + Constants.TSVSeparateFilesFolder);
         if (!Files.exists(folderTSVSeparated)) {
             try {
                 Files.createDirectory(folderTSVSeparated);
@@ -667,24 +596,8 @@ public class MainController {
             }
 
         }
-        /**disable this unless necessary
-        //save annotations to "basic_annotations" and "advanced_annotations"
-        try {
-            LoincAnnotationSerializationFactory.setLoincEntryMap(model.getLoincEntryMap());
-            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
-            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile, folderTSVSeparated.toString());
-        } catch (IOException e1) {
 
-            PopUps.showWarningDialog("Error message",
-                    "Failure to save annotations data",
-                    "An error occurred. Try again!");
-
-        }
-
-         //end
-         **/
-
-        Path folderTSVSingle = Paths.get(model.getPathToLastSession() + File.separator + Constants.TSVSingleFileFolder);
+        Path folderTSVSingle = Paths.get(dataDir + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
             try {
                 Files.createDirectory(folderTSVSingle);
@@ -698,8 +611,8 @@ public class MainController {
 
         String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
-            LoincAnnotationSerializationFactory.setHpoTermMap(model.getTermMap2());
-            LoincAnnotationSerializationFactory.serializeToFile(model.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
+            LoincAnnotationSerializationFactory.setHpoTermMap(appResources.getTermidTermMap());
+            LoincAnnotationSerializationFactory.serializeToFile(appResources.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
         } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,
@@ -707,14 +620,14 @@ public class MainController {
             return;
         }
 
-        String pathToLoincCategory = model.getPathToLastSession() + File.separator + LOINC_CATEGORY_folder;
+        String pathToLoincCategory = dataDir + File.separator + LOINC_CATEGORY_folder;
         if (!new File(pathToLoincCategory).exists()) {
             new File(pathToLoincCategory).mkdir();
         }
-        model.getUserCreatedLoincLists().entrySet()
+        appResources.getUserCreatedLoincLists().entrySet()
                 .forEach(p -> {
                     String path = pathToLoincCategory + File.separator + p.getKey() + ".txt";
-                    Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p.getKey());
+                    Set<LoincId> loincIds = appResources.getUserCreatedLoincLists().get(p.getKey());
                     StringBuilder builder = new StringBuilder();
                     loincIds.forEach(l -> {
                         builder.append (l);
@@ -724,7 +637,7 @@ public class MainController {
                 });
 
         //reset the session change tracker
-        model.setSessionChanged(false);
+        appTempData.setSessionChanged(false);
 
         if (e != null) {
             e.consume();
@@ -895,7 +808,7 @@ public class MainController {
     private void updateHpo() throws IOException, InterruptedException, CommandExecutionException {
         String command = "git pull && cd src/ontology && make && cd ../..";
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToHpGitRepo());
+        TerminalCommand tm = new TerminalCommand(commands, appTempData.getPathToHpGitRepo());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -906,7 +819,7 @@ public class MainController {
 
         String command = "git pull origin develop && git checkout develop";
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        TerminalCommand tm = new TerminalCommand(commands, settings.getAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -918,7 +831,7 @@ public class MainController {
 
         String command = String.format("git add . && git commit -m \"%s\" && git push origin develop", "update");
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        TerminalCommand tm = new TerminalCommand(commands, settings.getAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -927,9 +840,9 @@ public class MainController {
     }
 
     public void sendLockingEmail() throws IOException, InterruptedException, CommandExecutionException {
-        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"LOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", settings.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        TerminalCommand tm = new TerminalCommand(commands, settings.getAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library
@@ -937,9 +850,9 @@ public class MainController {
     }
 
     public void sendUnlockingEmail() throws IOException, InterruptedException, CommandExecutionException {
-        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", model.getBiocuratorID());
+        String command = String.format("echo \"Biocurator: %s\" | mail -s \"UNLOCKING loinc2hpoAnnotation\" \"loinc2hpoannotation@googlegroups.com\"", settings.getBiocuratorID());
         String[] commands = new String[] {"/bin/bash", "-c", command};
-        TerminalCommand tm = new TerminalCommand(commands, model.getPathToLastSession());
+        TerminalCommand tm = new TerminalCommand(commands, settings.getAnnotationFolder());
         int exitvalue = tm.execute();
         if (exitvalue != 0) {
             throw new CommandExecutionException("failure"); //borrowed an exception from another library

@@ -4,7 +4,6 @@ package org.monarchinitiative.loinc2hpo.io;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.monarchinitiative.phenol.ontology.data.TermPrefix;
 
 
 import java.io.*;
@@ -69,12 +68,12 @@ public class WriteToFile {
 
 
     public static TermId convertToTermID(String record) {
-        TermPrefix prefix = new TermPrefix("HP");
-        if (!record.startsWith(prefix.getValue()) || record.length() <= 3) {
+        String prefix = "HP";
+        if (!record.startsWith(prefix) || record.length() <= 3) {
             logger.error("Non HPO termId is detected from TSV: " + record);
             return null;
         }
         String id = record.substring(3);
-        return new TermId(prefix, id);
+        return TermId.of(prefix, id);
     }
 }

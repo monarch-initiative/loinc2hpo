@@ -10,14 +10,12 @@ import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.io.OntologyLoader;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,13 +32,7 @@ public class FhirObservationAnalyzerTest {
         observation = FhirResourceRetriever.parseJsonFile2Observation(path);
 
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        }
+        Ontology hpo = OntologyLoader.loadOntology(new File(hpo_obo));
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         if (hpo !=null) {
             List<Term> res = hpo.getTermMap().values().stream().distinct()
@@ -97,9 +89,9 @@ public class FhirObservationAnalyzerTest {
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(hpoTermMap.get("Hypoglycemia"))
-                .setIntermediateValueHpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration"))
-                .setHighValueHpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .setLowValueHpoTerm(hpoTermMap.get("Hypoglycemia").getId())
+                .setIntermediateValueHpoTerm(hpoTermMap.get("Abnormality of blood glucose concentration").getId())
+                .setHighValueHpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .setIntermediateNegated(true)
                 .build();
 

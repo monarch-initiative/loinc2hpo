@@ -2,9 +2,7 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-
-import static org.junit.Assert.*;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 
 @Ignore
 public class HpoOntologyParserTest {
@@ -33,7 +31,7 @@ public class HpoOntologyParserTest {
     public void getOntology() throws Exception {
         HpoOntologyParser hpoOntologyParser = new HpoOntologyParser(hpo_owl_edit);
         hpoOntologyParser.parseOntology();
-        HpoOntology hpoOntology = hpoOntologyParser.getOntology();
+        Ontology hpoOntology = hpoOntologyParser.getOntology();
         System.out.println(hpoOntology.getTerms().size());
     }
 

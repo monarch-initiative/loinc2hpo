@@ -14,9 +14,8 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.io.OntologyLoader;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -40,13 +39,7 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
     public static void setup() throws Exception {
 
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        }
+        Ontology hpo  = OntologyLoader.loadOntology(new File(hpo_obo));
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         ImmutableMap.Builder<TermId, Term> termMap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
@@ -71,9 +64,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
-                .setHighValueHpoTerm(hi)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
+                .setHighValueHpoTerm(hi.getId())
                 .setIntermediateNegated(true)
                 .build();
         testmap.put(loincId, glucoseAnnotation);
@@ -92,9 +85,9 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive, false))
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive.getId(), false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);

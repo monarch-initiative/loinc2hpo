@@ -45,7 +45,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     @Override
     public void serialize(Map<LoincId, LOINC2HpoAnnotationImpl> annotationmap, String filepath) throws IOException {
 
-
+        logger.info("file path: " + filepath);
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(filepath));
         writer.write(header);
@@ -61,14 +61,11 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     @Override
     public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
-        if (hpoTermMap == null) {
-            throw new NullPointerException("hpoTermMap is not provided yet");
-        }
-
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         Map<LoincId, LOINC2HpoAnnotationImpl.Builder> builders = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(filepath));
-        reader.lines().forEach(serialized -> {
+
+        reader.lines().filter(l -> !l.isEmpty()).forEach(serialized -> {
             String[] elements = serialized.split("\\t");
             if (elements.length == 13 && !serialized.startsWith("loincId")) {
                 try {
@@ -118,7 +115,8 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     } else {
                         coding = Code.getNewCode().setCode(code).setSystem(system);
                     }
-                    HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(hpoTermMap.get(termId), inverse);
+
+                    HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(termId, inverse);
                     builders.get(loincId).addAdvancedAnnotation(coding, annotate);
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
@@ -146,7 +144,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
     }
 
 
-    private String annotationToString(LOINC2HpoAnnotationImpl annotation) {
+    public String annotationToString(LOINC2HpoAnnotationImpl annotation) {
         StringBuilder builder = new StringBuilder();
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
@@ -167,7 +165,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getIdWithPrefix());
+                    builder.append(p.getValue().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");
@@ -203,7 +201,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     builder.append("\t");
                     builder.append(p.getKey().getCode());
                     builder.append("\t");
-                    builder.append(p.getValue().getHpoTerm().getId().getIdWithPrefix());
+                    builder.append(p.getValue().getId().getValue());
                     builder.append("\t");
                     builder.append(p.getValue().isNegated());
                     builder.append("\t");

@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -42,43 +43,53 @@ import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.NetPostException;
 import org.monarchinitiative.loinc2hpo.github.GitHubLabelRetriever;
 import org.monarchinitiative.loinc2hpo.github.GitHubPoster;
-import org.monarchinitiative.loinc2hpo.gui.GitHubPopup;
-import org.monarchinitiative.loinc2hpo.gui.Main;
-import org.monarchinitiative.loinc2hpo.gui.PopUps;
+import org.monarchinitiative.loinc2hpo.gui.*;
 import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.io.OntologyModelBuilderForJena;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.loinc2hpo.model.AdvantagedAnnotationTableComponent;
-import org.monarchinitiative.loinc2hpo.model.Model;
+import org.monarchinitiative.loinc2hpo.model.AdvancedAnnotationTableComponent;
+import org.monarchinitiative.loinc2hpo.model.AppResources;
+import org.monarchinitiative.loinc2hpo.model.AppTempData;
+import org.monarchinitiative.loinc2hpo.model.Settings;
 import org.monarchinitiative.loinc2hpo.util.*;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import org.monarchinitiative.loinc2hpo.gui.ColorUtils;
 
 
 @Singleton
 public class AnnotateTabController {
     private static final Logger logger = LogManager.getLogger();
 
-    private Model model=null;
+    private AppTempData appTempData =null;
     private final String MISSINGVALUE = "NA";
 
     @Inject
     private Injector injector;
+
+    @Inject
+    private Settings settings;
+
+    @Inject
+    private AppResources appResources;
 
     /** Reference to the third tab. When the user adds a new annotation, we update the table, therefore, we need a reference. */
     @Inject private Loinc2HpoAnnotationsTabController loinc2HpoAnnotationsTabController;
     @Inject private MainController mainController;
     private ImmutableMap<LoincId,LoincEntry> loincmap=null;
 
+    //observable map for LOINC entries
+    private ObservableMap<LoincId, LoincEntry> loincMap = FXCollections.observableHashMap();
 
+    //observable map for annotations
+    private ObservableMap<LoincId, LOINC2HpoAnnotationImpl> annotationsMap = FXCollections.observableHashMap();
 
     //private final Stage primarystage;
     @FXML private Button initLOINCtableButton;
@@ -100,10 +111,10 @@ public class AnnotateTabController {
     @FXML private TextField annotationTextFieldRight;
     @FXML private CheckBox inverseChecker;
     @FXML private Button addCodedAnnotationButton;
-    private HPO_Class_Found hpo_drag_and_drop;
+
     //private ImmutableMap<String, HPO_Class_Found> selectedHPOforAnnotation;
 
-    private ImmutableMap<String,Term> termmap;
+    private Map<String,Term> termmap;
     // TODO currently, this list is taking both HPO_CLass_Found and String at different parts of the app.
     @FXML private ListView<HPO_Class_Found> hpoListView;
     private ObservableList<HPO_Class_Found> sparqlQueryResult = FXCollections.observableArrayList();
@@ -128,11 +139,11 @@ public class AnnotateTabController {
 
     @FXML private Button modeButton;
     @FXML private TitledPane advancedAnnotationTitledPane;
-    @FXML private TableView<AdvantagedAnnotationTableComponent> advancedAnnotationTable;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationSystem;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationCode;
-    @FXML private TableColumn<AdvantagedAnnotationTableComponent, String> advancedAnnotationHpo;
-    private ObservableList<AdvantagedAnnotationTableComponent> tempAdvancedAnnotations = FXCollections.observableArrayList();
+    @FXML private TableView<AdvancedAnnotationTableComponent> advancedAnnotationTable;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationSystem;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationCode;
+    @FXML private TableColumn<AdvancedAnnotationTableComponent, String> advancedAnnotationHpo;
+    private ObservableList<AdvancedAnnotationTableComponent> tempAdvancedAnnotations = FXCollections.observableArrayList();
 
     //candidate HPO classes found by Sparql query
     //@FXML private TableView<HPO_Class_Found> candidateHPOList;
@@ -173,14 +184,14 @@ public class AnnotateTabController {
     private BooleanProperty isPresentOrd = new SimpleBooleanProperty(false);
 
 
-    @Inject private CurrentAnnotationController currentAnnotationController;
+    //@Inject private CurrentAnnotationController currentAnnotationController;
 
     @FXML private void initialize() {
-        if (model != null) {   //weird line. model is set by main controller; this line never runs
-            setModel(model);
-            //currentAnnotationController.setModel(model); //let current annotation stage have access to model
+        if (appTempData != null) {   //weird line. appTempData is set by main controller; this line never runs
+            setAppTempData(appTempData);
+            //currentAnnotationController.setAppTempData(appTempData); //let current annotation stage have access to appTempData
         }
-        //currentAnnotationController.setModel(model); //let current annotation stage have access to model
+        //currentAnnotationController.setAppTempData(appTempData); //let current annotation stage have access to appTempData
         suggestHPOButton.setTooltip(new Tooltip("Suggest new HPO terms"));
         filterButton.setTooltip(new Tooltip("Filter Loinc by providing a Loinc list in txt file"));
         addCodedAnnotationButton.setTooltip(new Tooltip("Add current annotation"));
@@ -188,7 +199,7 @@ public class AnnotateTabController {
         clearButton.setTooltip(new Tooltip("Clear all textfields"));
         allAnnotationsButton.setTooltip(new Tooltip("Display annotations for currently selected Loinc code"));
         initLOINCtableButton.setTooltip(new Tooltip("Initialize Loinc Core Table. Download it first."));
-        IntializeHPOmodelbutton.setTooltip(new Tooltip("Load hp.owl as a RDF model for query"));
+        IntializeHPOmodelbutton.setTooltip(new Tooltip("Load hp.owl as a RDF appTempData for query"));
         searchForLOINCIdButton.setTooltip(new Tooltip("Search Loinc with a Loinc code or name"));
         modeButton.setTooltip(new Tooltip("Switch between basic and advanced annotation mode"));
         autoQueryButton.setTooltip(new Tooltip("Find candidate HPO terms with automatically generated keys"));
@@ -254,11 +265,10 @@ public class AnnotateTabController {
                         logger.trace(c + " was added");
                         c.getAddedSubList()
                             .stream()
-                            .filter(p -> !model.getUserCreatedLoincLists().containsKey(p))
                             .forEach(p -> {
-
-                                model.addUserCreatedLoincList(p, new LinkedHashSet<>());
-
+                                //putIfAbsent is important to prevent overwritten
+                                appResources.getUserCreatedLoincLists().putIfAbsent(p, new LinkedHashSet<>());
+                                //appTempData.addUserCreatedLoincList(p, new LinkedHashSet<>());
                                 MenuItem newListMenuItem = new MenuItem(p);
                                 groupUngroup2LoincListButton.getItems().add(newListMenuItem);
                                 newListMenuItem.setOnAction((event -> {
@@ -266,18 +276,18 @@ public class AnnotateTabController {
                                     if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
                                         LoincId loincId = loincTableView.getSelectionModel()
                                                 .getSelectedItem().getLOINC_Number();
-                                        if (model.getUserCreatedLoincLists().get(p).contains(loincId)) {
-                                            model.getUserCreatedLoincLists().get(p)
+                                        if (appResources.getUserCreatedLoincLists().get(p).contains(loincId)) {
+                                            appResources.getUserCreatedLoincLists().get(p)
                                                     .remove(loincId);
                                             logger.trace(String.format("LOINC: %s removed from %s", loincId, p));
                                         } else {
-                                            model.getUserCreatedLoincLists().get(p)
+                                            appResources.getUserCreatedLoincLists().get(p)
                                                     .add(loincId);
                                             logger.trace(String.format("LOINC: %s added to %s", loincId, p));
                                         }
 
                                         changeColorLoincTableView();
-                                        model.setSessionChanged(true);
+                                        appTempData.setSessionChanged(true);
                                     }
                                 }));
 
@@ -286,7 +296,7 @@ public class AnnotateTabController {
                                 newExportMenuItem.setOnAction((event -> {
                                     logger.trace("action detected");
                                     if (loincTableView.getSelectionModel().getSelectedItem()!=null) {
-                                        Set<LoincId> loincIds = model.getUserCreatedLoincLists().get(p);
+                                        Set<LoincId> loincIds = appResources.getUserCreatedLoincLists().get(p);
                                         if (loincIds.isEmpty()) {
                                             return;
                                         }
@@ -334,8 +344,8 @@ public class AnnotateTabController {
                                             } catch (MalformedLoincCodeException e) {
                                                 malformed.add(l);
                                             }
-                                            if (model.getLoincEntryMap().containsKey(loincId)) {
-                                                model.getUserCreatedLoincLists().get(p).add(loincId);
+                                            if (appResources.getLoincEntryMap().containsKey(loincId)) {
+                                                appResources.getUserCreatedLoincLists().get(p).add(loincId);
                                             } else {
                                                 notFound.add(l);
                                             }
@@ -393,21 +403,24 @@ public class AnnotateTabController {
                 }
             }
         });
+        initTableStructure();
     }
 
     void defaultStartUp() {
-        initLOINCtable(null);
+        initLOINCtable();
         Platform.runLater(()->initHPOmodelButton(null));
         List<String> DEFAULTGROUPS = Arrays.asList(LOINCWAITING4NEWHPO, LOINCUNABLE2ANNOTATE, UNSPECIFIEDSPECIMEN, LOINC4QC);
         for(int i = 0; i < DEFAULTGROUPS.size(); i++) {
-            if (!model.getUserCreatedLoincListsColor().containsKey(DEFAULTGROUPS.get(i))) {
-                model.addOrUpdateUserCreatedLoincListColor(DEFAULTGROUPS.get(i), model.defaultColorList().get(i + 1));
-                logger.info(DEFAULTGROUPS.get(i) + "::::" + model.defaultColorList().get(i + 1));
-            }
+            settings.getUserCreatedLoincListsColor().putIfAbsent(DEFAULTGROUPS.get(i),
+                        appTempData.defaultColorList().get(i + 1));
+            logger.info(DEFAULTGROUPS.get(i) + "::::" + appTempData.defaultColorList().get(i + 1));
+
         }
-        logger.info("default colors in model:");
-        //model.defaultColorList().forEach(System.out::println);
         logger.trace("default color for LOINC lists is set");
+        logger.trace("loinc categories: " + appResources.getUserCreatedLoincLists().keySet());
+        userCreatedLoincLists.addAll(appResources.getUserCreatedLoincLists().keySet());
+        changeColorLoincTableView();
+
     }
 
     private void noLoincEntryAlert(){
@@ -427,20 +440,12 @@ public class AnnotateTabController {
     }
 
 
-    /** Initialize the Model reference and set up the HPO autocomplete if possible. */
-    public void setModel(Model m) {
-        logger.trace("Setting model in AnnotateTabeController");
-        model=m;
-        if (model.getPathToHpoOboFile()==null) {
-            logger.error("Path to hp.obo file is null. Cannot initialize autocomplete");
-            return;
-        }
-        model.parseOntology();
-        termmap = model.getTermMap();
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldLeft, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldMiddle, termmap.keySet());
-//        WidthAwareTextFields.bindWidthAwareAutoCompletion(annotationTextFieldRight, termmap.keySet());
-        logger.trace(String.format("Initializing term map to %d terms",termmap.size()));
+    /** Initialize the AppTempData reference and set up the HPO autocomplete if possible. */
+    public void setAppTempData(AppTempData m) {
+        logger.trace("Setting appTempData in AnnotateTabeController");
+        appTempData =m;
+        //termmap = appTempData.getTermMap();
+        termmap = appResources.getTermnameTermMap();
     }
 
 
@@ -477,7 +482,7 @@ public class AnnotateTabController {
             }
 
             //disable further action if the user is not under Editing mode
-            if(model.getLoincUnderEditing() != null && !model.getLoincUnderEditing().equals(rowData)){
+            if(appTempData.getLoincUnderEditing() != null && !appTempData.getLoincUnderEditing().equals(rowData)){
                 PopUps.showInfoMessage("You are currently editing " + rowData.getLOINC_Number() +
                                 ". Save or cancel editing current loinc annotation before switching to others",
                         "Under Editing mode");
@@ -503,10 +508,10 @@ public class AnnotateTabController {
     private void updateHpoTermListView(LoincEntry entry) {
         if(SparqlQuery.model == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("HPO Model Undefined");
-            alert.setHeaderText("Create HPO model first before querying");
-            alert.setContentText("Click \"Initialize HPO model\" to create an" +
-                    " HPO model for Sparql query. Click and query again.");
+            alert.setTitle("HPO AppTempData Undefined");
+            alert.setHeaderText("Create HPO appTempData first before querying");
+            alert.setContentText("Click \"Initialize HPO appTempData\" to create an" +
+                    " HPO appTempData for Sparql query. Click and query again.");
             alert.showAndWait();
             return;
         }
@@ -563,12 +568,12 @@ public class AnnotateTabController {
             return;
         }
         logger.info(String.format("Start auto query for \"%s\"by pressing button",entry));
-        if (model.getLoincUnderEditing() == null || //not under Editing mode
+        if (appTempData.getLoincUnderEditing() == null || //not under Editing mode
                 //or query the loinc code under editing
-                (model.getLoincUnderEditing() != null && model.getLoincUnderEditing().equals(entry))) {
+                (appTempData.getLoincUnderEditing() != null && appTempData.getLoincUnderEditing().equals(entry))) {
             updateHpoTermListView(entry);
         } else {
-            PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
+            PopUps.showInfoMessage("You are currently editing " + appTempData.getLoincUnderEditing().getLOINC_Number() +
                             ". Save or cancel editing current loinc annotation before switching to others",
                     "Under Editing mode");
             return;
@@ -591,10 +596,10 @@ public class AnnotateTabController {
         e.consume();
         if(SparqlQuery.model == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("HPO Model Undefined");
-            alert.setHeaderText("Create HPO model first before querying");
-            alert.setContentText("Click \"Initialize HPO model\" to create an" +
-                    " HPO model for Sparql query. Click and query again.");
+            alert.setTitle("HPO AppTempData Undefined");
+            alert.setHeaderText("Create HPO appTempData first before querying");
+            alert.setContentText("Click \"Initialize HPO appTempData\" to create an" +
+                    " HPO appTempData for Sparql query. Click and query again.");
             alert.showAndWait();
             return;
         }
@@ -608,9 +613,9 @@ public class AnnotateTabController {
         }
 
 
-        if (model.getLoincUnderEditing() != null && !model.getLoincUnderEditing().equals(entry)) {
+        if (appTempData.getLoincUnderEditing() != null && !appTempData.getLoincUnderEditing().equals(entry)) {
 
-            PopUps.showInfoMessage("You are currently editing " + model.getLoincUnderEditing().getLOINC_Number() +
+            PopUps.showInfoMessage("You are currently editing " + appTempData.getLoincUnderEditing().getLOINC_Number() +
                             ". Save or cancel editing current loinc annotation before switching to others",
                     "Under Editing mode");
             return;
@@ -695,28 +700,24 @@ public class AnnotateTabController {
     }
 
     @FXML private void initLOINCtable(ActionEvent e) {
-        logger.trace("init LOINC table");
-        String loincCoreTableFile=model.getPathToLoincCoreTableFile();
-        if (loincCoreTableFile==null) {
-            PopUps.showWarningDialog("Error", "File not found", "Could not find LOINC Core Table file. Set the path first");
-            return;
-        }
-        this.loincmap = LoincEntry.getLoincEntryList(loincCoreTableFile);
-        model.setLoincEntryMap(this.loincmap);
-        int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
-        List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
+        initLOINCtable();
+    }
+
+    private void initLOINCtable() {
+
+        this.loincmap = ImmutableMap.copyOf(appResources.getLoincEntryMap());
+        //int limit=Math.min(loincmap.size(),1000); // we will show just the first 1000 entries in the table.
+        //List<LoincEntry> lst = loincmap.values().asList().subList(0,limit);
+        List<LoincEntry> lst = loincmap.values().asList();
         loincTableView.getItems().clear(); // remove any previous entries
         loincTableView.getItems().addAll(lst);
         loincTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        initTableStructure();
-        if (e != null) {
-            e.consume();
-        }
+
         if (this.loincmap.isEmpty()) {
             Platform.runLater(() -> {
                 PopUps.showWarningDialog("No LOINC data was imported",
-                    "Warning",
-                    "We could not import any LOINC data - \n did you import the correct LOINC file?");
+                        "Warning",
+                        "We could not import any LOINC data - \n did you import the correct LOINC file?");
             });
         }
 
@@ -724,12 +725,12 @@ public class AnnotateTabController {
 
     @FXML private void initHPOmodelButton(ActionEvent e){
 
-        String pathToHPO = this.model.getPathToHpoOwlFile();
+        String pathToHPO = settings.getHpoOwlPath();
         logger.info("pathToHPO: " + pathToHPO);
-        //org.apache.jena.rdf.model.Model hpoModel = SparqlQuery.getOntologyModel(pathToHPO);
+        //org.apache.jena.rdf.appTempData.AppTempData hpoModel = SparqlQuery.getOntologyModel(pathToHPO);
         //SparqlQuery.setHPOmodel(hpoModel);
         // The following codes run nicely from IDE, but fails in Jar.
-        //create a task to create HPO model
+        //create a task to create HPO appTempData
         Task<org.apache.jena.rdf.model.Model> task = new OntologyModelBuilderForJena(pathToHPO);
         //Platform.runLater(new Thread(task)::start);
         new Thread(task).start();
@@ -744,7 +745,7 @@ public class AnnotateTabController {
         });
         task.setOnFailed(x -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Failed to create HPO model");
+            alert.setTitle("Failed to create HPO appTempData");
             alert.setContentText("Check whether hpo.owl is downloaded. Path to hpo.owl is set to: " + pathToHPO);
             IntializeHPOmodelbutton.setStyle("-fx-background-color: #ff0000");
             IntializeHPOmodelbutton.setText("Retry");
@@ -809,12 +810,12 @@ public class AnnotateTabController {
     }
 
     @FXML private void handleLoincFiltering(ActionEvent e){
-
+        e.consume();
         List<LoincEntry> entrylist=new ArrayList<>();
         String enlistName;
         FileChooser chooser = new FileChooser();
-        if (model.getPathToAutoSavedFolder() != null) {
-            chooser.setInitialDirectory(new File(model.getPathToAutoSavedFolder()));
+        if (settings.getAnnotationFolder() != null) {
+            chooser.setInitialDirectory(new File(settings.getAnnotationFolder()));
         }
         chooser.setTitle("Choose File containing a list of interested Loinc " +
                 "codes");
@@ -833,12 +834,12 @@ public class AnnotateTabController {
                     LoincEntry loincEntry;
                     try {
                         loincId = new LoincId(loincString);
-                        loincEntry = model.getLoincEntryMap().get(loincId);
+                        loincEntry = appResources.getLoincEntryMap().get(loincId);
                     } catch (MalformedLoincCodeException e2) {
                         //try to see whether user provided Loinc long common name
-                        if (model.getLoincEntryMapWithName().get(loincString) != null) {
-                            loincEntry = model.getLoincEntryMapWithName().get(loincString);
-                        } else {
+                        loincEntry = appResources.getLoincEntryMapFromName().
+                                get(loincString);
+                        if (loincEntry == null) {
                             logger.error("Malformed loinc");
                             malformedList.add(loincString);
                             continue;
@@ -875,11 +876,11 @@ public class AnnotateTabController {
             if (termmap==null) initialize(); // set up the Hpo autocomplete if possible
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(entrylist);
-            model.addFilteredList(enlistName, new ArrayList<>(entrylist)); //keep a record in model
+            appTempData.addFilteredList(enlistName, new ArrayList<>(entrylist)); //keep a record in appTempData
             //entrylist.forEach(p -> logger.trace(p.getLOINC_Number()));
             accordion.setExpandedPane(loincTableTitledpane);
         } else {
-            logger.error("Unable to obtain path to LOINC of interest file");
+            logger.info("Unable to obtain path to LOINC of interest file");
         }
     }
 
@@ -887,7 +888,7 @@ public class AnnotateTabController {
     private void lastLoincList(ActionEvent e) {
 
         e.consume();
-        List<LoincEntry> lastLoincList = model.previousLoincList();
+        List<LoincEntry> lastLoincList = appTempData.previousLoincList();
         if (lastLoincList != null && !lastLoincList.isEmpty()) {
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(lastLoincList);
@@ -898,7 +899,7 @@ public class AnnotateTabController {
     private void nextLoincList(ActionEvent e) {
         e.consume();
 
-        List<LoincEntry> nextLoincList = model.nextLoincList();
+        List<LoincEntry> nextLoincList = appTempData.nextLoincList();
         if (nextLoincList != null && !nextLoincList.isEmpty()) {
             loincTableView.getItems().clear();
             loincTableView.getItems().addAll(nextLoincList);
@@ -913,12 +914,12 @@ public class AnnotateTabController {
         if (nameOfList == null) {
             return;
         }
-        //model.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
+        //appTempData.addUserCreatedLoincList(nameOfList, new LinkedHashSet<>());
         userCreatedLoincLists.add(nameOfList);
         Random rand = new Random();
         double[] randColorValues = rand.doubles(3, 0, 1).toArray();
         Color randColor = Color.color(randColorValues[0], randColorValues[1], randColorValues[2]);
-        model.addOrUpdateUserCreatedLoincListColor(nameOfList, ColorUtils.colorValue(randColor));
+        settings.getUserCreatedLoincListsColor().put(nameOfList, ColorUtils.colorValue(randColor));
     }
 
     @FXML
@@ -940,7 +941,7 @@ public class AnnotateTabController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (observable != null) {
-                    final String colorString = model.getUserCreatedLoincListsColor().get(newValue);
+                    final String colorString = settings.getUserCreatedLoincListsColor().get(newValue);
                     if (colorString != null) {
                         final Color color = Color.web(colorString);
                         colorPicker.setValue(color);
@@ -963,7 +964,7 @@ public class AnnotateTabController {
             TextField name = new TextField(userCreatedLoincLists.get(i));
             gridPane.add(name, 0, i);
             TextField color = new TextField();
-            color.setBackground(new Background(new BackgroundFill(Color.web(model.getUserCreatedLoincListsColor().get(name.getText())), null, null)));
+            color.setBackground(new Background(new BackgroundFill(Color.web(settings.getUserCreatedLoincListsColor().get(name.getText())), null, null)));
             gridPane.add(color, 1, i);
             gridPaneColors.put(name.getText(), color);
             logger.trace("color" + color.getBackground().getFills().toString());
@@ -971,11 +972,11 @@ public class AnnotateTabController {
 
 
         colorPicker.setOnAction(t -> {
-            model.addOrUpdateUserCreatedLoincListColor(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
-            logger.trace("new color: " + model.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
+            settings.getUserCreatedLoincListsColor().put(loincGroupCombo.getSelectionModel().getSelectedItem(), colorPicker.getValue().toString());
+            logger.trace("new color: " + settings.getUserCreatedLoincListsColor().get(loincGroupCombo.getSelectionModel().getSelectedItem()));
             gridPaneColors.get(loincGroupCombo.getSelectionModel().getSelectedItem()).setBackground(new Background(new BackgroundFill(colorPicker.getValue(), null, null)));
             changeColorLoincTableView();
-            model.writeSettings();
+            Settings.writeSettings(settings, Loinc2HpoPlatform.getPathToSettingsFile());
         });
 
         root.getChildren().addAll(toolBar, gridPane);
@@ -989,7 +990,7 @@ public class AnnotateTabController {
      */
     private void initializeUserCreatedLoincListsIfNecessary(){
         //execute the functionalities only once in each secession
-        if (!model.getUserCreatedLoincLists().isEmpty()) {
+        if (!appResources.getUserCreatedLoincLists().isEmpty()) {
             logger.trace("initializeUserCreatedLoincListsIfNecessary(): 1111");
             return;
         }
@@ -1010,18 +1011,18 @@ public class AnnotateTabController {
         initialListNames.forEach(p -> {
             groupUngroup2LoincListButton.getItems().add(new MenuItem(p));
             exportLoincListButton.getItems().add(new MenuItem(p));
-            model.addUserCreatedLoincList(p, new ArrayList<>());
+            appTempData.addUserCreatedLoincList(p, new ArrayList<>());
         });
          */
     }
 
 
     private void initializeMenuItemsForFilteredLists() {
-        if (!model.getFilteredLoincListsMap().isEmpty()) {
+        if (!appTempData.getFilteredLoincListsMap().isEmpty()) {
             loincListsButton.setDisable(false);
             loincListsButton.getItems().clear();
             List<MenuItem> menuItems = new ArrayList<>();
-            model.getFilteredLoincListsMap().keySet().forEach(p -> {
+            appTempData.getFilteredLoincListsMap().keySet().forEach(p -> {
                 MenuItem menuItem = new MenuItem(p);
                 menuItems.add(menuItem);
             });
@@ -1030,7 +1031,7 @@ public class AnnotateTabController {
             //loincListsButton.getItems().forEach(p -> logger.trace("current: " + p.getText()));
             loincListsButton.getItems().forEach(p -> p.setOnAction((event) -> {
                 logger.trace(p.getText());
-                List<LoincEntry> loincList = model.getLoincList(p.getText());
+                List<LoincEntry> loincList = appTempData.getLoincList(p.getText());
                 if (loincList != null && !loincList.isEmpty()) {
                     loincTableView.getItems().clear();
                     loincTableView.getItems().addAll(loincList);
@@ -1269,12 +1270,12 @@ public class AnnotateTabController {
             logger.error("Select a LOINC entry to copy");
             return;
         }
-        if (!model.getLoincAnnotationMap().containsKey(selectedLoinc.getLOINC_Number())) {
+        if (!appResources.getLoincAnnotationMap().containsKey(selectedLoinc.getLOINC_Number())) {
             PopUps.showWarningDialog("Error Selection", "LOINC does not have annotation", "Select a LOINC code that has already been annotated");
             logger.error("Annotation does not exist for " + selectedLoinc.getLOINC_Number());
             return;
         }
-        toCopy = model.getLoincAnnotationMap().get(selectedLoinc.getLOINC_Number());
+        toCopy = appResources.getLoincAnnotationMap().get(selectedLoinc.getLOINC_Number());
         loincTableEnableMultiSelection.setSelected(true);
         //loincTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
@@ -1303,7 +1304,7 @@ public class AnnotateTabController {
         //refresh annotation tab
         loinc2HpoAnnotationsTabController.refreshTable();
         changeColorLoincTableView();
-        model.setSessionChanged(true);
+        appTempData.setSessionChanged(true);
 
         //reset
         toCopy = null;
@@ -1313,7 +1314,7 @@ public class AnnotateTabController {
     }
 
     private void pasteAnnotationTo(LoincId loincId) {
-        if (model.getLoincAnnotationMap().containsKey(loincId)) {
+        if (appResources.getLoincAnnotationMap().containsKey(loincId)) {
             logger.trace("Overwrite: " + loincId);
         }
         String comments = toCopy.getNote()==null ? "" : "@original comment: " + toCopy.getNote();
@@ -1331,7 +1332,8 @@ public class AnnotateTabController {
                 .setVersion(toCopy.getVersion());
         toCopy.getCandidateHpoTerms().entrySet().stream()
                 .forEach(entry -> builder.addAdvancedAnnotation(entry.getKey(), entry.getValue()));
-        model.addLoincTest(builder.build());
+
+        appResources.getLoincAnnotationMap().put(loincId, builder.build());
 
     }
 
@@ -1350,7 +1352,7 @@ public class AnnotateTabController {
 
         //if the loinc is already annotated, warn user
         if (createAnnotationButton.getText().equals("Create annotation")
-                && model.getLoincAnnotationMap().containsKey(loincCode)) {
+                && appResources.getLoincAnnotationMap().containsKey(loincCode)) {
             boolean toOverwrite = PopUps.getBooleanFromUser("Do you want to overwrite?",
                     loincCode + " is already annotated", "Overwrite warning");
             if (!toOverwrite) return;
@@ -1360,15 +1362,15 @@ public class AnnotateTabController {
         if(!advancedAnnotationModeSelected) { //we are last in basic mode, user might have changed data for basic annotation
             logger.trace("creating the annotation while at the basic mode");
             logger.trace("record changes for basic annotation");
-            model.setTempTerms(recordTempTerms()); //update terms for basic annotation
-            model.setInversedBasicMode(recordInversed());
+            appTempData.setTempTerms(recordTempTerms()); //update terms for basic annotation
+            appTempData.setInversedBasicMode(recordInversed());
         } else { //if we are last in the advanced mode, user might have added a new annotation, we add this annotation
             logger.trace("creating the annotation while at the advanced mode");
             handleAnnotateCodedValue(e);
         }
 
         //map hpo terms to internal codes
-        Map<String, String> tempTerms = model.getTempTerms();
+        Map<String, String> tempTerms = appTempData.getTempTerms();
         String hpoLo = tempTerms.get("hpoLo");
         String hpoNormal = tempTerms.get("hpoNormal");
         String hpoHi = tempTerms.get("hpoHi");
@@ -1385,9 +1387,9 @@ public class AnnotateTabController {
         }
 
         //We don't have to force every loinc code to have three phenotypes
-        Term low = termmap.get(hpoLo);
-        Term normal = termmap.get(hpoNormal);
-        Term high = termmap.get(hpoHi);
+        TermId low = termmap.containsKey(hpoLo) ? termmap.get(hpoLo).getId() : null;
+        TermId normal = termmap.containsKey(hpoNormal) ? termmap.get(hpoNormal).getId() : null;
+        TermId high = termmap.containsKey(hpoHi) ? termmap.get(hpoHi).getId() : null;
         //logger.debug((String.format("Terms found: lo- %s; normal- %s; hi- %s", low.getName(), normal.getName(), high.getName())));
 
         //Warning user that there is something wrong
@@ -1424,9 +1426,9 @@ public class AnnotateTabController {
             builder.setLowValueHpoTerm(low)
                     .setIntermediateValueHpoTerm(normal)
                     .setHighValueHpoTerm(high)
-                    .setIntermediateNegated(model.isInversedBasicMode());
+                    .setIntermediateNegated(appTempData.isInversedBasicMode());
         } else if (loincScale == LoincScale.Ord && loincTableView.getSelectionModel().getSelectedItem().isPresentOrd()) {
-            builder.setNegValueHpoTerm(normal, model.isInversedBasicMode())
+            builder.setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
                     .setPosValueHpoTerm(high);
         } else { //
             boolean choice = PopUps.getBooleanFromUser("Current Loinc should be annotated in advanced mode. Click Yes if you still want to keep current annotations?", "LOINC type mismatch", "Warning");
@@ -1434,8 +1436,8 @@ public class AnnotateTabController {
                 builder.setLowValueHpoTerm(low)
                         .setIntermediateValueHpoTerm(normal)
                         .setHighValueHpoTerm(high)
-                        .setIntermediateNegated(model.isInversedBasicMode())
-                        .setNegValueHpoTerm(normal, model.isInversedBasicMode())
+                        .setIntermediateNegated(appTempData.isInversedBasicMode())
+                        .setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
                         .setPosValueHpoTerm(high);
             }
         }
@@ -1449,40 +1451,40 @@ public class AnnotateTabController {
 
         //add some meta data, such as date, created by, and version
         if (createAnnotationButton.getText().equals("Create annotation")) { //create for the first time
-            builder.setCreatedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+            builder.setCreatedBy(settings.getBiocuratorID() == null? MISSINGVALUE:settings.getBiocuratorID())
                 .setCreatedOn(LocalDateTime.now().withNano(0))
                 .setVersion(0.1);
         } else { //editing mode
-            builder.setLastEditedBy(model.getBiocuratorID() == null? MISSINGVALUE:model.getBiocuratorID())
+            builder.setLastEditedBy(settings.getBiocuratorID() == null? MISSINGVALUE:settings.getBiocuratorID())
                     .setLastEditedOn(LocalDateTime.now().withNano(0))
-                    .setCreatedBy(model.getLoincAnnotationMap().get(loincCode).getCreatedBy())
-                    .setCreatedOn(model.getLoincAnnotationMap().get(loincCode).getCreatedOn())
-                    .setVersion(model.getLoincAnnotationMap().get(loincCode).getVersion() + 0.1);
+                    .setCreatedBy(appResources.getLoincAnnotationMap().get(loincCode).getCreatedBy())
+                    .setCreatedOn(appResources.getLoincAnnotationMap().get(loincCode).getCreatedOn())
+                    .setVersion(appResources.getLoincAnnotationMap().get(loincCode).getVersion() + 0.1);
 
         }
 
         //complete the building process, build the object
         LOINC2HpoAnnotationImpl loinc2HPOAnnotation = builder.build();
-        model.addLoincTest(loinc2HPOAnnotation);
+        appResources.getLoincAnnotationMap().put(loincCode, loinc2HPOAnnotation);
 
         //reset many settings
         advancedAnnotationModeSelected = false;
-        model.setTempTerms(new HashMap<>());//clear the temp term in model
-        model.setInversedBasicMode(false);
-        model.setTempAdvancedAnnotation(new HashMap<>());
-        model.setInversedAdvancedMode(false);
+        appTempData.setTempTerms(new HashMap<>());//clear the temp term in appTempData
+        appTempData.setInversedBasicMode(false);
+        appTempData.setTempAdvancedAnnotation(new HashMap<>());
+        appTempData.setInversedAdvancedMode(false);
         tempAdvancedAnnotations.clear();
         switchToBasicAnnotationMode();
         flagForAnnotation.setSelected(false);
         annotationNoteField.clear();
-        model.setSessionChanged(true);
+        appTempData.setSessionChanged(true);
         loincTableEnableMultiSelection.setSelected(false);
 
         loinc2HpoAnnotationsTabController.refreshTable();
         createAnnotationSuccess.setFill(Color.GREEN);
         if (createAnnotationButton.getText().equals("Save")) {
             createAnnotationButton.setText("Create annotation");
-            model.setLoincUnderEditing(null);
+            appTempData.setLoincUnderEditing(null);
         }
         changeColorLoincTableView();
 
@@ -1509,7 +1511,7 @@ public class AnnotateTabController {
             //popup an alert
             issueDetected = true;
             userConfirmed = PopUps.getBooleanFromUser("Are you sure you want to create an annotation without any HPO terms?",
-                    "AdvantagedAnnotationTableComponent without HPO terms", "No HPO Alert");
+                    "AdvancedAnnotationTableComponent without HPO terms", "No HPO Alert");
         }
         */
 
@@ -1660,11 +1662,13 @@ public class AnnotateTabController {
 
     }
 
-
     //change the color of rows to green after the loinc code has been annotated
     void changeColorLoincTableView(){
         logger.debug("enter changeColorLoincTableView");
-        logger.info("model size: " + model.getLoincAnnotationMap().size());
+        logger.info("annotated LOINC count: " + appResources.getLoincAnnotationMap().size());
+        logger.info("num Loinc Categories: " + appResources.getUserCreatedLoincLists().keySet());
+        logger.info("unable_to_annotate: " + appResources.getUserCreatedLoincLists().get("unspecified_specimen").size());
+        logger.info("colors: " + appResources.getUserCreatedLoincListsColor().values());
         loincIdTableColumn.setCellFactory(x -> new TableCell<LoincEntry, String>() {
             @Override
             protected void updateItem(String item, boolean empty){
@@ -1673,20 +1677,20 @@ public class AnnotateTabController {
                 if(!empty) {
                     setText(item);
                     try {
-                        if(model.getLoincAnnotationMap().containsKey(new LoincId(item))) {
+                        if(appResources.getLoincAnnotationMap().containsKey(new LoincId(item))) {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             currentRow.setStyle("-fx-background-color: cyan");
                         } else {
                             TableRow<LoincEntry> currentRow = getTableRow();
                             LoincId loincId = new LoincId(item);
-                            List<String> inList = model.getUserCreatedLoincLists().entrySet()
+                            List<String> inList = appResources.getUserCreatedLoincLists().entrySet()
                                     .stream()
                                     .filter(entry -> entry.getValue().contains(loincId))
                                     .map(entry -> entry.getKey())
                                     .collect(Collectors.toList());
                             if (!inList.isEmpty()) {
                                 List<Color> colors = inList.stream()
-                                    .map(l -> model.getUserCreatedLoincListsColor().get(l))
+                                    .map(l -> settings.getUserCreatedLoincListsColor().get(l))
                                     .filter(Objects::nonNull)
                                     .map(Color::web)
                                     .collect(Collectors.toList());
@@ -1727,12 +1731,12 @@ public class AnnotateTabController {
         //createTempAnnotation();
         //Important: Save annotation current annotation data
         if (!advancedAnnotationModeSelected) { //current state: Basic mode
-            model.setTempTerms(recordTempTerms());
-            model.setInversedBasicMode(recordInversed());
+            appTempData.setTempTerms(recordTempTerms());
+            appTempData.setInversedBasicMode(recordInversed());
         }
         if (advancedAnnotationModeSelected) { //current state: Advanced mode
-            model.setTempAdvancedAnnotation(recordAdvancedAnnotation());
-            model.setInversedAdvancedMode(recordInversed());
+            appTempData.setTempAdvancedAnnotation(recordAdvancedAnnotation());
+            appTempData.setInversedAdvancedMode(recordInversed());
         }
 
         advancedAnnotationModeSelected = ! advancedAnnotationModeSelected; //switch mode
@@ -1760,11 +1764,11 @@ public class AnnotateTabController {
         annotationTextFieldRight.setPromptText("candidate HPO");
         modeButton.setText("<<<basic");
         inverseChecker.setSelected(false);
-        if (!model.getTempAdvancedAnnotation().isEmpty()) { //if we have recorded temp data, display it accordingly
-            annotationTextFieldLeft.setText(model.getTempAdvancedAnnotation().get("system"));
-            annotationTextFieldMiddle.setText(model.getTempAdvancedAnnotation().get("code"));
-            annotationTextFieldRight.setText(model.getTempAdvancedAnnotation().get("hpoTerm"));
-            inverseChecker.setSelected(model.isInversedAdvancedMode());
+        if (!appTempData.getTempAdvancedAnnotation().isEmpty()) { //if we have recorded temp data, display it accordingly
+            annotationTextFieldLeft.setText(appTempData.getTempAdvancedAnnotation().get("system"));
+            annotationTextFieldMiddle.setText(appTempData.getTempAdvancedAnnotation().get("code"));
+            annotationTextFieldRight.setText(appTempData.getTempAdvancedAnnotation().get("hpoTerm"));
+            inverseChecker.setSelected(appTempData.isInversedAdvancedMode());
         }
     }
 
@@ -1790,11 +1794,11 @@ public class AnnotateTabController {
         annotationTextFieldRight.setPromptText("hpo for high value");
         modeButton.setText("advanced>>>");
         inverseChecker.setSelected(true);
-        if (!model.getTempTerms().isEmpty()) { //if we have recorded temp data, display it accordingly
-            annotationTextFieldLeft.setText(model.getTempTerms().get("hpoLo"));
-            annotationTextFieldMiddle.setText(model.getTempTerms().get("hpoNormal"));
-            annotationTextFieldRight.setText(model.getTempTerms().get("hpoHi"));
-            inverseChecker.setSelected(model.isInversedBasicMode());
+        if (!appTempData.getTempTerms().isEmpty()) { //if we have recorded temp data, display it accordingly
+            annotationTextFieldLeft.setText(appTempData.getTempTerms().get("hpoLo"));
+            annotationTextFieldMiddle.setText(appTempData.getTempTerms().get("hpoNormal"));
+            annotationTextFieldRight.setText(appTempData.getTempTerms().get("hpoHi"));
+            inverseChecker.setSelected(appTempData.isInversedBasicMode());
         }
     }
 
@@ -1804,26 +1808,26 @@ public class AnnotateTabController {
 
         if (!advancedAnnotationModeSelected) return; //do nothing if it is the basic mode
 
-        AdvantagedAnnotationTableComponent annotation = null;
-        String system = annotationTextFieldLeft.getText().trim().toLowerCase();
+        AdvancedAnnotationTableComponent annotation = null;
+        String system = annotationTextFieldLeft.getText().trim();
         String codeId = annotationTextFieldMiddle.getText().trim(); //case sensitive
         Code code = null;
         if ( !system.isEmpty() && !codeId.isEmpty()) {
             code = Code.getNewCode().setSystem(system).setCode(codeId);
         }
         String candidateHPO = annotationTextFieldRight.getText();
-        Term hpoterm = model.getTermMap().get(stripEN(candidateHPO));
+        Term hpoterm = appResources.getTermnameTermMap().get(stripEN(candidateHPO));
         if (hpoterm == null) logger.error("hpoterm is null");
         if (code != null && hpoterm != null) {
-            annotation = new AdvantagedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm, inverseChecker.isSelected()));
+            annotation = new AdvancedAnnotationTableComponent(code, new HpoTerm4TestOutcome(hpoterm.getId(), inverseChecker.isSelected()));
         }
         tempAdvancedAnnotations.add(annotation);
         //add annotated value to the advanced table view
         //initadvancedAnnotationTable();
         accordion.setExpandedPane(advancedAnnotationTitledPane);
         inverseChecker.setSelected(false);
-        model.setTempAdvancedAnnotation(new HashMap<>());
-        model.setInversedAdvancedMode(false);
+        appTempData.setTempAdvancedAnnotation(new HashMap<>());
+        appTempData.setInversedAdvancedMode(false);
     }
 
     @FXML
@@ -1831,7 +1835,7 @@ public class AnnotateTabController {
         event.consume();
         logger.debug("user wants to delete an annotation");
         logger.debug("tempAdvancedAnnotations size: " + tempAdvancedAnnotations.size());
-        AdvantagedAnnotationTableComponent selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
+        AdvancedAnnotationTableComponent selectedToDelete = advancedAnnotationTable.getSelectionModel().getSelectedItem();
         if (selectedToDelete != null) {
             tempAdvancedAnnotations.remove(selectedToDelete);
         }
@@ -1864,7 +1868,7 @@ public class AnnotateTabController {
      * once per session though.
      */
     private void initializeGitHubLabelsIfNecessary() {
-        if (model.hasLabels()) {
+        if (appTempData.hasLabels()) {
             return; // we only need to retrieve the labels from the server once per session!
         }
         GitHubLabelRetriever retriever = new GitHubLabelRetriever();
@@ -1875,7 +1879,7 @@ public class AnnotateTabController {
         if (labels.size() == 0) {
             labels.add("new term request");
         }
-        model.setGithublabels(labels);
+        appTempData.setGithublabels(labels);
     }
 
 
@@ -1896,10 +1900,10 @@ public class AnnotateTabController {
 
         GitHubPopup popup = new GitHubPopup(loincEntrySelected);
         initializeGitHubLabelsIfNecessary();
-        popup.setLabels(model.getGithublabels());
+        popup.setLabels(appTempData.getGithublabels());
         popup.setupGithubUsernamePassword(githubUsername, githubPassword);
-        popup.setBiocuratorId(model.getBiocuratorID());
-        logger.debug("get biocurator id from model: " + model.getBiocuratorID());
+        popup.setBiocuratorId(settings.getBiocuratorID());
+        logger.debug("get biocurator id from appTempData: " + settings.getBiocuratorID());
         popup.displayWindow(Main.getPrimarystage());
         String githubissue = popup.retrieveGitHubIssue();
         if (githubissue == null) {
@@ -1940,14 +1944,14 @@ public class AnnotateTabController {
             return;
         }
 
-        Term hpoTerm = model.getTermMap().get(hpoSelected.getLabel());
+        Term hpoTerm = appResources.getTermnameTermMap().get(hpoSelected.getLabel());
 
         GitHubPopup popup = new GitHubPopup(loincEntrySelected, hpoTerm, true);
         initializeGitHubLabelsIfNecessary();
-        popup.setLabels(model.getGithublabels());
+        popup.setLabels(appTempData.getGithublabels());
         popup.setupGithubUsernamePassword(githubUsername, githubPassword);
-        popup.setBiocuratorId(model.getBiocuratorID());
-        logger.debug("get biocurator id from model: " + model.getBiocuratorID());
+        popup.setBiocuratorId(settings.getBiocuratorID());
+        logger.debug("get biocurator id from appTempData: " + settings.getBiocuratorID());
         popup.displayWindow(Main.getPrimarystage());
         String githubissue = popup.retrieveGitHubIssue();
         if (githubissue == null) {
@@ -2017,31 +2021,39 @@ public class AnnotateTabController {
         loincTableView.getItems().addAll(loincEntry);
     }
     void setLoincIdSelected(LoincId loincId) {
-        LoincEntry loincEntry = model.getLoincEntryMap().get(loincId);
+        LoincEntry loincEntry = appResources.getLoincEntryMap().get(loincId);
         setLoincIdSelected(loincEntry);
     }
 
     @FXML
     protected void showAllAnnotations(ActionEvent event) {
         event.consume();
+        LoincEntry loincEntry2Review;
+        LOINC2HpoAnnotationImpl annotation2Review;
 
-        LoincEntry loincEntry2Review = getLoincIdSelected();
+        loincEntry2Review = loincTableView.getSelectionModel().getSelectedItem();
         if (loincEntry2Review == null) {
             PopUps.showInfoMessage("There is no annotation to review. Select a loinc entry and try again",
                     "No content to show");
             return;
-        }
-        if (model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()) != null) {
-            logger.debug("The annotation to review is already added to the annotation map");
-            //currentAnnotationController.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
-            model.setCurrentAnnotation(model.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
         } else {
+            annotation2Review = appResources.getLoincAnnotationMap().
+                    get(loincEntry2Review.getLOINC_Number());
+        }
+
+
+        if (annotation2Review == null) {
             logger.debug("currently selected loinc has no annotation. A temporary annotation is being created for " + loincEntry2Review.getLOINC_Number());
             PopUps.showInfoMessage("Currently selected loinc code has not been annotated.",
                     "No content to show");
             return;
+
+        } else {
+            logger.debug("The annotation to review is already added to the annotation map");
+
+            appTempData.setCurrentAnnotation(appResources.getLoincAnnotationMap().get(loincEntry2Review.getLOINC_Number()));
             //currentAnnotationController.setCurrentAnnotation(createCurrentAnnotation());
-            //model.setCurrentAnnotation(createCurrentAnnotation());
+            //appTempData.setCurrentAnnotation(createCurrentAnnotation());
         }
 
 
@@ -2055,17 +2067,23 @@ public class AnnotateTabController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("/fxml/currentAnnotation.fxml"));
-
-//            This sets the same controller factory (Callback) as above using method reference syntax (in single line)
-//            fxmlLoader.setControllerFactory(injector::getInstance);
-
             fxmlLoader.setControllerFactory(// Callback
                  (clazz) -> { return injector.getInstance(clazz); }
             );
 
+            CurrentAnnotationController currentAnnotationController = injector.getInstance(CurrentAnnotationController.class);
+            currentAnnotationController.setData(loincEntry2Review, annotation2Review);
+            currentAnnotationController.setTermMap(appResources.getTermidTermMap());
+            //tell the new window how to handle "edit" button
+            Consumer<LOINC2HpoAnnotationImpl> edithook = (t) -> {
+                editCurrentAnnotation(t);
+                mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
+                window.close();
+            };
+            currentAnnotationController.setEditHook(edithook);
+
             root = fxmlLoader.load();
             Scene scene = new Scene(root, 800, 600);
-
             window.setScene(scene);
             window.show();
 
@@ -2081,7 +2099,7 @@ public class AnnotateTabController {
     void editCurrentAnnotation(LOINC2HpoAnnotationImpl loincAnnotation) {
 
         setLoincIdSelected(loincAnnotation.getLoincId());
-        model.setLoincUnderEditing(model.getLoincEntryMap().get(loincAnnotation.getLoincId()));
+        appTempData.setLoincUnderEditing(appResources.getLoincEntryMap().get(loincAnnotation.getLoincId()));
 
         //populate annotation textfields for basic mode
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
@@ -2101,15 +2119,15 @@ public class AnnotateTabController {
         }
 
         if (hpoLow != null) {
-            String hpoLowTermName = hpoLow.getHpoTerm().getName();
+            String hpoLowTermName = appResources.getTermidTermMap().get(hpoLow.getId()).getName();
             annotationTextFieldLeft.setText(hpoLowTermName);
         }
         if (hpoHigh != null) {
-            String hpoHighTermName = hpoHigh.getHpoTerm().getName();
+            String hpoHighTermName = appResources.getTermidTermMap().get(hpoHigh.getId()).getName();
             annotationTextFieldRight.setText(hpoHighTermName);
         }
         if (hpoNormal != null) {
-            String hpoNormalTermName = hpoNormal.getHpoTerm().getName();
+            String hpoNormalTermName = appResources.getTermidTermMap().get(hpoNormal.getId()).getName();
             boolean isnegated = hpoNormal.isNegated();
             annotationTextFieldMiddle.setText(hpoNormalTermName);
             inverseChecker.setSelected(isnegated);
@@ -2119,7 +2137,7 @@ public class AnnotateTabController {
         //remember: advanced annotation == not using internal codes
         for (Map.Entry<Code, HpoTerm4TestOutcome> entry : loincAnnotation.getCandidateHpoTerms().entrySet()) {
             if (!entry.getKey().getSystem().equals(Loinc2HPOCodedValue.CODESYSTEM)) {
-                tempAdvancedAnnotations.add(new AdvantagedAnnotationTableComponent(entry.getKey(), entry.getValue()));
+                tempAdvancedAnnotations.add(new AdvancedAnnotationTableComponent(entry.getKey(), entry.getValue()));
             }
         }
 
@@ -2145,7 +2163,7 @@ public class AnnotateTabController {
         switchToBasicAnnotationMode();
         if (clearButton.getText().equals("Cancel")) {
             clearButton.setText("Clear");
-            model.setLoincUnderEditing(null);
+            appTempData.setLoincUnderEditing(null);
         }
         createAnnotationButton.setText("Create annotation");
 

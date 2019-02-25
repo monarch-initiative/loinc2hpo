@@ -158,20 +158,20 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                                 .setNote(note)
                                 .setFlag(flag);
                         if (loincScale == LoincScale.Qn) {
-                            builder.setLowValueHpoTerm(hpoTermMap.get(low))
-                                    .setIntermediateValueHpoTerm(hpoTermMap.get(intermediate))
-                                    .setHighValueHpoTerm(hpoTermMap.get(high))
+                            builder.setLowValueHpoTerm(low)
+                                    .setIntermediateValueHpoTerm(intermediate)
+                                    .setHighValueHpoTerm(high)
                                     .setIntermediateNegated(inverse);
                         } else if (loincScale == LoincScale.Ord && loincEntryMap.get(loincId).isPresentOrd()) {
-                            builder.setNegValueHpoTerm(hpoTermMap.get(intermediate), inverse)
-                                    .setPosValueHpoTerm(hpoTermMap.get(high));
+                            builder.setNegValueHpoTerm(intermediate, inverse)
+                                    .setPosValueHpoTerm(high);
                         } else {
-                            builder.setLowValueHpoTerm(hpoTermMap.get(low))
-                                    .setIntermediateValueHpoTerm(hpoTermMap.get(intermediate))
-                                    .setHighValueHpoTerm(hpoTermMap.get(high))
+                            builder.setLowValueHpoTerm(low)
+                                    .setIntermediateValueHpoTerm(intermediate)
+                                    .setHighValueHpoTerm(high)
                                     .setIntermediateNegated(inverse)
-                                    .setNegValueHpoTerm(hpoTermMap.get(intermediate), inverse)
-                                    .setPosValueHpoTerm(hpoTermMap.get(high));
+                                    .setNegValueHpoTerm(intermediate, inverse)
+                                    .setPosValueHpoTerm(high);
                         }
                         deserializedMap.put(loincId, builder.build());
                         logger.trace(deserializedMap.get(loincId));
@@ -213,7 +213,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     LOINC2HpoAnnotationImpl annotation = deserializedMap.get(loincId);
                     Code code = Code.getNewCode().setSystem(system).setCode(codeString);
-                    annotation.addAdvancedAnnotation(code, new HpoTerm4TestOutcome(hpoTermMap.get(termId), inverse));
+                    annotation.addAdvancedAnnotation(code, new HpoTerm4TestOutcome(termId, inverse));
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
                 }
@@ -251,9 +251,9 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
             high = annotation.getPositiveHpoTermName();
 
         }
-        stringBuilder.append("\t" + (low == null ? Constants.MISSINGVALUE : low.getIdWithPrefix()));
-        stringBuilder.append("\t" + (normal == null ? Constants.MISSINGVALUE : normal.getIdWithPrefix()));
-        stringBuilder.append("\t" + (high == null ? Constants.MISSINGVALUE : high.getIdWithPrefix()));
+        stringBuilder.append("\t" + (low == null ? Constants.MISSINGVALUE : low.getValue()));
+        stringBuilder.append("\t" + (normal == null ? Constants.MISSINGVALUE : normal.getValue()));
+        stringBuilder.append("\t" + (high == null ? Constants.MISSINGVALUE : high.getValue()));
         stringBuilder.append("\t" + annotation.isNormalOrNegativeInversed());
         stringBuilder.append("\t" + (annotation.getNote() == null ? Constants.MISSINGVALUE : annotation.getNote()));
         stringBuilder.append("\t" + annotation.getFlag());
@@ -298,7 +298,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
             stringBuilder.append("\t" + annotation.getLoincScale().toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + (annotation.getNote() == null ? Constants.MISSINGVALUE : annotation.getNote()));
             stringBuilder.append("\t" + annotation.getFlag());

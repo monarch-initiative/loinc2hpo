@@ -1,28 +1,16 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
-import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
-
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -50,7 +38,7 @@ public class PhenotypeComponentImplTest {
         Date start = dateFormat.parse("2016-09-30 09:30:00");
         testComponent = new PhenotypeComponentImpl.Builder()
                 .start(start)
-                .hpoTerm(hpoTermMap.get("Hyperglycemia"))
+                .hpoTerm(hpoTermMap.get("Hyperglycemia").getId())
                 .isNegated(false)
                 .build();
 
@@ -78,7 +66,7 @@ public class PhenotypeComponentImplTest {
 
     @Test
     public void abnormality() throws Exception {
-        assertEquals("Hyperglycemia", testComponent.abnormality().getName());
+        assertEquals(hpoTermMap.get("Hyperglycemia").getId(), testComponent.abnormality());
     }
 
     @Test

@@ -1,7 +1,10 @@
-package org.monarchinitiative.loinc2hpo;
+package org.monarchinitiative.loinc2hpo.model;
 
-public class Constants {
-
+/**
+ * This class defines constant variables used in the GUI app.
+ * @TODO: migrate to this class
+ */
+public final class AppConstants {
     //missing values are noted as "NA" during serialization
     public static final String MISSINGVALUE = "NA";
 
@@ -31,7 +34,4 @@ public class Constants {
 
     public static final String V2OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v2/0078";
     public static final String V3OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v3/ObservationInterpretation";
-
-
-
 }

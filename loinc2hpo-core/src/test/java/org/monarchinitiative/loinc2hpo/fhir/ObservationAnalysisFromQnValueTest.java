@@ -9,9 +9,8 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.ReferenceNotFoundException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.io.OntologyLoader;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -42,13 +41,10 @@ public class ObservationAnalysisFromQnValueTest {
         observations[1] = observation2;
 
         String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        HpOboParser hpoOboParser = new HpOboParser(new File(hpo_obo));
-        HpoOntology hpo = null;
-        try {
-            hpo = hpoOboParser.parse();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        }
+        Ontology hpo = null;
+
+        hpo = OntologyLoader.loadOntology(new File(hpo_obo));
+
         ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
         ImmutableMap.Builder<TermId,Term> termmap2 = new ImmutableMap.Builder<>();
         if (hpo !=null) {
@@ -73,10 +69,10 @@ public class ObservationAnalysisFromQnValueTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
                 .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi);
+                .setHighValueHpoTerm(hi.getId());
 
         LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
@@ -96,9 +92,9 @@ public class ObservationAnalysisFromQnValueTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
+                .setHighValueHpoTerm(positive.getId())
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 

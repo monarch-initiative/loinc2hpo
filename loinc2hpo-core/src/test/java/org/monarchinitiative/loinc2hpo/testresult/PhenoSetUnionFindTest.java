@@ -1,23 +1,17 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
-import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
+import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -41,10 +35,10 @@ public class PhenoSetUnionFindTest {
 
         hpoTermMap = resourceCollection.hpoTermMapFromName();
         hpoTermMap2 = resourceCollection.hpoTermMap();
-        HpoOntology hpo = resourceCollection.getHPO();
+        Ontology hpo = resourceCollection.getHPO();
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
 
-        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().collect(Collectors.toSet()), annotationMap);
+        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap);
 
     }
 
@@ -52,9 +46,9 @@ public class PhenoSetUnionFindTest {
     public void test1() throws Exception {
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");
-        assertTrue(unionFind.getUnionFind().inSameSet(term1, term2));
+        assertTrue(unionFind.getUnionFind().inSameSet(term1.getId(), term2.getId()));
         Term term3 = hpoTermMap.get("Nitrituria");
-        assertFalse(unionFind.getUnionFind().inSameSet(term1, term3));
+        assertFalse(unionFind.getUnionFind().inSameSet(term1.getId(), term3.getId()));
     }
 
 }

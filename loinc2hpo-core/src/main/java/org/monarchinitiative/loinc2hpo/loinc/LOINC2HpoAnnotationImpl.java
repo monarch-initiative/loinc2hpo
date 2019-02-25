@@ -34,33 +34,26 @@ import java.util.*;
  * necessity to map various coding systems. We have a built-in map that converts fhir interpretation codes to our internal
  * code. We still need to have more maps for different interpretation systems.
  */
-
-@JsonIgnoreProperties({"codeSystems", "unrecognizedCodes"})
-//@JsonInclude(JsonInclude.Include.NON_NULL.NON_EMPTY)
 public class LOINC2HpoAnnotationImpl implements Serializable {
 
     private static Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
-    @JsonIgnore
     private static final long serialVersionUID = 1L;
     private static final String MISSINGVALUE = "NA";
 
-    @JsonProperty("version")
     private double version = 0.0;
     private LocalDateTime createdOn = null;
     private String createdBy = null;
     private LocalDateTime lastEditedOn = null;
     private String lastEditedBy = null;
 
-    @JsonProperty("loinc id")
     private LoincId loincId = null;
-    @JsonProperty("loinc scale")
     private LoincScale loincScale = null;
     //The following fields record three terms for basic annotations
-    private Term low = null;
-    private Term intermediate = null;
+    private TermId low = null;
+    private TermId intermediate = null;
     private boolean intermediateNegated = false;
-    private Term high = null;
+    private TermId high = null;
 
     //The following hashmap stores all manually created advanced annotations
     private Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms = null;
@@ -74,11 +67,8 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
     //the keys are internal codes; each one should correspond to one HpoTerm4LoincTest
     //alternatively, the codes can be external codes, if it is for a Ord or Nom loinc test
     //access the codes from the CodeSystemConvertor.getCodeContainer
-    @JsonProperty("annotations")
     private HashMap<Code, HpoTerm4TestOutcome> candidateHpoTerms = new HashMap<>();
-    @JsonProperty("note")
     private String note = null; //any comment for this annotation, say e.g. "highly confident about this annotation"
-    @JsonProperty("flag")
     private boolean flag = false; //a simpler version that equals a comment "not sure about the annotation, come back later"
 
     private Set<String> codeSystems; //what code systems are used for annotation
@@ -102,7 +92,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * @param version
      */
     public LOINC2HpoAnnotationImpl(LoincId loincId, LoincScale loincScale,
-                                   Term low, Term intermediate, boolean intermediateNegated, Term high, Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms, LocalDateTime createdOn, String createdBy, LocalDateTime lastEditedOn, String lastEditedBy, String note, boolean flag, double version) {
+                                   TermId low, TermId intermediate, boolean intermediateNegated, TermId high, Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms, LocalDateTime createdOn, String createdBy, LocalDateTime lastEditedOn, String lastEditedBy, String note, boolean flag, double version) {
 
         this.loincId = loincId;
         this.loincScale = loincScale;
@@ -126,14 +116,12 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
         //if an internal code is manually annotated, it will overwrite default map
         this.candidateHpoTerms.putAll(advancedAnnotationTerms);
 
-
-
         //if "A" is not specified, use "N" but negation should be reversed
         //e.g. "N" is NOT abnormal glucose concentration, "A" should be abnormal glucose concentration
         Map<String, Code> internalCode = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         if (getAbnormalHpoTermName() == null && getNotAbnormalHpoTermName() != null) {
             HpoTerm4TestOutcome normal = candidateHpoTerms.get(internalCode.get("N"));
-            candidateHpoTerms.put(internalCode.get("A"), new HpoTerm4TestOutcome(normal.getHpoTerm(), !normal.isNegated()));
+            candidateHpoTerms.put(internalCode.get("A"), new HpoTerm4TestOutcome(normal.getId(), !normal.isNegated()));
         }
     }
 
@@ -329,10 +317,10 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for low
      * @return
      */
-    public Term whenValueLow() {
+    public TermId whenValueLow() {
 
         if (loincInterpretationToHPO(internalCode.get("L")) != null) {
-            return loincInterpretationToHPO(internalCode.get("L")).getHpoTerm();
+            return loincInterpretationToHPO(internalCode.get("L")).getId();
         } else {
             return null;
         }
@@ -344,12 +332,12 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for normal (Qn) or negative (Ord)
      * @return
      */
-    public Term whenValueNormalOrNegative() {
+    public TermId whenValueNormalOrNegative() {
 
         if (loincInterpretationToHPO(internalCode.get("N")) != null) {
-            return loincInterpretationToHPO(internalCode.get("N")).getHpoTerm();
+            return loincInterpretationToHPO(internalCode.get("N")).getId();
         } else if (loincInterpretationToHPO(internalCode.get("NEG")) != null) {
-            return loincInterpretationToHPO(internalCode.get("NEG")).getHpoTerm();
+            return loincInterpretationToHPO(internalCode.get("NEG")).getId();
         } else {
             return null;
         }
@@ -370,12 +358,12 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
      * A convenient method to show hpo term for high (Qn) or positive (Ord)
      * @return
      */
-    public Term whenValueHighOrPositive() {
+    public TermId whenValueHighOrPositive() {
 
         if (loincInterpretationToHPO(internalCode.get("H")) != null) {
-            return loincInterpretationToHPO(internalCode.get("H")).getHpoTerm();
+            return loincInterpretationToHPO(internalCode.get("H")).getId();
         } else if (loincInterpretationToHPO(internalCode.get("POS")) != null) {
-            return loincInterpretationToHPO(internalCode.get("POS")).getHpoTerm();
+            return loincInterpretationToHPO(internalCode.get("POS")).getId();
         } else {
             return null;
         }
@@ -483,7 +471,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             stringBuilder.append("\t" + this.loincScale.toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + this.note);
             stringBuilder.append("\t" + this.flag);
@@ -503,9 +491,9 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.loincId);
         stringBuilder.append("\t" + this.loincScale.toString());
-        stringBuilder.append("\t" + (low == null ? MISSINGVALUE : low.getId().getIdWithPrefix()));
-        stringBuilder.append("\t" + (intermediate == null ? MISSINGVALUE : intermediate.getId().getIdWithPrefix()));
-        stringBuilder.append("\t" + (high == null ? MISSINGVALUE : high.getId().getIdWithPrefix()));
+        stringBuilder.append("\t" + (low == null ? MISSINGVALUE : low.getId()));
+        stringBuilder.append("\t" + (intermediate == null ? MISSINGVALUE : intermediate.getId()));
+        stringBuilder.append("\t" + (high == null ? MISSINGVALUE : high.getId()));
         stringBuilder.append("\t" + intermediateNegated);
         stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
         stringBuilder.append("\t" + this.flag);
@@ -530,7 +518,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             stringBuilder.append("\t" + this.loincScale.toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getIdWithPrefix());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + (this.note == null ? MISSINGVALUE : this.note));
             stringBuilder.append("\t" + this.flag);
@@ -554,10 +542,10 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         private LoincId loincId = null;
         private LoincScale loincScale = null;
-        private Term low = null;
-        private Term intermediate = null;
+        private TermId low = null;
+        private TermId intermediate = null;
         private boolean intermediateNegated = false;
-        private Term high = null;
+        private TermId high = null;
         private Map<Code, HpoTerm4TestOutcome> advancedAnnotationTerms = new HashMap<>();
         private LocalDateTime createdOn = null;
         private String createdBy = null;
@@ -600,7 +588,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Set the HPO term when the measured value is low
          * @param low
          */
-        public Builder setLowValueHpoTerm(Term low) {
+        public Builder setLowValueHpoTerm(TermId low) {
 
             this.low = low;
             if (low == null) {
@@ -616,7 +604,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Set the HPO term when the measured value is intermediate (typically "normal")
          * @param intermediate
          */
-        public Builder setIntermediateValueHpoTerm(Term intermediate) {
+        public Builder setIntermediateValueHpoTerm(TermId intermediate) {
 
             this.intermediate = intermediate;
             if (intermediate == null) {
@@ -631,7 +619,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         }
 
-        public Builder setIntermediateValueHpoTerm(Term intermediate, boolean isNegated) {
+        public Builder setIntermediateValueHpoTerm(TermId intermediate, boolean isNegated) {
 
             this.intermediate = intermediate;
             if (intermediate == null) {
@@ -667,7 +655,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
          * Specify the HPO term when the measured value is high.
          * @param high
          */
-        public Builder setHighValueHpoTerm(Term high) {
+        public Builder setHighValueHpoTerm(TermId high) {
 
             this.high = high;
             if (high == null) {
@@ -679,7 +667,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
 
         }
 
-        public Builder setPosValueHpoTerm(Term pos) {
+        public Builder setPosValueHpoTerm(TermId pos) {
 
             if (pos == null) {
                 return this;
@@ -690,7 +678,7 @@ public class LOINC2HpoAnnotationImpl implements Serializable {
             return this;
         }
 
-        public Builder setNegValueHpoTerm(Term neg, boolean inverse) {
+        public Builder setNegValueHpoTerm(TermId neg, boolean inverse) {
 
             if (neg == null) {
                 return this;

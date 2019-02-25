@@ -4,7 +4,6 @@ package org.monarchinitiative.loinc2hpo.gui;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Key;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +16,6 @@ import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.controller.MainController;
-import org.monarchinitiative.loinc2hpo.io.Loinc2HpoPlatform;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -26,9 +24,9 @@ import java.util.Optional;
 
 
 /**
- * The driver class of the LOINC2HPO biocuration app, which is intended to help annotate LOINC codes to the
- * relevantHPO Terms.
+ * The driver class of the LOINC2HPO biocuration app, which is intended to help annotate LOINC codes to the relevantHPO Terms.
  * @author <a href="mailto:peter.robinson@jax.org">Peter Robinson</a>
+ * @author <a href="mailto:aaron.zhang@jax.org">Aaron Zhang</a>
  * @version 0.1.2
  */
 

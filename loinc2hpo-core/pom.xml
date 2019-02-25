@@ -5,7 +5,7 @@
     <parent>
         <artifactId>Loinc2Hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
-        <version>1.1.3</version>
+        <version>1.1.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,21 +23,7 @@
 
 
     <dependencies>
-       <!--  <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
-        </dependency> -->
+
 
 
     </dependencies>
@@ -131,7 +117,7 @@
                         <!-- set useUniqueVersions=false in order that the classpath has the
                             SNAPSHOT instead of the build number prefixed to the dependency -->
                         <!--<useUniqueVersions>false</useUniqueVersions>-->
-                        <mainClass>org.monarchinitiative.loinc2hpo.Loinc2Hpo</mainClass>
+                        <!--<mainClass>org.monarchinitiative.loinc2hpo.Loinc2Hpo</mainClass>-->
                     </manifest>
                 </archive>
             </configuration>

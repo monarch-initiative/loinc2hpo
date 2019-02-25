@@ -1,29 +1,22 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
-import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
-import org.monarchinitiative.loinc2hpo.fhir.FhirObservationAnalyzerTest;
+import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializerToTSVSingleFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
-import org.monarchinitiative.phenol.base.PhenolException;
-import org.monarchinitiative.phenol.formats.hpo.HpoOntology;
-import org.monarchinitiative.phenol.io.obo.hpo.HpOboParser;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -39,10 +32,9 @@ public class LOINC2HpoAnnotationImplTest {
 
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws Exception {
         resourceCollection = new ResourceCollection();
         resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp.obo").getPath());
-
         hpoTermMap = resourceCollection.hpoTermMapFromName();
     }
 
@@ -63,9 +55,9 @@ public class LOINC2HpoAnnotationImplTest {
         LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
-                .setHighValueHpoTerm(hi)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
+                .setHighValueHpoTerm(hi.getId())
                 .setIntermediateNegated(true)
                 .build();
         testmap.put(loincId, glucoseAnnotation);
@@ -84,9 +76,9 @@ public class LOINC2HpoAnnotationImplTest {
         LOINC2HpoAnnotationImpl bacterialAnnotation = new LOINC2HpoAnnotationImpl.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false))
-                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive, false))
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false))
+                .addAdvancedAnnotation(internalCodes.get("POS"), new HpoTerm4TestOutcome(positive.getId(), false))
                 .build();
 
         testmap.put(loincId, bacterialAnnotation);
@@ -128,10 +120,10 @@ public class LOINC2HpoAnnotationImplTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
                 .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi);
+                .setHighValueHpoTerm(hi.getId());
 
         LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
@@ -140,15 +132,15 @@ public class LOINC2HpoAnnotationImplTest {
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
 
         Code code4low = internalCodes.get("L");
-        assertEquals(low.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4low).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(low.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4low).getId().getValue());
         assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4low).isNegated());
 
         Code code4high = internalCodes.get("H");
-        assertEquals(hi.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4high).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(hi.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4high).getId().getValue());
         assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4high).isNegated());
 
         Code code4normal = internalCodes.get("N");
-        assertEquals(normal.getId().getIdWithPrefix(), annotation15074.getCandidateHpoTerms().get(code4normal).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(normal.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4normal).getId().getValue());
         assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
 
         Code code4Pos = internalCodes.get("POS");
@@ -170,31 +162,39 @@ public class LOINC2HpoAnnotationImplTest {
          Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
          Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
+         TermId low = TermId.of("HP:00000123");
+
          Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
          Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+         Code code3 = Code.getNewCode().setSystem("FHIR").setCode("L");
 
          loinc2HpoAnnotationBuilder.setLoincId(loincId)
                  .setLoincScale(loincScale)
-                 .setPosValueHpoTerm(positive)
-                 .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                 .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
+                 .setPosValueHpoTerm(positive.getId())
+                 .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                 .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false))
+                 .addAdvancedAnnotation(code3, new HpoTerm4TestOutcome(low, true));
 
          LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
          assertEquals("600-7", annotation600.getLoincId().toString());
 
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         Code code4Pos = internalCodes.get("POS");
-        assertEquals(positive.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code4Pos).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(positive.getId().getValue(), annotation600.getCandidateHpoTerms().get(code4Pos).getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
 
         Code code4high = internalCodes.get("H");
         assertNull(annotation600.getCandidateHpoTerms().get(code4high));
 
-        assertEquals(forCode1.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code1).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(forCode1.getId().getValue(), annotation600.getCandidateHpoTerms().get(code1).getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code1).isNegated());
 
-        assertEquals(forCode2.getId().getIdWithPrefix(), annotation600.getCandidateHpoTerms().get(code2).getHpoTerm().getId().getIdWithPrefix());
+        assertEquals(forCode2.getId().getValue(), annotation600.getCandidateHpoTerms().get(code2).getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code2).isNegated());
+
+        assertEquals(true, annotation600.getCandidateHpoTerms().get(code3).isNegated());
+
+        System.out.println(new LoincAnnotationSerializerToTSVSingleFile(null).annotationToString(annotation600));
 
     }
 
@@ -212,10 +212,10 @@ public class LOINC2HpoAnnotationImplTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal)
+                .setLowValueHpoTerm(low.getId())
+                .setIntermediateValueHpoTerm(normal.getId())
                 .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi);
+                .setHighValueHpoTerm(hi.getId());
 
         LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
@@ -256,9 +256,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setHighValueHpoTerm(positive)
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1, false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2, false));
+                .setHighValueHpoTerm(positive.getId())
+                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
+                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
         System.out.println(annotation600.getAdvancedAnnotationsString());
