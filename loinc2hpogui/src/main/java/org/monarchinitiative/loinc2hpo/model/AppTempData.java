@@ -22,9 +22,6 @@ public class AppTempData {
 
     private String pathToHpGitRepo = null;
 
-    private Map<String, Set<LoincId>> userCreatedLoincLists = new LinkedHashMap<>();
-    private Map<String, String> userCreatedLoincListsColor = new LinkedHashMap<>();
-
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
     private LOINC2HpoAnnotationImpl currentAnnotation = null;
@@ -160,18 +157,6 @@ public class AppTempData {
     public void setCurrentAnnotation(LOINC2HpoAnnotationImpl current) {this.currentAnnotation = current;}
     public LOINC2HpoAnnotationImpl getCurrentAnnotation() {
         return currentAnnotation;
-    }
-
-    public Map<String, Set<LoincId>> getUserCreatedLoincLists() {
-        return userCreatedLoincLists;
-    }
-
-    public void addUserCreatedLoincList(String listName, Set<LoincId> list) {
-        this.userCreatedLoincLists.put(listName, list);
-    }
-
-    public void addOrUpdateUserCreatedLoincListColor(String listName, String color) {
-        userCreatedLoincListsColor.put(listName, color);
     }
 
     private String fhirServer = Constants.HAPIFHIRTESTSERVER;//default fhir server

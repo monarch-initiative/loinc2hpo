@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializationFactory;
+import org.monarchinitiative.loinc2hpo.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -16,10 +17,13 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * This class manages all resources that are required for this app. Whenever a new resource is required, just call a getter to retrieve it.
@@ -34,6 +38,7 @@ public class ResourceCollection {
     private String annotationMapPath;
     private String loincPanelPath;
     //private String loincPanelAnnotationPath;
+    private String loincCategoriesDirPath; //the path to the directory where we keep lists of loinc categories
     private HpoOntologyParser hpoOntologyParser;
     private Ontology hpo;
     private Map<TermId, Term> termidTermMap;
@@ -42,6 +47,7 @@ public class ResourceCollection {
     private Set<LoincId> loincIdSet;
     private Map<LoincId, LoincPanel> loincPanelMap;
     private Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
+    private Map<String, Set<LoincId>> loincCategories;
 
     public void setLoincEntryPath(String path) {
         this.loincEntryPath = path;
@@ -58,6 +64,8 @@ public class ResourceCollection {
     public void setAnnotationMapPath(String path) {
         this.annotationMapPath = path;
     }
+
+    public void setLoincCategoriesDirPath(String path) { this.loincCategoriesDirPath = path; }
 
     public void setLoincPanelPath(String path) {
         this.loincPanelPath = path;
@@ -158,6 +166,50 @@ public class ResourceCollection {
         }
 
         return this.hpo;
+    }
+
+    public Map<String, Set<LoincId>> getLoincCategories() {
+        if (loincCategories != null) {
+            return this.loincCategories;
+        }
+
+        this.loincCategories = new HashMap<>();
+        File loinc_category_folder = new File(loincCategoriesDirPath);
+        if (!loinc_category_folder.exists() || !loinc_category_folder.isDirectory()) {
+            return this.loincCategories;
+        }
+
+        File[] files = loinc_category_folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().endsWith(".txt")) {
+                    continue;
+                }
+                if (file.getName().endsWith("DS_Store.txt")){
+                    continue;
+                }
+                try {
+                    LoincOfInterest loincCategory = new LoincOfInterest(file.getAbsolutePath());
+                    Set<String> loincIdStrings = loincCategory.getLoincOfInterest();
+                    String categoryName = file.getName().substring(0, file.getName().length() - 4);;
+
+                    Set<LoincId> loincIds = loincIdStrings.stream().map(p -> {
+                        try {
+                            return new LoincId(p);
+                        } catch (MalformedLoincCodeException e1) {
+                            logger.error("malformed LOINC id: " + p);
+                            logger.error("in:" + file.getAbsolutePath());
+                        }
+                        return null;
+                    }).collect(Collectors.toSet());
+                    this.loincCategories.putIfAbsent(categoryName, loincIds);
+                    logger.info("loinc list: " + categoryName + "\t" + loincIds.size());
+                } catch (FileNotFoundException e1) {
+                    logger.error("file not found:" + file.getAbsolutePath());
+                }
+            }
+        }
+        return loincCategories;
     }
 
     public String getLoincEntryPath() {

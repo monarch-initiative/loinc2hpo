@@ -9,8 +9,10 @@ import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
+import org.monarchinitiative.loinc2hpo.io.LoincAnnotationSerializerToTSVSingleFile;
 import org.monarchinitiative.loinc2hpo.io.WriteToFile;
 import org.monarchinitiative.phenol.ontology.data.Term;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -160,14 +162,18 @@ public class LOINC2HpoAnnotationImplTest {
          Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
          Term positive = hpoTermMap.get("Recurrent bacterial infections");
 
+         TermId low = TermId.of("HP:00000123");
+
          Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
          Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+         Code code3 = Code.getNewCode().setSystem("FHIR").setCode("L");
 
          loinc2HpoAnnotationBuilder.setLoincId(loincId)
                  .setLoincScale(loincScale)
                  .setPosValueHpoTerm(positive.getId())
                  .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
-                 .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false));
+                 .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false))
+                 .addAdvancedAnnotation(code3, new HpoTerm4TestOutcome(low, true));
 
          LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
          assertEquals("600-7", annotation600.getLoincId().toString());
@@ -185,6 +191,10 @@ public class LOINC2HpoAnnotationImplTest {
 
         assertEquals(forCode2.getId().getValue(), annotation600.getCandidateHpoTerms().get(code2).getId().getValue());
         assertEquals(false, annotation600.getCandidateHpoTerms().get(code2).isNegated());
+
+        assertEquals(true, annotation600.getCandidateHpoTerms().get(code3).isNegated());
+
+        System.out.println(new LoincAnnotationSerializerToTSVSingleFile(null).annotationToString(annotation600));
 
     }
 
