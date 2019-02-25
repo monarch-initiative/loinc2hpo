@@ -125,9 +125,7 @@ Note:
 Save & Export data
 ~~~~~~~~~~~~~~~~~~
 
-To save data, you can click `File` - `Save Session`. This will save your annotations to two files: basic_annotations.tsv and advanced_annotations.tsv, and save your categories of LOINC codes into separated text files. All those files are located at the folder that you specified for auto-saved data.
-
-To export data, you can click `File` - `Export annotations as`. Currently the app only supports .tsv files.
+To save data, you can click `File` - `Save Session`. This will save your annotations into loinc2hpoAnnotation/Data/TSVSingle/annotations.csv. All those files are located at the folder that you specified for auto-saved data.
 
 
 Converting Observations to HPO terms
