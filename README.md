@@ -7,6 +7,8 @@ If you want to contribute to LOINC to HPO mapping, read below.
 # org.monarchinitiative.loinc2hpo
 Java library to map LOINC-encoded test results to Human Phenotype Ontology.
 
+*Important note on Java version* The library currently does not support Java 11. Please use Java 8.
+
 There are currently two modules, a core module and a graphical user interface (GUI) module. loinc2hpogui is a JavaFX app that intends to help with biocuration of LOINC code to HPO term mappings. To build and run the GUI, use the following command.
 ```
 $ mvn clean package
