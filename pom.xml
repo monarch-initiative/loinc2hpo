@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -19,6 +19,7 @@
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>3.6.0</hapi-fhir.version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <modules>
@@ -57,6 +58,19 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-cli</groupId>
@@ -90,22 +104,6 @@
             <version>1.11</version>
         </dependency>
 
-
-        <!--dependency>
-            <groupId>com.github.phenomics</groupId>
-            <artifactId>ontolib-core</artifactId>
-            <version>${ontolib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
         <dependency>
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-io</artifactId>
@@ -139,31 +137,8 @@
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
-                <!--<exclusion>-->
-                    <!--<groupId>net.sourceforge.owlapi</groupId>-->
-                    <!--<artifactId>owlapi-distribution</artifactId>-->
-                <!--</exclusion>-->
             </exclusions>
         </dependency>
-        <!--dependency>
-            <groupId>com.github.phenomics</groupId>
-            <artifactId>ontolib-io</artifactId>
-            <version>${ontolib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
 
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -189,14 +164,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owlapi-distribution -->
-        <!--<dependency>-->
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-distribution</artifactId>-->
-            <!--<version>5.1.4</version>-->
-        <!--</dependency>-->
-
 
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -267,32 +234,7 @@
         </dependency>
 
 
-        <!--dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.26</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>2.26</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>xml-path</artifactId>
-            <version>2.4.0</version>
-        </dependency> -->
 
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>

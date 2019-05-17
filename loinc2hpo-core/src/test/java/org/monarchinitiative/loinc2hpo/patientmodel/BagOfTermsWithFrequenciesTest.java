@@ -71,10 +71,8 @@ public class BagOfTermsWithFrequenciesTest {
         TermId abnormalGlucoseHomeostasis = TermId.of(HP_PREFIX, "0011014");
         assertEquals(inferred.get(abnormalGlucoseHomeostasis).longValue(), 5);
 
-        System.out.println(bag1);
-
-        bag1.getInferredTermCounts().entrySet().forEach(e ->
-                System.out.println(bag1.getPatientId() + "\t" + e.getKey() + "\t" + e.getValue()));
+//        bag1.getInferredTermCounts().entrySet().forEach(e ->
+//                System.out.println(bag1.getPatientId() + "\t" + e.getKey() + "\t" + e.getValue()));
 
     }
 

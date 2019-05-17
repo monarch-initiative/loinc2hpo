@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
-import org.hl7.fhir.dstu3.model.codesystems.V3ObservationInterpretation;
 import org.junit.Ignore;
 import org.junit.Test;
 
