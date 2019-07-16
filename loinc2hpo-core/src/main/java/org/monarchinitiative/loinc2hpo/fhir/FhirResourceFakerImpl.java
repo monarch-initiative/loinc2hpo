@@ -1,15 +1,9 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-import ca.uhn.fhir.model.base.composite.BaseResourceReferenceDt;
 import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.model.primitive.StringDt;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseReference;
-import org.hl7.fhir.instance.model.api.IIdType;
 import org.monarchinitiative.loinc2hpo.Constants;
-import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.loinc2hpo.loinc.LoincScale;
@@ -29,7 +23,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
     private Map<LoincId, LoincEntry> loincEntryMap;
 
     /**
-     * Constructor takes in a loincEntry map, which is created by calling method {@link org.monarchinitiative.loinc2hpo.loinc.LoincEntry#getLoincEntryList(String)}  getLoincEntryList}.
+     * Constructor takes in a loincEntry map, which is created by calling method {@link org.monarchinitiative.loinc2hpo.loinc.LoincEntry#getLoincEntryMap(String)}  getLoincEntryMap}.
      * @param loincEntryMap
      */
     public FhirResourceFakerImpl(Map<LoincId, LoincEntry> loincEntryMap) {

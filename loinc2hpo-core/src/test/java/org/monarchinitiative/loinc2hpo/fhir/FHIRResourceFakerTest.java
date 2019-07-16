@@ -12,7 +12,6 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class FHIRResourceFakerTest {
     @BeforeClass
     public static void setup() {
         String path = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
-        Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+        Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path);
         assertNotNull(loincEntryMap);
         assertTrue(loincEntryMap.size() > 1000);
         resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);

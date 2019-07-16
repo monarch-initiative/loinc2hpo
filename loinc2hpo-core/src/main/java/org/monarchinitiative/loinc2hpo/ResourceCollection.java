@@ -82,7 +82,7 @@ public class ResourceCollection {
             return null;
         }
         if (loincEntryMap == null) {
-            this.loincEntryMap = LoincEntry.getLoincEntryList(this.loincEntryPath);
+            this.loincEntryMap = LoincEntry.getLoincEntryMap(this.loincEntryPath);
         }
         return this.loincEntryMap;
     }
