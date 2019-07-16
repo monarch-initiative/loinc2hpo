@@ -203,7 +203,7 @@ public class ObservationDownloader {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             path = chooser.getSelectedFile().getAbsolutePath();
             System.out.println(path);
-            Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+            Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path);
             System.out.println("size of loinc table: " + loincEntryMap.size());
             for (LoincEntry loincEntry : loincEntryMap.values()) {
                 if (countComplete.containsKey(loincEntry.getScale()) && countComplete.get(loincEntry.getScale()) < 50) {

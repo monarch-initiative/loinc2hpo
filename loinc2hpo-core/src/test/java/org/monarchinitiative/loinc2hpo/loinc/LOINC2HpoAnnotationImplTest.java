@@ -34,7 +34,7 @@ public class LOINC2HpoAnnotationImplTest {
     @BeforeClass
     public static void setUp() throws Exception {
         resourceCollection = new ResourceCollection();
-        resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp.obo").getPath());
+        resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp_test.obo").getPath());
         hpoTermMap = resourceCollection.hpoTermMapFromName();
     }
 

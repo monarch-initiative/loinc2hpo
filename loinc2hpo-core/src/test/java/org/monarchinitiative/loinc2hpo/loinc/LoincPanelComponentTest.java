@@ -17,7 +17,7 @@ public class LoincPanelComponentTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        loincEntryMap = LoincEntry.getLoincEntryList(loincCoreTable);
+        loincEntryMap = LoincEntry.getLoincEntryMap(loincCoreTable);
         LoincId testLoinc = new LoincId("2160-0");
         LoincPanelComponent.setLoincEntryMap(loincEntryMap);
         component = new LoincPanelComponent(testLoinc, PanelComponentConditionality.R);

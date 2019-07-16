@@ -89,7 +89,7 @@ public class LoincEntry {
 
 
 
-    public static ImmutableMap<LoincId,LoincEntry> getLoincEntryList(String pathToLoincCoreTable) {
+    public static ImmutableMap<LoincId,LoincEntry> getLoincEntryMap(String pathToLoincCoreTable) {
         ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder();
         int count_malformed = 0;
         int count_correct = 0;

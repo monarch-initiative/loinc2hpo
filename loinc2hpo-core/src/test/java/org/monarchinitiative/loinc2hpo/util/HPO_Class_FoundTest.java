@@ -1,9 +1,7 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.impl.PropertyImpl;
+
 import org.junit.Test;
-import org.openrdf.model.vocabulary.RDFS;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

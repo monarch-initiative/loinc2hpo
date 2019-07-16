@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
-
-import com.google.common.collect.ImmutableMap;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -9,17 +7,11 @@ import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.loinc.*;
-import org.monarchinitiative.phenol.io.OntologyLoader;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 
 import static org.junit.Assert.*;
@@ -27,8 +19,6 @@ import static org.junit.Assert.*;
 public class ObservationAnalysisFromInterpretationTest {
 
     private static Observation[] observations = new Observation[2];
-    private static Map<String, Term> hpoTermMap;
-    private static Map<TermId, Term> hpoTermMap2;
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
     @BeforeClass
@@ -40,36 +30,20 @@ public class ObservationAnalysisFromInterpretationTest {
         observations[0] = observation1;
         observations[1] = observation2;
 
-        String hpo_obo = FhirObservationAnalyzerTest.class.getClassLoader().getResource("obo/hp.obo").getPath();
-        Ontology hpo = OntologyLoader.loadOntology(new File(hpo_obo));
-        ImmutableMap.Builder<String,Term> termmap = new ImmutableMap.Builder<>();
-        ImmutableMap.Builder<TermId,Term> termmap2 = new ImmutableMap.Builder<>();
-        if (hpo !=null) {
-            List<Term> res = hpo.getTermMap().values().stream().distinct()
-                    .collect(Collectors.toList());
-            res.forEach( term -> {
-                termmap.put(term.getName(),term);
-                termmap2.put(term.getId(), term);
-            });
-        }
-        hpoTermMap = termmap.build();
-        hpoTermMap2 = termmap2.build();
-
-
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
-        Term low = hpoTermMap.get("Hypoglycemia");
-        Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
-        Term hi = hpoTermMap.get("Hyperglycemia");
+        TermId low = TermId.of("HP:001");
+        TermId normal = TermId.of("HP:002");
+        TermId hi = TermId.of("HP:003");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low.getId())
-                .setIntermediateValueHpoTerm(normal.getId())
+                .setLowValueHpoTerm(low)
+                .setIntermediateValueHpoTerm(normal)
                 .setIntermediateNegated(true)
-                .setHighValueHpoTerm(hi.getId());
+                .setHighValueHpoTerm(hi);
 
         LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
 
@@ -80,18 +54,18 @@ public class ObservationAnalysisFromInterpretationTest {
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
-        Term forCode1 = hpoTermMap.get("Recurrent E. coli infections");
-        Term forCode2 = hpoTermMap.get("Recurrent Staphylococcus aureus infections");
-        Term positive = hpoTermMap.get("Recurrent bacterial infections");
+        TermId ecoli = TermId.of("HP:004");
+        TermId staphaureus = TermId.of("HP:005");
+        TermId bacterial = TermId.of("HP:006");
 
-        Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+        Code ecoli_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
+        Code staph_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
-                .setHighValueHpoTerm(positive.getId())
-                .addAdvancedAnnotation(code1, new HpoTerm4TestOutcome(forCode1.getId(), false))
-                .addAdvancedAnnotation(code2, new HpoTerm4TestOutcome(forCode2.getId(), false));
+                .setHighValueHpoTerm(bacterial)
+                .addAdvancedAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
+                .addAdvancedAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 
@@ -122,7 +96,7 @@ public class ObservationAnalysisFromInterpretationTest {
 
         assertNotNull(analyzer.getHPOforObservation());
         HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
-        System.out.println(hpoterm.getId());
+        assertEquals("HP:003", hpoterm.getId().getValue());
         assertEquals(false, hpoterm.isNegated());
 
     }

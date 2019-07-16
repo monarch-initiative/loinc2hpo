@@ -20,16 +20,14 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
 
     private static final Logger logger = LogManager.getLogger();
 
-    private Map<TermId, Term> hpoTermMap = null;
     private Map<LoincId, LoincEntry> loincEntryMap = null;
 
     private LoincAnnotationSerializerToTSVSeparateFiles() {
 
     }
 
-    public LoincAnnotationSerializerToTSVSeparateFiles(Map<TermId, Term> hpoTermMap, Map<LoincId, LoincEntry> loincEntryMap) {
+    public LoincAnnotationSerializerToTSVSeparateFiles(Map<LoincId, LoincEntry> loincEntryMap) {
 
-        this.hpoTermMap = hpoTermMap;
         this.loincEntryMap = loincEntryMap;
 
     }
@@ -54,9 +52,6 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     @Override
     public Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws FileNotFoundException {
 
-        if (hpoTermMap == null) {
-            throw new NullPointerException("hpoTermMap is not provided yet");
-        }
         if (loincEntryMap == null) {
             throw new NullPointerException("loincEntryMap is not provided yet");
         }
@@ -65,13 +60,13 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
         String basicannotations = filepath + File.separator + Constants.TSVSeparateFilesBasic;
         String advancedAnnotations = filepath + File.separator + Constants.TSVSeparateFilesAdv;
         if (new File(basicannotations).exists()) {
-            annotationMap = fromTSVBasic(basicannotations, this.hpoTermMap);
+            annotationMap = fromTSVBasic(basicannotations);
         } else {
             annotationMap = new LinkedHashMap<>();
         }
 
         if (new File(advancedAnnotations).exists()) {
-            fromTSVAdvanced(advancedAnnotations, annotationMap, this.hpoTermMap);
+            fromTSVAdvanced(advancedAnnotations, annotationMap);
         }
 
         return annotationMap;
@@ -123,7 +118,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> fromTSVBasic(String path, Map<TermId, Term> hpoTermMap) throws FileNotFoundException {
+    public Map<LoincId, LOINC2HpoAnnotationImpl> fromTSVBasic(String path) throws FileNotFoundException {
 
         Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap = new LinkedHashMap<>();
         BufferedReader reader = new BufferedReader(new FileReader(path));
@@ -199,7 +194,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
     }
 
 
-    public void fromTSVAdvanced(String path, Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap, Map<TermId, Term> hpoTermMap) throws FileNotFoundException {
+    public void fromTSVAdvanced(String path, Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap) throws FileNotFoundException {
 
         BufferedReader reader = new BufferedReader(new FileReader(path));
         reader.lines().forEach(serialized -> {

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>Loinc2Hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
-        <version>1.1.6</version>
+        <version>1.1.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,8 +14,6 @@
 
     <name>Loinc2Hpo Core</name>
     <description>loin2hpo-core is a library for mapping LOINC codes to HPO terms</description>
-    <!-- TODO   <url>http://jacksonlaboratory.github.io/loinc2hpo/</url> -->
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

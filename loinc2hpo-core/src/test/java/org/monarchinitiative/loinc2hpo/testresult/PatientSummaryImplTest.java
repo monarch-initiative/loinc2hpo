@@ -50,7 +50,7 @@ public class PatientSummaryImplTest {
         hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(s -> s.getId()).collect(Collectors.toSet()), annotationMap).getUnionFind();
 
         String path = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
-        Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryList(path);
+        Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path);
         resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
         patient = resourceGenerator.fakePatient();
 

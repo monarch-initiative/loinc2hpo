@@ -32,7 +32,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
     private static final Logger logger = LogManager.getLogger();
 
-    private LoincAnnotationSerializerToTSVSingleFile() {
+    public LoincAnnotationSerializerToTSVSingleFile() {
 
     }
 

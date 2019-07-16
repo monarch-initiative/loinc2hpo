@@ -9,6 +9,7 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -58,7 +59,7 @@ public class LoincAnnotationSerializationFactory {
                 if (loincEntryMap == null) {
                     throw new NullPointerException("loincEntryMap not specified!");
                 }
-                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(hpoTermMap, loincEntryMap);
+                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(loincEntryMap);
                 serializer.serialize(annotationMap, path);
                 break;
             case JSON:
@@ -69,19 +70,42 @@ public class LoincAnnotationSerializationFactory {
         }
     }
 
-    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, Map<TermId, Term> termmap, SerializationFormat format) throws Exception {
+    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, @Nullable Map<TermId, Term> termmap, SerializationFormat format) throws Exception {
 
         Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
         LoincAnnotationSerializer serializer;
         switch (format) {
             case TSVSingleFile:
                 logger.trace("entry TSVSingleFile serilizer:");
-                serializer = new LoincAnnotationSerializerToTSVSingleFile(termmap);
+                serializer = new LoincAnnotationSerializerToTSVSingleFile();
                 annotationMap = serializer.parse(path);
                 logger.trace("annotationMap size: " + annotationMap.size());
                 break;
             case TSVSeparateFile:
-                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(termmap, loincEntryMap);
+                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(loincEntryMap);
+                annotationMap = serializer.parse(path);
+                break;
+            case JSON:
+                break;
+            default:
+                break;
+        }
+        return annotationMap;
+    }
+
+    public static Map<LoincId, LOINC2HpoAnnotationImpl> parseFromFile(String path, SerializationFormat format) throws Exception {
+
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
+        LoincAnnotationSerializer serializer;
+        switch (format) {
+            case TSVSingleFile:
+                logger.trace("entry TSVSingleFile serilizer:");
+                serializer = new LoincAnnotationSerializerToTSVSingleFile();
+                annotationMap = serializer.parse(path);
+                logger.trace("annotationMap size: " + annotationMap.size());
+                break;
+            case TSVSeparateFile:
+                serializer = new LoincAnnotationSerializerToTSVSeparateFiles(loincEntryMap);
                 annotationMap = serializer.parse(path);
                 break;
             case JSON:

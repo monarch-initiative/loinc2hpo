@@ -1,14 +1,5 @@
 package org.monarchinitiative.loinc2hpo;
 
-import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
-import org.monarchinitiative.phenol.ontology.data.Term;
-import org.monarchinitiative.phenol.ontology.data.TermId;
-
-import java.util.Map;
-import java.util.Set;
 
 public class SharedResourceCollection {
 
@@ -24,7 +15,7 @@ public class SharedResourceCollection {
         resourceCollection.setLoincEntryPath(loincCoreTable);
         resourceCollection.setLoincPanelPath(loincPanels);
         //resourceCollection.setHpoOboPath(hpo_obo);
-        resourceCollection.setHpoOboPath(SharedResourceCollection.class.getResource("/obo/hp.obo").getPath());
+        resourceCollection.setHpoOboPath(SharedResourceCollection.class.getResource("/obo/hp_test.obo").getPath());
         //resourceCollection.setHpoOwlPath(hpo_owl);
         resourceCollection.setHpoOwlPath(SharedResourceCollection.class.getResource("/hp.owl").getPath());
         resourceCollection.setAnnotationMapPath(loincAnnotationPath);

@@ -1,31 +1,16 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.apache.jena.atlas.iterator.Iter;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
-import org.apache.jena.shared.JenaException;
-import org.apache.jena.util.FileManager;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.FunctionalSyntaxDocumentFormat;
-import org.semanticweb.owlapi.formats.RDFaDocumentFormat;
-import org.semanticweb.owlapi.io.FileDocumentSource;
-import org.semanticweb.owlapi.io.OWLOntologyDocumentSource;
-import org.semanticweb.owlapi.model.OWLDocumentFormat;
-import org.semanticweb.owlapi.model.OWLDocumentFormatImpl;
-import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.parameters.OntologyCopy;
-//import ru.avicomp.owlapi.OWLOntologyFactoryImpl;
+
 
 import java.io.*;
 import java.util.*;
