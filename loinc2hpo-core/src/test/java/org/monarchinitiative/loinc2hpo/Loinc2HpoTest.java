@@ -21,7 +21,7 @@ public class Loinc2HpoTest {
 
     @Test
     public void queryWithInterpretationCode() throws Exception {
-        //LoincId of current test: Potassium in Serum or plasma
+        //LoincId of current test: LOINC 2823-3 Potassium in Serum or plasma
         LoincId loincId = new LoincId("2823-3");
 
         //Assume result is lower than normal, then interpretation code is L (low) in FHIR system .
