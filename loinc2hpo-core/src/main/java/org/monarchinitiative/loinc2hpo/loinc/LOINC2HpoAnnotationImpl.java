@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * TODO: implement Json serialization
  * This class is responsible for managing the annotation information. The app keeps a map from loinc -> annotation. This
  * class is only the annotation part. For each loinc code, we assign a candidate Hpo term for a potential observation
  * value. The observation value is a code in a coding system (if it is a numeric value, we change it to a code). For Qn
