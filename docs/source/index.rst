@@ -19,7 +19,8 @@ Mapping LOINC to HPO terms requires significant efforts from biocurators. Loinc2
    Annotation logic
    Install & running
    Configuration
-   Tutorial
+   Annotation Tutorial
+   Consumption Tutorial
    Contact
 
 GitHub repo

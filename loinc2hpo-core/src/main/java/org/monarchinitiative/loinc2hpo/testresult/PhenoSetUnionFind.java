@@ -2,14 +2,11 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.jgrapht.alg.util.UnionFind;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotation;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
