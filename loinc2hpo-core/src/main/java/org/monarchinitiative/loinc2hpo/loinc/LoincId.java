@@ -16,6 +16,13 @@ public class LoincId  implements Serializable {
     private final int suffix;
 
     public LoincId(String loinccode) throws MalformedLoincCodeException {
+        this(loinccode, false);
+    }
+
+    public LoincId(String loinccode, boolean hasPrefix) throws MalformedLoincCodeException {
+        if (hasPrefix){
+            loinccode = loinccode.split(":")[1];
+        }
         int dash_pos=loinccode.indexOf("-");
         if (dash_pos<=0) throw new MalformedLoincCodeException("No dash found in "+loinccode);
         if (dash_pos >loinccode.length()-2)

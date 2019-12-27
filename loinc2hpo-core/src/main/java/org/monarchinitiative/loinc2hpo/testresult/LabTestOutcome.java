@@ -4,7 +4,6 @@ import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
 

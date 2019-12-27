@@ -1,9 +1,12 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Loinc2HpoAnnotationCsvEntry {
@@ -191,6 +194,11 @@ public class Loinc2HpoAnnotationCsvEntry {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Override
+    public String toString(){
+        return StringUtils.join(Arrays.asList(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment), "\t");
     }
 
 
