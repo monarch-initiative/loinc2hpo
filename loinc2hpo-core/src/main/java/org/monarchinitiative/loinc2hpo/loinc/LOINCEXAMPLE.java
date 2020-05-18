@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFakerImpl;
 
 import java.util.Arrays;
 import java.util.List;

@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpo.codesystems;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.InternalCodeNotFoundException;
-import org.monarchinitiative.loinc2hpo.exception.LoincCodeNotFoundException;
 
 import java.io.*;
 import java.nio.charset.Charset;

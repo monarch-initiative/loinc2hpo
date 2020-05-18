@@ -27,6 +27,7 @@ public class Loinc2Hpo {
         try {
             annotationMap = importAnnotationMap(path);
         } catch (Exception e) {
+            logger.error("Failed to import loinc2hpo annotation");
             throw new RuntimeException("failed to import loinc2hpo annotation");
         }
     }

@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;

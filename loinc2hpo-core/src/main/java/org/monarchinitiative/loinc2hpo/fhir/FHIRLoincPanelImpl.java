@@ -2,14 +2,10 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 

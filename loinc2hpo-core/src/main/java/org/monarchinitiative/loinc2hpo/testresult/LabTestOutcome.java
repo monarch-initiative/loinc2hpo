@@ -4,16 +4,13 @@ import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Reference;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
 
 /**
- * This class should combine with the Labtest.class.
- */
-
-/**
- * This interface defines classes that model the outcome from a lab test after our analysis. It contains the information about the subject of the test, the identifier of the test, and the outcome (in HPO terms).
+ * This interface defines classes that model the outcome from a lab test after our analysis.
+ * It contains the information about the subject of the test, the identifier of the test,
+ * and the outcome (in HPO terms).
  */
 
 public interface LabTestOutcome {

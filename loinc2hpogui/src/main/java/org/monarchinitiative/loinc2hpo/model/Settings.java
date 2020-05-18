@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.model;
 
-import com.google.inject.Singleton;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;

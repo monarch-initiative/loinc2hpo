@@ -1,10 +1,7 @@
 package org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanelConversionLogic;
 
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpo.Constants;
-import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanelImpl;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;

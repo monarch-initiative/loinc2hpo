@@ -8,11 +8,9 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.exception.*;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.BasicLabTestOutcome;
-import org.monarchinitiative.loinc2hpo.testresult.LabTest;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

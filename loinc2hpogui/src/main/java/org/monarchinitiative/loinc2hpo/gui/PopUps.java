@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;

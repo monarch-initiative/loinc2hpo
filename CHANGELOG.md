@@ -3,7 +3,10 @@
 
 
 ## current
-* v 1.0.1
+* v 1.1.8
+
+## v1.1.8
+* Update to phenol 1.5.0
 
 ### loinc2hpo-core
 * Adding enums for FHIR observation codes

@@ -1,12 +1,10 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * This will be used to represent a more complete lab test. It has the following component:

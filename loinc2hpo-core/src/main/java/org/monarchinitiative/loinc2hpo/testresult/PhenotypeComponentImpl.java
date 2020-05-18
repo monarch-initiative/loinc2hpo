@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import javax.annotation.Nullable;

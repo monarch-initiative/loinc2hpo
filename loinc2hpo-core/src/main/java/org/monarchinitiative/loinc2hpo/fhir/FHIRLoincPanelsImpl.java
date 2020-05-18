@@ -5,7 +5,6 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanelConversionLogic.BloodPressurePanel;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
 
 import java.util.*;
 import java.util.stream.Collectors;

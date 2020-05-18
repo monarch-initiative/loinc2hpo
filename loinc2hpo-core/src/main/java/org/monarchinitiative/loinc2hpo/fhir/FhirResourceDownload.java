@@ -5,7 +5,6 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Reference;
 
-import java.util.Date;
 import java.util.List;
 
 public interface FhirResourceDownload {

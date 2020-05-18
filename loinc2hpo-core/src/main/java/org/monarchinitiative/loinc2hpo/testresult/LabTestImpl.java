@@ -1,13 +1,10 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.apache.maven.model.Build;
-import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * How to model a lab test?

@@ -1,20 +1,15 @@
 package org.monarchinitiative.loinc2hpo.fhir.FHIRLoincPanelConversionLogic;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-import org.apache.commons.chain.web.MapEntry;
 import org.hl7.fhir.dstu3.model.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
-import org.monarchinitiative.loinc2hpo.ResourceCollectionTest;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.fhir.*;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.loinc2hpo.loinc.LoincPanel;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.github;
 
 import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.gui.GitHubPopup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class GitHubPosterTest {
     @Test
-    public void debugLabelsArray4Json1() throws Exception {
+    public void debugLabelsArray4Json1()  {
 
         //GitHubPoster poster = new GitHubPoster("userName", "password", "Loinc123", "content");
         GitHubPoster poster = new GitHubPoster(null, null, null, null);
@@ -25,7 +24,7 @@ public class GitHubPosterTest {
 
 
     @Test
-    public void debugLabelsArray4Json2() throws Exception {
+    public void debugLabelsArray4Json2() {
 
         //GitHubPoster poster = new GitHubPoster("userName", "password", "Loinc123", "content");
         GitHubPoster poster = new GitHubPoster(null, null, null, null);
@@ -37,7 +36,7 @@ public class GitHubPosterTest {
         assertEquals("\"lo\\tin\\tc\", \"immunology\"", poster.debugLabelsArray4Json());
     }
     @Test
-    public void debugReformatpayloadWithLabel1() throws Exception {
+    public void debugReformatpayloadWithLabel1() {
 
         GitHubPoster poster = new GitHubPoster(null, null, null, null);
         List<String> labels = new ArrayList<>();
@@ -52,7 +51,7 @@ public class GitHubPosterTest {
     }
 
     @Test
-    public void debugReformatpayloadWithLabel2() throws Exception {
+    public void debugReformatpayloadWithLabel2() {
 
         GitHubPoster poster = new GitHubPoster(null, null, null, null);
         List<String> labels = new ArrayList<>();
@@ -67,7 +66,7 @@ public class GitHubPosterTest {
     }
 
     @Test
-    public void testPayload() throws Exception{
+    public void testPayload() {
         GitHubPoster poster = new GitHubPoster(null, null, null, null);
         List<String> labels = new ArrayList<>();
         labels.add("loinc");
@@ -77,7 +76,7 @@ public class GitHubPosterTest {
     }
 
     @Test
-    public void testColor() throws Exception {
+    public void testColor() {
         Color color = Color.PINK;
         System.out.println("#" + color.toString().substring(2,8).toUpperCase());
         System.out.println(String.format( "#%02X%02X%02X",

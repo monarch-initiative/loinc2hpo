@@ -9,12 +9,8 @@ import ca.uhn.fhir.rest.gclient.TokenClientParam;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.monarchinitiative.loinc2hpo.exception.AmbiguousSubjectException;
-import org.monarchinitiative.loinc2hpo.exception.SubjectNotFoundException;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FhirServerDstu3Impl implements FhirServer{

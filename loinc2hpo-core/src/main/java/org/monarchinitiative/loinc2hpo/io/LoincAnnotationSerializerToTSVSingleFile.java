@@ -16,7 +16,6 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

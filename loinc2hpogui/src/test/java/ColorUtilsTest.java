@@ -2,8 +2,6 @@ import org.junit.Test;
 import javafx.scene.paint.Color;
 import org.monarchinitiative.loinc2hpo.gui.ColorUtils;
 
-import static org.junit.Assert.*;
-
 public class ColorUtilsTest {
     @Test
     public void colorValue() throws Exception {

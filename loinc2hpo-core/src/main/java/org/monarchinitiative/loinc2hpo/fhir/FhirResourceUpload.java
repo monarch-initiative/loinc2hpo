@@ -4,8 +4,6 @@ import ca.uhn.fhir.rest.api.MethodOutcome;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 
-import javax.annotation.Resource;
-
 public interface FhirResourceUpload {
 
     /**

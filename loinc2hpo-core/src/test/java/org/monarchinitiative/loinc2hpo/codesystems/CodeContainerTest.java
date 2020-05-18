@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

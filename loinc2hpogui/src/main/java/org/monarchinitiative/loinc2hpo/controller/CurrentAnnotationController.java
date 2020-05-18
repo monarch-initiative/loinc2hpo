@@ -1,8 +1,6 @@
 package org.monarchinitiative.loinc2hpo.controller;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.kenai.jaffl.annotations.In;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -22,7 +20,6 @@ import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.model.AdvancedAnnotationTableComponent;
-import org.monarchinitiative.loinc2hpo.model.AppResources;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 

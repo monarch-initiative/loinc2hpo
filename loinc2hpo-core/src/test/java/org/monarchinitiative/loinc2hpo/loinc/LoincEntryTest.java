@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 
-import static org.junit.Assert.*;
-
 public class LoincEntryTest {
 
     static ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;;

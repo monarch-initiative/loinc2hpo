@@ -7,7 +7,7 @@ import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 
 import java.util.*;
-import java.util.List;
+
 import javafx.scene.paint.Color;
 
 /**

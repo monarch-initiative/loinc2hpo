@@ -2,10 +2,7 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.model.valueset.BundleTypeEnum;
 import ca.uhn.fhir.parser.DataFormatException;
-import ca.uhn.fhir.rest.api.Constants;
-import ca.uhn.fhir.rest.api.MethodOutcome;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.junit.Ignore;
@@ -30,6 +27,7 @@ public class FhirObservationRetrieverTest {
     public void testParseJsonFile2ObservationException() throws Exception{
         String path = getClass().getClassLoader().getResource("json/malformedObservation.fhir").getPath();
         Observation observation = (Observation) new FhirResourceParserDstu3().parse(path);
+        assertNotNull(observation);
     }
 
     @Test
