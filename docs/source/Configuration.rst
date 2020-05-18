@@ -26,7 +26,7 @@ affect the operation of the app.
 
 * Once you are done, click **"Configuration"** - **"Show settings"** to view all your settings. The first two settings should **NOT** be null in order for the app to work correctly.
 
-* Use customized hpo. If you prefer to use your own versions of hpo, click **"Configuration"** - **"Change hpo.owl"** to set the path to your hpo.owl file; use the button below to set the path to the hpo.obo file. An important note: inconsistencies of hpo.owl and hpo.obo files will lead to errors, so make sure your hpo OWL and OBO files are serialized from the same HPO.
+* Use customized hpo. If you prefer to use your own versions of hpo, click **"Configuration"** - **"Change hpo.owl"** to set the path to your hpo.owl file; use the button below to set the path to the hpo.obo file. An important note: inconsistencies of hpo.owl and hpo.obo files will lead to errors, so make sure your hpo OWL and OBO files are serialized from the same HPO. For details, refer to https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation/blob/master/README.md#annotating-with-newly-created-hpo-terms
 
 
 Change Settings
