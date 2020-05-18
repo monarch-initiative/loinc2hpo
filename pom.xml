@@ -14,7 +14,6 @@
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
         <phenol.version>1.5.0</phenol.version>
-        <junit.version>4.12</junit.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>4.1.0</hapi-fhir.version>
@@ -49,13 +48,28 @@
             <version>1.7.25</version>
         </dependency>
 
+          <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.6.0</version>
+                <scope>test</scope>
+            </dependency>
+
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.4.2</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.wso2.orbit.org.apache.commons/commons-compress -->
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.18.0.wso2v1</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -163,6 +177,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.14.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.apache.commons</groupId>

@@ -1,8 +1,10 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
@@ -14,14 +16,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ObservationAnalysisFromInterpretationTest {
 
     private static Observation[] observations = new Observation[2];
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws MalformedLoincCodeException, IOException, DataFormatException {
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
@@ -102,13 +105,14 @@ public class ObservationAnalysisFromInterpretationTest {
     }
 
 
-    @Test (expected = AmbiguousResultsFoundException.class)
+    @Test
     public void getHPOforObservationTestException() throws Exception {
+        Assertions.assertThrows(AmbiguousResultsFoundException.class, () -> {
+            LoincId loincId = new LoincId("15074-8");
+            ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[1].getInterpretation(), testmap);
+            HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
+        });
 
-        LoincId loincId = new LoincId("15074-8");
-
-        ObservationAnalysisFromInterpretation analyzer = new ObservationAnalysisFromInterpretation(loincId, observations[1].getInterpretation(), testmap);
-        HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
 
     }
 

@@ -2,7 +2,8 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.apache.jena.query.ARQ;
 import org.apache.jena.riot.RIOT;
-import org.apache.jena.system.JenaSubsystemLifecycle;
+import org.apache.jena.sys.JenaSubsystemLifecycle;
+
 
 /**
  * This is a critical class to for Jena to work from Jar.

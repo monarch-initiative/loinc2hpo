@@ -1,9 +1,8 @@
 package org.monarchinitiative.loinc2hpo.io;
 
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -15,15 +14,18 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    static File temporaryFolder;
+    private static File temporaryFile = new File(temporaryFolder, "hp.rdf");
+    private static String temporaryPath = temporaryFile.getAbsolutePath();
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
@@ -71,25 +73,18 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     @Test
     public void serialize() throws Exception {
-
-        String tempFile = folder.newFile().getAbsolutePath();
         LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
-        serializer.serialize(testmap, tempFile);
-
-        BufferedReader reader = new BufferedReader(new FileReader(tempFile));
+        serializer.serialize(testmap, temporaryPath);
+        BufferedReader reader = new BufferedReader(new FileReader(temporaryPath));
         reader.lines().forEach(System.out::println);
-
     }
 
     @Test
     public void parse() throws Exception {
-
-        String tempFile = folder.newFile().getAbsolutePath();
         LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
-        serializer.serialize(testmap, tempFile);
-
+        serializer.serialize(testmap, temporaryPath);
         LoincAnnotationSerializerToTSVSingleFile serilizer = new LoincAnnotationSerializerToTSVSingleFile(null);
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = serilizer.parse(tempFile);
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = serilizer.parse(temporaryPath);
         assertNotNull(annotationMap);
         assertEquals(2, annotationMap.size());
 
@@ -97,13 +92,12 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     @Test
     public void testFactory() throws Exception {
-
-        String tempFile = folder.newFile().getAbsolutePath();
         LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
-        serializer.serialize(testmap, tempFile);
+        serializer.serialize(testmap, temporaryPath);
 
 
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tempFile, null, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
+                LoincAnnotationSerializationFactory.parseFromFile(temporaryPath, null, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
         assertNotNull(annotationMap);
         assertEquals(2, annotationMap.size());
 

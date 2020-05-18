@@ -1,17 +1,19 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Queue;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class LoincLongNameComponentsTest {
     static LoincLongNameComponents testclass;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         testclass = new LoincLongNameComponents("Erythrocytes distribution width", "blood or serum", "Automated Count", "Ratio");
     }
@@ -54,7 +56,7 @@ public class LoincLongNameComponentsTest {
     @Test
     public void testALoinc() {
         String aLoinc = "Erythrocyte distribution width [Ratio] by Automated count";
-        Assert.assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
+        assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
         assertEquals("", LoincLongNameParser.parse(aLoinc).getLoincTissue());
         System.out.println(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().size());
         for (String tissue : LoincLongNameParser.parse(aLoinc).keysInLoincTissue()) {

@@ -5,9 +5,10 @@ import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 import org.hl7.fhir.dstu3.model.*;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.Constants;
 import org.monarchinitiative.loinc2hpo.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
@@ -16,15 +17,16 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore
+
+@Disabled
 public class FHIRResourceFakerTest {
 
     private static FhirResourceFaker resourceGenerator;
     private static List<Patient> randPatients;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         String path = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
         Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path);
@@ -120,7 +122,7 @@ public class FHIRResourceFakerTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testUploadLoincPanels() throws Exception {
         Patient patient = resourceGenerator.fakePatient();
         LoincId panelId = new LoincId("35094-2");

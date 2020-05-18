@@ -2,11 +2,12 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 
+import java.io.File;
 import java.util.Map;
 
 public class WriteToFileTest {
@@ -14,8 +15,8 @@ public class WriteToFileTest {
     @JsonSerialize(keyUsing = LoincIdJsonSerializer.class)
     Map<LoincId, String> idSer;
 
-    @Rule
-    public TemporaryFolder tempFolder = new TemporaryFolder();
+    @TempDir
+    File tempFolder;
 
 
     @Test

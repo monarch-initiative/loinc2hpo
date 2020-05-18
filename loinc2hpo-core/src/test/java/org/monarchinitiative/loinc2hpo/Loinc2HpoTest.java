@@ -1,18 +1,20 @@
 package org.monarchinitiative.loinc2hpo;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class Loinc2HpoTest {
 
     private static Loinc2Hpo loinc2Hpo;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup(){
         //initialize the Loinc2Hpo app with the annotation file path
         String path = Loinc2HpoTest.class.getClassLoader().getResource("annotations.tsv").getPath();

@@ -1,8 +1,10 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.UnrecognizedCodeException;
@@ -14,14 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws MalformedLoincCodeException, DataFormatException, IOException {
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcus.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
@@ -89,11 +93,15 @@ public class ObservationAnalysisFromCodedValuesTest {
     }
 
 
-    @Test (expected = UnrecognizedCodeException.class)
-    public void testGetInterpretationCodes2() throws Exception {
-        LoincId loincId = new LoincId("600-7");
-        ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[3].getValueCodeableConcept(), testmap);
-        analyzer.getHPOforObservation();
+    @Test
+    public void testGetInterpretationCodes2()  {
+        Assertions.assertThrows(UnrecognizedCodeException.class, () -> {
+            LoincId loincId = new LoincId("600-7");
+            ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[3].getValueCodeableConcept(), testmap);
+            analyzer.getHPOforObservation();
+        });
+
+
     }
 
 }

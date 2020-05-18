@@ -5,13 +5,15 @@ import ca.uhn.fhir.model.primitive.IdDt;
 import ca.uhn.fhir.parser.DataFormatException;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class FhirObservationRetrieverTest {
     @Test
@@ -23,15 +25,17 @@ public class FhirObservationRetrieverTest {
         assertEquals("Observation", observation.getResourceType().toString());
     }
 
-    @Test (expected = DataFormatException.class)
+    @Test
     public void testParseJsonFile2ObservationException() throws Exception{
-        String path = getClass().getClassLoader().getResource("json/malformedObservation.fhir").getPath();
-        Observation observation = (Observation) new FhirResourceParserDstu3().parse(path);
-        assertNotNull(observation);
+        Assertions.assertThrows(DataFormatException.class, () -> {
+            String path = getClass().getClassLoader().getResource("json/malformedObservation.fhir").getPath();
+            Observation observation = (Observation) new FhirResourceParserDstu3().parse(path);
+            assertNotNull(observation);
+        });
+
     }
 
     @Test
-    @Ignore
     public void testUploadBundle() {
         // Create a patient object
         Patient patient = new Patient();

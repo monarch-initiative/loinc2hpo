@@ -1,12 +1,14 @@
 package org.monarchinitiative.loinc2hpo.patientmodel;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BagOfTermsTest {
 
@@ -14,7 +16,7 @@ public class BagOfTermsTest {
     private final String patientId = "patient001";
     private final String HP_PREFIX = "HP";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         hpo = SharedResourceCollection.resourceCollection.getHPO();
     }

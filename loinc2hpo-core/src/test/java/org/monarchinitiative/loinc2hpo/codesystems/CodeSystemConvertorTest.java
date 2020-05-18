@@ -1,13 +1,14 @@
 package org.monarchinitiative.loinc2hpo.codesystems;
 
-import org.junit.Ignore;
-import org.junit.Test;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class CodeSystemConvertorTest {
-    @Test @Ignore
-    public void testAddCodeSystems() throws Exception {
+    @Test
+    public void testAddCodeSystems() {
         assertNotNull(CodeSystemConvertor.getCodeContainer());
         assertNotNull(CodeSystemConvertor.getCodeContainer().getCodeSystemMap());
         assertEquals(2, CodeSystemConvertor.getCodeContainer().getCodeSystemMap().size());
@@ -17,7 +18,7 @@ public class CodeSystemConvertorTest {
     }
 
     @Test
-    public void testAddMappingData() throws Exception{
+    public void testAddMappingData() {
         assertEquals(39, CodeSystemConvertor.getCodeConversionMap().size());
     }
 
@@ -49,28 +50,4 @@ public class CodeSystemConvertorTest {
         assertEquals("abnormal", internal2.getDisplay());
 
     }
-
-    /**
-    @Test
-    public void convertToInternalCodeTest2() throws Exception{
-        assertNotNull(CodeSystemConvertor.getCodeConversionMap());
-        assertEquals(11, CodeSystemConvertor.getCodeConversionMap().size());
-        CodeSystemConvertor.getCodeConversionMap().entrySet()
-                .forEach(x -> System.out.println(x.getKey().getSystem() + " " + x.getKey().getCode() + " " + x.getKey().getDisplay()
-                        + " : " + x.getValue().getSystem() + " " + x.getValue().getCode() + " " + x.getValue().getDisplay()));
-        Coding v3Code;
-        Coding internal;
-
-        V3ObservationInterpretation v3value;
-        Loinc2HPOCodedValue internalvalue;
-
-        //v3: N    internal: N
-        v3value = V3ObservationInterpretation.fromCode("N");
-        v3Code = new Coding(v3value.getSystem(), v3value.toCode(), v3value.getDisplay());
-        System.out.println(v3Code.getSystem() + " " + v3Code.getCode() + " " + v3Code.getDisplay());
-        internal = CodeSystemConvertor.convertToInternalCode(v3Code);
-        //assertNotNull(internal);
-
-    }
-**/
 }

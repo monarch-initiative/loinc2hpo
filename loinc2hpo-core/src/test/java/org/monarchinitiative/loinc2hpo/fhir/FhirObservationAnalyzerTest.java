@@ -2,8 +2,9 @@ package org.monarchinitiative.loinc2hpo.fhir;
 
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.loinc.*;
 import org.monarchinitiative.loinc2hpo.testresult.LabTestOutcome;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -11,14 +12,16 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class FhirObservationAnalyzerTest {
 
     private static Observation observation;
     private static Map<String, Term> hpoTermMap;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception{
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
         observation = FhirResourceRetriever.parseJsonFile2Observation(path);

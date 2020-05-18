@@ -1,11 +1,17 @@
 package org.monarchinitiative.loinc2hpo;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class SharedResourceCollection {
+
+    private static final Path resourceDirectory = Paths.get("src","test","resources");
 
     public static ResourceCollection resourceCollection = new ResourceCollection();
 
-    private static final String loincCoreTable = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
+    private static final String loincCoreTable = Paths.get(String.valueOf(resourceDirectory),
+            "LoincTableCoreTiny.csv").toString();
     private static final String loincPanels = "/Users/zhangx/git/loinc2hpoAnnotation/Data/LoincPanel/loincpanelAnnotation.tsv";
     private static final String hpo_obo = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.obo";
     private static final String hpo_owl = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.owl";

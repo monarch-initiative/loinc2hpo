@@ -5,26 +5,30 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 
 import java.io.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class SparqlQueryTest {
 
     static Model model;
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    static File temporaryFolder;
+    private static File temporaryFile = new File(temporaryFolder, "hp.rdf");
+    private static String temporaryPath = temporaryFile.getAbsolutePath();
 
 
-    @BeforeClass
+    @BeforeAll
     public static void initializeModel() {
 
         String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
@@ -32,11 +36,10 @@ public class SparqlQueryTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testWriteRDF() throws IOException {
         try {
-            String path = temporaryFolder.newFile("hp.rdf").getAbsolutePath();
-            OutputStream out = new FileOutputStream(path);
+            OutputStream out = new FileOutputStream(temporaryPath);
             RDFDataMgr.write(out, model, RDFFormat.RDFXML);
             out.close();
         } catch (FileNotFoundException e) {
@@ -46,11 +49,9 @@ public class SparqlQueryTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testLoadRDF() throws IOException {
-        String path = temporaryFolder.newFile("hp.rdf").getAbsolutePath();
-        //String path = getClass().getClassLoader().getResource("hp.rdfformat").getPath();
-        OutputStream out = new FileOutputStream(path);
+        OutputStream out = new FileOutputStream(temporaryPath);
         RDFDataMgr.write(out, model, RDFFormat.RDF_THRIFT);
         out.close();
         //TODO: figure out how to load data from binary file
@@ -204,7 +205,7 @@ public class SparqlQueryTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void tests(){
         testQueryWithOneKey();
         testQueryWithMultiKeys();

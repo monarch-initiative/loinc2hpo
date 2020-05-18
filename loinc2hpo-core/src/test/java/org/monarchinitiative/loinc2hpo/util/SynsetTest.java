@@ -1,20 +1,21 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.monarchinitiative.loinc2hpo.util.Synset;
+
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class SynsetTest {
 
     @Test
     public void testGetRow(){
-        Assert.assertEquals(-1, new Synset().getRow("brain"));
+        assertEquals(-1, new Synset().getRow("brain"));
         assertEquals(0, new Synset().getRow("blood"));
         assertEquals(0, new Synset().getRow("serum"));
         assertEquals(4, new Synset().getRow("heart"));

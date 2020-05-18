@@ -1,13 +1,14 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore
+
+@Disabled
 public class LoincPanelComponentTest {
 
     private static final String loincCoreTable = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
@@ -15,7 +16,7 @@ public class LoincPanelComponentTest {
     private static ImmutableMap<LoincId, LoincEntry> loincEntryMap;
     private static LoincPanelComponent component;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         loincEntryMap = LoincEntry.getLoincEntryMap(loincCoreTable);
         LoincId testLoinc = new LoincId("2160-0");

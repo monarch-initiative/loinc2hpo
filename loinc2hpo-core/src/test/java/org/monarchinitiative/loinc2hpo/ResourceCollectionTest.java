@@ -1,8 +1,9 @@
 package org.monarchinitiative.loinc2hpo;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
@@ -13,12 +14,13 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * This class is to test the resource collection
  */
-@Ignore
+@Disabled
 public class ResourceCollectionTest {
 
     private static Map<LoincId, LoincEntry> loincEntryMap;
@@ -37,7 +39,7 @@ public class ResourceCollectionTest {
     private static final String loincAnnotationPath = "/Users/zhangx/git/loinc2hpoAnnotation/Data/TSVSingleFile/annotations.tsv";
 //    private static final String loincPanelAnnotationPath = "/Users/zhangx/git/loinc2hpoAnnotation/Data/LoincPanel/loincPanelAnnotations.tsv";;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         resourceCollection.setLoincEntryPath(loincCoreTable);
         resourceCollection.setLoincPanelPath(loincPanels);

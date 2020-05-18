@@ -1,10 +1,13 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class RandomGeneratorImplTest {
     RandomGenerator randomGenerator = new RandomGeneratorImpl();
@@ -79,7 +82,7 @@ public class RandomGeneratorImplTest {
     }
 
     @Test
-    public void randString() throws Exception {
+    public void randString() {
         int iter = 1000;
         int charNum = 5;
         int intNum = 5;
@@ -90,7 +93,7 @@ public class RandomGeneratorImplTest {
     }
 
     @Test
-    public void randStrings() throws Exception {
+    public void randStrings() {
         int iter = 1000;
         int charNum = 5;
         int intNum = 5;
@@ -102,7 +105,7 @@ public class RandomGeneratorImplTest {
     }
 
     @Test
-    public void randDouble() throws Exception {
+    public void randDouble() {
         int iter = 1000;
         int low = 0;
         int high = 10;
@@ -113,7 +116,7 @@ public class RandomGeneratorImplTest {
     }
 
     @Test
-    public void randDoubles() throws Exception {
+    public void randDoubles() {
         int size = 1000;
         int low = 0;
         int high = 10;

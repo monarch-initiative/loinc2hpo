@@ -1,9 +1,12 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class LoincIdTest {
 
@@ -22,18 +25,23 @@ public class LoincIdTest {
         assertEquals(code,id.toString());
     }
 
-    @Test(expected = MalformedLoincCodeException.class)
-    public void testBadCode() throws MalformedLoincCodeException {
-        String code = "15074-";
-        LoincId id = new LoincId(code);
-        assertEquals(code,id.toString());
+    @Test
+    public void testBadCode() {
+        Assertions.assertThrows(MalformedLoincCodeException.class, () -> {
+            String code = "15074-";
+            LoincId id = new LoincId(code);
+            assertEquals(code,id.toString());
+        });
+
     }
 
-    @Test(expected = MalformedLoincCodeException.class)
+    @Test
     public void testBadCode2() throws MalformedLoincCodeException {
-        String code = "1507423";
-        LoincId id = new LoincId(code);
-        assertEquals(code,id.toString());
+        Assertions.assertThrows(MalformedLoincCodeException.class, () -> {
+            String code = "1507423";
+            LoincId id = new LoincId(code);
+            assertEquals(code, id.toString());
+        });
     }
 
     // test custom equals function

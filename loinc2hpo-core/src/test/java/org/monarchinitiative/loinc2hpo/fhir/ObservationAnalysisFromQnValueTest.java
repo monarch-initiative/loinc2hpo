@@ -1,8 +1,10 @@
 package org.monarchinitiative.loinc2hpo.fhir;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpo.exception.ReferenceNotFoundException;
@@ -14,14 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class ObservationAnalysisFromQnValueTest {
     private static Observation[] observations = new Observation[2];
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws MalformedLoincCodeException, IOException, DataFormatException {
         String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHighNoInterpretation.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
@@ -82,12 +86,14 @@ public class ObservationAnalysisFromQnValueTest {
     }
 
 
-    @Test (expected = ReferenceNotFoundException.class)
+    @Test
     public void testGetInterpretationCodes2() throws Exception {
+        Assertions.assertThrows(ReferenceNotFoundException.class, () -> {
+            LoincId loincId = new LoincId("15074-8");
+            ObservationAnalysisFromQnValue analyzer = new ObservationAnalysisFromQnValue(loincId, observations[1], testmap);
+            analyzer.getHPOforObservation();
+        });
 
-        LoincId loincId = new LoincId("15074-8");
-        ObservationAnalysisFromQnValue analyzer = new ObservationAnalysisFromQnValue(loincId, observations[1], testmap);
-        analyzer.getHPOforObservation();
     }
 
 }

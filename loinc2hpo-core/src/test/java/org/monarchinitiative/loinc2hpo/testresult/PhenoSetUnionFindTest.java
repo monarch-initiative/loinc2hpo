@@ -1,8 +1,9 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -15,9 +16,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Ignore
+
+@Disabled
 /**
  * Only manually run this test
  */
@@ -29,7 +32,7 @@ public class PhenoSetUnionFindTest {
     private static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
     private static PhenoSetUnionFind unionFind;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception{
         ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
 
@@ -42,7 +45,8 @@ public class PhenoSetUnionFindTest {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Disabled
     public void test1() throws Exception {
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");

@@ -1,9 +1,10 @@
 package org.monarchinitiative.loinc2hpo.io;
 
-import org.junit.Ignore;
-import org.junit.Test;
 
-@Ignore
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+@Disabled
 public class TerminalCommandTest {
     @Test
     public void execute() throws Exception {

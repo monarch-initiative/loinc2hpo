@@ -1,8 +1,9 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -12,7 +13,8 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class PhenotypeComponentImplTest {
 
@@ -21,7 +23,7 @@ public class PhenotypeComponentImplTest {
     private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception{
 
         ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
@@ -32,7 +34,7 @@ public class PhenotypeComponentImplTest {
 
     }
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         //create an instance
         Date start = dateFormat.parse("2016-09-30 09:30:00");

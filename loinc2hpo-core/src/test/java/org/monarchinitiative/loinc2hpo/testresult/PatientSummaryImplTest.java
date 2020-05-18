@@ -2,9 +2,9 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.hl7.fhir.dstu3.model.Patient;
 import org.jgrapht.alg.util.UnionFind;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.fhir.FhirResourceFaker;
@@ -22,9 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Ignore
+
+@Disabled
 public class PatientSummaryImplTest {
 
     private PhenoSetTimeLine glucosetimeLine;
@@ -38,7 +40,7 @@ public class PatientSummaryImplTest {
     private static PatientSummary patientSummary1;
     private static Patient patient;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception{
         ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
 

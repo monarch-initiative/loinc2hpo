@@ -2,24 +2,26 @@ package org.monarchinitiative.loinc2hpo.loinc;
 
 
 import com.google.common.collect.ImmutableMap;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
 import java.io.*;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@Ignore
+
+@Disabled
 public class LoincPanelTest {
     private static final String loincCoreTable = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
     public static final String loincPanels = "/Users/zhangx/Downloads/LOINC_2/Accessory/PanelsAndForms/LOINC_263_PanelsAndForms_Panels.csv";
     private static ImmutableMap<LoincId, LoincEntry> loincEntryMap;
     private static Map<LoincId, LoincPanel> panelMap;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         loincEntryMap = LoincEntry.getLoincEntryMap(loincCoreTable);
         LoincPanelComponent.setLoincEntryMap(loincEntryMap);
@@ -144,7 +146,7 @@ public class LoincPanelTest {
     private final String testExcel = "/Users/zhangx/Downloads/LOINC_2/Accessory/PanelsAndForms/LOINC_263_PanelsAndForms_Panels.csv";
 
     @Test
-    @Ignore
+    @Disabled
     public void testParser() throws Exception {
 
         //FileInputStream excelFile = new FileInputStream(testExcel);

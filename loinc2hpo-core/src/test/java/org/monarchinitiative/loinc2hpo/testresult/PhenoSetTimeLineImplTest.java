@@ -1,10 +1,9 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.jgrapht.alg.util.UnionFind;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -18,8 +17,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
-@Ignore
+import static org.junit.jupiter.api.Assertions.*;
+
+@Disabled
 public class PhenoSetTimeLineImplTest {
 
     private PhenoSetTimeLine glucosetimeLine;
@@ -28,7 +28,7 @@ public class PhenoSetTimeLineImplTest {
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static UnionFind<TermId> hpoTermUnionFind;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception{
         ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
 
@@ -40,7 +40,7 @@ public class PhenoSetTimeLineImplTest {
         hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap).getUnionFind();
     }
 
-    @Before
+    @BeforeAll
     public void init() throws Exception {
 
         glucosetimeLine = new PhenoSetTimeLineImpl(new PhenoSetImpl(hpoTermUnionFind));

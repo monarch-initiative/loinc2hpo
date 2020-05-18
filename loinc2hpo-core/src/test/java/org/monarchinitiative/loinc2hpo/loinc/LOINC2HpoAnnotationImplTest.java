@@ -1,10 +1,11 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
@@ -15,23 +16,26 @@ import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 public class LOINC2HpoAnnotationImplTest {
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
     private static ResourceCollection resourceCollection;
     private static Map<String, Term> hpoTermMap;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception {
         resourceCollection = new ResourceCollection();
         resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp_test.obo").getPath());
@@ -85,7 +89,9 @@ public class LOINC2HpoAnnotationImplTest {
 
         //testmap.entrySet().forEach(System.out::println);
 
-        String path = temporaryFolder.newFile("testoutput.tsv").getPath();
+       // String path = temporaryFolder.newFile("testoutput.tsv").getPath();
+        File temporaryFile = new File(temporaryFolder, "letters.txt");
+        String path = temporaryFile.getAbsolutePath();
         WriteToFile.writeToFile("", path);
         testmap.forEach((k, v) -> {
             WriteToFile.appendToFile(v.toString(), path);
@@ -199,7 +205,7 @@ public class LOINC2HpoAnnotationImplTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testSerializeBasicAnnotation() throws Exception {
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
@@ -240,7 +246,7 @@ public class LOINC2HpoAnnotationImplTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testSerializeAdvancedAnnotation() throws Exception {
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
