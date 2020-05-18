@@ -395,7 +395,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
         File f = chooser.showSaveDialog(null);
         if (f != null) {
             path = f.getAbsolutePath();
-            logger.trace("Save annotation data to new file: ",path);
+            logger.trace("Save annotation data to new file: {}",path);
         } else {
             logger.error("Unable to obtain path to a new file to save " +
                     "annotation data to");

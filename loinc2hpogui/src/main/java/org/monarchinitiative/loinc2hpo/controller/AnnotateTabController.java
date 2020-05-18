@@ -69,7 +69,7 @@ public class AnnotateTabController {
     private static final Logger logger = LogManager.getLogger();
 
     private AppTempData appTempData =null;
-    private final String MISSINGVALUE = "NA";
+    private final static String MISSINGVALUE = "NA";
 
     @Inject
     private Injector injector;
@@ -530,10 +530,9 @@ public class AnnotateTabController {
             alert.setContentText("Try search with synonyms");
             alert.show();
 
-            Task task = new Task() {
+            Task<Void> task = new Task<Void>() {
                 @Override
-                protected Object call() throws Exception {
-
+                protected Void call() {
                     try {
                         Thread.sleep(1500);
                     } catch (InterruptedException e) {
@@ -543,7 +542,6 @@ public class AnnotateTabController {
                             alert.close();
                         });
                     }
-
                     return null;
                 }
             };
@@ -932,7 +930,7 @@ public class AnnotateTabController {
 
 
         ToolBar toolBar = new ToolBar();
-        final ComboBox<String> loincGroupCombo = new ComboBox();
+        final ComboBox<String> loincGroupCombo = new ComboBox<>();
 
         loincGroupCombo.getItems().addAll(userCreatedLoincLists);
 

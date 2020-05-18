@@ -45,11 +45,11 @@ public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
     }
 
     public Map<TermId, Integer> getOriginalTermCounts() {
-        return new LinkedHashMap<TermId, Integer>(termCounts);
+        return new LinkedHashMap<>(termCounts);
     }
 
     public Map<TermId, Integer> getInferredTermCounts() {
-        return new LinkedHashMap<TermId, Integer>(inferred);
+        return new LinkedHashMap<>(inferred);
     }
 
     @Override

@@ -15,8 +15,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.*;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SparqlQueryTest {
@@ -399,6 +398,6 @@ public class SparqlQueryTest {
         String test = "potassium:chloride symporter activity";
         //assertEquals(false, test.matches(".*((increase*)|(decrease*)|(elevate*)|(reduc*)|(high*)|(low*)|(above)|(below)|(abnormal*)).*"));
 
-        assertEquals(false, test.matches(".*(increase*|decrease*|elevate*|reduc*|high*|\"low*\").*"));
+        assertFalse(test.matches(".*(increase*|decrease*|elevate*|reduc*|high*|\"low*\").*"));
     }
 }

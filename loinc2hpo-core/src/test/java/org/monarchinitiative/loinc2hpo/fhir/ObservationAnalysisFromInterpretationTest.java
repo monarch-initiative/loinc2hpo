@@ -100,7 +100,7 @@ public class ObservationAnalysisFromInterpretationTest {
         assertNotNull(analyzer.getHPOforObservation());
         HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
         assertEquals("HP:003", hpoterm.getId().getValue());
-        assertEquals(false, hpoterm.isNegated());
+        assertFalse(hpoterm.isNegated());
 
     }
 

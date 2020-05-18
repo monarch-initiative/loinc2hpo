@@ -20,8 +20,6 @@ public class HpoOntologyParser {
     private static final Logger logger = LogManager.getLogger();
     /** Path to the {@code hp.obo} file. */
     private String hpoOboPath =null;
-    private String hpoOwlPath = null;
-    private boolean isObo = false;
     private Ontology hpoOntology;
 
 
@@ -32,10 +30,7 @@ public class HpoOntologyParser {
 
     public HpoOntologyParser(String path){
         if (path.contains(".obo")) {
-            isObo = true;
             hpoOboPath = path;
-        } else {
-            hpoOwlPath = path;
         }
     }
 
@@ -58,9 +53,7 @@ public class HpoOntologyParser {
     }
 
     public Ontology getOntology() {
-
         return this.hpoOntology;
-
     }
 
     /** @return a map will all terms of the Hpo Phenotype subontology. */

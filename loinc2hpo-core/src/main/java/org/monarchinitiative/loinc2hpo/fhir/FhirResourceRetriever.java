@@ -144,7 +144,7 @@ public class FhirResourceRetriever {
     @Deprecated
     private List<Observation> toList(Bundle bundle) {
 
-        List<Observation> resourceList = new ArrayList<Observation>();
+        List<Observation> resourceList = new ArrayList<>();
         while (true) {
             bundle.getEntry()
                     .forEach(p -> resourceList.add((Observation) p.getResource()));

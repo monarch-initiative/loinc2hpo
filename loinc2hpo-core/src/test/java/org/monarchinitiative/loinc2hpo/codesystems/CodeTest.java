@@ -4,8 +4,7 @@ package org.monarchinitiative.loinc2hpo.codesystems;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CodeTest {
@@ -45,15 +44,15 @@ public class CodeTest {
     public void equals() throws Exception {
         Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        assertEquals(true, code1.equals(code2));
+        assertEquals(code1, code2);
         Code code3 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H");
-        assertEquals(true, code1.equals(code3));
+        assertEquals(code1, code3);
         Code code4 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("N").setDisplay("Above normal");
-        assertEquals(false, code1.equals(code4));
+        assertNotEquals(code1, code4);
         Code code5 = Code.getNewCode().setSystem("http://jax.org").setCode("H").setDisplay("Above normal");
-        assertEquals(false, code1.equals(code5));
+        assertNotEquals(code1, code5);
         Code code6 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("high");
-        assertEquals(true, code1.equals(code6));
+        assertEquals(code1, code6);
     }
 
     @Test
@@ -61,15 +60,15 @@ public class CodeTest {
 
         Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        assertEquals(true, code1.hashCode() == code2.hashCode());
+        assertEquals(code1.hashCode(), code2.hashCode());
         Code code3 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H");
-        assertEquals(true, code1.hashCode()==code3.hashCode());
+        assertEquals(code1.hashCode(), code3.hashCode());
         Code code4 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("N").setDisplay("Above normal");
-        assertEquals(false, code1.hashCode() == code4.hashCode());
+        assertNotEquals(code1.hashCode(), code4.hashCode());
         Code code5 = Code.getNewCode().setSystem("http://jax.org").setCode("H").setDisplay("Above normal");
-        assertEquals(false, code1.hashCode() == code5.hashCode());
+        assertNotEquals(code1.hashCode(), code5.hashCode());
         Code code6 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("high");
-        assertEquals(true, code1.hashCode() == code6.hashCode());
+        assertEquals(code1.hashCode(), code6.hashCode());
 
     }
 

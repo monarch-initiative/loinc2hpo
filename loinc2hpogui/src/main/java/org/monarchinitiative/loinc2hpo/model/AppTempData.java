@@ -168,7 +168,7 @@ public class AppTempData {
         this.fhirServer = fhirServer;
     }
 
-    private List<String> fhirServers = new ArrayList<>(Arrays.asList(this.fhirServer));
+    private List<String> fhirServers = new ArrayList<>(Collections.singletonList(this.fhirServer));
     public List<String> getFhirServers() {
         return fhirServers;
     }

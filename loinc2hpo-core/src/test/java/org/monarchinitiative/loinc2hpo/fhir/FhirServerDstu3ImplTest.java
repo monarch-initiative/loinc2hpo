@@ -55,7 +55,7 @@ public class FhirServerDstu3ImplTest {
     @Disabled
     public void getPatient3() throws Exception {
         List<Patient> patient = fhirServer.getPatient("Harry", "Metz", "002-837-6481", "79442-0781");
-        assertTrue(!patient.isEmpty());
+        assertFalse(patient.isEmpty());
     }
 
     @Test

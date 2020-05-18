@@ -153,8 +153,7 @@ public class LoincLongNameComponents {
             int value = Integer.parseInt(word); //do not allow integers
             return false;
         } catch (Exception e) {
-            HashSet<String> invalid = new HashSet<>();
-            invalid.addAll(Arrays.asList(invalid_words));
+            HashSet<String> invalid = new HashSet<>(Arrays.asList(invalid_words));
             return !invalid.contains(word);
         }
 

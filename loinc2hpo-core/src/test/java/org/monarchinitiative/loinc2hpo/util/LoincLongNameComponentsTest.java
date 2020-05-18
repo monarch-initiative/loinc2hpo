@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class LoincLongNameComponentsTest {
@@ -62,7 +63,7 @@ public class LoincLongNameComponentsTest {
         for (String tissue : LoincLongNameParser.parse(aLoinc).keysInLoincTissue()) {
             System.out.println(tissue);
         }
-        assertEquals(true, LoincLongNameParser.parse(aLoinc).keysInLoincTissue().isEmpty());
+        assertTrue(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().isEmpty());
     }
 
 

@@ -73,7 +73,7 @@ public class PhenotypeComponentImplTest {
 
     @Test
     public void isNegated() throws Exception {
-        assertEquals(false, testComponent.isNegated());
+        assertFalse(testComponent.isNegated());
     }
 
     @Test

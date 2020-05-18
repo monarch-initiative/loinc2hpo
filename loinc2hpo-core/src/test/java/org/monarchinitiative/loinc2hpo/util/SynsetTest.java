@@ -60,8 +60,7 @@ public class SynsetTest {
 
     @Test
     public void test7(){
-        List<String> testlist = new LinkedList<>();
-        testlist.addAll(Arrays.asList(new String[] {"blood", "heart", "brain"}));
+        List<String> testlist = new LinkedList<>(Arrays.asList(new String[]{"blood", "heart", "brain"}));
         System.out.println(new Synset().getSynset(testlist).convertToRe());
     }
 }

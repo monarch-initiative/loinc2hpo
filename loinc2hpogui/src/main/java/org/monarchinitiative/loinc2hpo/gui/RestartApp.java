@@ -22,7 +22,7 @@ public class RestartApp {
 
 
   /* Build command: java -jar application.jar */
-        final ArrayList<String> command = new ArrayList<String>();
+        final ArrayList<String> command = new ArrayList<>();
         command.add(javaBin);
         command.add("-jar");
         command.add(currentJar.getPath());

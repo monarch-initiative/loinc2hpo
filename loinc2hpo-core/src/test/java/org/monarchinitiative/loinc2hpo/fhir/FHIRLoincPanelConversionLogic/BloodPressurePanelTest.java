@@ -15,8 +15,7 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled
 public class BloodPressurePanelTest {
@@ -59,7 +58,7 @@ public class BloodPressurePanelTest {
         bpPanel.addComponents(components);
         FhirObservationAnalyzer.init(resources.loincIdSet(), resources.annotationMap());
         FHIRLoincPanel.initResources(resources.loincIdSet(), resources.loincEntryMap(), resources.annotationMap());
-        assertTrue(bpPanel.panelComponents().size() == 2);
+        assertEquals(2, bpPanel.panelComponents().size());
         assertNotNull(resources.loincIdSet());
         assertTrue(resources.loincIdSet().size() > 5000);
         assertNotNull(resources.annotationMap());

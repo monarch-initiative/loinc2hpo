@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * the HPO class. The class is comparable by the scores it receives from
  * keyword matching (from the loinc code used for query and the HPO class).
  */
-public class HPO_Class_Found implements Comparable {
+public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
 
     private String id; //uri of HPO class
     private String label; //all classes should have a non-null label
@@ -127,9 +127,8 @@ public class HPO_Class_Found implements Comparable {
     public int getScore() { return this.score; }
 
     @Override
-    public int compareTo(Object o) {
-        if (o instanceof HPO_Class_Found) {
-            HPO_Class_Found other = (HPO_Class_Found) o;
+    public int compareTo(HPO_Class_Found other) {
+        if (other != null) {
             return this.score - other.score;
         } else {
             throw new IllegalArgumentException();

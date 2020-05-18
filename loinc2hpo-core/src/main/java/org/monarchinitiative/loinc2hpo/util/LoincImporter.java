@@ -59,7 +59,7 @@ public class LoincImporter {
      */
     public static List<String> splitCSVquoted(String s)
     {
-        List<String> words = new ArrayList<String>();
+        List<String> words = new ArrayList<>();
         boolean notInsideComma = true;
         int start =0, end=0;
         for(int i=0; i<s.length()-1; i++)

@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpo.testresult;
 
 import org.jgrapht.alg.util.UnionFind;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
@@ -40,7 +41,7 @@ public class PhenoSetTimeLineImplTest {
         hpoTermUnionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap).getUnionFind();
     }
 
-    @BeforeAll
+    @BeforeEach
     public void init() throws Exception {
 
         glucosetimeLine = new PhenoSetTimeLineImpl(new PhenoSetImpl(hpoTermUnionFind));

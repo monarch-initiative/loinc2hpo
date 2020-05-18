@@ -72,9 +72,7 @@ public class AppResources {
 
         try {
             this.hpo = resourceCollection.getHPO();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (PhenolException | FileNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -88,9 +86,7 @@ public class AppResources {
 
         try {
             this.termidTermMap = resourceCollection.hpoTermMap();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (PhenolException | FileNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -104,9 +100,7 @@ public class AppResources {
 
         try {
             this.termnameTermMap = resourceCollection.hpoTermMapFromName();
-        } catch (PhenolException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (PhenolException | FileNotFoundException e) {
             e.printStackTrace();
         }
 

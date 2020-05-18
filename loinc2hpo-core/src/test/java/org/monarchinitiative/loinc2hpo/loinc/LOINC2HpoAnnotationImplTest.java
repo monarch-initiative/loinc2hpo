@@ -22,8 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class LOINC2HpoAnnotationImplTest {
@@ -31,13 +30,12 @@ public class LOINC2HpoAnnotationImplTest {
     @TempDir
     public File temporaryFolder;
 
-    private static ResourceCollection resourceCollection;
     private static Map<String, Term> hpoTermMap;
 
 
     @BeforeAll
     public static void setUp() throws Exception {
-        resourceCollection = new ResourceCollection();
+        ResourceCollection resourceCollection = new ResourceCollection();
         resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp_test.obo").getPath());
         hpoTermMap = resourceCollection.hpoTermMapFromName();
     }
@@ -139,15 +137,15 @@ public class LOINC2HpoAnnotationImplTest {
 
         Code code4low = internalCodes.get("L");
         assertEquals(low.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4low).getId().getValue());
-        assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4low).isNegated());
+        assertFalse(annotation15074.getCandidateHpoTerms().get(code4low).isNegated());
 
         Code code4high = internalCodes.get("H");
         assertEquals(hi.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4high).getId().getValue());
-        assertEquals(false, annotation15074.getCandidateHpoTerms().get(code4high).isNegated());
+        assertFalse(annotation15074.getCandidateHpoTerms().get(code4high).isNegated());
 
         Code code4normal = internalCodes.get("N");
         assertEquals(normal.getId().getValue(), annotation15074.getCandidateHpoTerms().get(code4normal).getId().getValue());
-        assertEquals(true, annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
+        assertTrue(annotation15074.getCandidateHpoTerms().get(code4normal).isNegated());
 
         Code code4Pos = internalCodes.get("POS");
         assertNull(annotation15074.getCandidateHpoTerms().get(code4Pos));
@@ -187,18 +185,18 @@ public class LOINC2HpoAnnotationImplTest {
         Map<String, Code> internalCodes = CodeSystemConvertor.getCodeContainer().getCodeSystemMap().get(Loinc2HPOCodedValue.CODESYSTEM);
         Code code4Pos = internalCodes.get("POS");
         assertEquals(positive.getId().getValue(), annotation600.getCandidateHpoTerms().get(code4Pos).getId().getValue());
-        assertEquals(false, annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
+        assertFalse(annotation600.getCandidateHpoTerms().get(code4Pos).isNegated());
 
         Code code4high = internalCodes.get("H");
         assertNull(annotation600.getCandidateHpoTerms().get(code4high));
 
         assertEquals(forCode1.getId().getValue(), annotation600.getCandidateHpoTerms().get(code1).getId().getValue());
-        assertEquals(false, annotation600.getCandidateHpoTerms().get(code1).isNegated());
+        assertFalse(annotation600.getCandidateHpoTerms().get(code1).isNegated());
 
         assertEquals(forCode2.getId().getValue(), annotation600.getCandidateHpoTerms().get(code2).getId().getValue());
-        assertEquals(false, annotation600.getCandidateHpoTerms().get(code2).isNegated());
+        assertFalse(annotation600.getCandidateHpoTerms().get(code2).isNegated());
 
-        assertEquals(true, annotation600.getCandidateHpoTerms().get(code3).isNegated());
+        assertTrue(annotation600.getCandidateHpoTerms().get(code3).isNegated());
 
         System.out.println(new LoincAnnotationSerializerToTSVSingleFile(null).annotationToString(annotation600));
 
