@@ -53,7 +53,13 @@ public enum Loinc2HPOCodedValue {
         throw new UnrecognizedCodeException("Cannot recognize the code: " + codeString);
     }
 
-    public String toCode(){
+    public Code toCode() {
+        return new Code(getSystem(), this.toCodeString(), getDisplay());
+    }
+
+
+
+    public String toCodeString(){
         switch(this) {
             case A: return "A";
             case L: return "L";
@@ -83,10 +89,7 @@ public enum Loinc2HPOCodedValue {
         }
     }
 
-    public String getDefinition(){
-        //not support now
-        return null;
-    }
+
 
 
 }

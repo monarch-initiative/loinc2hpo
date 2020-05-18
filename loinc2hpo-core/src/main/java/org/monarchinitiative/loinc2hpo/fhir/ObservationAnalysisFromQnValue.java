@@ -127,7 +127,7 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
             } else {
                 result = Loinc2HPOCodedValue.fromCode("N");
             }
-            Code resultCode = Code.getNewCode().setSystem(Loinc2HPOCodedValue.CODESYSTEM).setCode(result.toCode());
+            Code resultCode = Code.getNewCode().setSystem(Loinc2HPOCodedValue.CODESYSTEM).setCode(result.toCodeString());
             hpoTerm4TestOutcome = annotationMap.get(loincId).loincInterpretationToHPO(resultCode);
         } else if (references.size() == 2) {
             //what does it mean with multiple references

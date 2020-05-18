@@ -25,23 +25,16 @@ public class CodeTest {
     }
 
     @Test
-    public void getDisplay() throws Exception {
+    public void getDisplay() {
         Code code = new Code();
         code.setDisplay("above normal");
         assertNotNull(code.getDisplay());
         assertEquals("above normal", code.getDisplay());
     }
 
-    @Test
-    public void getDefinition() throws Exception {
-        Code code = new Code();
-        code.setDefinition("value too high");
-        assertNotNull(code.getDefinition());
-        assertEquals("value too high", code.getDefinition());
-    }
 
     @Test
-    public void equals() throws Exception {
+    public void equals() {
         Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         assertEquals(code1, code2);
@@ -56,8 +49,7 @@ public class CodeTest {
     }
 
     @Test
-    public void testhashCode() throws Exception {
-
+    public void testhashCode() {
         Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
         assertEquals(code1.hashCode(), code2.hashCode());

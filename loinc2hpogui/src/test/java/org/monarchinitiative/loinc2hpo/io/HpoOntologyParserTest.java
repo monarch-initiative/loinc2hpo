@@ -1,27 +1,28 @@
 package org.monarchinitiative.loinc2hpo.io;
 
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 
-@Ignore
+@Disabled
 public class HpoOntologyParserTest {
     final String hpo_owl = "/Users/zhangx/git/human-phenotype-ontology/hp.owl";
     final String hpo_owl_edit = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp-edit.owl";
     final String hpo_obo = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.obo";
-    @Test (expected = Test.None.class)
+    @Test
     public void parseObo() throws Exception {
         HpoOntologyParser hpoOntologyParser = new HpoOntologyParser(hpo_obo);
         hpoOntologyParser.parseOntology();
     }
 
-    @Test (expected = Test.None.class)
+    @Test
     public void parseOwl() throws Exception {
         HpoOntologyParser hpoOntologyParser = new HpoOntologyParser(hpo_owl);
         hpoOntologyParser.parseOntology();
     }
 
-    @Test (expected = Test.None.class)
+    @Test
     public void parseOwlEdit() throws Exception {
         HpoOntologyParser hpoOntologyParser = new HpoOntologyParser(hpo_owl_edit);
         hpoOntologyParser.parseOntology();

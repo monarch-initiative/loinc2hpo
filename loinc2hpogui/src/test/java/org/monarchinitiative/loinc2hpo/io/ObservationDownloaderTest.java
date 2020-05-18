@@ -1,17 +1,19 @@
 package org.monarchinitiative.loinc2hpo.io;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.io.ObservationDownloader;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class ObservationDownloaderTest {
     @Test
-    @Ignore("This test tries to fetch observation from hapi-fhir test server, so the returning observations various")
+    @Disabled("This test tries to fetch observation from hapi-fhir test server, so the returning observations various")
     public void retrieveObservation() throws Exception {
         String testLoinc = "1558-6";
         List<Observation> observations = ObservationDownloader.retrieveObservation( testLoinc);
@@ -25,7 +27,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
-    @Ignore("same as above, can fail when server changes")
+    @Disabled("same as above, can fail when server changes")
     public void longestObservation() throws Exception {
         String testLoinc = "600-7";
         String longestObservation = ObservationDownloader.longestObservation(ObservationDownloader.retrieveObservation(testLoinc));
@@ -35,8 +37,8 @@ public class ObservationDownloaderTest {
     }
 
     @Test
-    @Ignore
-    public void firstComplete() throws Exception{
+    @Disabled
+    public void firstComplete() {
         String testLoinc = "600-7";
         List<Observation> observations = ObservationDownloader.retrieveObservation(testLoinc);
         String firstComplete = ObservationDownloader.firstCompleteObservation(observations);
@@ -48,7 +50,7 @@ public class ObservationDownloaderTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void firstAccetable() throws Exception {
         String testLoinc = "600-7";
         List<Observation> observations = ObservationDownloader.retrieveObservation(testLoinc);
@@ -59,11 +61,6 @@ public class ObservationDownloaderTest {
             System.out.println("Could not find an acceptable observation");
         }
 
-    }
-
-    @Test
-    @Ignore
-    public void retrievePatient() throws Exception {
     }
 
 }

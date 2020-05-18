@@ -1,9 +1,10 @@
 package org.monarchinitiative.loinc2hpo.model;
 
-import org.junit.Ignore;
-import org.junit.Test;
 
-@Ignore
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+@Disabled
 public class SettingsTest {
     private Settings settings;
     private String settingsPath = "/Users/zhangx/.loinc2hpo/loinc2hpo.settings";

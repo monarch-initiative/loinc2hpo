@@ -19,41 +19,36 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FhirObservationAnalyzerTest {
 
     private static Observation observation;
-    private static Map<String, Term> hpoTermMap;
 
     @BeforeAll
-    public static void setup() throws Exception{
-        String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
+    public static void setup() throws Exception {
+        String path = Objects.requireNonNull(FhirObservationAnalyzerTest.class.getClassLoader().
+                getResource("json/glucoseHigh.fhir")).getPath();
         observation = FhirResourceRetriever.parseJsonFile2Observation(path);
     }
 
     @Test
-    public void setObservation() throws Exception {
-
+    public void setObservation() {
         FhirObservationAnalyzer.setObservation(observation);
         assertNotNull(FhirObservationAnalyzer.getObservation());
     }
 
     @Test
-    public void getHPO4ObservationOutcome() throws Exception {
+    public void getHPO4ObservationOutcome() {
         FhirObservationAnalyzer.setObservation(observation);
     }
 
     @Test
     public void getLoincIdOfObservation() throws Exception {
-
         FhirObservationAnalyzer.setObservation(observation);
         LoincId loincId = FhirObservationAnalyzer.getLoincIdOfObservation();
         assertEquals("15074-8", loincId.toString());
-
     }
 
 
     @Test
     public void testUniversalAnnotation() throws Exception {
-
         FhirObservationAnalyzer.setObservation(observation);
-
         Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -76,16 +71,5 @@ public class FhirObservationAnalyzerTest {
         loincIdSet.add(loincId);
         LabTestOutcome result = FhirObservationAnalyzer.getHPO4ObservationOutcome(loincIdSet, testmap);
         assertEquals(result.getOutcome().getId(), hi);
-
     }
-
-
-    @Test
-    public void getHPOFromRawValue() throws Exception {
-    }
-
-    @Test
-    public void getHPOFromCodedValue() throws Exception {
-    }
-
 }

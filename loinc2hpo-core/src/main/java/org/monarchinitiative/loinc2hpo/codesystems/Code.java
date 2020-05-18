@@ -12,16 +12,23 @@ public class Code implements Serializable {
     private String system;
     private String code;
     private String display;
-    private String definition;
+
 
     public Code(){
 
     }
-    public Code(String system, String Code, String display){
+
+
+    public Code(String system, String code, String display){
         this.system = system;
         this.code = code;
         this.display = display;
+    }
 
+    public Code(Code otherCode) {
+        this.system = otherCode.system;
+        this.code = otherCode.code;
+        this.display = otherCode.display;
     }
 
     public Code (Coding coding) {
@@ -36,7 +43,7 @@ public class Code implements Serializable {
         return system;
     }
 
-    public Code setSystem(String system) {
+   public Code setSystem(String system) {
         this.system = system;
         return this;
     }
@@ -59,14 +66,6 @@ public class Code implements Serializable {
         return this;
     }
 
-    public String getDefinition() {
-        return definition;
-    }
-
-    public Code setDefinition(String definition) {
-        this.definition = definition;
-        return this;
-    }
 
     @Override
     public boolean equals(Object obj){
@@ -78,7 +77,6 @@ public class Code implements Serializable {
     }
     @Override
     public int hashCode(){
-
         return system.hashCode() + code.hashCode()*37;
 
     }
@@ -86,7 +84,7 @@ public class Code implements Serializable {
     @Override
     public String toString(){
 
-        String toString = String.format("System: %s; Code: %s, Display: %s, Definition: %s", system, code, display, definition);
+        String toString = String.format("System: %s; Code: %s, Display: %s", system, code, display);
         return toString;
 
     }

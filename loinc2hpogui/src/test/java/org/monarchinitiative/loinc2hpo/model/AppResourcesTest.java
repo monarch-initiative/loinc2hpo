@@ -3,17 +3,19 @@ package org.monarchinitiative.loinc2hpo.model;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.gui.Loinc2HpoPlatform;
 
 import javax.inject.Singleton;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Ignore
+
+@Disabled
 public class AppResourcesTest {
 
     @Inject
@@ -27,7 +29,7 @@ public class AppResourcesTest {
 
     static AppResources appResources;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         String settingsPath = Loinc2HpoPlatform.getPathToSettingsFile();
         Settings.loadSettings(settings, settingsPath);

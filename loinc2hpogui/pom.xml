@@ -92,7 +92,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                                    <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -154,7 +154,7 @@
                             <!-- set useUniqueVersions=false in order that the classpath has the
                                SNAPSHOT instead of the build number prefixed to the dependency -->
                             <useUniqueVersions>false</useUniqueVersions>
-                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
                         </manifest>
                     </archive>
                     <!--   <compilerArgument>-Xlint:all</compilerArgument>
@@ -193,7 +193,7 @@
             <!--&lt;!&ndash; MainClass in mainfest make a executable jar &ndash;&gt;-->
             <!--<archive>-->
             <!--<manifest>-->
-            <!--<mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>-->
+            <!--<mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>-->
             <!--</manifest>-->
             <!--</archive>-->
 
@@ -221,7 +221,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

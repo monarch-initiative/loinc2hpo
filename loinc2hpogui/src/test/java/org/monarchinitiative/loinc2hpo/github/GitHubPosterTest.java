@@ -1,12 +1,13 @@
 package org.monarchinitiative.loinc2hpo.github;
 
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.paint.Color;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class GitHubPosterTest {
     @Test

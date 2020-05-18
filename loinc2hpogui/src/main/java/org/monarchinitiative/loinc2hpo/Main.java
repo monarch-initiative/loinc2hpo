@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpo.gui;
+package org.monarchinitiative.loinc2hpo;
 
 
 import com.google.inject.Guice;
@@ -16,6 +16,9 @@ import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.controller.MainController;
+import org.monarchinitiative.loinc2hpo.gui.DepInjectionModule;
+import org.monarchinitiative.loinc2hpo.gui.Loinc2HpoPlatform;
+import org.monarchinitiative.loinc2hpo.gui.PopUps;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -77,7 +80,7 @@ public class Main extends Application {
                 URL iconURL = Main.class.getResource("/img/icon.jpg");
                 java.awt.Image macimage = new ImageIcon(iconURL).getImage();
                 com.apple.eawt.Application.getApplication().setDockIconImage(macimage);
-                //stem.setProperty("org.monarchinitiative.loinc2hpo.gui.Main", "Loinc2Hpo");
+                //stem.setProperty("org.monarchinitiative.loinc2hpo.Main", "Loinc2Hpo");
             } catch (Exception e) {
                 // Not for Windows or Linux. Just skip it!
             }

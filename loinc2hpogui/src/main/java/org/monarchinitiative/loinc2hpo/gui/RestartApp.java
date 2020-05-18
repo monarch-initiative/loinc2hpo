@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpo.gui;
 
+import org.monarchinitiative.loinc2hpo.Main;
+
 import java.io.File;
 import java.util.ArrayList;
 

@@ -2,6 +2,8 @@ package org.monarchinitiative.loinc2hpo.codesystems;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpo.exception.InternalCodeNotFoundException;
+import org.monarchinitiative.loinc2hpo.exception.Loinc2HpoRuntimeException;
+import org.omg.SendingContext.RunTime;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -30,11 +32,7 @@ public class CodeSystemConvertor {
     private static void addRelevantCodeSystems(){
 
         for (Loinc2HPOCodedValue code : Loinc2HPOCodedValue.class.getEnumConstants()){
-            Code newCode = Code.getNewCode()
-                    .setSystem(code.getSystem())
-                    .setCode(code.toCode())
-                    .setDisplay(code.getDisplay())
-                    .setDefinition(code.getDefinition());
+            Code newCode = code.toCode();
             logger.debug(newCode.toString());
             codeContainer.add(newCode);
         }
@@ -59,11 +57,11 @@ public class CodeSystemConvertor {
                     if (elements.length == 6 || elements.length == 5) { //last line only has five elements
                         String code = elements[0];
                         String display = elements[1];
-                        String definition = elements[4];
-                        Code newCode = Code.getNewCode().setSystem(system).setCode(code).setDisplay(display).setDefinition(definition);
+                        String definition = elements[4]; // not used
+                        Code newCode = new Code(system,code,display);
                         codeContainer.add(newCode);
                     } else {
-
+                        throw new Loinc2HpoRuntimeException("Malformed line in resources/CodeSystems/HL7_V2_table0078.tsv");
                     }
                 }
                 line = bufferedReader.readLine();

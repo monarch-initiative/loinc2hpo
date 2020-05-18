@@ -1213,7 +1213,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

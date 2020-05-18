@@ -1,6 +1,9 @@
-import org.junit.Test;
+package org.monarchinitiative.loinc2hpo.gui;
+
+
 import javafx.scene.paint.Color;
-import org.monarchinitiative.loinc2hpo.gui.ColorUtils;
+import org.junit.jupiter.api.Test;
+
 
 public class ColorUtilsTest {
     @Test
