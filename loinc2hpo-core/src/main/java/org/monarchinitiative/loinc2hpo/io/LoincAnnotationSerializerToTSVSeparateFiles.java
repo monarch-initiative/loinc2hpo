@@ -127,9 +127,9 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                 try {
                     LoincId loincId = new LoincId(elements[0]);
                     LoincScale loincScale = LoincScale.string2enum(elements[1]);
-                    TermId low = convertToTermID(elements[2]);
-                    TermId intermediate = convertToTermID(elements[3]);
-                    TermId high = convertToTermID(elements[4]);
+                    TermId low = TermId.of(elements[2]);
+                    TermId intermediate = TermId.of(elements[3]);
+                    TermId high = TermId.of(elements[4]);
                     logger.trace(String.format("low: %s; normal: %s; high: %s", low, intermediate, high));
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     String note = elements[6].equals(Constants.MISSINGVALUE) ? null : elements[6];
@@ -203,7 +203,7 @@ public class LoincAnnotationSerializerToTSVSeparateFiles implements LoincAnnotat
                     LoincId loincId = new LoincId(elements[0]);
                     String system = elements[2];
                     String codeString = elements[3];
-                    TermId termId = convertToTermID(elements[4]);
+                    TermId termId = TermId.of(elements[4]);
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     LOINC2HpoAnnotationImpl annotation = deserializedMap.get(loincId);
                     Code code = Code.getNewCode().setSystem(system).setCode(codeString);

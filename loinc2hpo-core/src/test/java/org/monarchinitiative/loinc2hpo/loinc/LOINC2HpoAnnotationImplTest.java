@@ -40,8 +40,6 @@ public class LOINC2HpoAnnotationImplTest {
         hpoTermMap = resourceCollection.hpoTermMapFromName();
     }
 
-
-
     @Test
     public void testToString() throws Exception {
 

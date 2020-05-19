@@ -13,14 +13,4 @@ public interface LoincAnnotationSerializer {
 
     Map<LoincId, LOINC2HpoAnnotationImpl> parse(String filepath) throws Exception;
 
-    default TermId convertToTermID(String record) {
-        String prefix = "HP";
-        if (!record.startsWith(prefix) || record.length() <= 3) {
-            return null;
-        }
-        String id = record.substring(3);
-        return TermId.of(prefix, id);
-    }
-
-
 }

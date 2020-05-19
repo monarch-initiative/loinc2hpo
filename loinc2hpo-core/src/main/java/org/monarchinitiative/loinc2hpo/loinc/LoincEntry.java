@@ -85,10 +85,6 @@ public class LoincEntry {
     }
 
 
-    public static String getHeaderLine(){return HEADER_LINE; }
-
-
-
     public static ImmutableMap<LoincId,LoincEntry> getLoincEntryMap(String pathToLoincCoreTable) {
         ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder<>();
         int count_malformed = 0;

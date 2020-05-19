@@ -72,7 +72,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
                     LoincScale loincScale = LoincScale.string2enum(elements[1]);
                     String system = elements[2];
                     String code = elements[3];
-                    TermId termId = WriteToFile.convertToTermID(elements[4]);
+                    TermId termId = TermId.of(elements[4]);
                     boolean inverse = Boolean.parseBoolean(elements[5]);
                     LocalDateTime createdOn = elements[6].equals(MISSINGVALUE) ?
                             null : LocalDateTime.parse(elements[6]);
