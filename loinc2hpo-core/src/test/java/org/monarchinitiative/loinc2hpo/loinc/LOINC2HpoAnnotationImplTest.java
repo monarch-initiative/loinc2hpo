@@ -1,12 +1,10 @@
 package org.monarchinitiative.loinc2hpo.loinc;
 
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import org.monarchinitiative.loinc2hpo.ResourceCollection;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpo.codesystems.Loinc2HPOCodedValue;
@@ -19,8 +17,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,14 +30,24 @@ public class LOINC2HpoAnnotationImplTest {
     @TempDir
     public File temporaryFolder;
 
-    private static Map<String, Term> hpoTermMap;
+    private static Map<String, Term> hpoTermMap = new HashMap<>();
 
 
     @BeforeAll
-    public static void setUp() throws Exception {
-        ResourceCollection resourceCollection = new ResourceCollection();
-        resourceCollection.setHpoOboPath(LOINC2HpoAnnotationImplTest.class.getResource("/obo/hp_test.obo").getPath());
-        hpoTermMap = resourceCollection.hpoTermMapFromName();
+    public static void setUp(){
+
+        List<Term> terms = Stream.of(
+                Term.of("HP:0001943", "Hypoglycemia"),
+                Term.of("HP:0011015", "Abnormality of blood glucose " +
+                        "concentration"),
+                Term.of("HP:0003074", "Hyperglycemia"),
+                Term.of("HP:0002740", "Recurrent E. coli infections" ),
+                Term.of("HP:0002726", "Recurrent Staphylococcus aureus infections"),
+                Term.of("HP:0002718", "Recurrent bacterial infections")
+        ).collect(Collectors.toList());
+
+        hpoTermMap = terms.stream().collect(Collectors.toMap(Term::getName,
+                t-> t));
     }
 
     @Test
@@ -265,8 +275,4 @@ public class LOINC2HpoAnnotationImplTest {
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
         System.out.println(annotation600.getAdvancedAnnotationsString());
     }
-
-
-
-
 }
