@@ -65,9 +65,9 @@ public class CodeTest {
     }
 
     @Test
-    public void testtoString() throws Exception {
+    public void testtoString() {
         Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        assertEquals("System: http://jax.org/loinc2hpo; Code: H, Display: Above normal, Definition: null", code1.toString());
+        assertEquals("System: http://jax.org/loinc2hpo; Code: H, Display: Above normal", code1.toString());
 
     }
 

@@ -14,7 +14,6 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,14 +25,18 @@ public class ObservationAnalysisFromCodedValuesTest {
 
 
     @BeforeAll
-    public static void setup() throws MalformedLoincCodeException, DataFormatException, IOException {
-        String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcus.fhir").getPath();
+    public static void setup() throws MalformedLoincCodeException, IOException {
+        String path =
+                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcus.fhir").getPath();
         Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcusNoInterpretation.fhir").getPath();
+        path =
+                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcusNoInterpretation.fhir").getPath();
         Observation observation2 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/ecoliNoInterpretation.fhir").getPath();
+        path =
+                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/ecoliNoInterpretation.fhir").getPath();
         Observation observation3 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/neisseriaNoInterpretation.fhir").getPath();
+        path =
+                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/neisseriaNoInterpretation.fhir").getPath();
         Observation observation4 = FhirResourceRetriever.parseJsonFile2Observation(path);
 
         observations[0] = observation1;
@@ -86,8 +89,9 @@ public class ObservationAnalysisFromCodedValuesTest {
     @Test
     public void testNom1() throws Exception {
         LoincId loincId = new LoincId("600-7");
-
-        ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[0].getValueCodeableConcept(), testmap);
+        ObservationAnalysis analyzer =
+        new ObservationAnalysisFromCodedValues(loincId,
+                observations[0].getValueCodeableConcept(), testmap);
         assertNotNull(analyzer.getHPOforObservation());
         assertEquals("005", analyzer.getHPOforObservation().getId().getId());
     }

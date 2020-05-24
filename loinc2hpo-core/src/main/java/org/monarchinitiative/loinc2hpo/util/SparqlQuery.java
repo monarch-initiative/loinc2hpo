@@ -10,9 +10,6 @@ import org.apache.jena.shared.JenaException;
 import org.apache.jena.util.FileManager;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 public class SparqlQuery {
 
-//    private static final String hpo = SparqlQuery.class.getResource("/hp" +
-//            ".owl").getPath(); //need '/' to get a resource file
+    private static final Logger logger = LogManager.getLogger();
     public static boolean modelCreated = false; //check whether the model for
     // hpo has been created
     public static Model model; //model of hp.owl for Sparql query
@@ -39,9 +35,8 @@ public class SparqlQuery {
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> ";
     private static final String DISPLAY = "SELECT DISTINCT ?phenotype ?label ?definition ";
 
-    //public static final String modifier = "increase*|decrease*|elevate*|reduc*|high*|low*|above|below|abnormal*";
     public static final String modifier = "increase.*|decrease.*|elevat.*|reduc.*|high.*|low.*|above|below|abnormal.*";
-    private static final Logger logger = LogManager.getLogger();
+
 
     /**
      * Create an ontology model from its owl file
@@ -50,21 +45,25 @@ public class SparqlQuery {
      */
     public static Model getOntologyModel(String path_to_ontology) {
         logger.trace("enter function to create ontology model");
-        //model = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
-        model = ModelFactory.createDefaultModel();
         try {
             logger.trace("start reading the ontology");
             InputStream in = FileManager.get().open(path_to_ontology);
-            try {
-                model.read(in, null);
-                in.close();
-                logger.trace("model created");
-                modelCreated = true;
-            } catch (Exception e) {
-                logger.error("cannot read in data to model");
-            }
+            model = getOntologyModel(in);
         } catch (JenaException je) {
             logger.error("cannot open hpo.owl");
+        }
+        return model;
+    }
+
+    public static Model getOntologyModel(InputStream inputStream){
+        model = ModelFactory.createDefaultModel();
+        try {
+            model.read(inputStream, null);
+            inputStream.close();
+            logger.trace("model created");
+            modelCreated = true;
+        } catch (Exception e) {
+            logger.error("cannot read in data to model");
         }
         return model;
     }
@@ -401,59 +400,6 @@ public class SparqlQuery {
     }
 
 
-
-    /**
-    public static List<HPO_Class_Found> query(String loincLongCommonName, Model hpomodel) {
-
-        if(!modelCreated) {
-            createHPOModel();
-        }
-        List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
-        //first parse the loinc long common name
-        LoincLongNameComponents loincClass = LoincLongNameParser.parse(loincLongCommonName);
-        String[] parameters = parameters(loincClass.getLoincParameter());
-        //the parameter could be more than one word
-        //use the first word to do initial search
-        String queryString = buildStandardQueryWithSingleKey(parameters[0]);
-        Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.create(query, hpomodel);
-        Iterator<QuerySolution> results = qexec.execSelect();
-        int count = 0;
-        count = addFoundClasses(HPO_classes_found, results, loincClass);
-        System.out.println(count + " results are found!");
-
-        if (count < 3) { //loose criteria
-            HPO_classes_found = new ArrayList<>();
-            queryString = buildLooseQueryWithSingleKey(parameters[0]);
-            query = QueryFactory.create(queryString);
-            qexec = QueryExecutionFactory.create(query, hpomodel);
-            results = qexec.execSelect();
-            count = 0;
-            count = addFoundClasses(HPO_classes_found, results, loincClass);
-            System.out.println(count + " results are found!");
-
-        }
-
-        if (count < 3) { //use another word and standard query
-
-        }
-
-        if (count < 3) { //use another word and loose query
-
-        }
-
-        if (count > 20) { //too many, add another criteria: tissue--pay attention to synonyms of tissue
-                            //e.g. blood = serum = plasma
-                            //     urine = urinary
-                            //     kidney = renal
-
-        }
-        return HPO_classes_found;
-
-    }
-     **/
-
-
     public static List<HPO_Class_Found> getChildren(String HPO_class_URL) {
         if(!modelCreated) {
             createHPOModel();
@@ -528,90 +474,4 @@ public class SparqlQuery {
         return words;
     }
 
-
-
-
-
-
-
-
-    public static void main(String[] args) {
-        //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath(); //need '/' to get a resource file
-        //System.out.println("hpo path: " + hpo);
-        //Model model = getOntologyModel(hpo);
-
-
-        if(!modelCreated) {
-        createHPOModel();
-        }
-
-        Path path = Paths.get(SparqlQuery.class.getResource("/loinc_most_frequent.csv").getFile());
-        String newline;
-        try (InputStream input = Files.newInputStream(path)) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            PrintWriter writer = new PrintWriter("loinc-hpo-mapping.tsv");
-            reader.readLine();
-            writer.write("Loinc Long Common Name\tScore\tCandidate HPO Class URI\tCandidate HPO Class Label\tCandidate HPO Class Definition\n");
-            while ((newline = reader.readLine()) != null) {
-                //List<HPO_Class_Found> hpo_clsses_found = SparqlQuery.query(newline, model);
-                List<HPO_Class_Found> hpo_clsses_found = query_auto(newline);
-                if (hpo_clsses_found.size() > 0 && hpo_clsses_found.size() < 20) {
-                    for (HPO_Class_Found HPO_class : hpo_clsses_found) {
-                        StringBuilder outContent = new StringBuilder();
-                        outContent.append(newline);
-                        outContent.append("\t");
-                        outContent.append(HPO_class.getScore() + "\t");
-                        outContent.append(HPO_class.getId() + "\t");
-                        outContent.append(HPO_class.getLabel() + "\t");
-                        if (HPO_class.getDefinition() != null)  {
-                            outContent.append(HPO_class.getDefinition());
-                        }
-                        outContent.append("\n");
-                        writer.write(outContent.toString());
-                    }
-                } else if (hpo_clsses_found.size() == 0) {
-                    writer.write(newline + "\tNo HPO classes are found\n ");
-                } else {
-                    writer.write(newline + "\tToo many (" + hpo_clsses_found.size() + ") classes are found. List top 15 only\n");
-                    int count = 0;
-                    for (HPO_Class_Found HPO_class : hpo_clsses_found) {
-                        count++;
-                        if(count > 15) break;
-                        StringBuilder outContent = new StringBuilder();
-                        outContent.append(newline);
-                        outContent.append("\t");
-                        outContent.append(HPO_class.getScore() + "\t");
-                        outContent.append(HPO_class.getId() + "\t");
-                        outContent.append(HPO_class.getLabel() + "\t");
-                        if (HPO_class.getDefinition() != null)  {
-                            outContent.append(HPO_class.getDefinition());
-                        }
-                        outContent.append("\n");
-                        writer.write(outContent.toString());
-                    }
-                }
-
-
-            }
-            reader.close();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-/**
-        if(!modelCreated) {
-            createHPOModel();
-        }
-        String key = "testosterone";
-        String looseQueryString = SparqlQuery.buildLooseQueryWithSingleKey(key);
-        String standardQueryString = SparqlQuery.buildStandardQueryWithSingleKey(key);
-        Query looseQuery = QueryFactory.create(looseQueryString);
-        Query standardQuery = QueryFactory.create(standardQueryString);
-        List<HPO_Class_Found> results_loose = query(looseQuery, model, null);
-        List<HPO_Class_Found> results_standard = query(standardQuery, model, null);
-        System.out.println(results_loose.size() + " HPO terms are found!");
-        System.out.println(results_standard.size()+ " HPO terms are found!");
- **/
-    }
 }
