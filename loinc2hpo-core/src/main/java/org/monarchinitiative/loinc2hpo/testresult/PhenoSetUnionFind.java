@@ -12,6 +12,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Use a UnionFind structure to represent disjoint sets of phenotypes, of
+ * which only one phenotype can be assigned to a patient at any given time.
+ * For example, Hyperglycemia, Hypoglycemia, Not Abnormal blood glucose
+ * concentration is in one set.
+ */
 public class PhenoSetUnionFind {
     private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
     private UnionFind<TermId> unionFind;
@@ -19,7 +25,7 @@ public class PhenoSetUnionFind {
     public PhenoSetUnionFind(Set<TermId> hpoTermSet, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
         this.annotationMap = annotationMap;
         this.unionFind = new UnionFind<>(hpoTermSet);
-        union(annotationMap);
+        union(this.annotationMap);
     }
 
     private void union(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {

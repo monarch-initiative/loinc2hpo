@@ -7,17 +7,14 @@ import org.monarchinitiative.loinc2hpo.loinc.LoincId;
 
 import java.util.*;
 
+/**
+ * Class to represent a FHIR LOINC panel
+ */
 public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
 
-//    protected FHIRLoincPanelFactory factory = new FHIRLoincPanelFactoryLazy();
     protected Patient subject;
     protected LoincId panelId;
     protected Map<LoincId, Observation> components;
-
-
-//    public FHIRLoincPanelImpl(FHIRLoincPanelFactory factory) {
-//        this.factory = factory;
-//    }
 
     public FHIRLoincPanelImpl(LoincId panelid) {
         this.panelId = panelid;
@@ -29,16 +26,6 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
         this.subject = patient;
         //this.resourceCollection = resourceCollection;
     }
-
-//    @Override
-//    public FHIRLoincPanel instance(LoincId loincId) {
-//        return this.factory.createFhirLoincPanel(loincId);
-//    }
-//
-//    @Override
-//    public FHIRLoincPanel instance(LoincId loincId, Patient subject) {
-//        return this.factory.createFhirLoincPanel(loincId, subject);
-//    }
 
     @Override
     public void setSubject(Patient subject) {

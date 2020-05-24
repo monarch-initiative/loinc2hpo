@@ -17,7 +17,8 @@
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>4.1.0</hapi-fhir.version>
-        <mockito.version>1.10.19</mockito.version>
+        <mockito.version>3.3.3</mockito.version>
+        <power.mockito.version>2.0.7</power.mockito.version>
     </properties>
 
     <modules>
@@ -82,6 +83,13 @@
                     <artifactId>hamcrest-core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
         </dependency>
 
 

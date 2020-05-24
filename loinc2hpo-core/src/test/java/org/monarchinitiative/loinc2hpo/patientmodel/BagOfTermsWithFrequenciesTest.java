@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpo.patientmodel;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
+import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -19,12 +19,12 @@ public class BagOfTermsWithFrequenciesTest {
     private final String HP_PREFIX = "HP";
 
     @BeforeAll
-    public static void setup() throws Exception {
-        hpo = SharedResourceCollection.resourceCollection.getHPO();
+    public static void setup() {
+        hpo = OntologyLoader.loadOntology(BagOfTermsWithFrequencies.class.getResourceAsStream("/obo/hp_test.obo"));
     }
 
     @Test
-    public void addTerm() throws Exception {
+    public void addTerm() {
         assertNotNull(hpo);
         BagOfTermsWithFrequencies bag1 = new BagOfTermsWithFrequencies(patientId, hpo);
         assertNotNull(bag1);
@@ -42,7 +42,7 @@ public class BagOfTermsWithFrequenciesTest {
     }
 
     @Test
-    public void infer() throws Exception {
+    public void infer() {
 
         assertNotNull(hpo);
         BagOfTermsWithFrequencies bag1 = new BagOfTermsWithFrequencies(patientId, hpo);
@@ -72,9 +72,6 @@ public class BagOfTermsWithFrequenciesTest {
 
         TermId abnormalGlucoseHomeostasis = TermId.of(HP_PREFIX, "0011014");
         assertEquals(inferred.get(abnormalGlucoseHomeostasis).longValue(), 5);
-
-//        bag1.getInferredTermCounts().entrySet().forEach(e ->
-//                System.out.println(bag1.getPatientId() + "\t" + e.getKey() + "\t" + e.getValue()));
 
     }
 

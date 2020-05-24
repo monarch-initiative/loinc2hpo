@@ -4,34 +4,25 @@ package org.monarchinitiative.loinc2hpo.testresult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpo.ResourceCollection;
-import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 
 public class PhenotypeComponentImplTest {
 
     private static PhenotypeComponent testComponent;
-    private static Map<String, Term> hpoTermMap;
-    private static Map<TermId, Term> hpoTermMap2;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static Term hyperglycemia;
 
     @BeforeAll
     public static void setup() throws Exception{
-
-        ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
-        //resourceCollection.setHpoOboPath(PhenotypeComponentImplTest.class.getResource("/obo/hp.obo").getPath());
-
-        hpoTermMap = resourceCollection.hpoTermMapFromName();
-        hpoTermMap2 = resourceCollection.hpoTermMap();
-
+        hyperglycemia = Term.of(TermId.of("HP:00023"), "Hyperglycemia");
     }
 
     @BeforeEach
@@ -40,7 +31,7 @@ public class PhenotypeComponentImplTest {
         Date start = dateFormat.parse("2016-09-30 09:30:00");
         testComponent = new PhenotypeComponentImpl.Builder()
                 .start(start)
-                .hpoTerm(hpoTermMap.get("Hyperglycemia").getId())
+                .hpoTerm(hyperglycemia.getId())
                 .isNegated(false)
                 .build();
 
@@ -68,7 +59,7 @@ public class PhenotypeComponentImplTest {
 
     @Test
     public void abnormality() throws Exception {
-        assertEquals(hpoTermMap.get("Hyperglycemia").getId(), testComponent.abnormality());
+        assertEquals(hyperglycemia.getId(), testComponent.abnormality());
     }
 
     @Test
