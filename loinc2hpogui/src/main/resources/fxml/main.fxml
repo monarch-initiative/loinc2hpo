@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 
-<BorderPane fx:id="boardPane" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpo.controller.MainController">
+<BorderPane fx:id="boardPane" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.monarchinitiative.loinc2hpogui.controller.MainController">
    <top>
        <HBox maxHeight="30.0" BorderPane.alignment="CENTER">
            <MenuBar fx:id="loincmenubar" HBox.hgrow="NEVER">

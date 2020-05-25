@@ -11,7 +11,7 @@
 
 <SplitPane dividerPositions="0.29910714285714285" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9"
            xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.monarchinitiative.loinc2hpo.controller.Loinc2HpoAnnotationsTabController">
+           fx:controller="org.monarchinitiative.loinc2hpogui.controller.Loinc2HpoAnnotationsTabController">
     <VBox fx:id="vbox4wv" alignment="CENTER"/>
     <AnchorPane>
         <TableView fx:id="loincAnnotationTableView" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="10.0"

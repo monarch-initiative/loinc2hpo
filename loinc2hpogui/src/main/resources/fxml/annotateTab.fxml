@@ -29,7 +29,7 @@
 
 <SplitPane dividerPositions="0.4605475040257649" onDragDone="#handleDragDone" onDragOver="#handleDragOver"
            orientation="VERTICAL" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.monarchinitiative.loinc2hpo.controller.AnnotateTabController">
+           fx:controller="org.monarchinitiative.loinc2hpogui.controller.AnnotateTabController">
     <SplitPane dividerPositions="0.6185308848080133">
         <VBox>
             <HBox VBox.vgrow="NEVER">

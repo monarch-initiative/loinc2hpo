@@ -13,7 +13,7 @@
 
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.monarchinitiative.loinc2hpo.controller.CurrentAnnotationController">
+            fx:controller="org.monarchinitiative.loinc2hpogui.controller.CurrentAnnotationController">
     <Label fx:id="annotationTitle" stylesheets="@../css/loinc2hpo.css" text="Annotation" AnchorPane.leftAnchor="5.0"
            AnchorPane.topAnchor="5.0"/>
     <SplitPane dividerPositions="0.4983277591973244" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"

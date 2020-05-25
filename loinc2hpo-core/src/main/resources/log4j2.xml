@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="ERROR">
     <Appenders>
-        <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpo.log"
+        <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpogui.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>[%t] %-5level (%F:%L) - %msg%n</Pattern>

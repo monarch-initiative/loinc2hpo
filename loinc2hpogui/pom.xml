@@ -34,14 +34,6 @@
             <version>8.40.12</version>
         </dependency>
 
-
-        <!-- https://mvnrepository.com/artifact/com.github.monarch-initiative/hpotextmining-core
-        <dependency>
-            <groupId>com.github.monarch-initiative</groupId>
-            <artifactId>hpotextmining-core</artifactId>
-            <version>0.2.0</version>
-        </dependency>
-        -->
         <!-- The following is for the Max eawt code:
           com.apple.eawt.Application.getApplication().setDockIconImage(macimage); -->
         <dependency>
@@ -92,7 +84,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
+                                    <mainClass>org.monarchinitiative.loinc2hpogui.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -154,7 +146,7 @@
                             <!-- set useUniqueVersions=false in order that the classpath has the
                                SNAPSHOT instead of the build number prefixed to the dependency -->
                             <useUniqueVersions>false</useUniqueVersions>
-                            <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpogui.Main</mainClass>
                         </manifest>
                     </archive>
                     <!--   <compilerArgument>-Xlint:all</compilerArgument>

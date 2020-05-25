@@ -1171,7 +1171,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.monarchinitiative.loinc2hpo.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpogui.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
