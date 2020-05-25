@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * Use this class to represent a LOINC panel, which is a collection of LOINC tests there are typically ordered together.
- *
+ * TODO: fix tests
  */
 public class LoincPanel {
 

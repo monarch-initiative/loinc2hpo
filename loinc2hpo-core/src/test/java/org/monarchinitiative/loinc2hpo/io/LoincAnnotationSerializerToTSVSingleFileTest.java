@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpo.io;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.monarchinitiative.loinc2hpo.codesystems.Code;
 import org.monarchinitiative.loinc2hpo.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
@@ -21,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
+    @TempDir
     static File temporaryFolder;
-    private static File temporaryFile = new File(temporaryFolder, "hp.rdf");
-    private static String temporaryPath = temporaryFile.getAbsolutePath();
+    static String temporaryPath;
 
     @BeforeAll
     public static void setup() throws Exception {
@@ -68,6 +69,8 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 
         testmap.put(loincId, annotation600);
+
+        temporaryPath = new File(temporaryFolder, "tempfile").getAbsolutePath();
     }
 
 

@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpo.util;
 
-
-
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
-    //private static Map<HpoTerm, PhenoSet> phenoSetMap;
-
     private Patient patient;
     private List<LabTest> labTests;
     private List<PhenoSetTimeLine> phenoSetTimeLines;
@@ -26,14 +24,6 @@ public class PatientSummaryImpl implements PatientSummary{
         this.hpoTermUnionFind = hpoTermUnionFind;
     }
 
-    /**
-    static PatientSummaryImpl getInstance(Patient patient){
-        if (phenoSetMap == null) {
-            throw new RuntimeException("phenoSetMap is not set");
-        }
-        return new PatientSummaryImpl(patient);
-    }
-     **/
 
     @Override
     public Patient patient() {

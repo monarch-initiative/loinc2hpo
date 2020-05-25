@@ -3,16 +3,11 @@ package org.monarchinitiative.loinc2hpo.util;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.riot.RDFFormat;
-
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 
 
-import java.io.*;
+import java.io.InputStream;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,74 +15,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SparqlQueryTest {
 
-    static Model model;
-    @TempDir
-    static File temporaryFolder;
-    private static File temporaryFile = new File(temporaryFolder, "hp.rdf");
-    private static String temporaryPath = temporaryFile.getAbsolutePath();
-
+    public static Model model;
 
     @BeforeAll
-    public static void initializeModel() {
+    public static void setup() {
 
-        String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
+        InputStream hpo =
+                SparqlQueryTest.class.getResourceAsStream("/hp.owl");
         model = SparqlQuery.getOntologyModel(hpo);
+        SparqlQuery.setHPOmodel(model);
     }
 
-    @Test
-    @Disabled
-    public void testWriteRDF() throws IOException {
-        try {
-            OutputStream out = new FileOutputStream(temporaryPath);
-            RDFDataMgr.write(out, model, RDFFormat.RDFXML);
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
-    @Disabled
-    public void testLoadRDF() throws IOException {
-        OutputStream out = new FileOutputStream(temporaryPath);
-        RDFDataMgr.write(out, model, RDFFormat.RDF_THRIFT);
-        out.close();
-        //TODO: figure out how to load data from binary file
-        //InputStream in = new FileInputStream(path);
-        //org.apache.jena.rdf.model.Model modelFromRDF = FileManager.get().loadModel(path, null, "TURTLE");
-        //assertNotNull(modelFromRDF);
-    }
-
-//    @Test
-//    @Ignore
-//    public void testLoadOwlFunctionalSyntax() throws Exception {
-//        String hpo_owl_fs = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp-edit.owl";
-//        String hpo_owl = "/Users/zhangx/git/human-phenotype-ontology/src/ontology/hp.owl";
-//        org.apache.jena.rdf.model.Model jenaModel = ModelFactory.createDefaultModel();
-//        //InputStream inputStream = new FileInputStream(new File(hpo_owl_fs));
-//        System.out.println("11111");
-//        //OWLOntologyManager owlOntologyManager = OWLManager.createOWLOntologyManager();
-//        //OWLOntology owlOntology = owlOntologyManager.loadOntologyFromOntologyDocument(new File(hpo_owl_fs));
-//
-//        OntologyManager manager = OntManagers.createONT();
-//        OWLOntologyDocumentSource source = new FileDocumentSource(new File(hpo_owl_fs), new FunctionalSyntaxDocumentFormat());
-//        System.out.println("22222");
-//        //PipedInputStream inputStream = new PipedInputStream();
-//        //PipedOutputStream outputStream = new PipedOutputStream(inputStream);
-//        //owlOntology.saveOntology(outputStream);
-//        OntologyModel ontology = manager.loadOntologyFromOntologyDocument(source);
-//        jenaModel = ontology.asGraphModel();
-//        System.out.println("completed");
-//    }
 
     @Test
     public void testinitializeModel() {
-        //String hpo = SparqlQuery.class.getResource("/hp.owl").getPath();
-        //String hpo = SparqlQueryTest.class.getResource("/hp.owl").getPath();
-        //model = SparqlQuery.getOntologyModel(hpo);
         assertNotNull(model);
     }
+
     @Test
     public void testbuildStandardQueryWithSingleKey() {
         String test1 = "Testosterone";
@@ -170,12 +114,7 @@ public class SparqlQueryTest {
         assertNotNull(model);
         List<HPO_Class_Found> results_loose = SparqlQuery.query(looseQuery, model, null);
         List<HPO_Class_Found> results_standard = SparqlQuery.query(standardQuery, model, null);
-        /**
-        System.out.println(results_loose.size() + " HPO terms are found!");
-        for(HPO_Class_Found hpo : results_loose) {
-            System.out.println(hpo.getLabel() + "\t" + hpo.getId() + "\n" + hpo.getDefinition());
-        }
-        **/
+
         assertEquals(14, results_loose.size()); //interesting that this program identifies 16 classes;
                                                             // while the same query finds 14 in command line
                                                             //reason: command line uses hp.owl; this program builds a model from hp.owl(?)
@@ -204,13 +143,6 @@ public class SparqlQueryTest {
     }
 
     @Test
-    @Disabled
-    public void tests(){
-        testQueryWithOneKey();
-        testQueryWithMultiKeys();
-    }
-
-    @Test
     public void testQuery_auto() {
         //String loinc_name = "Testosterone Free [Mass/volume] in Serum or Plasma";
         //SparqlQuery.query_auto(loinc_name);
@@ -218,12 +150,7 @@ public class SparqlQueryTest {
         //String loinc_name = "Erythrocyte distribution width [Ratio] in blood or serum by Automated count";
         //String loinc_name = "Carbon dioxide, total [Moles/volume] in Serum or Plasma";
         //List<HPO_Class_Found> hpo_clsses_found = new ArrayList<>();
-        /**
-        System.out.println("Find Carbon dioxide, total [Moles/volume] in Serum or Plasma: ");
-        SparqlQuery.query_auto("Carbon dioxide, total [Moles/volume] in Serum or Plasma");
-        System.out.println("Find Anion gap 3 in Serum or Plasma: ");
-        SparqlQuery.query_auto("Anion gap 3 in Serum or Plasma");
-         **/
+
         //System.out.println("Find \"Potassium [Moles/volume] in Serum or Plasma\": ");
         List<HPO_Class_Found> hpo_clsses_found = SparqlQuery.query_auto("Potassium [Moles/volume] in Serum or Plasma");
         for (HPO_Class_Found HPO_class : hpo_clsses_found) {
@@ -267,72 +194,24 @@ public class SparqlQueryTest {
         test_words = SparqlQuery.parameters(test);
         assertEquals(4, test_words.length);
     }
-/**
-    @Test
-    public void testTrimS() {
-        String s = "Zinc";
-        assertEquals("Zinc", SparqlQuery.trimS(s));
 
-        s = "Cells";
-        assertEquals("Cell", SparqlQuery.trimS(s));
-
-        s = "exocytosis";
-        assertEquals("exocytosi", SparqlQuery.trimS(s));
-    }
-**/
     @Test
     public void testGetChildren() {
         String current = "http://purl.obolibrary.org/obo/HP_0012598";
         List<HPO_Class_Found> results = SparqlQuery.getChildren(current);
         assertEquals(3, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
 
         current = "http://purl.obolibrary.org/obo/HP_0012100";
         results = SparqlQuery.getChildren(current);
         assertEquals(2, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
 
         current = "http://purl.obolibrary.org/obo/HP_0012101";
         results = SparqlQuery.getChildren(current);
         assertEquals(0, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
 
         current = "http://purl.obolibrary.org/obo/HP_0004364";
         results = SparqlQuery.getChildren(current);
         assertEquals(8, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
     }
 
     @Test
@@ -340,52 +219,18 @@ public class SparqlQueryTest {
         String current = "http://purl.obolibrary.org/obo/HP_0012598";
         List<HPO_Class_Found> results = SparqlQuery.getParents(current);
         assertEquals(1, results.size());
-//        for (HPO_Class_Found hpo_term : results) {
-//            System.out.println(hpo_term.getId());
-//            System.out.println(hpo_term.getLabel());
-//            if(hpo_term.getDefinition() != null) {
-//                System.out.println(hpo_term.getDefinition());
-//            }
-//        }
 
         current = "http://purl.obolibrary.org/obo/HP_0012100";
         results = SparqlQuery.getParents(current);
         assertEquals(1, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
 
         current = "http://purl.obolibrary.org/obo/HP_0012101";
         results = SparqlQuery.getParents(current);
         assertEquals(1, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
 
         current = "http://purl.obolibrary.org/obo/HP_0004364";
         results = SparqlQuery.getParents(current);
         assertEquals(1, results.size());
-        /**
-        for (HPO_Class_Found hpo_term : results) {
-            System.out.println(hpo_term.getId());
-            System.out.println(hpo_term.getLabel());
-            if(hpo_term.getDefinition() != null) {
-                System.out.println(hpo_term.getDefinition());
-            }
-        }
-         **/
     }
 
     @Test

@@ -1,53 +1,60 @@
 package org.monarchinitiative.loinc2hpo.testresult;
 
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpo.ResourceCollection;
-import org.monarchinitiative.loinc2hpo.SharedResourceCollection;
 import org.monarchinitiative.loinc2hpo.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpo.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 
-@Disabled
-/**
- * Only manually run this test
- */
 public class PhenoSetUnionFindTest {
 
-    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
-    private static Map<String, Term> hpoTermMap;
-    private static Map<TermId, Term> hpoTermMap2;
-    private static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
-    private static PhenoSetUnionFind unionFind;
+    private Map<String, Term> hpoTermMap;
+    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    private PhenoSetUnionFind unionFind;
 
-    @BeforeAll
-    public static void setup() throws Exception{
-        ResourceCollection resourceCollection = SharedResourceCollection.resourceCollection;
+    @BeforeEach
+    public void setup(){
 
-        hpoTermMap = resourceCollection.hpoTermMapFromName();
-        hpoTermMap2 = resourceCollection.hpoTermMap();
-        Ontology hpo = resourceCollection.getHPO();
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = resourceCollection.annotationMap();
+        LoincId caliumTest = mock(LoincId.class);
+        Term hypocapnia = Term.of(TermId.of("HP:000012"), "Hypocapnia");
+        Term hypercapnia = Term.of(TermId.of("HP:000013"), "Hypercapnia");
+        LoincId nitritTest = mock(LoincId.class);
+        Term nitrituria = Term.of(TermId.of("HP:0000043"), "Nitrituria");
 
-        unionFind = new PhenoSetUnionFind(hpo.getTermMap().values().stream().map(Term::getId).collect(Collectors.toSet()), annotationMap);
+        hpoTermMap =
+                Stream.of(hypocapnia, hypercapnia, nitrituria).collect(Collectors.toMap(e -> e.getName(), e-> e));
+        LOINC2HpoAnnotationImpl annotation1 =
+                new LOINC2HpoAnnotationImpl.Builder()
+                .setLoincId(caliumTest)
+                .setLowValueHpoTerm(hypocapnia.getId())
+                .setHighValueHpoTerm(hypercapnia.getId())
+                .build();
+        LOINC2HpoAnnotationImpl annotation2 =
+                new LOINC2HpoAnnotationImpl.Builder()
+                .setLoincId(nitritTest)
+                .setPosValueHpoTerm(nitrituria.getId())
+                .build();
+        annotationMap = new HashMap<>();
+        annotationMap.put(caliumTest, annotation1);
+        annotationMap.put(nitritTest, annotation2);
+
+        Set<TermId> termIdSet = hpoTermMap.values().stream().map(Term::getId).collect(Collectors.toSet());
+        unionFind = new PhenoSetUnionFind(termIdSet, annotationMap);
 
     }
 
     @Test
-    @Disabled
-    public void test1() throws Exception {
+    public void checkDataStructureSetUpCorrectly() {
         Term term1 = hpoTermMap.get("Hypocapnia");
         Term term2 = hpoTermMap.get("Hypercapnia");
         assertTrue(unionFind.getUnionFind().inSameSet(term1.getId(), term2.getId()));
