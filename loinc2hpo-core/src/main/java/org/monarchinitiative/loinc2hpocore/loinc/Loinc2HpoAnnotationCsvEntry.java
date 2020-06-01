@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Loinc2HpoAnnotationCsvEntry {
 
@@ -56,6 +57,9 @@ public class Loinc2HpoAnnotationCsvEntry {
                 String[] elements = line.split("\t");
                 if (elements.length != 13){
                     throw new RuntimeException("Line does not have expected length: " + line);
+                }
+                for (int i = 0; i < elements.length; i++){
+                    elements[i] = elements[i].equals("NA")? null : elements[i];
                 }
                 String loincId = elements[0];
                 String loincScale = elements[1];
@@ -198,7 +202,13 @@ public class Loinc2HpoAnnotationCsvEntry {
 
     @Override
     public String toString(){
-        return StringUtils.join(Arrays.asList(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment), "\t");
+        List<String> fields = Arrays.asList(loincId, loincScale, system, code
+                , hpoTermId, isNegated, createdOn, createdBy, lastEditedOn,
+                lastEditedBy, version, isFinalized, comment);
+        //replace any null value with "NA"
+        List<String> replaceNullWithNA = fields.stream().map(f -> f == null?
+                "NA" : f).collect(Collectors.toList());
+        return StringUtils.join(replaceNullWithNA, "\t");
     }
 
 

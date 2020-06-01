@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpogui.model;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.ResourceCollection;
+import org.monarchinitiative.loinc2hpogui.ResourceCollection;
 import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;

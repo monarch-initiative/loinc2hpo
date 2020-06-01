@@ -23,10 +23,10 @@ import org.apache.maven.wagon.CommandExecutionException;
 import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.command.VersionCommand;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.io.TerminalCommand;
 import org.monarchinitiative.loinc2hpocore.io.WriteToFile;
+import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpogui.gui.*;
 import org.monarchinitiative.loinc2hpogui.io.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -583,21 +583,21 @@ logger.trace("MainController initialize() called");
 
         String dataDir = settings.getAnnotationFolder() + File.separator + "Data";
 
-        // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
-        //create folder is not present
-        Path folderTSVSeparated = Paths.get(dataDir + File.separator + Constants.TSVSeparateFilesFolder);
-        if (!Files.exists(folderTSVSeparated)) {
-            try {
-                Files.createDirectory(folderTSVSeparated);
-            } catch (IOException e1) {
-
-                PopUps.showWarningDialog("Error message",
-                        "Failure to create folder",
-                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSeparated));
-                return;
-            }
-
-        }
+//        // The following codes demonstrates how to save the annotations in TSVSeparatedFiles format
+//        //create folder is not present
+//        Path folderTSVSeparated = Paths.get(dataDir + File.separator + Constants.TSVSeparateFilesFolder);
+//        if (!Files.exists(folderTSVSeparated)) {
+//            try {
+//                Files.createDirectory(folderTSVSeparated);
+//            } catch (IOException e1) {
+//
+//                PopUps.showWarningDialog("Error message",
+//                        "Failure to create folder",
+//                        String.format("An error occurred when trying to make a directory at %s. Try again!", folderTSVSeparated));
+//                return;
+//            }
+//
+//        }
 
         Path folderTSVSingle = Paths.get(dataDir + File.separator + Constants.TSVSingleFileFolder);
         if (!Files.exists(folderTSVSingle)) {
@@ -613,8 +613,7 @@ logger.trace("MainController initialize() called");
 
         String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
-            LoincAnnotationSerializationFactory.setHpoTermMap(appResources.getTermidTermMap());
-            LoincAnnotationSerializationFactory.serializeToFile(appResources.getLoincAnnotationMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, annotationTSVSingleFile);
+            LOINC2HpoAnnotationImpl.to_csv_file(appResources.getLoincAnnotationMap(), annotationTSVSingleFile);
         } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,

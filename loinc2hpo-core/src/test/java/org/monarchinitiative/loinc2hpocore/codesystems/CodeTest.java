@@ -1,14 +1,10 @@
-package org.monarchinitiative.loinc2hpogui.codesystems;
-
-
+package org.monarchinitiative.loinc2hpocore.codesystems;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class CodeTest {
+class CodeTest {
     @Test
     public void systemGetterAndSetter() throws Exception {
         Code code = new Code();
@@ -71,5 +67,4 @@ public class CodeTest {
         assertEquals("System: http://jax.org/loinc2hpo; Code: H, Display: Above normal", code1.toString());
 
     }
-
 }

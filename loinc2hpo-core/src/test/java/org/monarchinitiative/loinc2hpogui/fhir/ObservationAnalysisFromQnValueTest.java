@@ -72,8 +72,8 @@ public class ObservationAnalysisFromQnValueTest {
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setHighValueHpoTerm(bacterial)
-                .addAdvancedAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
-                .addAdvancedAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
+                .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
+                .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 

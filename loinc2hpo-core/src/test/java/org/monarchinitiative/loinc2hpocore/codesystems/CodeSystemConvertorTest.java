@@ -1,15 +1,10 @@
-package org.monarchinitiative.loinc2hpogui.codesystems;
-
+package org.monarchinitiative.loinc2hpocore.codesystems;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-public class CodeSystemConvertorTest {
+class CodeSystemConvertorTest {
 
     @Test
     public void convertToInternalCode() throws Exception {
@@ -41,4 +36,5 @@ public class CodeSystemConvertorTest {
         assertEquals("abnormal", internal2.getDisplay());
 
     }
+
 }

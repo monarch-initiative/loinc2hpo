@@ -5,7 +5,7 @@ import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundExcepti
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
 
 import java.io.*;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +18,11 @@ public class CodeSystemConvertor {
         initV2toInternalCodeMap();
     }
 
+    //add default conversion map from FHIR V2 codeset to internal codes
     private void initV2toInternalCodeMap(){
         final String v2System = "http://hl7.org/fhir/v2/0078";
-        final String internalSystem = InternalCodeSystem.SYSTEMNAME;
         InputStream mappath = CodeSystemConvertor.class.getClassLoader().getResourceAsStream("external2internalCodeMap/HL7_v2_table0078_to_internal.tsv");
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mappath, Charset.forName("UTF-8")))){
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(mappath, StandardCharsets.UTF_8))){
             //ignore header
             String line = bufferedReader.readLine();
             while ((line = bufferedReader.readLine()) != null) {
@@ -46,7 +46,10 @@ public class CodeSystemConvertor {
         }
     }
 
-
+    /**
+     * Add additional code conversion maps to our internal code
+     * @param newMap
+     */
     public void addCodeConversionMap(Map<Code, Code> newMap){
         this.codeConversionmap.putAll(newMap);
     }

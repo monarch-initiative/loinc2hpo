@@ -20,16 +20,14 @@ import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpogui.gui.PopUps;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpogui.model.AppResources;
 import org.monarchinitiative.loinc2hpogui.model.AppTempData;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory.SerializationFormat;
 import org.monarchinitiative.loinc2hpocore.util.AnnotationQC;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -210,9 +208,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
             try {
                 Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
-                        LoincAnnotationSerializationFactory.parseFromFile(path,
-                                appResources.getTermidTermMap(),
-                                SerializationFormat.TSVSingleFile);
+                        LOINC2HpoAnnotationImpl.from_csv(path);
                 appResources.getLoincAnnotationMap().putAll(annotationMap);
                 refreshTable();
             } catch (Exception e) {
@@ -233,34 +229,13 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
         logger.debug("Num of annotations in appTempData: " + appResources.getLoincAnnotationMap().size());
 
-        /**
-        //if using the LoincAnnotationSerializerToTSVSingleFile for serialization
-        String basicAnnotationsFilePath = pathToOpen + File.separator + Constants.TSVSeparateFilesBasic;
-        LoincAnnotationSerializationFactory.setLoincEntryMap(appTempData.getLoincEntryMap());
-        LoincAnnotationSerializationFactory.setHpoTermMap(appTempData.getTermMap2());
-        if (new File(basicAnnotationsFilePath).exists()) {
-            try {
-                //import basic annotations
-                Map<LoincId, LOINC2HpoAnnotationImpl> deserializedMap =
-                        LoincAnnotationSerializationFactory.parseFromFile(pathToOpen, appTempData.getTermMap2(),
-                                LoincAnnotationSerializationFactory.SerializationFormat.TSVSeparateFile);
-                appTempData.getLoincAnnotationMap().putAll(deserializedMap);
-            } catch (Exception e) {
-                logger.error("error during deserialization");
-            }
-
-        }
-         //end
-        **/
-
-
         //if using the LoincAnnotationSerializerTSVSingleFile for serialization
         String tsvSingleFile = pathToOpen + File.separator
                 + Constants.TSVSingleFileFolder + File.separator + Constants.TSVSingleFileName;
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new HashMap<>();
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
 
         try {
-            annotationMap = LoincAnnotationSerializationFactory.parseFromFile(tsvSingleFile, appResources.getTermidTermMap(), SerializationFormat.TSVSingleFile);
+            annotationMap = LOINC2HpoAnnotationImpl.from_csv(tsvSingleFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -361,10 +336,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
             if (!f.exists() || overwrite) {
                 try {
-                    LoincAnnotationSerializationFactory.setHpoTermMap(appResources.getTermidTermMap());
-                    LoincAnnotationSerializationFactory.setLoincEntryMap(appResources.getLoincEntryMap());
-                    LoincAnnotationSerializationFactory.serializeToFile(appResources.getLoincAnnotationMap(),
-                            LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile, path);
+                    LOINC2HpoAnnotationImpl.to_csv_file(appResources.getLoincAnnotationMap(), path);
                 } catch (IOException e1) {
                     PopUps.showWarningDialog("Error message",
                             "Failure to Save Session Data" ,

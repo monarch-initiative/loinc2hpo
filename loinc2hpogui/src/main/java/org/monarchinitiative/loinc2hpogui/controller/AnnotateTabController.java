@@ -1327,7 +1327,7 @@ public class AnnotateTabController {
                 .setFlag(toCopy.getFlag())
                 .setVersion(toCopy.getVersion());
         toCopy.getCandidateHpoTerms().entrySet().stream()
-                .forEach(entry -> builder.addAdvancedAnnotation(entry.getKey(), entry.getValue()));
+                .forEach(entry -> builder.addAnnotation(entry.getKey(), entry.getValue()));
 
         appResources.getLoincAnnotationMap().put(loincId, builder.build());
 
@@ -1440,7 +1440,7 @@ public class AnnotateTabController {
         //add the advanced annotations
         if (!tempAdvancedAnnotations.isEmpty()) {
             tempAdvancedAnnotations.forEach(p ->
-                    builder.addAdvancedAnnotation(p.getCode(), p.getHpoTerm4TestOutcome()));
+                    builder.addAnnotation(p.getCode(), p.getHpoTerm4TestOutcome()));
         }
 
         //add some meta data, such as date, created by, and version

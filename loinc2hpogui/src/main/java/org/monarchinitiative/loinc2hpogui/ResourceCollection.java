@@ -1,10 +1,9 @@
-package org.monarchinitiative.loinc2hpocore;
+package org.monarchinitiative.loinc2hpogui;
 
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.io.HpoOntologyParser;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
@@ -140,7 +139,8 @@ public class ResourceCollection {
             return this.loincAnnotationMap;
         }
 
-        this.loincAnnotationMap = LoincAnnotationSerializationFactory.parseFromFile(this.annotationMapPath, hpoTermMap(), LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+        this.loincAnnotationMap =
+                LOINC2HpoAnnotationImpl.from_csv(this.annotationMapPath);
         return this.loincAnnotationMap;
     }
 

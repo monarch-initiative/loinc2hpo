@@ -1,22 +1,19 @@
 package org.monarchinitiative.loinc2hpogui.io;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializer;
 import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializerToTSVSingleFile;
-import org.monarchinitiative.loinc2hpocore.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
+import org.monarchinitiative.loinc2hpocore.loinc.*;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LoincAnnotationSerializerToTSVSingleFileTest {
 
-    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
+    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new LinkedHashMap<>();
     @TempDir
     static File temporaryFolder;
     static String temporaryPath;
@@ -65,8 +62,8 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setHighValueHpoTerm(bacterial)
-                .addAdvancedAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
-                .addAdvancedAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
+                .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
+                .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
 
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 
@@ -81,7 +78,17 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
         serializer.serialize(testmap, temporaryPath);
         BufferedReader reader = new BufferedReader(new FileReader(temporaryPath));
-        reader.lines().forEach(System.out::println);
+        String content = StringUtils.join(reader.lines().collect(Collectors.toList()), "\n");
+
+
+        String temporaryPath2 =
+                new File(temporaryFolder, "tempfile2").getAbsolutePath();
+        LOINC2HpoAnnotationImpl.to_csv_file(testmap, temporaryPath2);
+        reader = new BufferedReader(new FileReader(temporaryPath2));
+        String content2 =
+                StringUtils.join(reader.lines().collect(Collectors.toList()),
+                        "\n");
+        assertEquals(content, content2);
     }
 
     @Test
@@ -93,18 +100,15 @@ public class LoincAnnotationSerializerToTSVSingleFileTest {
         assertNotNull(annotationMap);
         assertEquals(2, annotationMap.size());
 
-    }
+        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap2 =
+                LOINC2HpoAnnotationImpl.from_csv(temporaryPath);
+        assertNotNull(annotationMap2);
+        assertEquals(2, annotationMap2.size());
 
-    @Test
-    public void testFactory() throws Exception {
-        LoincAnnotationSerializer serializer = new LoincAnnotationSerializerToTSVSingleFile(null);
-        serializer.serialize(testmap, temporaryPath);
-
-
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
-                LoincAnnotationSerializationFactory.parseFromFile(temporaryPath, null, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
-        assertNotNull(annotationMap);
-        assertEquals(2, annotationMap.size());
+        assertEquals(annotationMap.get(new LoincId("15074-8")).toString(),
+                annotationMap2.get(new LoincId("15074-8")).toString());
+        assertEquals(annotationMap.get(new LoincId("600-7")).toString(),
+                annotationMap2.get(new LoincId("600-7")).toString());
 
     }
 

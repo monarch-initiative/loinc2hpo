@@ -111,7 +111,7 @@ public class LoincAnnotationSerializerToTSVSingleFile implements LoincAnnotation
 
 
                     HpoTerm4TestOutcome annotate = new HpoTerm4TestOutcome(termId, inverse);
-                    builders.get(loincId).addAdvancedAnnotation(coding, annotate);
+                    builders.get(loincId).addAnnotation(coding, annotate);
                 } catch (MalformedLoincCodeException e) {
                     logger.error("Malformed loinc code line: " + serialized);
                 }

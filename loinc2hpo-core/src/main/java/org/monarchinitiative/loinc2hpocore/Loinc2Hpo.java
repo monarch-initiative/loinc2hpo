@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.exception.AnnotationNotFoundException;
 import org.monarchinitiative.loinc2hpocore.exception.LoincCodeNotAnnotatedException;
-import org.monarchinitiative.loinc2hpocore.io.LoincAnnotationSerializationFactory;
 import org.monarchinitiative.loinc2hpocore.loinc.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -33,7 +32,7 @@ public class Loinc2Hpo {
     }
 
     private Map<LoincId, LOINC2HpoAnnotationImpl> importAnnotationMap(String path) throws Exception {
-        annotationMap = LoincAnnotationSerializationFactory.parseFromFile(path, null, LoincAnnotationSerializationFactory.SerializationFormat.TSVSingleFile);
+        annotationMap = LOINC2HpoAnnotationImpl.from_csv(path);
         return annotationMap;
     }
 
