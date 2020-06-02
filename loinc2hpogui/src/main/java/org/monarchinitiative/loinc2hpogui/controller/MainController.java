@@ -26,7 +26,7 @@ import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.io.TerminalCommand;
 import org.monarchinitiative.loinc2hpocore.io.WriteToFile;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpogui.gui.*;
 import org.monarchinitiative.loinc2hpogui.io.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;

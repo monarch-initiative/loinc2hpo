@@ -5,7 +5,7 @@ import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincPanel;

@@ -2,6 +2,9 @@ package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationCsvEntry;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;

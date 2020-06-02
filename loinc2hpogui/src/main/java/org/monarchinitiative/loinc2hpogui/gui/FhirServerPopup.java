@@ -18,8 +18,8 @@ import org.apache.logging.log4j.Logger;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpocore.fhir.FhirServer;
-import org.monarchinitiative.loinc2hpocore.fhir.FhirServerDstu3Impl;
+import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirServer;
+import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirServerDstu3Impl;
 import org.monarchinitiative.loinc2hpogui.model.AppTempData;
 
 import java.util.List;

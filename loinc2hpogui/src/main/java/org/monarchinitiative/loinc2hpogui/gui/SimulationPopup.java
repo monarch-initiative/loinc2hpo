@@ -17,7 +17,7 @@ import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.fhir.*;
+import org.monarchinitiative.loinc2hpocore.fhir2hpo.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LOINCEXAMPLE;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;

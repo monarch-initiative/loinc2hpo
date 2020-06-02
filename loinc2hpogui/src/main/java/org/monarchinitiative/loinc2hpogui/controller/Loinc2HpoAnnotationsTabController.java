@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpogui.gui.PopUps;
 import org.monarchinitiative.loinc2hpogui.model.AppResources;

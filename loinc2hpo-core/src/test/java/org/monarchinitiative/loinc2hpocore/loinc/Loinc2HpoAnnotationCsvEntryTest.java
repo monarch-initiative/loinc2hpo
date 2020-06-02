@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationCsvEntry;
 
 import java.util.List;
 

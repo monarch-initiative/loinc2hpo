@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 
 import java.util.*;

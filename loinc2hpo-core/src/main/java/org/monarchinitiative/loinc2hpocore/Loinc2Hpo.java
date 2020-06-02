@@ -3,10 +3,12 @@ package org.monarchinitiative.loinc2hpocore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
+import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.AnnotationNotFoundException;
+import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundException;
 import org.monarchinitiative.loinc2hpocore.exception.LoincCodeNotAnnotatedException;
-import org.monarchinitiative.loinc2hpocore.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.Map;
@@ -21,21 +23,28 @@ public class Loinc2Hpo {
     private static final Logger logger = LogManager.getLogger();
 
     private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    private CodeSystemConvertor converter;
 
-    public Loinc2Hpo(String path){
+    public Loinc2Hpo(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap,
+                     CodeSystemConvertor converter){
+        this.annotationMap = annotationMap;
+        this.converter = converter;
+    }
+
+    public Loinc2Hpo(String path, CodeSystemConvertor converter){
         try {
-            annotationMap = importAnnotationMap(path);
+            annotationMap = LOINC2HpoAnnotationImpl.from_csv(path);
         } catch (Exception e) {
             logger.error("Failed to import loinc2hpo annotation");
             throw new RuntimeException("failed to import loinc2hpo annotation");
         }
+        this.converter = converter;
     }
 
-    private Map<LoincId, LOINC2HpoAnnotationImpl> importAnnotationMap(String path) throws Exception {
-        annotationMap = LOINC2HpoAnnotationImpl.from_csv(path);
-        return annotationMap;
+    public Code convertToInternal(Code original) throws InternalCodeNotFoundException {
+        Code internal = this.converter.convertToInternalCode(original);
+        return internal;
     }
-
 
     public HpoTerm4TestOutcome query(LoincId loincId, Code testResult) throws AnnotationNotFoundException, LoincCodeNotAnnotatedException {
 

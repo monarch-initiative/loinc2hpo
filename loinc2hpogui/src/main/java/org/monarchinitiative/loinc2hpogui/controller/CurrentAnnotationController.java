@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
-import org.monarchinitiative.loinc2hpocore.loinc.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 
 import org.monarchinitiative.loinc2hpogui.model.AdvancedAnnotationTableComponent;

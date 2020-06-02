@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpogui.model;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.loinc.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 
 /**
  * This class is for data visualization in GUI only. It simply keeps a record of a code and its corresponding hpoTerm4TestOutcome term

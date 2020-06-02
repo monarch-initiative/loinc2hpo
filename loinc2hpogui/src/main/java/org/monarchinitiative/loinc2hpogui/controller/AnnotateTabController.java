@@ -35,6 +35,8 @@ import javafx.stage.*;
 import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.*;
 import org.monarchinitiative.loinc2hpocore.util.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpocore.util.LoincLongNameComponents;
@@ -1422,6 +1424,12 @@ public class AnnotateTabController {
             builder.setLowValueHpoTerm(low)
                     .setIntermediateValueHpoTerm(normal, appTempData.isInversedBasicMode())
                     .setHighValueHpoTerm(high);
+            //We automatically add the annotation to abnormal, which is the
+            // inversed normal annotation
+            if (normal != null){
+                builder.addAnnotation(InternalCodeSystem.getCode(InternalCode.A),
+                        new HpoTerm4TestOutcome(normal, !appTempData.isInversedBasicMode()));
+            }
         } else if (loincScale == LoincScale.Ord && loincTableView.getSelectionModel().getSelectedItem().isPresentOrd()) {
             builder.setNegValueHpoTerm(normal, appTempData.isInversedBasicMode())
                     .setPosValueHpoTerm(high);

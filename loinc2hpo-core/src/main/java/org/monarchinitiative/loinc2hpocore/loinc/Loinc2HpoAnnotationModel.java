@@ -1,6 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationCsvEntry;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.phenol.ontology.data.TermId;
