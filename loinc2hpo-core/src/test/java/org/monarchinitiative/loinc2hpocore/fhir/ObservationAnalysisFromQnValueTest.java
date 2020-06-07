@@ -1,25 +1,23 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
 import org.hl7.fhir.dstu3.model.Observation;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
+import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.exception.ReferenceNotFoundException;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromQnValue;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,14 +26,19 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ObservationAnalysisFromQnValueTest {
     private static Observation[] observations = new Observation[2];
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
+    private static Loinc2Hpo loinc2Hpo;
 
 
     @BeforeAll
-    public static void setup() throws MalformedLoincCodeException, IOException, DataFormatException {
-        String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHighNoInterpretation.fhir").getPath();
-        Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseNoInterpretationNoReference.fhir").getPath();
-        Observation observation2 = FhirResourceRetriever.parseJsonFile2Observation(path);
+    public static void setup() throws MalformedLoincCodeException {
+        FhirContext ctx = FhirContext.forDstu3();
+        IParser parser = ctx.newJsonParser();
+
+        Observation observation1 = (Observation)
+                parser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/glucoseHighNoInterpretation.fhir"));
+
+        Observation observation2 =
+                (Observation) parser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/glucoseNoInterpretationNoReference.fhir"));
         observations[0] = observation1;
         observations[1] = observation2;
 
@@ -57,44 +60,25 @@ public class ObservationAnalysisFromQnValueTest {
 
 
         testmap.put(loincId, annotation15074);
-
-        loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
-
-        loincId = new LoincId("600-7");
-        loincScale = LoincScale.string2enum("Nom");
-        TermId ecoli = TermId.of("HP:004");
-        TermId staphaureus = TermId.of("HP:005");
-        TermId bacterial = TermId.of("HP:006");
-
-        Code ecoli_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code staph_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
-
-        loinc2HpoAnnotationBuilder.setLoincId(loincId)
-                .setLoincScale(loincScale)
-                .setHighValueHpoTerm(bacterial)
-                .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
-                .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
-
-        LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
-
-        testmap.put(loincId, annotation600);
+        loinc2Hpo = new Loinc2Hpo(testmap, null);
     }
 
     @Test
-    public void testGetInterpretationCodes1() throws Exception {
+    public void testGetHpo() throws Exception {
 
-        LoincId loincId = new LoincId("15074-8");
-        ObservationAnalysisFromQnValue analyzer = new ObservationAnalysisFromQnValue(loincId, observations[0], testmap);
+        ObservationAnalysisFromQnValue analyzer =
+                new ObservationAnalysisFromQnValue(loinc2Hpo, observations[0]);
         assertNotNull(analyzer.getHPOforObservation());
         assertEquals("HP:003", analyzer.getHPOforObservation().getId().getValue());
     }
 
 
     @Test
-    public void testGetInterpretationCodes2() throws Exception {
+    public void testNoRef() {
         Assertions.assertThrows(ReferenceNotFoundException.class, () -> {
-            LoincId loincId = new LoincId("15074-8");
-            ObservationAnalysisFromQnValue analyzer = new ObservationAnalysisFromQnValue(loincId, observations[1], testmap);
+            ObservationAnalysisFromQnValue analyzer =
+                    new ObservationAnalysisFromQnValue(loinc2Hpo,
+                            observations[1]);
             analyzer.getHPOforObservation();
         });
 

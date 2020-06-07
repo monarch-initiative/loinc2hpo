@@ -1,129 +1,90 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.AmbiguousResultsFoundException;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromInterpretation;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
-import org.monarchinitiative.phenol.ontology.data.TermId;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.zip.DataFormatException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class ObservationAnalysisFromInterpretationTest {
 
-    private static Observation[] observations = new Observation[2];
-    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
-    private static CodeSystemConvertor convertor;
-
-    @BeforeAll
-    public static void setup() throws MalformedLoincCodeException, IOException, DataFormatException {
-        String path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseHigh.fhir").getPath();
-        Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path = FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/glucoseConflictingInterpretation.fhir").getPath();
-        Observation observation2 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        observations[0] = observation1;
-        observations[1] = observation2;
-
-        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
-
-        LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
-        TermId low = TermId.of("HP:001");
-        TermId normal = TermId.of("HP:002");
-        TermId hi = TermId.of("HP:003");
-
-        loinc2HpoAnnotationBuilder.setLoincId(loincId)
-                .setLoincScale(loincScale)
-                .setLowValueHpoTerm(low)
-                .setIntermediateValueHpoTerm(normal, true)
-                .setHighValueHpoTerm(hi);
-
-        LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
-
-
-        testmap.put(loincId, annotation15074);
-
-        loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
-
-        loincId = new LoincId("600-7");
-        loincScale = LoincScale.string2enum("Nom");
-        TermId ecoli = TermId.of("HP:004");
-        TermId staphaureus = TermId.of("HP:005");
-        TermId bacterial = TermId.of("HP:006");
-
-        Code ecoli_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code staph_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
-
-        loinc2HpoAnnotationBuilder.setLoincId(loincId)
-                .setLoincScale(loincScale)
-                .setHighValueHpoTerm(bacterial)
-                .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
-                .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
-
-        LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
-
-        testmap.put(loincId, annotation600);
-        convertor = new CodeSystemConvertor();
-    }
-
-
-    @Test
-    public void testGetInterpretationCodes() throws Exception{
-
-        LoincId loincId = new LoincId("15074-8");
-
-        ObservationAnalysisFromInterpretation analyzer =
-                new ObservationAnalysisFromInterpretation(loincId,
-                        observations[0].getInterpretation(), testmap, convertor);
-        assertNotNull(analyzer.getInterpretationCodes());
-        assertEquals(1, analyzer.getInterpretationCodes().size());
-        assertNotEquals(0, analyzer.getInterpretationCodes().size());
-
-        analyzer = new ObservationAnalysisFromInterpretation(loincId,
-                observations[1].getInterpretation(), testmap, convertor);
-        assertNotNull(analyzer.getInterpretationCodes());
-        assertEquals(2, analyzer.getInterpretationCodes().size());
-        assertNotEquals(0, analyzer.getInterpretationCodes().size());
-    }
     @Test
     public void getHPOforObservation() throws Exception {
 
+        Observation observation = mock(Observation.class);
         LoincId loincId = new LoincId("15074-8");
-        ObservationAnalysisFromInterpretation analyzer =
-                new ObservationAnalysisFromInterpretation(loincId,
-                        observations[0].getInterpretation(), testmap, convertor);
+        when(observation.getCode()).thenReturn(new CodeableConcept().addCoding(new Coding("http://loinc.org", "15074-8", "")));
+        Coding exHigh = new Coding("http://hl7.org/fhir/v2/0078", "H", "High");
+        when(observation.getInterpretation()).thenReturn(new CodeableConcept().addCoding(exHigh));
 
-        assertNotNull(analyzer.getHPOforObservation());
+        Code inHigh = mock(Code.class);
+        HpoTerm4TestOutcome hpoForHigh = mock(HpoTerm4TestOutcome.class);
+        LOINC2HpoAnnotationImpl forGlucose =
+                mock(LOINC2HpoAnnotationImpl.class);
+        Map<Code, HpoTerm4TestOutcome> map = new HashMap<>();
+        map.put(inHigh, hpoForHigh);
+        when(forGlucose.getCandidateHpoTerms()).thenReturn((HashMap<Code,
+                HpoTerm4TestOutcome>) map);
+
+        Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HpoAnnotationMap =
+                new HashMap<>();
+        loinc2HpoAnnotationMap.put(loincId, forGlucose);
+
+        Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
+        when(loinc2Hpo.convertToInternal(new Code(exHigh.getSystem(),
+                exHigh.getCode(), ""))).thenReturn(inHigh);
+        when(loinc2Hpo.query(loincId, inHigh)).thenReturn(hpoForHigh);
+
+
+        ObservationAnalysisFromInterpretation analyzer =
+                new ObservationAnalysisFromInterpretation(loinc2Hpo,
+                        observation);
+
         HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
-        assertEquals("HP:003", hpoterm.getId().getValue());
-        assertFalse(hpoterm.isNegated());
+        assertEquals(hpoForHigh, hpoterm);
 
     }
 
 
     @Test
     public void getHPOforObservationTestException() throws Exception {
+
+        Observation observation = mock(Observation.class);
+        when(observation.getCode()).thenReturn(new CodeableConcept().addCoding(new Coding("http://loinc.org", "15074-8", "")));
+        Coding exHigh = new Coding("http://hl7.org/fhir/v2/0078", "H", "High");
+        Coding exLow = new Coding("http://hl7.org/fhir/v2/0078", "L", "Low");
+        when(observation.getInterpretation()).thenReturn(new CodeableConcept().addCoding(exHigh).addCoding(exLow));
+
+        Code inHigh = mock(Code.class);
+        Code inLow = mock(Code.class);
+
+
+        Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
+        when(loinc2Hpo.convertToInternal(new Code(exHigh.getSystem(),
+                exHigh.getCode(), ""))).thenReturn(inHigh);
+        when(loinc2Hpo.convertToInternal(new Code(exLow.getSystem(),
+                exLow.getCode(), ""))).thenReturn(inLow);
+
         Assertions.assertThrows(AmbiguousResultsFoundException.class, () -> {
-            LoincId loincId = new LoincId("15074-8");
             ObservationAnalysisFromInterpretation analyzer =
-                    new ObservationAnalysisFromInterpretation(loincId,
-                            observations[1].getInterpretation(), testmap, convertor);
+                new ObservationAnalysisFromInterpretation(loinc2Hpo,
+                        observation);
+
             HpoTerm4TestOutcome hpoterm = analyzer.getHPOforObservation();
         });
 

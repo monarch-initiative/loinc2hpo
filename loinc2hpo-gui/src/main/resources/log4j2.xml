@@ -34,5 +34,8 @@
         <Logger name="org.monarchinitiative.phenol" level="WARN">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition" level="WARN">
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>

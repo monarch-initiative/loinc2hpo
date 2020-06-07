@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservationAnalyzer;
+import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservationUtil;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
@@ -39,12 +40,8 @@ public class FhirObservationAnalyzerTest {
     @Test
     public void getHPO4ObservationOutcome() {
         FhirObservationAnalyzer.setObservation(observation);
+//        FhirObservationAnalyzer.setLoinc2Hpo()
     }
 
-    @Test
-    public void getLoincIdOfObservation() throws Exception {
-        FhirObservationAnalyzer.setObservation(observation);
-        LoincId loincId = FhirObservationAnalyzer.getLoincIdOfObservation();
-        assertEquals("15074-8", loincId.toString());
-    }
+
 }

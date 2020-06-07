@@ -1,14 +1,22 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
-import org.hl7.fhir.dstu3.model.Observation;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
 
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import org.mockito.Mock;
+import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
+import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceRetriever;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysis;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromCodedValues;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
@@ -20,34 +28,39 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
     private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
+    private static Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
     @BeforeAll
     public static void setup() throws MalformedLoincCodeException, IOException {
-        String path =
-                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcus.fhir").getPath();
-        Observation observation1 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path =
-                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/staphylococcusNoInterpretation.fhir").getPath();
-        Observation observation2 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path =
-                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/ecoliNoInterpretation.fhir").getPath();
-        Observation observation3 = FhirResourceRetriever.parseJsonFile2Observation(path);
-        path =
-                FhirObservationAnalyzerTest.class.getClassLoader().getResource("json/neisseriaNoInterpretation.fhir").getPath();
-        Observation observation4 = FhirResourceRetriever.parseJsonFile2Observation(path);
+        FhirContext ctx = FhirContext.forDstu3();
+        IParser jsonparser = ctx.newJsonParser();
+        Observation observation1 = (Observation)
+                jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/staphylococcus.fhir"));
+
+//        Observation observation2 =
+//                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/staphylococcusNoInterpretation.fhir"));
+//
+//        Observation observation3 =
+//                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/ecoliNoInterpretation.fhir"));
+
+        Observation observation4 =
+                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/neisseriaNoInterpretation.fhir"));
 
         observations[0] = observation1;
-        observations[1] = observation2;
-        observations[2] = observation3;
         observations[3] = observation4;
 
         LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
@@ -89,14 +102,14 @@ public class ObservationAnalysisFromCodedValuesTest {
         LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
 
         testmap.put(loincId, annotation600);
+
+        when(loinc2Hpo.getAnnotationMap()).thenReturn(testmap);
     }
 
     @Test
     public void testNom1() throws Exception {
-        LoincId loincId = new LoincId("600-7");
         ObservationAnalysis analyzer =
-        new ObservationAnalysisFromCodedValues(loincId,
-                observations[0].getValueCodeableConcept(), testmap);
+        new ObservationAnalysisFromCodedValues(loinc2Hpo, observations[0]);
         assertNotNull(analyzer.getHPOforObservation());
         assertEquals("005", analyzer.getHPOforObservation().getId().getId());
     }
@@ -105,12 +118,11 @@ public class ObservationAnalysisFromCodedValuesTest {
     @Test
     public void testGetInterpretationCodes2()  {
         Assertions.assertThrows(UnrecognizedCodeException.class, () -> {
-            LoincId loincId = new LoincId("600-7");
-            ObservationAnalysis analyzer = new ObservationAnalysisFromCodedValues(loincId, observations[3].getValueCodeableConcept(), testmap);
-            analyzer.getHPOforObservation();
+            ObservationAnalysis analyzer =
+                    new ObservationAnalysisFromCodedValues(loinc2Hpo,
+                            observations[3]);
+            HpoTerm4TestOutcome term = analyzer.getHPOforObservation();
         });
-
-
     }
 
 }

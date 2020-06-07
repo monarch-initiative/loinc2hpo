@@ -18,6 +18,9 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.exceptions.FHIRException;
+import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.*;
 import org.monarchinitiative.loinc2hpogui.gui.FhirServerPopup;
@@ -228,95 +231,51 @@ public class Loinc2HpoConversionTabController {
 
 
     private void convert(Observation o) {
+        Loinc2Hpo loinc2Hpo =
+                new Loinc2Hpo(appResources.getLoincAnnotationMap(),
+                        new CodeSystemConvertor());
+        FhirObservation2Hpo fhirObservation2Hpo =
+                new FhirObservation2Hpo(loinc2Hpo,
+                        appResources.getLoincEntryMap().keySet());
 
-        FhirObservationAnalyzer.setObservation(o);
+        String subject = o.getSubject().getReference();
+        String hpoTermLabel = null;
+        String hpoTermId = null;
+
         try {
-            LabTestOutcome outcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(appResources.getLoincEntryMap().keySet(), appResources.getLoincAnnotationMap());
-            displays.add(display(outcome));
-        } catch (MalformedLoincCodeException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 11]");
-        } catch (UnsupportedCodingSystemException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 12]");
-        } catch (LoincCodeNotFoundException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 13]");
-        } catch (AmbiguousResultsFoundException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 14]");
-        } catch (AnnotationNotFoundException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 15]");
-        } catch (UnrecognizedCodeException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 16]");
-        } catch (LoincCodeNotAnnotatedException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 17]");
-        } catch (AmbiguousReferenceException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 18]");
-        } catch (ReferenceNotFoundException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 19]");
-        } catch (FHIRException e) {
-            displays.add(o.getSubject().getReference() + " : failed to interpret [code 20]");
-        }
-    }
-
-    //wrap basic test outcome in a complete labtest record
-    private LabTest addTestMetaInfo(Observation o, LabTestOutcome basicOutcome, Map<Identifier, Patient> patientMap) throws FHIRException, MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException {
-        LabTest labTest;
-
-        Patient subject = null;
-        if (o.hasIdentifier()) {
-            List<Patient> candidate = o.getIdentifier().stream()
-                    .map(patientMap::get)
-                    .filter(Objects::nonNull)
-                    .distinct()
-                    .collect(Collectors.toList());
-            if (candidate.size() == 1) { //candidate has to be unique
-                subject = candidate.get(0);
+            HpoTerm4TestOutcome result = fhirObservation2Hpo.fhir2hpo(o);
+            hpoTermLabel =
+                    appResources.getTermidTermMap().get(result.getId()).getName();
+            hpoTermId = result.getId().getValue();
+            String display;
+            if (result.isNegated()) {
+                display = String.format("%s: NOT %s [%s]",subject,
+                        hpoTermLabel, hpoTermId);
+            } else {
+                display = String.format("%s: %s [%s]", subject, hpoTermLabel, hpoTermId);
             }
+            displays.add(display);
+        } catch (MalformedLoincCodeException e) {
+            displays.add(subject + " : failed to interpret [code 11]");
+        } catch (LoincCodeNotFoundException e) {
+            displays.add(subject + " : failed to interpret [code 13]");
+        } catch (AmbiguousResultsFoundException e) {
+            displays.add(subject + " : failed to interpret [code 14]");
+        } catch (AnnotationNotFoundException e) {
+            displays.add(subject + " : failed to interpret [code 15]");
+        } catch (UnrecognizedCodeException e) {
+            displays.add(subject + " : failed to interpret [code 16]");
+        } catch (LoincCodeNotAnnotatedException e) {
+            displays.add(subject + " : failed to interpret [code 17]");
+        } catch (AmbiguousReferenceException e) {
+            displays.add(subject + " : failed to interpret [code 18]");
+        } catch (ReferenceNotFoundException e) {
+            displays.add(subject + " : failed to interpret [code 19]");
+        } catch (FHIRException e) {
+            displays.add(subject + " : failed to interpret [code 20]");
+        } catch (UnrecognizedLoincCodeException e) {
+            displays.add(subject + " : failed to " +
+                    "interpret [code 21]");
         }
-        Date effectiveStartDate;
-        Date effectiveEndDate;
-        if (o.hasEffectiveDateTimeType()) {
-        effectiveStartDate =  o.getEffectiveDateTimeType().getValue();
-        effectiveEndDate = effectiveStartDate;
-        } else if (o.hasEffectivePeriod()) {
-        effectiveStartDate = o.getEffectivePeriod().getStart();
-        effectiveEndDate = o.getEffectivePeriod().getEnd();
-        } else {
-        effectiveStartDate = null; //no test date
-        effectiveEndDate = null;
-        }
-        FhirObservationAnalyzer.setObservation(o);
-        LoincId loincId = FhirObservationAnalyzer.getLoincIdOfObservation();
-
-        return new LabTestImpl.Builder()
-                .effectiveStart(effectiveStartDate)
-                .effectiveEnd(effectiveEndDate)
-                .loincId(loincId)
-                .outcome(basicOutcome)
-                .resourceId(o.getId())
-                .patient(subject)
-                .build();
     }
-
-
-    private String display(LabTestOutcome testOutcome) {
-        //It is fine to use the subject for display purposes, but for computation we should use identifier as subject is not guaranteed unique
-        String subject = testOutcome.getSubjectReference() != null && testOutcome.getSubjectReference().getReference() != null ?
-                testOutcome.getSubjectReference().getReference() : "Unknown subject";
-        TermId termId = testOutcome.getOutcome() == null ? null : testOutcome.getOutcome().getId();
-        String name;
-        if (termId != null) {
-            name = appResources.getTermidTermMap().get(termId).getName();
-        } else {
-            name = "failed to interpret";
-        }
-        String id = termId == null ? " " : termId.getValue();
-
-        String display;
-        if (testOutcome.getOutcome().isNegated()) {
-            display = String.format("%s: NOT %s [%s]",subject, name, id);
-        } else {
-            display = String.format("%s: %s [%s]", subject, name, id);
-        }
-        return display;
-    }
-
 }

@@ -41,6 +41,14 @@ public class Loinc2Hpo {
         this.converter = converter;
     }
 
+    public Map<LoincId, LOINC2HpoAnnotationImpl> getAnnotationMap() {
+        return annotationMap;
+    }
+
+    public CodeSystemConvertor getConverter() {
+        return converter;
+    }
+
     public Code convertToInternal(Code original) throws InternalCodeNotFoundException {
         Code internal = this.converter.convertToInternalCode(original);
         return internal;
@@ -66,5 +74,6 @@ public class Loinc2Hpo {
         code.setSystem(system).setCode(id);
         return query(loincId, code);
     }
+
 
 }
