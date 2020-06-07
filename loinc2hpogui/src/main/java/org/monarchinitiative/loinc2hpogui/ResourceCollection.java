@@ -3,13 +3,13 @@ package org.monarchinitiative.loinc2hpogui;
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.io.HpoOntologyParser;
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincPanel;
 import org.monarchinitiative.phenol.base.PhenolException;
+import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -38,7 +38,6 @@ public class ResourceCollection {
     private String loincPanelPath;
     //private String loincPanelAnnotationPath;
     private String loincCategoriesDirPath; //the path to the directory where we keep lists of loinc categories
-    private HpoOntologyParser hpoOntologyParser;
     private Ontology hpo;
     private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
@@ -66,14 +65,6 @@ public class ResourceCollection {
 
     public void setLoincCategoriesDirPath(String path) { this.loincCategoriesDirPath = path; }
 
-    public void setLoincPanelPath(String path) {
-        this.loincPanelPath = path;
-    }
-
-//    public void setLoincPanelAnnotationPath(String path){
-//        this.loincPanelAnnotationPath = path;
-//    }
-
     public ImmutableMap<LoincId, LoincEntry> loincEntryMap() {
         logger.trace("enter loincEntryMap()");
         logger.trace(String.format("loincEntryPath is null: %s", this.loincEntryPath == null));
@@ -96,28 +87,12 @@ public class ResourceCollection {
         return this.loincIdSet;
     }
 
-    private void parseHPO() throws PhenolException, FileNotFoundException {
-        if (this.hpoOboPath != null) {
-            hpoOntologyParser = new HpoOntologyParser(this.hpoOboPath);
-        } else if (this.hpoOwlPath != null) {
-            hpoOntologyParser = new HpoOntologyParser(this.hpoOwlPath);
-        }
-        hpoOntologyParser.parseOntology();
-        this.hpo = hpoOntologyParser.getOntology();
+    private void parseHPO() {
+        this.hpo = OntologyLoader.loadOntology(new File(this.hpoOboPath));
     }
 
     public Map<TermId, Term> hpoTermMap() throws PhenolException, FileNotFoundException {
-        if (this.termidTermMap != null) {
-            return this.termidTermMap;
-        }
-
-        if (this.hpoOntologyParser == null) {
-            parseHPO();
-        }
-
-        this.termidTermMap = hpoOntologyParser.getTermMap2();
-
-        return this.termidTermMap;
+        return this.hpo.getTermMap();
     }
 
     public Map<String, Term> hpoTermMapFromName() throws PhenolException, FileNotFoundException {
@@ -125,11 +100,8 @@ public class ResourceCollection {
             return this.termnameTermMap;
         }
 
-        if (this.hpoOntologyParser == null) {
-            parseHPO();
-        }
-
-        this.termnameTermMap = hpoOntologyParser.getTermMap();
+        this.termnameTermMap =
+                this.hpo.getTermMap().values().stream().collect(Collectors.toMap(t -> t.getName(), t->t, (a, b) -> a));
 
         return this.termnameTermMap;
     }
@@ -161,9 +133,7 @@ public class ResourceCollection {
             return this.hpo;
         }
 
-        if (this.hpoOntologyParser == null) {
-            parseHPO();
-        }
+        parseHPO();
 
         return this.hpo;
     }
