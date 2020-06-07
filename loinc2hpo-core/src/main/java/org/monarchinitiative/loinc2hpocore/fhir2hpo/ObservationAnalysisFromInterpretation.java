@@ -19,7 +19,8 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
     private CodeSystemConvertor convertor;
 
     public ObservationAnalysisFromInterpretation(LoincId loincId,
-                                                 CodeableConcept interpretation, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap, CodeSystemConvertor convertor) {
+                                                 CodeableConcept interpretation, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap,
+                                                 CodeSystemConvertor convertor) {
         this.loincId = loincId;
         this.interpretationField = interpretation;
         this.annotationMap = annotationMap;

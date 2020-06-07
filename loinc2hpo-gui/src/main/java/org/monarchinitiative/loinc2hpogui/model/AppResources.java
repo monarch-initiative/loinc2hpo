@@ -32,7 +32,6 @@ public class AppResources {
     private Map<String, Term> termnameTermMap;
     private Map<LoincId, LoincEntry> loincEntryMap;
     private Map<String, LoincEntry> loincEntryMapFromName;
-    private Map<LoincId, LoincPanel> loincPanelMap;
     private Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap;
     private Map<String, Set<LoincId>> userCreatedLoincLists;
     private Map<String, String> userCreatedLoincListsColor;
@@ -56,26 +55,15 @@ public class AppResources {
         this.resourceCollection.setAnnotationMapPath(annotationFilePath);
     }
 
-    public ResourceCollection getResourceCollection() {
-        return resourceCollection;
-    }
-
     public Settings getSettings() {
         return settings;
     }
 
     public Ontology getHpo() {
-
         if (this.hpo != null) {
             return this.hpo;
         }
-
-        try {
-            this.hpo = resourceCollection.getHPO();
-        } catch (PhenolException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        this.hpo = resourceCollection.getHPO();
         return this.hpo;
     }
 
@@ -83,13 +71,7 @@ public class AppResources {
         if (this.termidTermMap != null) {
             return this.termidTermMap;
         }
-
-        try {
-            this.termidTermMap = resourceCollection.hpoTermMap();
-        } catch (PhenolException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        this.termidTermMap = resourceCollection.hpoTermMap();
         return this.termidTermMap;
     }
 
@@ -97,13 +79,7 @@ public class AppResources {
         if (this.termnameTermMap != null) {
             return this.termnameTermMap;
         }
-
-        try {
-            this.termnameTermMap = resourceCollection.hpoTermMapFromName();
-        } catch (PhenolException | FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        this.termnameTermMap = resourceCollection.hpoTermMapFromName();
         return this.termnameTermMap;
     }
 
@@ -127,15 +103,10 @@ public class AppResources {
         return loincEntryMapFromName;
     }
 
-    public Map<LoincId, LoincPanel> getLoincPanelMap() {
-        throw new UnsupportedOperationException();
-    }
-
     public Map<LoincId, LOINC2HpoAnnotationImpl> getLoincAnnotationMap(){
-        if (this.loincPanelMap != null) {
+        if (this.loincAnnotationMap != null) {
             return this.loincAnnotationMap;
         }
-
 
         try {
             this.loincAnnotationMap = resourceCollection.annotationMap();

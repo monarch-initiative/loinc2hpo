@@ -168,32 +168,6 @@ public class SparqlQueryTest {
         }
     }
 
-    @Test
-    public void testParameters() {
-        String test = "Testosterone Free";
-        String[] test_words = SparqlQuery.parameters(test);
-        assertEquals("Testosterone", test_words[0]);
-        assertEquals(2, test_words.length);
-
-        test = "Aldolase";
-        test_words = SparqlQuery.parameters(test);
-        assertEquals(1, test_words.length);
-
-        test = "Other cells/100 leukocytes";
-        test_words = SparqlQuery.parameters(test);
-        assertEquals(4, test_words.length);
-        assertEquals("cells", test_words[1]);
-        assertEquals("100", test_words[2]);
-
-        test = "Streptococcus.beta-hemolytic";
-        test_words = SparqlQuery.parameters(test);
-        assertEquals(3, test_words.length);
-        assertEquals("beta", test_words[1]);
-
-        test = "Hemoglobin S/Hemoglobin.total";
-        test_words = SparqlQuery.parameters(test);
-        assertEquals(4, test_words.length);
-    }
 
     @Test
     public void testGetChildren() {

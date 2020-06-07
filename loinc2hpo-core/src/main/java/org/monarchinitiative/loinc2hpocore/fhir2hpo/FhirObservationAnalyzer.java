@@ -38,11 +38,11 @@ public class FhirObservationAnalyzer {
     public static void init(Set<LoincId> loincIdsSet, Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap) {
         loincIds = loincIdsSet;
         annotationMap = loincAnnotationMap;
-        codeSystemConvertor = new CodeSystemConvertor();
     }
 
     public static void setObservation(Observation aFhirObservation) {
         observation = aFhirObservation;
+        codeSystemConvertor = new CodeSystemConvertor();
     }
     public static Observation getObservation(){ return observation; }
 

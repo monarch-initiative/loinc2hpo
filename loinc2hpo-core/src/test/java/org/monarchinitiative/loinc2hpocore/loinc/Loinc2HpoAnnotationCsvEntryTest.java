@@ -22,7 +22,7 @@ class Loinc2HpoAnnotationCsvEntryTest {
                 "123.3", "Qn", "FHIR", "L", "HP:001", "false", "2020-01-02",
                 "JAX:azhang", null, null, "0.1", "true", "");
         String expected = "123.3\tQn\tFHIR\tL\tHP:001\tfalse\t2020-01-02\tJAX" +
-                ":azhang\tNA\tNA\t0.1\ttrue\t";
+                ":azhang\tNA\tNA\t0.1\ttrue\tNA";
         assertEquals(expected, entry.toString());
     }
 }

@@ -465,13 +465,4 @@ public class SparqlQuery {
         return count;
     }
 
-    public static String[] parameters(String loincparameter) {
-        //split the loinc parameter into individual words
-        String[] words = loincparameter.split("\\W");
-
-
-
-        return words;
-    }
-
 }

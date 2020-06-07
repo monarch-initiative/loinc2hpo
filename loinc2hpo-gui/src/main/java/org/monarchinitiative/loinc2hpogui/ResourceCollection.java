@@ -2,13 +2,10 @@ package org.monarchinitiative.loinc2hpogui;
 
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincPanel;
-import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -18,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,15 +31,10 @@ public class ResourceCollection {
     private String hpoOboPath;
     private String hpoOwlPath;
     private String annotationMapPath;
-    private String loincPanelPath;
-    //private String loincPanelAnnotationPath;
     private String loincCategoriesDirPath; //the path to the directory where we keep lists of loinc categories
     private Ontology hpo;
-    private Map<TermId, Term> termidTermMap;
     private Map<String, Term> termnameTermMap;
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
-    private Set<LoincId> loincIdSet;
-    private Map<LoincId, LoincPanel> loincPanelMap;
     private Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
     private Map<String, Set<LoincId>> loincCategories;
 
@@ -77,25 +68,15 @@ public class ResourceCollection {
         return this.loincEntryMap;
     }
 
-    public Set<LoincId> loincIdSet() {
-        if (this.loincEntryPath == null) {
-            return null;
-        }
-        if (loincIdSet == null) {
-            this.loincIdSet = loincEntryMap().keySet();
-        }
-        return this.loincIdSet;
-    }
-
     private void parseHPO() {
-        this.hpo = OntologyLoader.loadOntology(new File(this.hpoOboPath));
+        this.hpo = OntologyLoader.loadOntology(new File(this.hpoOwlPath));
     }
 
-    public Map<TermId, Term> hpoTermMap() throws PhenolException, FileNotFoundException {
+    public Map<TermId, Term> hpoTermMap() {
         return this.hpo.getTermMap();
     }
 
-    public Map<String, Term> hpoTermMapFromName() throws PhenolException, FileNotFoundException {
+    public Map<String, Term> hpoTermMapFromName() {
         if (this.termnameTermMap != null){
             return this.termnameTermMap;
         }
@@ -116,19 +97,7 @@ public class ResourceCollection {
         return this.loincAnnotationMap;
     }
 
-    public Map<LoincId, LoincPanel> getLoincPanelMap() throws MalformedLoincCodeException, IOException, UnrecognizedLoincCodeException {
-        if (this.loincPanelMap != null) {
-            return this.loincPanelMap;
-        }
-        this.loincPanelMap = LoincPanel.deserializeLoincPanel(this.loincPanelPath);
-        return this.loincPanelMap;
-    }
-
-    private void addLoincPanelAnnotation(String loincPanelAnnotationPath, Map<LoincId, LoincPanel> loincPanelMap){
-
-    }
-
-    public Ontology getHPO() throws PhenolException, FileNotFoundException {
+    public Ontology getHPO() {
         if (this.hpo != null) {
             return this.hpo;
         }
@@ -180,25 +149,5 @@ public class ResourceCollection {
             }
         }
         return loincCategories;
-    }
-
-    public String getLoincEntryPath() {
-        return loincEntryPath;
-    }
-
-    public String getHpoOboPath() {
-        return hpoOboPath;
-    }
-
-    public String getHpoOwlPath() {
-        return hpoOwlPath;
-    }
-
-    public String getAnnotationMapPath() {
-        return annotationMapPath;
-    }
-
-    public String getLoincPanelPath() {
-        return loincPanelPath;
     }
 }
