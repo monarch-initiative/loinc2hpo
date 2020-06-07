@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="TRACE">
+<Configuration status="WARN">
     <Appenders>
         <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpogui.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
@@ -19,8 +19,24 @@
     </Appenders>
     <Loggers>
         <Root level="TRACE">
-            <AppenderRef ref="LogFile"/>
+<!--            <AppenderRef ref="LogFile"/>-->
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="org.obolibrary.oboformat.parser.OBOFormatParser" level="ERROR">
+<!--            <AppenderRef ref="LogFile"/>-->
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.semanticweb.owlapi.rdf.rdfxml.parser" level="ERROR">
+<!--            <AppenderRef ref="LogFile"/>-->
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="uk.ac.manchester.cs.owl.owlapi" level="ERROR">
+<!--            <AppenderRef ref="LogFile"/>-->
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.monarchinitiative.phenol" level="WARN">
+<!--            <AppenderRef ref="LogFile"/>-->
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>
