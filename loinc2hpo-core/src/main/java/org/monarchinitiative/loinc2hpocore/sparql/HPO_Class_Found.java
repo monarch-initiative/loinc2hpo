@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.util;
+package org.monarchinitiative.loinc2hpocore.sparql;
 
 import java.util.*;
 import java.util.regex.Matcher;

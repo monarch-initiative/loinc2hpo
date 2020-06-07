@@ -2,6 +2,8 @@ package org.monarchinitiative.loinc2hpocore.util;
 
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameParser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

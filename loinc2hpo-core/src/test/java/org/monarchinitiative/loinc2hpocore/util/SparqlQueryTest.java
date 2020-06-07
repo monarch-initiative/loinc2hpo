@@ -5,6 +5,8 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.sparql.HPO_Class_Found;
+import org.monarchinitiative.loinc2hpocore.sparql.SparqlQuery;
 
 
 import java.io.InputStream;

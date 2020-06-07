@@ -4,6 +4,8 @@ package org.monarchinitiative.loinc2hpocore.util;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameParser;
 
 import java.util.Queue;
 

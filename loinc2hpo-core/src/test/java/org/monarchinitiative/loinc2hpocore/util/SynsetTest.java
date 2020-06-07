@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.util;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.sparql.Synset;
 
 import java.util.Arrays;
 import java.util.LinkedList;

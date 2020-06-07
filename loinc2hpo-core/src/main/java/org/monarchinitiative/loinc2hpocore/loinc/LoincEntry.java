@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.util.LoincImporter;
-import org.monarchinitiative.loinc2hpocore.util.LoincLongNameComponents;
-import org.monarchinitiative.loinc2hpocore.util.LoincLongNameParser;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincImporter;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
+import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameParser;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
