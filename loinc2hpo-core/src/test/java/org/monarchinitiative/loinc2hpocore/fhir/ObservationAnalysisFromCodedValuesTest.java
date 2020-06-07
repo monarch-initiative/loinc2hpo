@@ -28,8 +28,6 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,7 +47,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         FhirContext ctx = FhirContext.forDstu3();
         IParser jsonparser = ctx.newJsonParser();
         Observation observation1 = (Observation)
-                jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/staphylococcus.fhir"));
+                jsonparser.parseResource(ObservationAnalysisFromCodedValuesTest.class.getClassLoader().getResourceAsStream("json/staphylococcus.fhir"));
 
 //        Observation observation2 =
 //                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/staphylococcusNoInterpretation.fhir"));
@@ -58,7 +56,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 //                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/ecoliNoInterpretation.fhir"));
 
         Observation observation4 =
-                (Observation) jsonparser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/neisseriaNoInterpretation.fhir"));
+                (Observation) jsonparser.parseResource(ObservationAnalysisFromCodedValuesTest.class.getClassLoader().getResourceAsStream("json/neisseriaNoInterpretation.fhir"));
 
         observations[0] = observation1;
         observations[3] = observation4;

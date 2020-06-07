@@ -7,7 +7,6 @@ import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.monarchinitiative.loinc2hpocore.io.WriteToFile;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 

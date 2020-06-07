@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.io;
+package org.monarchinitiative.loinc2hpogui.io;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.io;
+package org.monarchinitiative.loinc2hpogui.io;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;

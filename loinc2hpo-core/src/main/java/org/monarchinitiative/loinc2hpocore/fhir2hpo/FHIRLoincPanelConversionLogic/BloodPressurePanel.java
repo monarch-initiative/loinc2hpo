@@ -8,7 +8,6 @@ import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FHIRLoincPanelImpl;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservation2Hpo;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;

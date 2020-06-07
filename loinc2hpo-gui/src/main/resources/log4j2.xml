@@ -31,7 +31,7 @@
         <Logger name="uk.ac.manchester.cs.owl.owlapi" level="ERROR">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="org.monarchinitiative.phenol" level="WARN">
+        <Logger name="org.monarchinitiative.phenol" level="ERROR">
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition" level="WARN">

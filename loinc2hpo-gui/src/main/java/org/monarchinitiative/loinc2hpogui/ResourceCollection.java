@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpogui;
 
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.io.LoincOfInterest;
+import org.monarchinitiative.loinc2hpogui.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;

@@ -35,10 +35,10 @@ public class ObservationAnalysisFromQnValueTest {
         IParser parser = ctx.newJsonParser();
 
         Observation observation1 = (Observation)
-                parser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/glucoseHighNoInterpretation.fhir"));
+                parser.parseResource(ObservationAnalysisFromQnValueTest.class.getClassLoader().getResourceAsStream("json/glucoseHighNoInterpretation.fhir"));
 
         Observation observation2 =
-                (Observation) parser.parseResource(FhirObservationAnalyzerTest.class.getClassLoader().getResourceAsStream("json/glucoseNoInterpretationNoReference.fhir"));
+                (Observation) parser.parseResource(ObservationAnalysisFromQnValueTest.class.getClassLoader().getResourceAsStream("json/glucoseNoInterpretationNoReference.fhir"));
         observations[0] = observation1;
         observations[1] = observation2;
 
