@@ -19,7 +19,6 @@ public class GitHubPosterTest {
         labels.add("loinc");
         labels.add("immunology");
         poster.setLabel(labels);
-        System.out.println(poster.debugLabelsArray4Json());
         assertEquals("\"loinc\", \"immunology\"", poster.debugLabelsArray4Json());
     }
 
@@ -33,7 +32,6 @@ public class GitHubPosterTest {
         labels.add("lo\tin\tc");
         labels.add("immunology");
         poster.setLabel(labels);
-        //System.out.println(poster.debugLabelsArray4Json());
         assertEquals("\"lo\\tin\\tc\", \"immunology\"", poster.debugLabelsArray4Json());
     }
     @Test
@@ -73,16 +71,16 @@ public class GitHubPosterTest {
         labels.add("loinc");
         labels.add("immunology");
         poster.setLabel(labels);
-        System.out.println(poster.debugReformatpayloadWithLabel());
+//        System.out.println(poster.debugReformatpayloadWithLabel());
     }
 
     @Test
     public void testColor() {
-        Color color = Color.PINK;
-        System.out.println("#" + color.toString().substring(2,8).toUpperCase());
-        System.out.println(String.format( "#%02X%02X%02X",
-                (int)( color.getRed() * 255 ),
-                (int)( color.getGreen() * 255 ),
-                (int)( color.getBlue() * 255 ) ));
+//        Color color = Color.PINK;
+//        System.out.println("#" + color.toString().substring(2,8).toUpperCase());
+//        System.out.println(String.format( "#%02X%02X%02X",
+//                (int)( color.getRed() * 255 ),
+//                (int)( color.getGreen() * 255 ),
+//                (int)( color.getBlue() * 255 ) ));
     }
 }

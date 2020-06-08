@@ -22,7 +22,31 @@
             <AppenderRef ref="LogFile"/>
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="ca.uhn.fhir.context" level="WARN">
+        <Logger name="ca.uhn.fhir.context" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.obolibrary.oboformat.parser.OBOFormatParser" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.semanticweb.owlapi.rdf.rdfxml.parser" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.semanticweb.owlapi.utilities" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="uk.ac.manchester.cs.owl.owlapi" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.monarchinitiative.phenol" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="javax.imageio.spi" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition" level="WARN">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.google.inject" level="WARN">
             <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>

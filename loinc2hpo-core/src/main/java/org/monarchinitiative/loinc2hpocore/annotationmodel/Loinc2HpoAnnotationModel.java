@@ -253,7 +253,7 @@ public class Loinc2HpoAnnotationModel {
         return lastEditedBy;
     }
 
-    
+
     /**
      * Get the corresponding Hpo term for a coded value
      * @param code a code in a coding system. Usually, it is the internal code; for Ord, Nom, or Nar, it can be codes of
