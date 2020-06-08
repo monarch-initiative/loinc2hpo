@@ -130,7 +130,7 @@ public class ResourceCollection {
                 try {
                     LoincOfInterest loincCategory = new LoincOfInterest(file.getAbsolutePath());
                     Set<String> loincIdStrings = loincCategory.getLoincOfInterest();
-                    String categoryName = file.getName().substring(0, file.getName().length() - 4);;
+                    String categoryName = file.getName().substring(0, file.getName().length() - 4);
 
                     Set<LoincId> loincIds = loincIdStrings.stream().map(p -> {
                         try {

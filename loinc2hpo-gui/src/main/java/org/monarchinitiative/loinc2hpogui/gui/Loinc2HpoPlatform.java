@@ -53,11 +53,11 @@ public class Loinc2HpoPlatform {
     private static CurrentPlatform figureOutPlatform() {
         String osName = System.getProperty("os.name").toLowerCase();
 
-        if (osName.indexOf("nix") >= 0 || osName.indexOf("nux") >= 0 || osName.indexOf("aix") >= 0) {
+        if (osName.contains("nix") || osName.contains("nux") || osName.contains("aix")) {
             return CurrentPlatform.LINUX;
-        } else if (osName.indexOf("win") >= 0) {
+        } else if (osName.contains("win")) {
             return CurrentPlatform.WINDOWS;
-        } else if (osName.indexOf("mac") >= 0) {
+        } else if (osName.contains("mac")) {
             return CurrentPlatform.OSX;
         } else {
             return CurrentPlatform.UNKNOWN;

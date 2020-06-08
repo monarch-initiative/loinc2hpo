@@ -40,7 +40,7 @@ public class Loinc2HpoAnnotationModel {
 
     private static final String MISSINGVALUE = "NA";
 
-    public static final String csv_header(String delim){
+    public static String csv_header(String delim){
 
         return StringUtils.join(
                 Arrays.asList("loincId",

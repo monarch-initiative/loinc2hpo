@@ -1,22 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.parser.DataFormatException;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.dstu3.model.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceParser;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceParserDstu3;
-
-
-import java.io.File;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 
 public class FhirObservationRetrieverTest {
 //    @Test

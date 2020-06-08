@@ -1,26 +1,11 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
-import ca.uhn.fhir.rest.api.MethodOutcome;
-import com.github.javafaker.Address;
-import com.github.javafaker.Faker;
-import com.github.javafaker.Name;
 import org.hl7.fhir.dstu3.model.*;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceFaker;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceFakerImpl;
-import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceRetriever;
-import org.monarchinitiative.loinc2hpocore.loinc.LOINCEXAMPLE;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Disabled

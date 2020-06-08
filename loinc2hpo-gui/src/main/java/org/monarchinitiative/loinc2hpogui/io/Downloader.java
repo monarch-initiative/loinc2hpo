@@ -117,7 +117,7 @@ public class Downloader extends Task<Void> {
                     threshold += block;
                 }
             }
-            logger.info("Successful download from "+urlstring+": " + (Integer.toString(totalBytesRead)) + "(" + size + ") bytes read.");
+            logger.info("Successful download from "+urlstring+": " + totalBytesRead + "(" + size + ") bytes read.");
             writer.close();
         } catch (MalformedURLException e) {
             updateProgress(0.00);

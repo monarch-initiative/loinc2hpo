@@ -142,7 +142,7 @@ public class LoincLongNameComponents {
      */
     private static boolean validKey(String word) { //test whether a word should be used in building a query
 
-        if (word == null || word == "") {
+        if (word == null || word.isEmpty()) {
             return false;
         }
         if (word.length() == 1) {

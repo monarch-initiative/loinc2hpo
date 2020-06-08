@@ -128,7 +128,7 @@ public class ObservationDownloader {
                     String completeRecord = jsonParser.encodeResourceToString(observation);
                     i++;
                     System.out.println(i + ". Find a complete record: \n" + completeRecord );
-                };
+                }
             }
             if (bundle.getLink(IBaseBundle.LINK_NEXT) != null){
                 bundle = client.loadPage().next(bundle).execute();

@@ -41,7 +41,7 @@ public class GitHubLabelRetriever {
         Object obj= JSONValue.parse(s);
         JSONArray jsonArray = (JSONArray) obj;
         Iterator<String> iterator = jsonArray.iterator();
-        jsonArray.forEach(label -> parseLabelElement(label) );
+        jsonArray.forEach(this::parseLabelElement);
     }
 
 
@@ -57,8 +57,6 @@ public class GitHubLabelRetriever {
             String response = scanner.useDelimiter("\\Z").next();
             scanner.close();
             decodeJSON(response);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

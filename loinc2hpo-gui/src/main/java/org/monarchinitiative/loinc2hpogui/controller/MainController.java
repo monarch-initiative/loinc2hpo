@@ -23,9 +23,6 @@ import org.apache.maven.wagon.CommandExecutionException;
 import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.command.VersionCommand;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpogui.io.LoincOfInterest;
-import org.monarchinitiative.loinc2hpogui.io.TerminalCommand;
-import org.monarchinitiative.loinc2hpogui.io.WriteToFile;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpogui.gui.*;
 import org.monarchinitiative.loinc2hpogui.io.*;
@@ -244,7 +241,7 @@ logger.trace("MainController initialize() called");
         window.setTitle("HPO download");
         window.setScene(scene);
 
-        Task hpodownload = new Downloader(dirpath, HP_OBO_URL,BASENAME,pb);
+        Task<Void> hpodownload = new Downloader(dirpath, HP_OBO_URL,BASENAME,pb);
         new Thread(hpodownload).start();
         hpodownload = new Downloader(dirpath, HP_OWL_URL, BASENAME_OWL, pb);
         new Thread(hpodownload).start();
@@ -544,7 +541,7 @@ logger.trace("MainController initialize() called");
                 try {
                     LoincOfInterest loincCategory = new LoincOfInterest(file.getAbsolutePath());
                     Set<String> loincIdStrings = loincCategory.getLoincOfInterest();
-                    String categoryName = file.getName().substring(0, file.getName().length() - 4);;
+                    String categoryName = file.getName().substring(0, file.getName().length() - 4);
 
                     Set<LoincId> loincIds = loincIdStrings.stream().map(p -> {
                         try {

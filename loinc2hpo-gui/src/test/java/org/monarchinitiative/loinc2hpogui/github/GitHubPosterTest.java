@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpogui.github;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.paint.Color;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

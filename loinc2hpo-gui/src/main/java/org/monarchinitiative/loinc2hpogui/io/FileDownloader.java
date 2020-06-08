@@ -137,7 +137,7 @@ public class FileDownloader {
                 throw new FileNotFoundException("Could not open connection for file " + fileName);
             out = new FileOutputStream(dest);
             BufferedInputStream inBf = new BufferedInputStream(in);
-            byte buffer[] = new byte[128 * 1024];
+            byte[] buffer = new byte[128 * 1024];
             int readCount;
             long pos = 0;
             if (pb != null)
@@ -233,7 +233,7 @@ public class FileDownloader {
                 logger.info("(server did not tell us the file size, no progress bar)");
 
             // Download file.
-            byte buffer[] = new byte[128 * 1024];
+            byte[] buffer = new byte[128 * 1024];
             int readCount;
             long pos = 0;
             if (pb != null)

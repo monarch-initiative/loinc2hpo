@@ -3,11 +3,9 @@ package org.monarchinitiative.loinc2hpocore.fhir2hpo;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FHIRLoincPanelConversionLogic.BloodPressurePanel;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class manages all LOINC panels belonging to a patient. Note: a patient may have multiple instances of the same panel. e.g. Blood pressure panel, a patient may have many blood pressure measurements. It will be difficult to group panel componenets if they are not added as a group.

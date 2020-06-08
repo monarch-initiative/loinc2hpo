@@ -559,9 +559,7 @@ public class AnnotateTabController {
                     } catch (InterruptedException e) {
                         //do nothing
                     } finally {
-                        Platform.runLater(() -> {
-                            alert.close();
-                        });
+                        Platform.runLater(alert::close);
                     }
                     return null;
                 }
@@ -686,20 +684,17 @@ public class AnnotateTabController {
             alert.setContentText("Try search with synonyms");
             alert.show();
 
-            Task task = new Task() {
+            Task<Void> task = new Task<Void>() {
                 @Override
-                protected Object call() throws Exception {
+                protected Void call() throws Exception {
 
                     try {
                         Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         //do nothing
                     } finally {
-                        Platform.runLater(() -> {
-                            alert.close();
-                        });
+                        Platform.runLater(alert::close);
                     }
-
                     return null;
                 }
             };
@@ -792,12 +787,10 @@ public class AnnotateTabController {
                 throw new LoincCodeNotFoundException();
             }
         } catch (Exception msg) { //catch all kind of exception
+            //logger.debug(loincEntry.getLOINC_Number() + " : " + loincEntry.getLongName());
             loincmap.values().stream()
                     .filter( loincEntry -> containedIn(query, loincEntry.getLongName()))
-                    .forEach(loincEntry -> {
-                        entrylist.add(loincEntry);
-                        //logger.debug(loincEntry.getLOINC_Number() + " : " + loincEntry.getLongName());
-                    });
+                    .forEach(entrylist::add);
                     //.forEach(loincEntry -> entryListInOrder.add(loincEntry));
         }
         if (entrylist.isEmpty()) {
@@ -1076,7 +1069,7 @@ public class AnnotateTabController {
      * private class for showing HPO class in treeview.
      * Another reason to have this is to facilitate drag and draw from treeview.
      */
-    private class HPO_TreeView{
+    private static class HPO_TreeView{
         private HPO_Class_Found hpo_class_found;
         private HPO_TreeView() {
             this.hpo_class_found = null;
@@ -1709,7 +1702,7 @@ public class AnnotateTabController {
                             List<String> inList = appResources.getUserCreatedLoincLists().entrySet()
                                     .stream()
                                     .filter(entry -> entry.getValue().contains(loincId))
-                                    .map(entry -> entry.getKey())
+                                    .map(Map.Entry::getKey)
                                     .collect(Collectors.toList());
                             if (!inList.isEmpty()) {
                                 List<Color> colors = inList.stream()

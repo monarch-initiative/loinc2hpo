@@ -13,7 +13,6 @@ import javafx.scene.input.MouseButton;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
@@ -26,20 +25,12 @@ import org.monarchinitiative.loinc2hpocore.fhir2hpo.*;
 import org.monarchinitiative.loinc2hpogui.gui.FhirServerPopup;
 import org.monarchinitiative.loinc2hpogui.gui.PopUps;
 import org.monarchinitiative.loinc2hpogui.gui.SimulationPopup;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpogui.model.AppResources;
 import org.monarchinitiative.loinc2hpogui.model.AppTempData;
-import org.monarchinitiative.loinc2hpocore.phenotypemodel.LabTest;
-import org.monarchinitiative.loinc2hpocore.phenotypemodel.LabTestImpl;
-import org.monarchinitiative.loinc2hpocore.phenotypemodel.LabTestOutcome;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.io.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.Date;
 
 @Singleton
 public class Loinc2HpoConversionTabController {
@@ -116,7 +107,7 @@ public class Loinc2HpoConversionTabController {
     /**
      * Private class that defines how to display an observation resource
      */
-    private class ResourceListViewComponent {
+    private static class ResourceListViewComponent {
 
         private Resource resource;
         private FhirResourceParser parser = new FhirResourceParserDstu3();
