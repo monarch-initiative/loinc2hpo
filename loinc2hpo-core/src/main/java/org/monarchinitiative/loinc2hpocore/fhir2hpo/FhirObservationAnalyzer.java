@@ -8,7 +8,7 @@ import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.phenotypemodel.BasicLabTestOutcome;
 import org.monarchinitiative.loinc2hpocore.phenotypemodel.LabTestOutcome;
@@ -29,7 +29,7 @@ public class FhirObservationAnalyzer {
 
     static private Observation observation;
     static private Set<LoincId> loincIds;
-    static Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    static Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
     static CodeSystemConvertor codeSystemConvertor;
     static Loinc2Hpo loinc2Hpo;
 
@@ -38,7 +38,7 @@ public class FhirObservationAnalyzer {
      * @param loincIdsSet
      * @param loincAnnotationMap
      */
-    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap) {
+    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, Loinc2HpoAnnotationModel> loincAnnotationMap) {
         loincIds = loincIdsSet;
         annotationMap = loincAnnotationMap;
     }
@@ -68,7 +68,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HPOannotationMap) throws MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException, AmbiguousResultsFoundException, AnnotationNotFoundException, UnrecognizedCodeException, LoincCodeNotAnnotatedException, AmbiguousReferenceException, ReferenceNotFoundException, FHIRException {
+    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, Loinc2HpoAnnotationModel> loinc2HPOannotationMap) throws MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException, AmbiguousResultsFoundException, AnnotationNotFoundException, UnrecognizedCodeException, LoincCodeNotAnnotatedException, AmbiguousReferenceException, ReferenceNotFoundException, FHIRException {
 
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {

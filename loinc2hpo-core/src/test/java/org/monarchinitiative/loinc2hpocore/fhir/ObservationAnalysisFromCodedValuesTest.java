@@ -4,23 +4,19 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mock;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysis;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromCodedValues;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -38,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
-    private static Map<LoincId, LOINC2HpoAnnotationImpl> testmap = new HashMap<>();
+    private static Map<LoincId, Loinc2HpoAnnotationModel> testmap = new HashMap<>();
     private static Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
@@ -61,7 +57,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         observations[0] = observation1;
         observations[3] = observation4;
 
-        LOINC2HpoAnnotationImpl.Builder loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
+        Loinc2HpoAnnotationModel.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModel.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.string2enum("Qn");
@@ -75,12 +71,12 @@ public class ObservationAnalysisFromCodedValuesTest {
                 .setIntermediateValueHpoTerm(normal, true)
                 .setHighValueHpoTerm(hi);
 
-        LOINC2HpoAnnotationImpl annotation15074 = loinc2HpoAnnotationBuilder.build();
+        Loinc2HpoAnnotationModel annotation15074 = loinc2HpoAnnotationBuilder.build();
 
 
         testmap.put(loincId, annotation15074);
 
-        loinc2HpoAnnotationBuilder = new LOINC2HpoAnnotationImpl.Builder();
+        loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModel.Builder();
 
         loincId = new LoincId("600-7");
         loincScale = LoincScale.string2enum("Nom");
@@ -97,7 +93,7 @@ public class ObservationAnalysisFromCodedValuesTest {
                 .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
                 .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
 
-        LOINC2HpoAnnotationImpl annotation600 = loinc2HpoAnnotationBuilder.build();
+        Loinc2HpoAnnotationModel annotation600 = loinc2HpoAnnotationBuilder.build();
 
         testmap.put(loincId, annotation600);
 

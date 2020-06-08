@@ -8,24 +8,24 @@ import org.monarchinitiative.loinc2hpocore.exception.AnnotationNotFoundException
 import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundException;
 import org.monarchinitiative.loinc2hpocore.exception.LoincCodeNotAnnotatedException;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.Map;
 
 /**
  * Entry point for the Loinc2Hpo tool
- * @author <a href="mailto:aaron.zhang@jax.org">Aaron Zhang</a>
+ * @author <a href="mailto:aaron.zhang@sema4.com">Aaron Zhang</a>
  * @version 1.1.7
  */
 public class Loinc2Hpo {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
     private CodeSystemConvertor converter;
 
-    public Loinc2Hpo(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap,
+    public Loinc2Hpo(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap,
                      CodeSystemConvertor converter){
         this.annotationMap = annotationMap;
         this.converter = converter;
@@ -33,7 +33,7 @@ public class Loinc2Hpo {
 
     public Loinc2Hpo(String path, CodeSystemConvertor converter){
         try {
-            annotationMap = LOINC2HpoAnnotationImpl.from_csv(path);
+            annotationMap = Loinc2HpoAnnotationModel.from_csv(path);
         } catch (Exception e) {
             logger.error("Failed to import loinc2hpo annotation");
             throw new RuntimeException("failed to import loinc2hpo annotation");
@@ -41,7 +41,7 @@ public class Loinc2Hpo {
         this.converter = converter;
     }
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> getAnnotationMap() {
+    public Map<LoincId, Loinc2HpoAnnotationModel> getAnnotationMap() {
         return annotationMap;
     }
 

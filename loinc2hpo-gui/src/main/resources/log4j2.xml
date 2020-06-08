@@ -37,5 +37,8 @@
         <Logger name="ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition" level="WARN">
             <AppenderRef ref="Console"/>
         </Logger>
+        <Logger name="com.google.inject" level="WARN">
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>

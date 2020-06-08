@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
  */
 public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
 
-    private String id; //uri of HPO class
+    private String id; //uri of HPO class. Actual id is the last
+    // (split by '/') in the form of HP_12345
     private String label; //all classes should have a non-null label
     private String definition; //some classes do not have a definition
     private LoincLongNameComponents loinc; //We found this HPO class with this loinc query
@@ -72,12 +73,6 @@ public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
             //String keysInTissue = new Synset().getSynset(new ArrayList<>(this.loinc.keysInLoincTissue())).convertToRe();
             pattern = Pattern.compile(toPattern(keysInTissue));
             matcher = pattern.matcher(total.toLowerCase());
-            /**
-            System.out.println("how many keys in the loinc class: " + this.loinc.keysInLoincTissue().size());
-            System.out.println("\nString for pattern: " + keysInTissue);
-            System.out.println(total);
-            System.out.println("match? " + matcher.matches());
-             **/
             if (matcher.matches()) {
                 matchScore += 20;
             }
@@ -86,7 +81,6 @@ public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
         //penalize non-hpo terms
         String[] id_string = this.id.split("/");
         if (!id_string[id_string.length - 1].startsWith("HP_")) {
-            System.out.println(this.id);
             matchScore = matchScore / 10;
         }
         return matchScore;
@@ -142,13 +136,6 @@ public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
         String[] id_string = this.id.split("/");
         builder.append("\t\t" + id_string[id_string.length - 1]);
         builder.append("\t\t" + this.label);
-        /**
-        int count_label_lengh = this.label.length();
-        while (count_label_lengh < 80) {
-            builder.append(" ");
-            count_label_lengh++;
-        }
-         **/
         if(this.definition != null){
             builder.append("\t\t" + this.definition);
         } else {

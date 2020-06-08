@@ -36,7 +36,7 @@ import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.*;
 import org.monarchinitiative.loinc2hpocore.sparql.HPO_Class_Found;
 import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
@@ -96,7 +96,7 @@ public class AnnotateTabController {
     private ObservableMap<LoincId, LoincEntry> loincMap = FXCollections.observableHashMap();
 
     //observable map for annotations
-    private ObservableMap<LoincId, LOINC2HpoAnnotationImpl> annotationsMap = FXCollections.observableHashMap();
+    private ObservableMap<LoincId, Loinc2HpoAnnotationModel> annotationsMap = FXCollections.observableHashMap();
 
     //private final Stage primarystage;
     @FXML private Button initLOINCtableButton;
@@ -140,7 +140,7 @@ public class AnnotateTabController {
     @FXML private TableColumn<LoincEntry, String> systemTableColumn;
     @FXML private TableColumn<LoincEntry, String> nameTableColumn;
     @FXML private CheckMenuItem loincTableEnableMultiSelection;
-    private LOINC2HpoAnnotationImpl toCopy;
+    private Loinc2HpoAnnotationModel toCopy;
     @FXML private MenuItem pasteAnnotationButton;
 
 
@@ -518,7 +518,28 @@ public class AnnotateTabController {
         String name = entry.getLongName();
         hpoListView.getItems().clear();
         sparqlQueryResult.clear();
-        sparqlQueryResult.addAll(SparqlQuery.query_auto(name));
+        List<HPO_Class_Found> result = SparqlQuery.query_auto(name);
+
+        //among found terms, show those that are 1) HPO terms 2) not obsolete
+        List<HPO_Class_Found> filteredResult = result
+                        .stream()
+                        .filter(t -> {
+                            String uri = t.getId();
+                            String[] elements = uri.split("/");
+                            String termid_string =
+                                    elements[elements.length - 1];
+                            if (!termid_string.matches("HP_[0-9]+")){
+                                return false;
+                            }
+                            TermId termid =
+                                    TermId.of(termid_string.replace("_"
+                                            , ":"));
+                            logger.debug("termid: " + termid.getValue());
+                            return termid.getPrefix().equals("HP") &&
+                                    appResources.getTermidTermMap().containsKey(termid) &&
+                                    (!appResources.getTermidTermMap().get(termid).isObsolete());
+                        }).collect(Collectors.toList());
+        sparqlQueryResult.addAll(filteredResult);
         sparqlQueryResult.sort((o1, o2) -> o2.getScore() - o1.getScore());
         //SparqlQuery.query_auto(name).stream().forEach(sparqlQueryResult::add);
         logger.trace("sparqlQueryResult size: " + sparqlQueryResult.size());
@@ -1318,7 +1339,7 @@ public class AnnotateTabController {
         String comments = toCopy.getNote()==null ? "" : "@original comment: " + toCopy.getNote();
         String copyInfo = String.format("copied from: %s %s", toCopy.getLoincId().toString(), comments);
 
-        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder()
+        Loinc2HpoAnnotationModel.Builder builder = new Loinc2HpoAnnotationModel.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(toCopy.getLoincScale())
                 .setCreatedBy(toCopy.getCreatedBy())
@@ -1414,7 +1435,7 @@ public class AnnotateTabController {
         }
 
         //start building the annotation
-        LOINC2HpoAnnotationImpl.Builder builder = new LOINC2HpoAnnotationImpl.Builder();
+        Loinc2HpoAnnotationModel.Builder builder = new Loinc2HpoAnnotationModel.Builder();
         builder.setLoincId(loincCode)
                 .setLoincScale(loincScale)
                 .setNote(annotationNoteField.getText())
@@ -1466,7 +1487,7 @@ public class AnnotateTabController {
         }
 
         //complete the building process, build the object
-        LOINC2HpoAnnotationImpl loinc2HPOAnnotation = builder.build();
+        Loinc2HpoAnnotationModel loinc2HPOAnnotation = builder.build();
         appResources.getLoincAnnotationMap().put(loincCode, loinc2HPOAnnotation);
 
         //reset many settings
@@ -2031,7 +2052,7 @@ public class AnnotateTabController {
     protected void showAllAnnotations(ActionEvent event) {
         event.consume();
         LoincEntry loincEntry2Review;
-        LOINC2HpoAnnotationImpl annotation2Review;
+        Loinc2HpoAnnotationModel annotation2Review;
 
         loincEntry2Review = loincTableView.getSelectionModel().getSelectedItem();
         if (loincEntry2Review == null) {
@@ -2077,7 +2098,7 @@ public class AnnotateTabController {
             currentAnnotationController.setData(loincEntry2Review, annotation2Review);
             currentAnnotationController.setTermMap(appResources.getTermidTermMap());
             //tell the new window how to handle "edit" button
-            Consumer<LOINC2HpoAnnotationImpl> edithook = (t) -> {
+            Consumer<Loinc2HpoAnnotationModel> edithook = (t) -> {
                 editCurrentAnnotation(t);
                 mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
                 window.close();
@@ -2098,7 +2119,7 @@ public class AnnotateTabController {
      * This method is called from the pop up window
      * @param loincAnnotation passed from the pop up window
      */
-    void editCurrentAnnotation(LOINC2HpoAnnotationImpl loincAnnotation) {
+    void editCurrentAnnotation(Loinc2HpoAnnotationModel loincAnnotation) {
 
         setLoincIdSelected(loincAnnotation.getLoincId());
         appTempData.setLoincUnderEditing(appResources.getLoincEntryMap().get(loincAnnotation.getLoincId()));

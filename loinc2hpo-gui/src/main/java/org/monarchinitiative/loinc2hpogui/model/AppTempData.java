@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 
 import java.util.*;
@@ -25,7 +25,7 @@ public class AppTempData {
 
     private Map<String, String> tempStrings = new HashMap<>();//hpo terms before being used to create an annotation
     private Map<String, String> tempAdvancedAnnotation = new HashMap<>();//a advanced annotation before it is being added to record
-    private LOINC2HpoAnnotationImpl currentAnnotation = null;
+    private Loinc2HpoAnnotationModel currentAnnotation = null;
     //private boolean tempInversed= false;
     private boolean inversedBasicMode = false; //whether inverse is checked for basic mode
     private boolean inversedAdvancedMode = false; //whether inverse is checked for advanced mode
@@ -155,8 +155,8 @@ public class AppTempData {
         this.inversedAdvancedMode = inversedAdvancedMode;
     }
 
-    public void setCurrentAnnotation(LOINC2HpoAnnotationImpl current) {this.currentAnnotation = current;}
-    public LOINC2HpoAnnotationImpl getCurrentAnnotation() {
+    public void setCurrentAnnotation(Loinc2HpoAnnotationModel current) {this.currentAnnotation = current;}
+    public Loinc2HpoAnnotationModel getCurrentAnnotation() {
         return currentAnnotation;
     }
 

@@ -5,7 +5,7 @@ import org.jgrapht.alg.util.UnionFind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -35,12 +35,12 @@ public class PatientSummaryImplTest {
     public void setup() throws Exception{
 
         LoincId glucose = new LoincId("15074-7");
-        LOINC2HpoAnnotationImpl glucoseAnnote =
-                mock(LOINC2HpoAnnotationImpl.class);
+        Loinc2HpoAnnotationModel glucoseAnnote =
+                mock(Loinc2HpoAnnotationModel.class);
         LoincId ferritin = new LoincId("2276-4");
-        LOINC2HpoAnnotationImpl ferritinAnnotation =
-                mock(LOINC2HpoAnnotationImpl.class);
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new HashMap<>();
+        Loinc2HpoAnnotationModel ferritinAnnotation =
+                mock(Loinc2HpoAnnotationModel.class);
+        Map<LoincId, Loinc2HpoAnnotationModel> annotationMap = new HashMap<>();
         annotationMap.put(glucose, glucoseAnnote);
         annotationMap.put(ferritin, ferritinAnnotation);
         hyperglycemia = Term.of(TermId.of("HP:0003074"), "Hyperglycemia");

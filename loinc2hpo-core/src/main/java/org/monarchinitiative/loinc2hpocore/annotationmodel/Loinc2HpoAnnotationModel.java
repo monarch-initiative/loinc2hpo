@@ -19,8 +19,13 @@ import java.util.stream.Collectors;
 
 /**
  * This class is responsible for managing the annotation information for a
- * LOINC coded lab test. For Qn type of Loinc, we use the internal codes,
- * which is a subset of FHIR codes:
+ * LOINC coded lab test. In essence, is uses a map to record mappings from an
+ * interpretation code to a HPO term (plus a negation boolean value). The key
+ * of this map, {@link org.monarchinitiative.loinc2hpocore.codesystems.Code},
+ * must have two parts (code system and
+ * actual code). We use a set of internal codes for the annotation, which is
+ * a subset of FHIR codes:
+ *
  * L(ow)                -> Hpo term
  * A(bnormal)/N(ormal)  -> Hpo term
  * H(igh)               -> Hpo term
@@ -28,9 +33,10 @@ import java.util.stream.Collectors;
  * POS(itive)           -> Hpo term
  * Neg(ative)           -> Hpo term
  *
- * For Nom and other types, the observed code might be different
+ * It is also okay to annotate with code from any coding system, for example,
+ * one could use SNOMED concepts.
  */
-public class LOINC2HpoAnnotationImpl {
+public class Loinc2HpoAnnotationModel {
 
     private static final String MISSINGVALUE = "NA";
 
@@ -53,7 +59,7 @@ public class LOINC2HpoAnnotationImpl {
 
     }
 
-    public static List<Loinc2HpoAnnotationCsvEntry> to_csv_entries(LOINC2HpoAnnotationImpl dataModel){
+    public static List<Loinc2HpoAnnotationCsvEntry> to_csv_entries(Loinc2HpoAnnotationModel dataModel){
 
         //convert objects to string
         String loincId = dataModel.getLoincId().toString();
@@ -70,6 +76,11 @@ public class LOINC2HpoAnnotationImpl {
         List<Loinc2HpoAnnotationCsvEntry> entries = new ArrayList<>();
         for (Map.Entry<Code, HpoTerm4TestOutcome> annotation :
                 dataModel.getCandidateHpoTerms().entrySet()){
+            //skip record if the mapped term is null
+            if (annotation.getValue() == null ||
+                    annotation.getValue().getId() == null){
+                continue;
+            }
             String system = annotation.getKey().getSystem();
             String code_id = annotation.getKey().getCode();
             String isNegated = annotation.getValue().isNegated()? "true" : "false";
@@ -96,10 +107,10 @@ public class LOINC2HpoAnnotationImpl {
         return entries;
     }
 
-    public static void to_csv_file(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap, String file_path) throws IOException{
-        String header = LOINC2HpoAnnotationImpl.csv_header("\t");
+    public static void to_csv_file(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap, String file_path) throws IOException{
+        String header = Loinc2HpoAnnotationModel.csv_header("\t");
         List<String> lines_to_write = annotationMap.values().stream()
-                .map(LOINC2HpoAnnotationImpl::to_csv_entries)
+                .map(Loinc2HpoAnnotationModel::to_csv_entries)
                 .flatMap(Collection::stream)
                 .map(Loinc2HpoAnnotationCsvEntry::toString)
                 .map(String::trim)
@@ -111,12 +122,12 @@ public class LOINC2HpoAnnotationImpl {
         writer.close();
     }
 
-    public static Map<LoincId, LOINC2HpoAnnotationImpl> from_csv(String path) throws IOException, MalformedLoincCodeException {
+    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws IOException, MalformedLoincCodeException {
 
         List<Loinc2HpoAnnotationCsvEntry> csvEntries = Loinc2HpoAnnotationCsvEntry.importAnnotations(path);
 
         //organize the TSV entries into data models
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationModelMap = new LinkedHashMap<>();
+        Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap = new LinkedHashMap<>();
 
         //go through each entry, create a new data model if it is first seen
         //otherwise, just add more additional information
@@ -148,8 +159,8 @@ public class LOINC2HpoAnnotationImpl {
 
             //create a new annotation model if it does not exist for current loincId
             if (!annotationModelMap.containsKey(loincId)){
-                LOINC2HpoAnnotationImpl newModel =
-                        new LOINC2HpoAnnotationImpl.Builder()
+                Loinc2HpoAnnotationModel newModel =
+                        new Loinc2HpoAnnotationModel.Builder()
                         .setLoincId(loincId)
                         .setLoincScale(loincScale)
                         .setCreatedOn(createdOn)
@@ -185,11 +196,11 @@ public class LOINC2HpoAnnotationImpl {
     private boolean flag = false; //a simpler version that equals a comment "not sure about the annotation, come back later"
 
 
-    public LOINC2HpoAnnotationImpl(LoincId loincId, LoincScale loincScale,
-                                   Map<Code, HpoTerm4TestOutcome> annotationMap,
-                                   LocalDateTime createdOn, String createdBy,
-                                   LocalDateTime lastEditedOn, String lastEditedBy,
-                                   String note, boolean flag, double version) {
+    public Loinc2HpoAnnotationModel(LoincId loincId, LoincScale loincScale,
+                                    Map<Code, HpoTerm4TestOutcome> annotationMap,
+                                    LocalDateTime createdOn, String createdBy,
+                                    LocalDateTime lastEditedOn, String lastEditedBy,
+                                    String note, boolean flag, double version) {
 
         this.loincId = loincId;
         this.loincScale = loincScale;
@@ -204,13 +215,6 @@ public class LOINC2HpoAnnotationImpl {
         //put other terms into the map
         this.candidateHpoTerms = new LinkedHashMap<>(annotationMap);
     }
-
-//    public static String getHeader() {
-//        String header = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s",
-//                "loincId", "loincScale", "system", "code", "hpoTermId", "inversed", "note", "flag",
-//                "version", "createdOn", "createdBy", "lastEditedOn", "lastEditedBy");
-//        return header;
-//    }
 
     public LoincId getLoincId(){ return this.loincId; }
 
@@ -228,7 +232,7 @@ public class LOINC2HpoAnnotationImpl {
         return version;
     }
 
-    public LOINC2HpoAnnotationImpl setVersion(double version) {
+    public Loinc2HpoAnnotationModel setVersion(double version) {
         this.version = version;
         return this;
     }
@@ -249,10 +253,57 @@ public class LOINC2HpoAnnotationImpl {
         return lastEditedBy;
     }
 
+    
+    /**
+     * Get the corresponding Hpo term for a coded value
+     * @param code a code in a coding system. Usually, it is the internal code; for Ord, Nom, or Nar, it can be codes of
+     *             an external coding system
+     * @return the hpo term wrapped in the HpoTerm4TestOutcome class
+     */
+    public HpoTerm4TestOutcome loincInterpretationToHPO(Code code) {
+        return candidateHpoTerms.get(code);
+    }
 
 
+    /**
+     * Return the annotation map.
+     * @TODO: consider return a copy of the map, but it will affect the
+     * parsing method.
+     * @return
+     */
+    public HashMap<Code, HpoTerm4TestOutcome> getCandidateHpoTerms() {
+        return candidateHpoTerms;
+    }
 
-    // The following define some convenient functions
+
+    @Override
+    /**
+     * The default toString method will serialize all the annotations to a string
+     */
+    public String toString(){
+
+        StringBuilder stringBuilder = new StringBuilder();
+        candidateHpoTerms.forEach((code, hpoTermId4LoincTest) -> {
+            stringBuilder.append(this.loincId);
+            stringBuilder.append("\t" + this.loincScale.toString());
+            stringBuilder.append("\t" + code.getSystem());
+            stringBuilder.append("\t" + code.getCode());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
+            stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
+            stringBuilder.append("\t" + this.note);
+            stringBuilder.append("\t" + this.flag);
+            stringBuilder.append("\t" + String.format("%.1f", this.version));
+            stringBuilder.append("\t" + (this.createdOn == null ? MISSINGVALUE : this.createdOn));
+            stringBuilder.append("\t" + (this.createdBy == null ? MISSINGVALUE : this.createdBy));
+            stringBuilder.append("\t" + (this.lastEditedOn == null ? MISSINGVALUE : this.lastEditedOn));
+            stringBuilder.append("\t" + (this.lastEditedBy == null ? MISSINGVALUE : this.lastEditedBy));
+            stringBuilder.append("\n");
+        });
+        return stringBuilder.toString().trim();
+
+    }
+
+    // The following define some convenient methods
     // TODO: consider moving them out
     /**
      * A convenient method to show hpo term for low
@@ -297,95 +348,6 @@ public class LOINC2HpoAnnotationImpl {
         } else {
             return null;
         }
-
-    }
-
-    public boolean hasCreatedOn() {
-
-        return this.createdOn != null;
-
-    }
-
-    public boolean hasCreatedBy() {
-
-        return this.createdBy != null;
-
-    }
-
-    public boolean hasLastEditedOn() {
-
-        return this.lastEditedOn != null;
-
-    }
-
-    public boolean hasLastEditedBy() {
-
-        return this.lastEditedBy != null;
-
-    }
-
-    public boolean hasComment() {
-
-        return this.note != null && !this.note.trim().isEmpty();
-
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Set<Code> getCodes(){
-        return candidateHpoTerms.keySet();
-    }
-
-
-    /**
-     * Get the corresponding Hpo term for a coded value
-     * @param code a code in a coding system. Usually, it is the internal code; for Ord, Nom, or Nar, it can be codes of
-     *             an external coding system
-     * @return the hpo term wrapped in the HpoTerm4TestOutcome class
-     */
-    public HpoTerm4TestOutcome loincInterpretationToHPO(Code code) {
-        return candidateHpoTerms.get(code);
-    }
-
-
-    /**
-     * Return the annotation map.
-     * @TODO: consider return a copy of the map, but it will affect the
-     * parsing method.
-     * @return
-     */
-    public HashMap<Code, HpoTerm4TestOutcome> getCandidateHpoTerms() {
-        return candidateHpoTerms;
-    }
-
-
-
-    @Override
-    /**
-     * The default toString method will serialize all the annotations to a string
-     */
-    public String toString(){
-
-        StringBuilder stringBuilder = new StringBuilder();
-        candidateHpoTerms.forEach((code, hpoTermId4LoincTest) -> {
-            stringBuilder.append(this.loincId);
-            stringBuilder.append("\t" + this.loincScale.toString());
-            stringBuilder.append("\t" + code.getSystem());
-            stringBuilder.append("\t" + code.getCode());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
-            stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
-            stringBuilder.append("\t" + this.note);
-            stringBuilder.append("\t" + this.flag);
-            stringBuilder.append("\t" + String.format("%.1f", this.version));
-            stringBuilder.append("\t" + (this.createdOn == null ? MISSINGVALUE : this.createdOn));
-            stringBuilder.append("\t" + (this.createdBy == null ? MISSINGVALUE : this.createdBy));
-            stringBuilder.append("\t" + (this.lastEditedOn == null ? MISSINGVALUE : this.lastEditedOn));
-            stringBuilder.append("\t" + (this.lastEditedBy == null ? MISSINGVALUE : this.lastEditedBy));
-            stringBuilder.append("\n");
-        });
-        return stringBuilder.toString().trim();
 
     }
 
@@ -575,9 +537,9 @@ public class LOINC2HpoAnnotationImpl {
 
         }
 
-        public LOINC2HpoAnnotationImpl build() {
+        public Loinc2HpoAnnotationModel build() {
 
-            return new LOINC2HpoAnnotationImpl(loincId,
+            return new Loinc2HpoAnnotationModel(loincId,
                     loincScale,
                     annotationMap,
                     createdOn,

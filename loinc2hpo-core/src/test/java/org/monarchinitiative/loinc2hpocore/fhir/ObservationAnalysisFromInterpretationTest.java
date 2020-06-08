@@ -11,7 +11,7 @@ import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.exception.AmbiguousResultsFoundException;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromInterpretation;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,14 +34,14 @@ public class ObservationAnalysisFromInterpretationTest {
 
         Code inHigh = mock(Code.class);
         HpoTerm4TestOutcome hpoForHigh = mock(HpoTerm4TestOutcome.class);
-        LOINC2HpoAnnotationImpl forGlucose =
-                mock(LOINC2HpoAnnotationImpl.class);
+        Loinc2HpoAnnotationModel forGlucose =
+                mock(Loinc2HpoAnnotationModel.class);
         Map<Code, HpoTerm4TestOutcome> map = new HashMap<>();
         map.put(inHigh, hpoForHigh);
         when(forGlucose.getCandidateHpoTerms()).thenReturn((HashMap<Code,
                 HpoTerm4TestOutcome>) map);
 
-        Map<LoincId, LOINC2HpoAnnotationImpl> loinc2HpoAnnotationMap =
+        Map<LoincId, Loinc2HpoAnnotationModel> loinc2HpoAnnotationMap =
                 new HashMap<>();
         loinc2HpoAnnotationMap.put(loincId, forGlucose);
 

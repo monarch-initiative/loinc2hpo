@@ -17,7 +17,7 @@ import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 
 import org.monarchinitiative.loinc2hpogui.model.AdvancedAnnotationTableComponent;
@@ -33,7 +33,7 @@ public class CurrentAnnotationController{
 
     private BooleanProperty dataReady;
     private LoincEntry currentLoinc;
-    private LOINC2HpoAnnotationImpl currentAnnotation;
+    private Loinc2HpoAnnotationModel currentAnnotation;
     private CodeSystemConvertor codeSystemConvertor = new CodeSystemConvertor();
 
     @FXML private BorderPane currentAnnotationPane;
@@ -61,7 +61,7 @@ public class CurrentAnnotationController{
     @FXML private TableColumn<AdvancedAnnotationTableComponent, String> hpoInterpretTableview;
     @FXML private TableColumn<AdvancedAnnotationTableComponent, Boolean> inversedInterpretTableview;
 
-    private Consumer<LOINC2HpoAnnotationImpl> editHook;
+    private Consumer<Loinc2HpoAnnotationModel> editHook;
     //private Consumer<LOINC2HpoAnnotationImpl> saveHook;
 
 //    @Inject
@@ -173,14 +173,14 @@ public class CurrentAnnotationController{
         }
     }
 
-    public void setData(LoincEntry loincEntry, LOINC2HpoAnnotationImpl currentAnnotation) {
+    public void setData(LoincEntry loincEntry, Loinc2HpoAnnotationModel currentAnnotation) {
         this.currentLoinc = loincEntry;
         this.currentAnnotation = currentAnnotation;
         dataReady.set(true);
         logger.info("current annotation is set successfully for: " + this.currentAnnotation.getLoincId());
     }
 
-    public void setEditHook(Consumer<LOINC2HpoAnnotationImpl> edit) {
+    public void setEditHook(Consumer<Loinc2HpoAnnotationModel> edit) {
         this.editHook = edit;
     }
 

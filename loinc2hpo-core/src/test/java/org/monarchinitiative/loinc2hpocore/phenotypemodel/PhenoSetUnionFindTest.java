@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpocore.phenotypemodel;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class PhenoSetUnionFindTest {
 
     private Map<String, Term> hpoTermMap;
-    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
     private PhenoSetUnionFind unionFind;
 
     @BeforeEach
@@ -33,14 +33,14 @@ public class PhenoSetUnionFindTest {
 
         hpoTermMap =
                 Stream.of(hypocapnia, hypercapnia, nitrituria).collect(Collectors.toMap(e -> e.getName(), e-> e));
-        LOINC2HpoAnnotationImpl annotation1 =
-                new LOINC2HpoAnnotationImpl.Builder()
+        Loinc2HpoAnnotationModel annotation1 =
+                new Loinc2HpoAnnotationModel.Builder()
                 .setLoincId(caliumTest)
                 .setLowValueHpoTerm(hypocapnia.getId())
                 .setHighValueHpoTerm(hypercapnia.getId())
                 .build();
-        LOINC2HpoAnnotationImpl annotation2 =
-                new LOINC2HpoAnnotationImpl.Builder()
+        Loinc2HpoAnnotationModel annotation2 =
+                new Loinc2HpoAnnotationModel.Builder()
                 .setLoincId(nitritTest)
                 .setPosValueHpoTerm(nitrituria.getId())
                 .build();

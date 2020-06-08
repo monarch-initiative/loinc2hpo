@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpogui;
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpogui.io.LoincOfInterest;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.io.OntologyLoader;
@@ -35,7 +35,7 @@ public class ResourceCollection {
     private Ontology hpo;
     private Map<String, Term> termnameTermMap;
     private ImmutableMap<LoincId, LoincEntry> loincEntryMap;
-    private Map<LoincId, LOINC2HpoAnnotationImpl> loincAnnotationMap;
+    private Map<LoincId, Loinc2HpoAnnotationModel> loincAnnotationMap;
     private Map<String, Set<LoincId>> loincCategories;
 
     public void setLoincEntryPath(String path) {
@@ -87,13 +87,13 @@ public class ResourceCollection {
         return this.termnameTermMap;
     }
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap() throws Exception {
+    public Map<LoincId, Loinc2HpoAnnotationModel> annotationMap() throws Exception {
         if (this.loincAnnotationMap != null) {
             return this.loincAnnotationMap;
         }
 
         this.loincAnnotationMap =
-                LOINC2HpoAnnotationImpl.from_csv(this.annotationMapPath);
+                Loinc2HpoAnnotationModel.from_csv(this.annotationMapPath);
         return this.loincAnnotationMap;
     }
 

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.monarchinitiative.loinc2hpocore.Constants;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpogui.gui.PopUps;
 import org.monarchinitiative.loinc2hpogui.model.AppResources;
@@ -52,14 +52,14 @@ public class Loinc2HpoAnnotationsTabController {
     @FXML private VBox vbox4wv;
 
     @FXML
-    private TableView<LOINC2HpoAnnotationImpl> loincAnnotationTableView;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> loincNumberColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> belowNormalHpoColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> notAbnormalHpoColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl,String> aboveNormalHpoColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> loincScaleColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> loincFlagColumn;
-    @FXML private TableColumn<LOINC2HpoAnnotationImpl, String> noteColumn;
+    private TableView<Loinc2HpoAnnotationModel> loincAnnotationTableView;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel,String> loincNumberColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel,String> belowNormalHpoColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel,String> notAbnormalHpoColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel,String> aboveNormalHpoColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel, String> loincScaleColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel, String> loincFlagColumn;
+    @FXML private TableColumn<Loinc2HpoAnnotationModel, String> noteColumn;
 
 
 
@@ -185,7 +185,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
 
     public void refreshTable() {
-        Map<LoincId,LOINC2HpoAnnotationImpl> testmap = appResources.getLoincAnnotationMap();
+        Map<LoincId, Loinc2HpoAnnotationModel> testmap = appResources.getLoincAnnotationMap();
         Platform.runLater(() -> {
             loincAnnotationTableView.getItems().clear();
             loincAnnotationTableView.getItems().addAll(testmap.values());
@@ -207,8 +207,8 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
             String path = f.getAbsolutePath();
 
             try {
-                Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap =
-                        LOINC2HpoAnnotationImpl.from_csv(path);
+                Map<LoincId, Loinc2HpoAnnotationModel> annotationMap =
+                        Loinc2HpoAnnotationModel.from_csv(path);
                 appResources.getLoincAnnotationMap().putAll(annotationMap);
                 refreshTable();
             } catch (Exception e) {
@@ -232,10 +232,10 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
         //if using the LoincAnnotationSerializerTSVSingleFile for serialization
         String tsvSingleFile = pathToOpen + File.separator
                 + Constants.TSVSingleFileFolder + File.separator + Constants.TSVSingleFileName;
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap = new LinkedHashMap<>();
+        Map<LoincId, Loinc2HpoAnnotationModel> annotationMap = new LinkedHashMap<>();
 
         try {
-            annotationMap = LOINC2HpoAnnotationImpl.from_csv(tsvSingleFile);
+            annotationMap = Loinc2HpoAnnotationModel.from_csv(tsvSingleFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -273,7 +273,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
             PopUps.showInfoMessage("Hpo is not imported yet. Try clicking \"Initialize HPO appTempData\" first.", "HPO not imported");
             return;
         }
-        LOINC2HpoAnnotationImpl selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
+        Loinc2HpoAnnotationModel selected = loincAnnotationTableView.getSelectionModel().getSelectedItem();
         if (selected != null) {
             annotateTabController.setLoincIdSelected(selected.getLoincId());
             annotateTabController.showAllAnnotations(event);
@@ -293,7 +293,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
             return;
         }
 
-        LOINC2HpoAnnotationImpl toEdit = loincAnnotationTableView.getSelectionModel()
+        Loinc2HpoAnnotationModel toEdit = loincAnnotationTableView.getSelectionModel()
                 .getSelectedItem();
         if (toEdit != null) {
             mainController.switchTab(MainController.TabPaneTabs.AnnotateTabe);
@@ -307,7 +307,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
         boolean confirmation = PopUps.getBooleanFromUser("Are you sure you want to delete the record?", "Confirm deletion request", "Deletion");
         if (confirmation) {
-            LOINC2HpoAnnotationImpl toDelete = loincAnnotationTableView.getSelectionModel()
+            Loinc2HpoAnnotationModel toDelete = loincAnnotationTableView.getSelectionModel()
                     .getSelectedItem();
             if (toDelete != null) {
                 loincAnnotationTableView.getItems().remove(toDelete);
@@ -336,7 +336,7 @@ logger.trace("Loinc2HpoAnnotationsTabController initialize() called");
 
             if (!f.exists() || overwrite) {
                 try {
-                    LOINC2HpoAnnotationImpl.to_csv_file(appResources.getLoincAnnotationMap(), path);
+                    Loinc2HpoAnnotationModel.to_csv_file(appResources.getLoincAnnotationMap(), path);
                 } catch (IOException e1) {
                     PopUps.showWarningDialog("Error message",
                             "Failure to Save Session Data" ,

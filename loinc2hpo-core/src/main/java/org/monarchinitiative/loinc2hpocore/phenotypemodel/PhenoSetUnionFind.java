@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpocore.phenotypemodel;
 
 import org.jgrapht.alg.util.UnionFind;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
  * concentration is in one set.
  */
 public class PhenoSetUnionFind {
-    private Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap;
+    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
     private UnionFind<TermId> unionFind;
 
-    public PhenoSetUnionFind(Set<TermId> hpoTermSet, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
+    public PhenoSetUnionFind(Set<TermId> hpoTermSet, Map<LoincId, Loinc2HpoAnnotationModel> annotationMap) {
         this.annotationMap = annotationMap;
         this.unionFind = new UnionFind<>(hpoTermSet);
         union(this.annotationMap);
     }
 
-    private void union(Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
+    private void union(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap) {
         annotationMap.values().forEach(annotation -> {
             List<TermId> termInAnnot = annotation.getCandidateHpoTerms().values()
                     .stream()

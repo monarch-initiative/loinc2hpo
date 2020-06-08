@@ -4,11 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpogui.ResourceCollection;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincPanel;
-import org.monarchinitiative.phenol.base.PhenolException;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.Term;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -16,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,7 +29,7 @@ public class AppResources {
     private Map<String, Term> termnameTermMap;
     private Map<LoincId, LoincEntry> loincEntryMap;
     private Map<String, LoincEntry> loincEntryMapFromName;
-    private Map<LoincId,LOINC2HpoAnnotationImpl> loincAnnotationMap;
+    private Map<LoincId, Loinc2HpoAnnotationModel> loincAnnotationMap;
     private Map<String, Set<LoincId>> userCreatedLoincLists;
     private Map<String, String> userCreatedLoincListsColor;
     private ResourceCollection resourceCollection;
@@ -103,7 +100,7 @@ public class AppResources {
         return loincEntryMapFromName;
     }
 
-    public Map<LoincId, LOINC2HpoAnnotationImpl> getLoincAnnotationMap(){
+    public Map<LoincId, Loinc2HpoAnnotationModel> getLoincAnnotationMap(){
         if (this.loincAnnotationMap != null) {
             return this.loincAnnotationMap;
         }

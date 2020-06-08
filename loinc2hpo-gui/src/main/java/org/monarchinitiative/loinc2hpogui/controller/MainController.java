@@ -26,7 +26,7 @@ import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException
 import org.monarchinitiative.loinc2hpogui.io.LoincOfInterest;
 import org.monarchinitiative.loinc2hpogui.io.TerminalCommand;
 import org.monarchinitiative.loinc2hpogui.io.WriteToFile;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpogui.gui.*;
 import org.monarchinitiative.loinc2hpogui.io.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -613,7 +613,7 @@ logger.trace("MainController initialize() called");
 
         String annotationTSVSingleFile = folderTSVSingle.toString() + File.separator + Constants.TSVSingleFileName;
         try {
-            LOINC2HpoAnnotationImpl.to_csv_file(appResources.getLoincAnnotationMap(), annotationTSVSingleFile);
+            Loinc2HpoAnnotationModel.to_csv_file(appResources.getLoincAnnotationMap(), annotationTSVSingleFile);
         } catch (IOException e1) {
             PopUps.showWarningDialog("Error message",
                     "Failure to Save Session Data" ,

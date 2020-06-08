@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpocore.loinc;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LOINC2HpoAnnotationImpl;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationCsvEntry;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LOINC2HpoAnnotationImplTest {
+class Loinc2HpoAnnotationModelTest {
 
     private static Map<String, Term> hpoTermMap = new HashMap<>();
 
@@ -45,13 +45,13 @@ class LOINC2HpoAnnotationImplTest {
         String expected = "loincId,loincScale,system,code,hpoTermId," +
                 "isNegated,createdOn,createdBy,lastEditedOn,lastEditedBy," +
                 "version,isFinalized,comment";
-        assertEquals(expected, LOINC2HpoAnnotationImpl.csv_header(","));
+        assertEquals(expected, Loinc2HpoAnnotationModel.csv_header(","));
     }
 
     @Test
     void to_csv_entries() throws Exception {
-        LOINC2HpoAnnotationImpl loinc2HpoAnnotation =
-                new LOINC2HpoAnnotationImpl.Builder()
+        Loinc2HpoAnnotationModel loinc2HpoAnnotation =
+                new Loinc2HpoAnnotationModel.Builder()
                         .setLoincId(new LoincId("123-4"))
                         .setLoincScale(LoincScale.Qn)
                         .setCreatedBy("jax:azhang")
@@ -61,7 +61,7 @@ class LOINC2HpoAnnotationImplTest {
                                 true)
                         .build();
         List<Loinc2HpoAnnotationCsvEntry> csvEntryList =
-                LOINC2HpoAnnotationImpl.to_csv_entries(loinc2HpoAnnotation);
+                Loinc2HpoAnnotationModel.to_csv_entries(loinc2HpoAnnotation);
         assertEquals(3, csvEntryList.size());
         csvEntryList.stream().map(entry -> entry.getLoincId()).distinct().count();
         assertEquals(1,
@@ -76,19 +76,19 @@ class LOINC2HpoAnnotationImplTest {
     @Test
     void from_csv() throws Exception {
         String annotationPath = this.getClass().getClassLoader().getResource("annotations.tsv").getPath();
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationModelMap =
-                LOINC2HpoAnnotationImpl.from_csv(annotationPath);
+        Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap =
+                Loinc2HpoAnnotationModel.from_csv(annotationPath);
         assertTrue(annotationModelMap.size() > 100);
     }
 
     @Test
     void test_re_deserialize() throws Exception{
         String annotationPath = this.getClass().getClassLoader().getResource("annotations.tsv").getPath();
-        Map<LoincId, LOINC2HpoAnnotationImpl> annotationModelMap =
-                LOINC2HpoAnnotationImpl.from_csv(annotationPath);
+        Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap =
+                Loinc2HpoAnnotationModel.from_csv(annotationPath);
 
         List<String> lines_to_write = annotationModelMap.values().stream()
-                .map(LOINC2HpoAnnotationImpl::to_csv_entries)
+                .map(Loinc2HpoAnnotationModel::to_csv_entries)
                 .flatMap(Collection::stream)
                 .map(Loinc2HpoAnnotationCsvEntry::toString)
                 .map(String::trim)
@@ -198,7 +198,7 @@ class LOINC2HpoAnnotationImplTest {
         Term normal = hpoTermMap.get("Abnormality of blood glucose concentration");
         Term hi = hpoTermMap.get("Hyperglycemia");
 
-        LOINC2HpoAnnotationImpl glucoseAnnotation = new LOINC2HpoAnnotationImpl.Builder()
+        Loinc2HpoAnnotationModel glucoseAnnotation = new Loinc2HpoAnnotationModel.Builder()
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setLowValueHpoTerm(low.getId())
@@ -225,9 +225,9 @@ class LOINC2HpoAnnotationImplTest {
         Code code1 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
         Code code2 = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
 
-        LOINC2HpoAnnotationImpl bacterialAnnotation;
-        LOINC2HpoAnnotationImpl.Builder bacterialBuilder =
-                new LOINC2HpoAnnotationImpl.Builder();
+        Loinc2HpoAnnotationModel bacterialAnnotation;
+        Loinc2HpoAnnotationModel.Builder bacterialBuilder =
+                new Loinc2HpoAnnotationModel.Builder();
         bacterialAnnotation = bacterialBuilder
                 .setLoincId(loincId)
                 .setLoincScale(loincScale)
