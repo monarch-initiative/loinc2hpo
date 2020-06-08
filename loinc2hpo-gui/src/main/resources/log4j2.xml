@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <RollingFile name="LogFile" fileName="logs/org.monarchinitiative.loinc2hpogui.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d [%t] %p %c - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="2 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="2" />
+        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%t] %-5level (%F:%L) - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="TRACE">
+<!--            <AppenderRef ref="LogFile"/>-->
+            <AppenderRef ref="Console"/>
+        </Root>
+        <Logger name="org.obolibrary.oboformat.parser.OBOFormatParser" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.semanticweb.owlapi.rdf.rdfxml.parser" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="uk.ac.manchester.cs.owl.owlapi" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.monarchinitiative.phenol" level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition" level="WARN">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.google.inject" level="WARN">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>

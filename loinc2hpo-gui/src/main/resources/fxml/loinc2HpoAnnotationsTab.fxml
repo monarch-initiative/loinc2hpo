@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<SplitPane dividerPositions="0.29910714285714285" orientation="VERTICAL" xmlns="http://javafx.com/javafx/9"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.monarchinitiative.loinc2hpogui.controller.Loinc2HpoAnnotationsTabController">
+    <VBox fx:id="vbox4wv" alignment="CENTER"/>
+    <AnchorPane>
+        <TableView fx:id="loincAnnotationTableView" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="10.0"
+                   AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0">
+            <columns>
+                <TableColumn fx:id="loincFlagColumn" prefWidth="50.0" resizable="false" text="Flag"/>
+                <TableColumn fx:id="loincNumberColumn" prefWidth="150.0" resizable="false" text="LOINC Num"/>
+                <TableColumn fx:id="loincScaleColumn" resizable="false" text="Scale"/>
+                <TableColumn fx:id="belowNormalHpoColumn" prefWidth="200.0" resizable="false"
+                             text="Below normal"/>
+                <TableColumn fx:id="notAbnormalHpoColumn" prefWidth="200.0" resizable="false" text="Normal"/>
+                <TableColumn fx:id="aboveNormalHpoColumn" prefWidth="200.0" resizable="false"
+                             text="Above normal"/>
+                <TableColumn fx:id="noteColumn" minWidth="75.0" prefWidth="120.0" text="Note"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleReview" text="Review"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleEdit" text="Edit"/>
+                        <MenuItem mnemonicParsing="false" onAction="#handleDelete" text="Delete"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+            <padding>
+                <Insets bottom="10.0"/>
+            </padding>
+        </TableView>
+    </AnchorPane>
+</SplitPane>

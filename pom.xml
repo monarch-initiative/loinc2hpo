@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>1.1.6</version>
+    <version>1.2.0</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -13,17 +13,18 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
-        <ontolib.version>0.3</ontolib.version>
-        <phenol.version>1.3.2</phenol.version>
-        <junit.version>4.12</junit.version>
+        <phenol.version>1.5.0</phenol.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <hapi-fhir.version>3.6.0</hapi-fhir.version>
+        <hapi-fhir.version>5.0.2</hapi-fhir.version>
+        <mockito.version>3.3.3</mockito.version>
+        <junit.version>5.6.2</junit.version>
+        <jena.version>3.14.0</jena.version>
     </properties>
 
     <modules>
         <module>loinc2hpo-core</module>
-        <module>loinc2hpogui</module>
+        <module>loinc2hpo-gui</module>
     </modules>
 
 
@@ -49,11 +50,55 @@
             <version>1.7.25</version>
         </dependency>
 
+      <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-surefire-provider -->
+<!--        <dependency>-->
+<!--            <groupId>org.junit.platform</groupId>-->
+<!--            <artifactId>junit-platform-surefire-provider</artifactId>-->
+<!--            <version>1.3.2</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/org.wso2.orbit.org.apache.commons/commons-compress -->
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.18.0.wso2v1</version>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -87,25 +132,9 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.11</version>
+            <version>1.14</version>
         </dependency>
 
-
-        <!--dependency>
-            <groupId>com.github.phenomics</groupId>
-            <artifactId>ontolib-core</artifactId>
-            <version>${ontolib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
         <dependency>
             <groupId>org.monarchinitiative.phenol</groupId>
             <artifactId>phenol-io</artifactId>
@@ -139,37 +168,14 @@
                     <groupId>org.yaml</groupId>
                     <artifactId>snakeyaml</artifactId>
                 </exclusion>
-                <!--<exclusion>-->
-                    <!--<groupId>net.sourceforge.owlapi</groupId>-->
-                    <!--<artifactId>owlapi-distribution</artifactId>-->
-                <!--</exclusion>-->
             </exclusions>
         </dependency>
-        <!--dependency>
-            <groupId>com.github.phenomics</groupId>
-            <artifactId>ontolib-io</artifactId>
-            <version>${ontolib.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
 
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena-libs</artifactId>
             <type>pom</type>
-            <version>3.6.0</version>
+            <version>${jena.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -190,12 +196,12 @@
             </exclusions>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/net.sourceforge.owlapi/owlapi-distribution -->
-        <!--<dependency>-->
-            <!--<groupId>net.sourceforge.owlapi</groupId>-->
-            <!--<artifactId>owlapi-distribution</artifactId>-->
-            <!--<version>5.1.4</version>-->
-        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena-arq -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>${jena.version}</version>
+        </dependency>
 
 
         <dependency>
@@ -267,32 +273,7 @@
         </dependency>
 
 
-        <!--dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.26</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.inject</groupId>
-            <artifactId>jersey-hk2</artifactId>
-            <version>2.26</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>rest-assured</artifactId>
-            <version>2.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.restassured</groupId>
-            <artifactId>xml-path</artifactId>
-            <version>2.4.0</version>
-        </dependency> -->
 
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -954,14 +935,9 @@
             <version>2.5.2</version>
         </dependency>
         <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>8.40.12</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
-            <version>0.16</version>
+            <version>1.0.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -974,12 +950,6 @@
             <artifactId>jgrapht-core</artifactId>
             <version>1.2.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.poi</groupId>-->
-            <!--<artifactId>poi-ooxml</artifactId>-->
-            <!--<version>3.17</version>-->
-        <!--</dependency>-->
         <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-model -->
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -1043,7 +1013,7 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>loinc2hpo-core/src/main/resources</directory>
                 <filtering>false</filtering>
                 <includes>
                     <include>CodeSystems/*.tsv</include>
@@ -1065,82 +1035,57 @@
 
         </resources>
 
-        <!--sourceDirectory>src</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources/CodeSystems</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources/external2internalCodeMap</directory>
-            </resource>
-
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            <resource>
-
-            <resource>
-                <directory>src/test/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-
-        </resources>
-        <finalName>org.monarchinitiative.loinc2hpo-${project.version}</finalName>
--->
-
 
         <plugins>
             <!-- JUnit testing -->
+            <!--https://stackoverflow.com/questions/36970384/surefire-is-not-picking-up-junit-5-tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.17</version>
-                <configuration>
-                    <skipTests>false</skipTests>
-                    <forkCount>3</forkCount>
-                    <reuseForks>true</reuseForks>
-                    <argLine>-Xms512m -Xmx1024m
-                        -Duser.language=en -Duser.region=US</argLine>
-                    <systemPropertyVariables>
-                        <user.language>en</user.language>
-                        <user.region>US</user.region>
-                    </systemPropertyVariables>
-                </configuration>
+                <version>2.21.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>1.3.2</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
 
-             <plugin>
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-enforcer-plugin</artifactId>
-                   <version>1.4.1</version>
-                   <executions>
-                       <execution>
-                           <id>enforce</id>
-                           <configuration>
-                               <rules>
-                                   <DependencyConvergence />
-                               </rules>
-                           </configuration>
-                           <goals>
-                               <goal>enforce</goal>
-                           </goals>
-                       </execution>
-                   </executions>
-               </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <executions>
+                    <execution>
+                        <id>default-cli</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <banDuplicateClasses/>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.4</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
 
             <!-- Javadoc generation. -->
             <plugin>
@@ -1199,34 +1144,16 @@
                 </executions>
             </plugin>
 
-            <!-- Compilation -->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-compiler-plugin</artifactId>-->
-                <!--<version>3.3</version>-->
-                <!--<configuration>-->
-                    <!--<compilerArgument>-Xlint:all</compilerArgument>-->
-                    <!--<showWarnings>true</showWarnings>-->
-                    <!--<showDeprecation>true</showDeprecation>-->
-                    <!--<source>1.8</source>-->
-                    <!--<target>1.8</target>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
 
-            <!-- Set versions into JAR -->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-jar-plugin</artifactId>-->
-                <!--<version>3.0.2</version>-->
-                <!--<configuration>-->
-                    <!--<archive>-->
-                        <!--<manifest>-->
-                            <!--<addDefaultImplementationEntries>true</addDefaultImplementationEntries>-->
-                            <!--<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>-->
-                        <!--</manifest>-->
-                    <!--</archive>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
+            <!-- mvn versions:display-plugin-updates -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
 
             <!-- Include all dependencies in Jar -->
 
@@ -1245,7 +1172,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.monarchinitiative.loinc2hpo.gui.Main</mainClass>
+                            <mainClass>org.monarchinitiative.loinc2hpogui.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -1260,23 +1187,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-<!--<plugin>-->
-    <!--<groupId>org.apache.maven.plugins</groupId>-->
-    <!--<artifactId>maven-shade-plugin</artifactId>-->
-    <!--<version>2.4.1</version>-->
-    <!--<configuration>-->
-        <!--<shadedArtifactAttached>false</shadedArtifactAttached>-->
-        <!--<transformers>-->
-            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>-->
-        <!--</transformers>-->
-
-    <!--</configuration>-->
-<!--</plugin>-->
-
-
-
 
         </plugins>
 
