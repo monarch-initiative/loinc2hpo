@@ -14,7 +14,7 @@ class CodeTest {
     }
 
     @Test
-    public void getCode() throws Exception {
+    public void getCode() {
         Code code = new Code();
         code.setCode("H");
         assertNotNull(code.getCode());

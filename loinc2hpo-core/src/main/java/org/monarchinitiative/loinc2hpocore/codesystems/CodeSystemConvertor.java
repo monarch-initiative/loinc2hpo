@@ -12,7 +12,7 @@ import java.util.Map;
 public class CodeSystemConvertor {
     private static final Logger logger = LogManager.getLogger();
 
-    private Map<Code, Code> codeConversionmap = new HashMap<>();
+    private final Map<Code, Code> codeConversionmap = new HashMap<>();
 
     public CodeSystemConvertor(){
         initV2toInternalCodeMap();

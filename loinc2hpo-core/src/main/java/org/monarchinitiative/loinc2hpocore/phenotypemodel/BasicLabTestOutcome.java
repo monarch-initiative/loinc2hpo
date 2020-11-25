@@ -17,9 +17,9 @@ public class BasicLabTestOutcome implements LabTestOutcome {
     private Observation observation;
     private Reference subject;
     private List<Identifier> identifiers;
-    private HpoTerm4TestOutcome hpoId;
+    private final HpoTerm4TestOutcome hpoId;
 
-    private String comment;
+    private final String comment;
 
     public BasicLabTestOutcome(HpoTerm4TestOutcome id, @Nullable String text) {
         this.hpoId = id;

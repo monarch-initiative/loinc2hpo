@@ -38,10 +38,7 @@ public class PhenotypeComponentImpl implements PhenotypeComponent {
     @Override
     public boolean isEffective(Date timepoint) {
         //at timepoint between [effectiveStart, effectiveEnd] inclusive is effective
-        if (timepoint.before(start) || timepoint.after(end)) {
-            return false;
-        }
-        return true;
+        return !timepoint.before(start) && !timepoint.after(end);
     }
 
     @Override

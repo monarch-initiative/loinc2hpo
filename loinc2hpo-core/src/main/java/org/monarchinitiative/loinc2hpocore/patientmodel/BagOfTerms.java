@@ -5,6 +5,7 @@ import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -13,9 +14,9 @@ import java.util.Set;
  */
 public class BagOfTerms implements InferWithHPOHierarchy {
 
-    private String patient;
-    private Ontology hpo;
-    private Set<TermId> terms;
+    private final String patient;
+    private final Ontology hpo;
+    private final Set<TermId> terms;
     private Set<TermId> terms_inferred;
 
     public BagOfTerms(String patient, Ontology hp) {
@@ -27,7 +28,7 @@ public class BagOfTerms implements InferWithHPOHierarchy {
 
     public BagOfTerms(String patient, Set<TermId> hpterms, Ontology hp) {
         this.patient = patient;
-        this.terms = hpterms;
+        this.terms = Objects.requireNonNull(hpterms);
         this.hpo = hp;
         this.terms_inferred = new LinkedHashSet<>(this.terms);
     }
@@ -45,9 +46,6 @@ public class BagOfTerms implements InferWithHPOHierarchy {
     }
 
     public void addTerm (TermId term) {
-        if(this.terms == null) {
-            terms = new LinkedHashSet<>();
-        }
         terms.add(term);
     }
 

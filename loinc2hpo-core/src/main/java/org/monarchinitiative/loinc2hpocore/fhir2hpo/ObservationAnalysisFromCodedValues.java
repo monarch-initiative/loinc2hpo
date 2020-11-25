@@ -64,7 +64,7 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
         Set<HpoTerm4TestOutcome> results = codedValue.getCoding()
                 .stream()
-                .filter(p -> annotationMap.get(loincId).getCandidateHpoTerms().keySet().contains(new Code(p)))
+                .filter(p -> annotationMap.get(loincId).getCandidateHpoTerms().containsKey(new Code(p)))
                 .map(c -> annotationMap.get(loincId).getCandidateHpoTerms().get(new Code(c.getSystem(),
                         c.getCode(), null)))
                 .collect(Collectors.toSet());

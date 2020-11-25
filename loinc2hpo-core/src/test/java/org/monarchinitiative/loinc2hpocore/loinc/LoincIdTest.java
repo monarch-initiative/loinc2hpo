@@ -37,7 +37,7 @@ public class LoincIdTest {
     }
 
     @Test
-    public void testBadCode2() throws MalformedLoincCodeException {
+    public void testBadCode2() {
         Assertions.assertThrows(MalformedLoincCodeException.class, () -> {
             String code = "1507423";
             LoincId id = new LoincId(code);

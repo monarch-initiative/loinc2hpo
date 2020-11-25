@@ -15,10 +15,10 @@ import java.util.Set;
 
 public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
 
-    private String patientId;
-    private Map<TermId, Integer> termCounts;
+    private final String patientId;
+    private final Map<TermId, Integer> termCounts;
     private Map<TermId, Integer> inferred;
-    private Ontology hpo;
+    private final Ontology hpo;
 
     public BagOfTermsWithFrequencies(String patientId, Ontology hpo) {
         this.patientId = patientId;
@@ -58,11 +58,11 @@ public class BagOfTermsWithFrequencies implements InferWithHPOHierarchy{
         this.inferred = new LinkedHashMap<>(termCounts);
 
         //For every term, find its ancestors (not including original term) and update their counts with the counts of current term.
-        termCounts.entrySet().forEach(entry -> {
-            Set<TermId> ancesstors = OntologyAlgorithm.getAncestorTerms(hpo, entry.getKey(), false);
+        termCounts.forEach((key, value) -> {
+            Set<TermId> ancesstors = OntologyAlgorithm.getAncestorTerms(hpo, key, false);
             ancesstors.forEach(t -> {
                 inferred.putIfAbsent(t, 0);
-                inferred.put(t, inferred.get(t) + entry.getValue());
+                inferred.put(t, inferred.get(t) + value);
             });
         });
     }
