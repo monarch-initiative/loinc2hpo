@@ -16,21 +16,21 @@ import java.util.List;
 public class LoincEntry {
     private static final Logger logger = LogManager.getLogger();
 
-    private LoincId LOINC_Number=null;
+    private final LoincId LOINC_Number;
 
-    private String component=null;
+    private final String component;
 
-    private String property=null;
+    private final String property;
 
-    private String timeAspect=null;
+    private final String timeAspect;
 
-    private String system=null;
+    private final String system;
 
-    private String scale=null;
+    private final String scale;
 
-    private String method=null;
+    private final String method;
 
-    private String longName=null;
+    private final String longName;
 
     //parse long name into single components
     private LoincLongNameComponents longNameComponents = null;
@@ -46,11 +46,7 @@ public class LoincEntry {
         if (F.size()<MIN_FIELDS_LOINC) {
             throw new MalformedLoincCodeException("malformed LOINC line: "+line);
         }
-        try {
-            LOINC_Number=new LoincId(F.get(0));
-        } catch (MalformedLoincCodeException e) {
-            logger.error("Invalid loinc id detected: " + F.get(0));
-        }
+        LOINC_Number=new LoincId(F.get(0));
         component=F.get(1);
         property=F.get(2);
         timeAspect=F.get(3);

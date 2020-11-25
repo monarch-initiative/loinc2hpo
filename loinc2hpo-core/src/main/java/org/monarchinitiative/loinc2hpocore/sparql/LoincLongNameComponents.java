@@ -1,6 +1,10 @@
 package org.monarchinitiative.loinc2hpocore.sparql;
 
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A class to represent a loinc code. The class is created by
@@ -21,13 +25,15 @@ import java.util.*;
  */
 public class LoincLongNameComponents {
 
-    private String parameter;
-    private String tissue;
-    private String assayMethod;
-    private String assayType;
-    private static final String[] invalid_words = new String[] //use lowercase letters
-            {"mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
-                    "normal", "on", "total", "identified"};
+    private final String parameter;
+    private final String tissue;
+    private final String assayMethod;
+    private final String assayType;
+    /** List of stop words and general words that we filter out of LOINC labels prior to text mining. */
+    private static final Set invalid_words =
+            Stream.of("mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
+                    "normal", "on", "total", "identified").collect(Collectors.toSet());
+
 
     public LoincLongNameComponents(String parameter, String tissue, String method, String type) {
         this.parameter = parameter;
@@ -45,9 +51,7 @@ public class LoincLongNameComponents {
      * @return parameter measured from a Loinc long common name; "" if such information is not identified.
      */
     public String getLoincParameter(){
-
         return this.parameter;
-
     }
 
     /**
@@ -57,9 +61,7 @@ public class LoincLongNameComponents {
      * @return tissued measured from a Loinc long common name; "" if such information is not identified.
      */
     public String getLoincTissue(){
-
         return this.tissue;
-
     }
 
     /**
@@ -69,7 +71,6 @@ public class LoincLongNameComponents {
      * @return method used from a Loinc long common name; "" if such information is not identified.
      */
     public String getLoincMethod(){
-
         return this.assayMethod;
     }
 
@@ -80,9 +81,7 @@ public class LoincLongNameComponents {
      * @return type used from a Loinc long common name; "" if such information is not identified.
      */
     public String getLoincType(){
-
         return this.assayType;
-
     }
 
     /**
@@ -92,7 +91,7 @@ public class LoincLongNameComponents {
      * or integers.
      * @return a list of valid words
      */
-    public Queue<String> keysInLoinParameter() {
+    public Queue<String> keysInLoincParameter() {
         Queue<String> keys = new LinkedList<>();
         String[] words = this.parameter.split("\\W");
         for (String word : words) {
@@ -136,26 +135,24 @@ public class LoincLongNameComponents {
     }
 
     /**
-     * A helper method to check whether a word is valid or not.
-     * @param word
-     * @return
+     * A helper method to check whether a word is valid or not, i.e., whether a word should be used in building a query
+     * Do not use numbers, empty/null words, one-letter words, or words in {@link #invalid_words}.
+     * @param word word to be tested
+     * @return true if the word can be used to build a query.
      */
-    private static boolean validKey(String word) { //test whether a word should be used in building a query
-
+    private static boolean validKey(String word) {
+        final Pattern pattern = Pattern.compile("[0-9]+");
+        final Predicate<String> integerPredicate = pattern.asPredicate();
         if (word == null || word.isEmpty()) {
             return false;
-        }
-        if (word.length() == 1) {
+        } else if (word.length() == 1) {
             return false;
-        }
-
-        try {
-            int value = Integer.parseInt(word); //do not allow integers
+        } else if (invalid_words.contains(word.toLowerCase())) {
             return false;
-        } catch (Exception e) {
-            HashSet<String> invalid = new HashSet<>(Arrays.asList(invalid_words));
-            return !invalid.contains(word);
+        } else if (integerPredicate.test(word)) {
+            return false;
+        } else {
+            return true;
         }
-
     }
 }

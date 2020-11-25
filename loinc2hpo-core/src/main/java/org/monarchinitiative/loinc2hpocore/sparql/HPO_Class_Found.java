@@ -58,7 +58,7 @@ public class HPO_Class_Found implements Comparable<HPO_Class_Found> {
         }
 
         //test key matches
-        Queue<String> keysInParameter = this.loinc.keysInLoinParameter();
+        Queue<String> keysInParameter = this.loinc.keysInLoincParameter();
         for (String key : keysInParameter) {
             pattern = Pattern.compile(toPattern(key));
             matcher = pattern.matcher(total.toLowerCase());
