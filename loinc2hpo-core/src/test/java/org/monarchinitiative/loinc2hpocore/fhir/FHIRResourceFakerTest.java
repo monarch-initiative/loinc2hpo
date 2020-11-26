@@ -1,11 +1,23 @@
 package org.monarchinitiative.loinc2hpocore.fhir;
 
+
 import org.hl7.fhir.dstu3.model.*;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceFaker;
+import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirResourceFakerImpl;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @Disabled
@@ -14,44 +26,43 @@ public class FHIRResourceFakerTest {
     private static FhirResourceFaker resourceGenerator;
     private static List<Patient> randPatients;
 
-//    @BeforeAll
-//    public static void setup() {
-//        String path = "/Users/zhangx/Downloads/LOINC_2/LoincTableCore.csv";
-//        Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path);
+
+    @BeforeAll
+    public static void setup() {
+        Path path = Paths.get("src", "test", "resources", "LoincTableCoreTiny.csv");
+       Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path.toAbsolutePath().toString());
+
+        resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
+       randPatients = resourceGenerator.fakePatients(10);
+    }
+
+//    @Test
+//    public void testLoincEntryMapSize() {
 //        assertNotNull(loincEntryMap);
 //        assertTrue(loincEntryMap.size() > 1000);
-//        resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
-//
-//        randPatients = resourceGenerator.fakePatients(10);
 //    }
-//
-//    @Test
-//    public void testFaker() {
-//        Faker faker = new Faker();
-//        String firstName = faker.name().firstName();
-//        String lastName = faker.name().lastName();
-//        String nameWithMiddle = faker.name().nameWithMiddle();
-//        System.out.println(firstName);
-//        System.out.println(lastName);
-//        System.out.println(nameWithMiddle);
-//
-//
-//        Name name = faker.name();
-//        System.out.println(name.firstName() + "\n" + name.lastName() + "\n" + name.nameWithMiddle());
-//
-//        Address address = faker.address();
-//        System.out.println(address.streetAddress() + "\n" + address.buildingNumber() + "\n" +
-//            address.city() + ", " + address.state() + " " + address.zipCode() + "\n" + address.country());
-//
-//        System.out.println(faker.address().fullAddress());
-//
+
+   @Test
+    public void testFaker() {
+       Patient patient = resourceGenerator.fakePatient();
+        String name = patient.getNameFirstRep().getNameAsSingleString();
+       System.out.println(name);
+
+        HumanName hname = patient.getName().get(0);
+        System.out.println(hname.getGiven());
+
+        Address address = patient.getAddress().get(0);
+       System.out.println(address.getCity() );
+
+        System.out.println(address.toString());
+
 //        System.out.println(faker.phoneNumber().phoneNumber());
 //
 //        System.out.println(faker.address().streetAddress(true));
-//
-//        //System.out.println(faker.);
-//
-//    }
+
+        //System.out.println(faker.);
+
+    }
 //    @Test
 //    public void generateObservation() throws Exception {
 //        LOINCEXAMPLE[] testLoinc = LOINCEXAMPLE.values();
