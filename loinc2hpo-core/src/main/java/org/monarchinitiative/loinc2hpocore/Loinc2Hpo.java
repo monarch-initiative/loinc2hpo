@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpocore;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.exception.AnnotationNotFoundException;
@@ -10,6 +9,8 @@ import org.monarchinitiative.loinc2hpocore.exception.LoincCodeNotAnnotatedExcept
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -20,10 +21,10 @@ import java.util.Map;
  */
 public class Loinc2Hpo {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(Loinc2Hpo.class);
 
-    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
-    private CodeSystemConvertor converter;
+    private final Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
+    private final CodeSystemConvertor converter;
 
     public Loinc2Hpo(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap,
                      CodeSystemConvertor converter){

@@ -24,7 +24,7 @@ public class FhirServerDstu3Impl implements FhirServer{
     }
 
     @Override
-    public IGenericClient restifulGenericClient() {
+    public IGenericClient restfulGenericClient() {
 
         return this.client;
     }

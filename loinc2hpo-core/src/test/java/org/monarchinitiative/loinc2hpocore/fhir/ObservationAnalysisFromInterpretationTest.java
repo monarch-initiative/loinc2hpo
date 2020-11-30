@@ -22,6 +22,15 @@ import static org.mockito.Mockito.when;
 
 
 public class ObservationAnalysisFromInterpretationTest {
+    /**
+     * This page is part of the FHIR Specification (v4.0.1: R4 - Mixed Normative and STU).
+     * This is the current published version. It defines v2 ABNORMAL FLAGS,
+     * HL7-defined code system of concepts which specify a categorical assessment of an
+     * observation value.
+     * It is being communicated in FHIR in Observation.interpretation.
+     */
+    public static final String  hl7Version2Table0078 = "http://hl7.org/fhir/v2/0078/";
+
 
     @Test
     public void getHPOforObservation() throws Exception {
@@ -29,7 +38,7 @@ public class ObservationAnalysisFromInterpretationTest {
         Observation observation = mock(Observation.class);
         LoincId loincId = new LoincId("15074-8");
         when(observation.getCode()).thenReturn(new CodeableConcept().addCoding(new Coding("http://loinc.org", "15074-8", "")));
-        Coding exHigh = new Coding("http://hl7.org/fhir/v2/0078", "H", "High");
+        Coding exHigh = new Coding(hl7Version2Table0078, "H", "High");
         when(observation.getInterpretation()).thenReturn(new CodeableConcept().addCoding(exHigh));
 
         Code inHigh = mock(Code.class);

@@ -1,20 +1,20 @@
 package org.monarchinitiative.loinc2hpocore.fhir2hpo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+import org.apache.jena.sparql.algebra.Op;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.util.*;
 
 public class FhirObservation2Hpo {
-
-    static Logger logger = LogManager.getLogger();
+    static Logger logger = LoggerFactory.getLogger(FhirObservation2Hpo.class);
 
     private Loinc2Hpo loinc2Hpo;
     private Set<LoincId> loincIdSet;
@@ -24,13 +24,20 @@ public class FhirObservation2Hpo {
         this.loincIdSet = loincIdSet;
     }
 
-    public HpoTerm4TestOutcome fhir2hpo(Observation observation) throws LoincCodeNotFoundException, MalformedLoincCodeException, UnrecognizedLoincCodeException, AmbiguousResultsFoundException, AnnotationNotFoundException, LoincCodeNotAnnotatedException, UnrecognizedCodeException, AmbiguousReferenceException, ReferenceNotFoundException {
-        LoincId loincId =
-                FhirObservationUtil.getLoincIdOfObservation(observation);
+    public Optional<HpoTerm4TestOutcome> fhir2hpo(Observation observation)
+            throws LoincCodeNotFoundException,
+            MalformedLoincCodeException,
+            UnrecognizedLoincCodeException,
+            AmbiguousResultsFoundException,
+            AnnotationNotFoundException,
+            LoincCodeNotAnnotatedException,
+            UnrecognizedCodeException,
+            AmbiguousReferenceException,
+            ReferenceNotFoundException {
+        LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
         if (!loincIdSet.contains(loincId)){
             throw new UnrecognizedLoincCodeException();
         }
-
         HpoTerm4TestOutcome result;
         if (observation.hasInterpretation()){
             result = new ObservationAnalysisFromInterpretation(loinc2Hpo,
@@ -43,9 +50,9 @@ public class FhirObservation2Hpo {
                     observation).getHPOforObservation();
         } else {
             logger.info("Unable to handle observation");
-            return null;
+            return Optional.empty();
         }
-        return result;
+        return Optional.of(result);
     }
 
 }

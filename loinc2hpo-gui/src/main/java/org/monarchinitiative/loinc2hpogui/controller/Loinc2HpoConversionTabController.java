@@ -30,6 +30,7 @@ import org.monarchinitiative.loinc2hpogui.model.AppTempData;
 
 import java.io.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -234,18 +235,22 @@ public class Loinc2HpoConversionTabController {
         String hpoTermId = null;
 
         try {
-            HpoTerm4TestOutcome result = fhirObservation2Hpo.fhir2hpo(o);
-            hpoTermLabel =
-                    appResources.getTermidTermMap().get(result.getId()).getName();
-            hpoTermId = result.getId().getValue();
-            String display;
-            if (result.isNegated()) {
-                display = String.format("%s: NOT %s [%s]",subject,
-                        hpoTermLabel, hpoTermId);
-            } else {
-                display = String.format("%s: %s [%s]", subject, hpoTermLabel, hpoTermId);
+            Optional<HpoTerm4TestOutcome> opt  = fhirObservation2Hpo.fhir2hpo(o);
+            HpoTerm4TestOutcome result;
+            if (opt.isPresent()) {
+                result = opt.get();
+                hpoTermLabel =
+                        appResources.getTermidTermMap().get(result.getId()).getName();
+                hpoTermId = result.getId().getValue();
+                String display;
+                if (result.isNegated()) {
+                    display = String.format("%s: NOT %s [%s]",subject,
+                            hpoTermLabel, hpoTermId);
+                } else {
+                    display = String.format("%s: %s [%s]", subject, hpoTermLabel, hpoTermId);
+                }
+                displays.add(display);
             }
-            displays.add(display);
         } catch (MalformedLoincCodeException e) {
             displays.add(subject + " : failed to interpret [code 11]");
         } catch (LoincCodeNotFoundException e) {
