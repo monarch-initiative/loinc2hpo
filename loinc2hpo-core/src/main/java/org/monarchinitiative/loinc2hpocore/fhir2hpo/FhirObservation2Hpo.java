@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.fhir2hpo;
 
-
-import org.apache.jena.sparql.algebra.Op;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
@@ -14,10 +12,10 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 public class FhirObservation2Hpo {
-    static Logger logger = LoggerFactory.getLogger(FhirObservation2Hpo.class);
+    private static final Logger logger = LoggerFactory.getLogger(FhirObservation2Hpo.class);
 
-    private Loinc2Hpo loinc2Hpo;
-    private Set<LoincId> loincIdSet;
+    private final Loinc2Hpo loinc2Hpo;
+    private final Set<LoincId> loincIdSet;
 
     public FhirObservation2Hpo(Loinc2Hpo loinc2Hpo, Set<LoincId> loincIdSet) {
         this.loinc2Hpo = loinc2Hpo;

@@ -36,10 +36,8 @@ public class CodeSystemConvertor {
                     logger.error("The line does not have 3 tab-separated elements: " + line);
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException  e) {
             e.printStackTrace();
-        } catch (IOException e) {
-
         } catch (UnrecognizedCodeException e) {
             e.printStackTrace();
             throw new RuntimeException("unrecognized code encountered");
@@ -56,7 +54,7 @@ public class CodeSystemConvertor {
 
 
     public Code convertToInternalCode(Code code) throws InternalCodeNotFoundException {
-
+        System.out.println(code);
         if (!this.codeConversionmap.containsKey(code)) {
             throw new InternalCodeNotFoundException("Could not find an internal code that match to: " + code.getSystem() + " " + code.getCode());
         }

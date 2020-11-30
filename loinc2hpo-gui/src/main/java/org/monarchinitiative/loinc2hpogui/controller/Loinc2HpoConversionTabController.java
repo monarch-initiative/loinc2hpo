@@ -218,7 +218,7 @@ public class Loinc2HpoConversionTabController {
         resources.stream()
                 .filter(o -> o.resource instanceof Observation)
                 .map(o -> (Observation) o.resource)
-                .forEach(o -> convert(o));
+                .forEach(this::convert);
     }
 
 
