@@ -14,7 +14,7 @@
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
         <phenol.version>1.5.0</phenol.version>
-        <guava.version>27.0.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>5.0.2</hapi-fhir.version>
         <mockito.version>3.3.3</mockito.version>
