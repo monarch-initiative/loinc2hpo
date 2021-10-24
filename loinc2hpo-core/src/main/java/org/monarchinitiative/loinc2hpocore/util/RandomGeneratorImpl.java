@@ -106,10 +106,8 @@ public class RandomGeneratorImpl implements RandomGenerator{
             while (!Character.isAlphabetic(string.charAt(0))) {
                 string = randString(charCount, intCount);
             }
-            return string;
-        } else {
-            return string;
         }
+        return string;
     }
 
 
@@ -120,7 +118,7 @@ public class RandomGeneratorImpl implements RandomGenerator{
         all.addAll(chars.stream().map(c -> c.toString()).collect(Collectors.toList()));
         all.addAll(ints.stream().map(i -> i.toString()).collect(Collectors.toList()));
         Collections.shuffle(all);
-        return all.stream().collect(Collectors.joining());
+        return String.join("", all);
     }
 
 

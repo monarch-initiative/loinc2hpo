@@ -32,7 +32,7 @@ public class PhenoSetUnionFindTest {
         Term nitrituria = Term.of(TermId.of("HP:0000043"), "Nitrituria");
 
         hpoTermMap =
-                Stream.of(hypocapnia, hypercapnia, nitrituria).collect(Collectors.toMap(e -> e.getName(), e-> e));
+                Stream.of(hypocapnia, hypercapnia, nitrituria).collect(Collectors.toMap(Term::getName, e-> e));
         Loinc2HpoAnnotationModel annotation1 =
                 new Loinc2HpoAnnotationModel.Builder()
                 .setLoincId(caliumTest)

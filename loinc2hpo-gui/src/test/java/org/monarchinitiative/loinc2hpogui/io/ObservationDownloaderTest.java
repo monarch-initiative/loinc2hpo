@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ObservationDownloaderTest {
     @Test
     @Disabled("This test tries to fetch observation from hapi-fhir test server, so the returning observations various")
-    public void retrieveObservation() throws Exception {
+    public void retrieveObservation() {
         String testLoinc = "1558-6";
         List<Observation> observations = ObservationDownloader.retrieveObservation( testLoinc);
         //data on server might change, so the assertion is not always true even through everything works
@@ -27,7 +27,7 @@ public class ObservationDownloaderTest {
 
     @Test
     @Disabled("same as above, can fail when server changes")
-    public void longestObservation() throws Exception {
+    public void longestObservation() {
         String testLoinc = "600-7";
         String longestObservation = ObservationDownloader.longestObservation(ObservationDownloader.retrieveObservation(testLoinc));
         if (longestObservation != null) {
@@ -50,7 +50,7 @@ public class ObservationDownloaderTest {
 
     @Test
     @Disabled
-    public void firstAccetable() throws Exception {
+    public void firstAcceptable() {
         String testLoinc = "600-7";
         List<Observation> observations = ObservationDownloader.retrieveObservation(testLoinc);
         String firstAcceptable = ObservationDownloader.firstAcceptableObservation(observations);

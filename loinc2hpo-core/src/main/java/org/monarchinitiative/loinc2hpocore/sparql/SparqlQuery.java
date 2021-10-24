@@ -264,7 +264,7 @@ public class SparqlQuery {
         List<HPO_Class_Found> HPO_classes_found = new ArrayList<>();
 
         LoincLongNameComponents loincClass = LoincLongNameParser.parse(loincLongCommonName);
-        Queue<String> keys_in_parameter = loincClass.keysInLoinParameter();
+        Queue<String> keys_in_parameter = loincClass.keysInLoincParameter();
         Queue<String> keys_in_tissue = loincClass.keysInLoincTissue();
         Stack<String> keys_in_use = new Stack<>();
 

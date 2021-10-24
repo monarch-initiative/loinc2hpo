@@ -122,7 +122,7 @@ public class Loinc2HpoAnnotationModel {
         writer.close();
     }
 
-    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws IOException, MalformedLoincCodeException {
+    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws MalformedLoincCodeException {
 
         List<Loinc2HpoAnnotationCsvEntry> csvEntries = Loinc2HpoAnnotationCsvEntry.importAnnotations(path);
 
@@ -184,16 +184,16 @@ public class Loinc2HpoAnnotationModel {
         return annotationModelMap;
     }
 
-    private LoincId loincId = null;
-    private LoincScale loincScale = null;
-    private HashMap<Code, HpoTerm4TestOutcome> candidateHpoTerms;
-    private LocalDateTime createdOn = null;
-    private String createdBy = null;
-    private LocalDateTime lastEditedOn = null;
-    private String lastEditedBy = null;
-    private double version = 0.0;
-    private String note = null; //any comment for this annotation, say e.g. "highly confident about this annotation"
-    private boolean flag = false; //a simpler version that equals a comment "not sure about the annotation, come back later"
+    private final LoincId loincId;
+    private final LoincScale loincScale;
+    private final HashMap<Code, HpoTerm4TestOutcome> candidateHpoTerms;
+    private final LocalDateTime createdOn;
+    private final String createdBy;
+    private final LocalDateTime lastEditedOn;
+    private final String lastEditedBy;
+    private double version;
+    private final String note; //any comment for this annotation, say e.g. "highly confident about this annotation"
+    private final boolean flag; //a simpler version that equals a comment "not sure about the annotation, come back later"
 
 
     public Loinc2HpoAnnotationModel(LoincId loincId, LoincScale loincScale,
@@ -267,8 +267,7 @@ public class Loinc2HpoAnnotationModel {
 
     /**
      * Return the annotation map.
-     * @TODO: consider return a copy of the map, but it will affect the
-     * parsing method.
+     * @TODO: consider return a copy of the map, but it will affect the parsing method.
      * @return
      */
     public HashMap<Code, HpoTerm4TestOutcome> getCandidateHpoTerms() {

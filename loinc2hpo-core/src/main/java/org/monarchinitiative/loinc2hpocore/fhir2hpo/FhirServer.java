@@ -7,5 +7,5 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
  */
 public interface FhirServer extends FhirResourceDownload, FhirResourceUpload {
     String getBaseAddress();
-    IGenericClient restifulGenericClient();
+    IGenericClient restfulGenericClient();
 }

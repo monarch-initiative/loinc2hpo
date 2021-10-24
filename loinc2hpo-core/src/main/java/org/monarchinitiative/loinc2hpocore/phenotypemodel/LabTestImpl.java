@@ -13,12 +13,12 @@ import java.util.Date;
 
 public class LabTestImpl implements LabTest{
 
-    private Patient patient;
-    private Date effectiveStart;
-    private Date effectiveEnd;
-    private LoincId loincId;
-    private String resourceId;
-    private HpoTerm4TestOutcome outcome;
+    private final Patient patient;
+    private final Date effectiveStart;
+    private final Date effectiveEnd;
+    private final LoincId loincId;
+    private final String resourceId;
+    private final HpoTerm4TestOutcome outcome;
 
 
     private LabTestImpl(Patient patient, Date effectiveStart, Date effectiveEnd, LoincId loincId, String resourceId, HpoTerm4TestOutcome outcome) {

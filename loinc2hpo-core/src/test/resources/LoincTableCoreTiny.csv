@@ -26,3 +26,4 @@
 "10022-2","R' wave duration.lead AVF","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R' wave duration in lead AVF","R' wave dur L-AVF","","ACTIVE","1.0i","2.48"
 "10023-0","R' wave duration.lead AVL","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R' wave duration in lead AVL","R' wave dur L-AVL","","ACTIVE","1.0i","2.48"
 "10024-8","R' wave duration.lead AVR","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R' wave duration in lead AVR","R' wave dur L-AVR","","ACTIVE","1.0i","2.48"
+"789-8","Erythrocytes [#/volume] in Blood by Automated count","NCnc","Pt","Bld","Qn","Automated count","2","Erythrocytes [#/volume] in Blood by Automated count","RBC # Bld Auto","","ACTIVE","1.0i","2.48"

@@ -63,3 +63,5 @@ hs_err_pid*
 
 # Mac junk :)
 .DS_Store
+/loinc2hpo-core/hp.rdf
+/loinc2hpo-core/letters.txt

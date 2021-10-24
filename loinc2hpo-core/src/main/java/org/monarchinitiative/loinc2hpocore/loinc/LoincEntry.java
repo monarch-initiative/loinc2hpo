@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
+import com.github.jsonldjava.utils.Obj;
 import com.google.common.collect.ImmutableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,28 +13,29 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class LoincEntry {
     private static final Logger logger = LogManager.getLogger();
 
-    private LoincId LOINC_Number=null;
+    private final LoincId LOINC_Number;
 
-    private String component=null;
+    private final String component;
 
-    private String property=null;
+    private final String property;
 
-    private String timeAspect=null;
+    private final String timeAspect;
 
-    private String system=null;
+    private final String system;
 
-    private String scale=null;
+    private final String scale;
 
-    private String method=null;
+    private final String method;
 
-    private String longName=null;
+    private final String longName;
 
     //parse long name into single components
-    private LoincLongNameComponents longNameComponents = null;
+    private final LoincLongNameComponents longNameComponents;
 
     private static final int MIN_FIELDS_LOINC=10;
 
@@ -46,11 +48,7 @@ public class LoincEntry {
         if (F.size()<MIN_FIELDS_LOINC) {
             throw new MalformedLoincCodeException("malformed LOINC line: "+line);
         }
-        try {
-            LOINC_Number=new LoincId(F.get(0));
-        } catch (MalformedLoincCodeException e) {
-            logger.error("Invalid loinc id detected: " + F.get(0));
-        }
+        LOINC_Number= new LoincId(F.get(0));
         component=F.get(1);
         property=F.get(2);
         timeAspect=F.get(3);
@@ -89,9 +87,8 @@ public class LoincEntry {
         ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder<>();
         int count_malformed = 0;
         int count_correct = 0;
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable));
-            String line=null;
+        try (BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable))){
+            String line;
             String header=br.readLine();
             if (! header.contains("\"LOINC_NUM\"")) {
                 logger.error(String.format("Malformed header line (%s) in Loinc File %s",header,pathToLoincCoreTable));
@@ -107,7 +104,6 @@ public class LoincEntry {
                     count_malformed++;
                 }
             }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,11 +126,7 @@ public class LoincEntry {
 
     @Override
     public int hashCode() {
-        if (this.LOINC_Number == null) {
-            return -9999;
-        }
         return this.LOINC_Number.hashCode();
-
     }
 
 

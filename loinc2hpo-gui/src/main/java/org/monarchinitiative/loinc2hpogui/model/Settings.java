@@ -14,6 +14,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This class parses the key:value setting file for LOINC2HPO app that is written to the user's home
+ * directory, something like the following.
+ * <pre>
+ * loincTablePath:/some/path/LoincTableCore.csv
+ * hp-obo:/home/user/.loinc2hpo/hp.obo
+ * hp-owl:/home/user/.loinc2hpo/hp.owl
+ * autosave to:/some/path
+ * </pre>
+ */
 public class Settings {
 
     private static Logger logger = LoggerFactory.getLogger(Settings.class);

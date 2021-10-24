@@ -63,13 +63,13 @@ class Loinc2HpoAnnotationModelTest {
         List<Loinc2HpoAnnotationCsvEntry> csvEntryList =
                 Loinc2HpoAnnotationModel.to_csv_entries(loinc2HpoAnnotation);
         assertEquals(3, csvEntryList.size());
-        csvEntryList.stream().map(entry -> entry.getLoincId()).distinct().count();
+        csvEntryList.stream().map(Loinc2HpoAnnotationCsvEntry::getLoincId).distinct().count();
         assertEquals(1,
-                csvEntryList.stream().map(entry -> entry.getLoincId()).distinct().count());
+                csvEntryList.stream().map(Loinc2HpoAnnotationCsvEntry::getLoincId).distinct().count());
         assertEquals(1,
-                csvEntryList.stream().map(entry -> entry.getLoincScale()).distinct().count());
+                csvEntryList.stream().map(Loinc2HpoAnnotationCsvEntry::getLoincScale).distinct().count());
         assertEquals(3,
-                csvEntryList.stream().map(entry -> entry.getCode()).distinct().count());
+                csvEntryList.stream().map(Loinc2HpoAnnotationCsvEntry::getCode).distinct().count());
 
     }
 

@@ -57,8 +57,7 @@ public class ResourceCollection {
     public void setLoincCategoriesDirPath(String path) { this.loincCategoriesDirPath = path; }
 
     public ImmutableMap<LoincId, LoincEntry> loincEntryMap() {
-        logger.trace("enter loincEntryMap()");
-        logger.trace(String.format("loincEntryPath is null: %s", this.loincEntryPath == null));
+        logger.trace("loincEntryPath is null: {}", this.loincEntryPath == null);
         if (this.loincEntryPath == null) {
             return null;
         }
@@ -82,7 +81,7 @@ public class ResourceCollection {
         }
 
         this.termnameTermMap =
-                this.hpo.getTermMap().values().stream().collect(Collectors.toMap(t -> t.getName(), t->t, (a, b) -> a));
+                this.hpo.getTermMap().values().stream().collect(Collectors.toMap(Term::getName, t->t, (a, b) -> a));
 
         return this.termnameTermMap;
     }

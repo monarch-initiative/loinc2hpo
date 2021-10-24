@@ -3,6 +3,7 @@ package org.monarchinitiative.loinc2hpocore.codesystems;
 import org.hl7.fhir.dstu3.model.Coding;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This is an class for coded values. This correspond to the Coding class in hapi-fhir with some modification (equal method)
@@ -77,8 +78,7 @@ public class Code implements Serializable {
     }
     @Override
     public int hashCode(){
-        return system.hashCode() + code.hashCode()*37;
-
+        return Objects.hash(this.system, this.code);
     }
 
     @Override

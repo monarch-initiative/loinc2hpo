@@ -1,6 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
 import org.apache.commons.lang3.StringUtils;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -44,7 +46,7 @@ public class Loinc2HpoAnnotationCsvEntry {
     }
 
 
-    public static List<Loinc2HpoAnnotationCsvEntry> importAnnotations(String path) throws IOException {
+    public static List<Loinc2HpoAnnotationCsvEntry> importAnnotations(String path) {
         List<Loinc2HpoAnnotationCsvEntry> entries = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(path))){
             //read header
@@ -91,6 +93,8 @@ public class Loinc2HpoAnnotationCsvEntry {
                         .build();
                 entries.add(newEntry);
             }
+        } catch (IOException e) {
+            throw new Loinc2HpoRuntimeException(e.getMessage());
         }
         return entries;
     }

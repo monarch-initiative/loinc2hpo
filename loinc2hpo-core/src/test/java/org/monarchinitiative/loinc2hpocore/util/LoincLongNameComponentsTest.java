@@ -7,10 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
 import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameParser;
 
+import java.util.HashSet;
 import java.util.Queue;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class LoincLongNameComponentsTest {
@@ -43,7 +44,7 @@ public class LoincLongNameComponentsTest {
 
     @Test
     public void keysInLoinParameter() throws Exception {
-        Queue<String> results = testclass.keysInLoinParameter();
+        Queue<String> results = testclass.keysInLoincParameter();
         assertEquals("Erythrocyte*", results.remove());
         assertEquals("distribution", results.remove());
         assertEquals("width", results.remove());
@@ -60,12 +61,37 @@ public class LoincLongNameComponentsTest {
     public void testALoinc() {
         String aLoinc = "Erythrocyte distribution width [Ratio] by Automated count";
         assertEquals("Erythrocyte distribution width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
-        assertEquals("", LoincLongNameParser.parse(aLoinc).getLoincTissue());
-        System.out.println(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().size());
-        for (String tissue : LoincLongNameParser.parse(aLoinc).keysInLoincTissue()) {
-            System.out.println(tissue);
-        }
-        assertTrue(LoincLongNameParser.parse(aLoinc).keysInLoincTissue().isEmpty());
+        LoincLongNameComponents loincLongName = LoincLongNameParser.parse(aLoinc);
+        Queue<String> queue = loincLongName.keysInLoincParameter();
+        assertEquals(3,queue.size());
+        Set<String> items = new HashSet<>(queue);
+        assertTrue(items.contains("Erythrocyte"));
+        assertTrue(items.contains("distribution"));
+        assertTrue(items.contains("width"));
+        // no tissue, so no keys available for tissue
+        assertEquals("", loincLongName.getLoincTissue());
+        assertTrue(loincLongName.keysInLoincTissue().isEmpty());
+    }
+
+    /**
+     * The processing of the LOINC long name should not return 42 as a possible key
+     */
+    @Test
+    public void testLongNameWithNumberLoinc() {
+        String aLoinc = "Erythrocyte distribution 42 width [Ratio] by Automated count";
+        assertEquals("Erythrocyte distribution 42 width", LoincLongNameParser.parse(aLoinc).getLoincParameter());
+        LoincLongNameComponents loincLongName = LoincLongNameParser.parse(aLoinc);
+        // expect to see "Erythrocyte", "distribution", "width", with 42 filtered out
+        Queue<String> queue = loincLongName.keysInLoincParameter();
+        assertEquals(3,queue.size());
+        Set<String> items = new HashSet<>(queue);
+        assertTrue(items.contains("Erythrocyte"));
+        assertTrue(items.contains("distribution"));
+        assertTrue(items.contains("width"));
+        assertFalse(items.contains("42"));
+        // no tissue, so no keys available for tissue
+        assertEquals("", loincLongName.getLoincTissue());
+        assertTrue(loincLongName.keysInLoincTissue().isEmpty());
     }
 
 

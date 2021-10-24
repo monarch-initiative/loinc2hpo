@@ -54,11 +54,11 @@ public enum InternalCode {
             case L: return "L";
             case N: return "N";
             case H: return "H";
-            case NP: return "NEG";
-            case P: return "POS";
-            case U: return "U";
+            case NP:
             case NEG: return "NEG";
+            case P:
             case POS: return "POS";
+            case U: return "U";
             default: return "?";
         }
     }

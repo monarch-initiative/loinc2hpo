@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class FHIRLoincPanelsImpl implements FHIRLoincPanels {
 
-    private Patient subject;
+    private final Patient subject;
     private String patientId;
     //
     private HashMap<LoincId, List<FHIRLoincPanel>> loincPanels;
