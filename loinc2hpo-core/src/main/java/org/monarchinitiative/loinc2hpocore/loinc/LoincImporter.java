@@ -1,5 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.sparql;
-
+package org.monarchinitiative.loinc2hpocore.loinc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +35,7 @@ import java.util.List;
  *     <li>VersionLastChanged, e.g., "2.34"</li>
  * </ol>
  *
-q
+ q
  */
 public class LoincImporter {
     private static final Logger logger = LogManager.getLogger();

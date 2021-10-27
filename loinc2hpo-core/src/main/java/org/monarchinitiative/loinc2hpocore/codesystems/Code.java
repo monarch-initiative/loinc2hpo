@@ -6,18 +6,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * This is an class for coded values. This correspond to the Coding class in hapi-fhir with some modification (equal method)
+ * This is an class for coded values. This corresponds to the Coding class in hapi-fhir with some
+ * modification (equal method)
  */
 public class Code implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String system;
-    private String code;
-    private String display;
-
-
-    public Code(){
-
-    }
+    private static final String DISPLAY_NOT_AVAILABLE = "n/a";
+    private final String system;
+    private final String code;
+    private final String display;
 
 
     public Code(String system, String code, String display){
@@ -32,41 +29,24 @@ public class Code implements Serializable {
         this.display = otherCode.display;
     }
 
-    public Code (Coding coding) {
+    public Code(Coding coding) {
         this.system = coding.getSystem();
         this.code = coding.getCode();
+        this.display = DISPLAY_NOT_AVAILABLE;
     }
 
-    public static Code getNewCode(){
-        return new Code();
-    }
+
     public String getSystem() {
         return system;
-    }
-
-   public Code setSystem(String system) {
-        this.system = system;
-        return this;
     }
 
     public String getCode() {
         return code;
     }
 
-    public Code setCode(String code) {
-        this.code = code;
-        return this;
-    }
-
     public String getDisplay() {
         return display;
     }
-
-    public Code setDisplay(String display) {
-        this.display = display;
-        return this;
-    }
-
 
     @Override
     public boolean equals(Object obj){
@@ -83,9 +63,14 @@ public class Code implements Serializable {
 
     @Override
     public String toString(){
+        return String.format("System: %s; Code: %s, Display: %s", system, code, display);
+    }
 
-        String toString = String.format("System: %s; Code: %s, Display: %s", system, code, display);
-        return toString;
+    public static Code fromSystemAndCode(String system, String code) {
+        return new Code(system, code, DISPLAY_NOT_AVAILABLE);
+    }
 
+    public static Code fromSystemCodeAndDisplay(String system, String code, String display) {
+        return new Code(system, code, display);
     }
 }

@@ -1,10 +1,10 @@
-package org.monarchinitiative.loinc2hpocore.sparql;
+package org.monarchinitiative.loinc2hpocore.loinc;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A class to represent a loinc code. The class is created by
@@ -30,9 +30,9 @@ public class LoincLongNameComponents {
     private final String assayMethod;
     private final String assayType;
     /** List of stop words and general words that we filter out of LOINC labels prior to text mining. */
-    private static final Set invalid_words =
-            Stream.of("mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
-                    "normal", "on", "total", "identified").collect(Collectors.toSet());
+    private static final Set<String> invalid_words =
+            Set.of("mean", "in", "of", "identified", "cell", "conjugated", "other", "virus",
+                    "normal", "on", "total");
 
 
     public LoincLongNameComponents(String parameter, String tissue, String method, String type) {
@@ -40,7 +40,6 @@ public class LoincLongNameComponents {
         this.tissue = tissue;
         this.assayMethod = method;
         this.assayType = type;
-
     }
 
 
@@ -149,10 +148,8 @@ public class LoincLongNameComponents {
             return false;
         } else if (invalid_words.contains(word.toLowerCase())) {
             return false;
-        } else if (integerPredicate.test(word)) {
-            return false;
         } else {
-            return true;
+            return !integerPredicate.test(word);
         }
     }
 }

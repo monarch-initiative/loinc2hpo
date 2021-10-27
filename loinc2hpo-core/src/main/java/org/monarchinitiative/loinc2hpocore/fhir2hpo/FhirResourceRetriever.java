@@ -9,11 +9,11 @@ import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.exception.AmbiguousSubjectException;
 import org.monarchinitiative.loinc2hpocore.exception.SubjectNotFoundException;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -21,9 +21,11 @@ import java.util.List;
 
 public class FhirResourceRetriever {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(FhirResourceRetriever.class);
+
+    public static final String HAPIFHIRTESTSERVER = "http://hapi.fhir.org/baseDstu3";
     //use hapi-fhir test server as our default
-    private static final String BASEURL = Constants.HAPIFHIRTESTSERVER;
+    private static final String BASEURL = HAPIFHIRTESTSERVER;
 
     //creating ctx is expensive, so make it public for the app
     public static final FhirContext ctx = FhirContext.forDstu3();

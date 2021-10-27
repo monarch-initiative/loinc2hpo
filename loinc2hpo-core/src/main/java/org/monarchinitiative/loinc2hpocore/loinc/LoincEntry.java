@@ -1,22 +1,18 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
-import com.github.jsonldjava.utils.Obj;
 import com.google.common.collect.ImmutableMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.sparql.LoincImporter;
-import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameComponents;
-import org.monarchinitiative.loinc2hpocore.sparql.LoincLongNameParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class LoincEntry {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(LoincEntry.class);
 
     private final LoincId LOINC_Number;
 

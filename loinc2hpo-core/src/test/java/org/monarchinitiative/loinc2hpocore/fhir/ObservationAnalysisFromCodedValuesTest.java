@@ -84,8 +84,8 @@ public class ObservationAnalysisFromCodedValuesTest {
         TermId staphaureus = TermId.of("HP:005");
         TermId bacterial = TermId.of("HP:006");
 
-        Code ecoli_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("112283007");
-        Code staph_snomed = Code.getNewCode().setSystem("http://snomed.info/sct").setCode("3092008");
+        Code ecoli_snomed = Code.fromSystemAndCode("http://snomed.info/sct", "112283007");
+        Code staph_snomed = Code.fromSystemAndCode("http://snomed.info/sct", "3092008");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)

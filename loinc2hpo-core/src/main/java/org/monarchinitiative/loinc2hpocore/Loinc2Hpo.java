@@ -51,8 +51,7 @@ public class Loinc2Hpo {
     }
 
     public Code convertToInternal(Code original) throws InternalCodeNotFoundException {
-        Code internal = this.converter.convertToInternalCode(original);
-        return internal;
+        return this.converter.convertToInternalCode(original);
     }
 
     public HpoTerm4TestOutcome query(LoincId loincId, Code testResult) throws AnnotationNotFoundException, LoincCodeNotAnnotatedException {
@@ -71,8 +70,7 @@ public class Loinc2Hpo {
     }
 
     public HpoTerm4TestOutcome query(LoincId loincId, String system, String id) throws LoincCodeNotAnnotatedException, AnnotationNotFoundException {
-        Code code = Code.getNewCode();
-        code.setSystem(system).setCode(id);
+        Code code = Code.fromSystemAndCode(system, id);
         return query(loincId, code);
     }
 

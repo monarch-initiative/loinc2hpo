@@ -17,10 +17,11 @@ import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Range;
 import org.hl7.fhir.dstu3.model.SimpleQuantity;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
-import org.joda.time.DateTime;
 import org.monarchinitiative.loinc2hpocore.util.RandomGenerator;
 import org.monarchinitiative.loinc2hpocore.util.RandomGeneratorImpl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -88,33 +89,25 @@ public class FhirResourceComponentFaker {
         return faker.date().birthday();
     }
 
-    public Date fakeDate(int year) {
-        return new DateTime(year,                                   //year
+    public LocalDate fakeDate(int year) {
+        return LocalDate.of(year,                                   //year
                 randomGenerator.randInt(1, 13),    //random month
-                randomGenerator.randInt(1, 29),    //random date
-                randomGenerator.randInt(1, 24),    //random hour
-                randomGenerator.randInt(0, 60),    //random minute
-                randomGenerator.randInt(0, 1000),  //random second
-                randomGenerator.randInt(0, 1000))  //random millisecond
-                .toDate();
+                randomGenerator.randInt(1, 29)) ; //random millisecond
+
     }
-    public Date fakeDate() {
+    public LocalDate fakeDate() {
         return fakeDate(1900, 2017);
     }
 
-    public Date fakeDate(int startYear, int endYear) {
-        return new DateTime(
+    public LocalDate fakeDate(int startYear, int endYear) {
+        return LocalDate.of(
                 randomGenerator.randInt(startYear, endYear),//random year
                 randomGenerator.randInt(1, 13),    //random month
-                randomGenerator.randInt(1, 29),    //random date
-                randomGenerator.randInt(1, 24),    //random hour
-                randomGenerator.randInt(0, 60),    //random minute
-                randomGenerator.randInt(0, 60),  //random second
-                randomGenerator.randInt(0, 1000))  //random millisecond
-                .toDate();
+                randomGenerator.randInt(1, 29));  //random millisecond
+
     }
 
-    public Date fakeDate21Century() {
+    public LocalDate fakeDate21Century() {
         return fakeDate(2000, 2017);
     }
 
@@ -123,8 +116,11 @@ public class FhirResourceComponentFaker {
     }
 
     public Period fakePeriod() {
-        Date date1 = fakeDate21Century();
-        Date date2 = fakeDate21Century();
+        LocalDate ldate1 = fakeDate21Century();
+        LocalDate ldate2 = fakeDate21Century();
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date date1 = Date.from(ldate1.atStartOfDay(defaultZoneId).toInstant());
+        Date date2 = Date.from(ldate2.atStartOfDay(defaultZoneId).toInstant());
         if (date1.before(date2)) {
             return new Period().setStart(date1).setEnd(date2);
         } else {

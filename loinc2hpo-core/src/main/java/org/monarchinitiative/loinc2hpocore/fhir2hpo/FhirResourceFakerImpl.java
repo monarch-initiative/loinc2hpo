@@ -5,7 +5,6 @@ import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
 import org.monarchinitiative.loinc2hpocore.util.RandomGenerator;
 import org.monarchinitiative.loinc2hpocore.util.RandomGeneratorImpl;
-import org.monarchinitiative.loinc2hpocore.Constants;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
@@ -18,7 +17,8 @@ import java.util.stream.Collectors;
  * This class is responsible for generating synthetic FHIR resources
  */
 public class FhirResourceFakerImpl implements FhirResourceFaker {
-
+    public static final String LOINCSYSTEM = "http://loinc.org";
+    public static final String V2OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v2/0078";
     private RandomGenerator randomGenerator;
     private FhirResourceComponentFaker fhirResourceComponentFaker = new FhirResourceComponentFaker();
     private Map<LoincId, LoincEntry> loincEntryMap;
@@ -97,7 +97,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
         //set a fake code with two faking codings
         CodeableConcept code = new CodeableConcept();
         Coding loinc = new Coding()
-                .setSystem(Constants.LOINCSYSTEM)
+                .setSystem(LOINCSYSTEM)
                 .setCode(loincId.toString())
                 .setDisplay(loincEntryMap.get(loincId).getLongName());
         Coding randCode = fhirResourceComponentFaker.fakeCoding();
@@ -163,7 +163,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
             if (toAddInterpretation) {
                 CodeableConcept interpretation = new CodeableConcept();
                 Coding interpCoding = new Coding();
-                interpCoding.setSystem(Constants.V2OBSERVATIONINTERPRETATION)
+                interpCoding.setSystem(V2OBSERVATIONINTERPRETATION)
                         .setCode(interpretationCode);
                 interpretation.addCoding(interpCoding);
                 observation.setInterpretation(interpretation);
@@ -198,7 +198,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
             if (toAddInterpretation) {
                 CodeableConcept interpretation = new CodeableConcept();
                 Coding interpCoding = new Coding();
-                interpCoding.setSystem(Constants.V2OBSERVATIONINTERPRETATION)
+                interpCoding.setSystem(V2OBSERVATIONINTERPRETATION)
                         .setCode(interpretationCode);
                 interpretation.addCoding(interpCoding);
                 observation.setInterpretation(interpretation);
