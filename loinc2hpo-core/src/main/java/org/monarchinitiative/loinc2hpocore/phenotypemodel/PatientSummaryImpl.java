@@ -33,7 +33,6 @@ public class PatientSummaryImpl implements PatientSummary{
     @Override
     public void addTest(LabTest test) {
         this.labTests.add(test);
-        //determine abnormality
         interpret_new_test(test);
     }
 
