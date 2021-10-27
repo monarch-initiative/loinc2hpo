@@ -68,7 +68,7 @@ public class FhirObservationDecoratorTest extends TestBase {
         List<Coding> codings = intepretation.getCoding();
         assertEquals(1, codings.size());
         Coding coding = codings.get(0);
-        assertEquals("http://hl7.org/fhir/v2/0078/", coding.getSystem());
+        assertEquals("http://hl7.org/fhir/v2/0078", coding.getSystem());
         assertEquals("L", coding.getCode());
         assertEquals("Low", coding.getDisplay());
     }

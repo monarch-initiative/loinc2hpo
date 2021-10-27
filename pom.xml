@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.monarchinitiative</groupId>
     <artifactId>Loinc2Hpo</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <packaging>pom</packaging>
     <name>Loinc2Hpo</name>
 
@@ -13,22 +13,22 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <log4j.version>2.9.1</log4j.version>
         <jdk.version>1.8</jdk.version>
-        <phenol.version>1.5.0</phenol.version>
+        <phenol.version>1.6.3</phenol.version>
         <guava.version>27.0.1-jre</guava.version>
         <slf4j.version>1.7.25</slf4j.version>
         <hapi-fhir.version>5.0.2</hapi-fhir.version>
-        <mockito.version>3.3.3</mockito.version>
-        <junit.version>5.6.2</junit.version>
+        <mockito.version>4.0.0</mockito.version>
+        <junit.version>5.8.1</junit.version>
         <jena.version>3.14.0</jena.version>
     </properties>
 
     <modules>
         <module>loinc2hpo-core</module>
-        <module>loinc2hpo-gui</module>
     </modules>
 
 
     <dependencies>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.32</version>
         </dependency>
 
       <dependency>
@@ -63,15 +63,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-surefire-provider -->
-<!--        <dependency>-->
-<!--            <groupId>org.junit.platform</groupId>-->
-<!--            <artifactId>junit-platform-surefire-provider</artifactId>-->
-<!--            <version>1.3.2</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-
 
         <!-- https://mvnrepository.com/artifact/org.wso2.orbit.org.apache.commons/commons-compress -->
         <dependency>
@@ -120,19 +111,19 @@
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.6</version>
+            <version>3.8.0</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.11.0</version>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.14</version>
+            <version>1.15</version>
         </dependency>
 
         <dependency>
@@ -291,7 +282,7 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.4</version>
+            <version>3.1.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.maven</groupId>
@@ -418,7 +409,7 @@
         <dependency>
             <groupId>org.tomdz.maven</groupId>
             <artifactId>sphinx-maven-plugin</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -435,7 +426,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.5.2</version>
+            <version>3.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -463,7 +454,7 @@
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-sink-api</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.maven.doxia</groupId>
@@ -474,7 +465,7 @@
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-site-renderer</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -543,7 +534,7 @@
         <dependency>
             <groupId>org.apache.maven.wagon</groupId>
             <artifactId>wagon-provider-api</artifactId>
-            <version>3.0.0</version>
+            <version>3.4.3</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -561,7 +552,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-container-default</artifactId>
-            <version>1.7.1</version>
+            <version>2.1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -577,7 +568,7 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
-            <version>3.1.1</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -703,7 +694,7 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.12.0</version>
+            <version>2.12.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
@@ -715,7 +706,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-repository-metadata</artifactId>
-            <version>3.5.2</version>
+            <version>3.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -726,7 +717,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-settings</artifactId>
-            <version>3.2.5</version>
+            <version>3.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -786,13 +777,13 @@
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-interpolation</artifactId>
-            <version>1.24</version>
+            <version>1.26</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-artifact -->
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-artifact</artifactId>
-            <version>3.5.2</version>
+            <version>3.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.commons</groupId>
@@ -808,7 +799,7 @@
         <dependency>
             <groupId>commons-validator</groupId>
             <artifactId>commons-validator</artifactId>
-            <version>1.6</version>
+            <version>1.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>xml-apis</groupId>
@@ -828,7 +819,7 @@
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-core</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -861,7 +852,7 @@
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-decoration-model</artifactId>
-            <version>1.8.1</version>
+            <version>1.10</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
@@ -879,13 +870,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
+            <version>3.12.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.3</version>
+            <version>4.5.13</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
@@ -902,37 +893,37 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>
+            <version>2.0.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-collections/commons-collections -->
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.2</version>
+            <version>20040616</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
+            <version>20030211.134440</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-logging-api -->
         <dependency>
             <groupId>org.apache.maven.doxia</groupId>
             <artifactId>doxia-logging-api</artifactId>
-            <version>1.8</version>
+            <version>1.10</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-component-annotations -->
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-component-annotations</artifactId>
-            <version>1.7.1</version>
+            <version>2.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.plexus/plexus-classworlds -->
         <dependency>
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-classworlds</artifactId>
-            <version>2.5.2</version>
+            <version>2.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.javafaker</groupId>
@@ -954,7 +945,7 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
-            <version>3.6.0</version>
+            <version>3.8.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>
