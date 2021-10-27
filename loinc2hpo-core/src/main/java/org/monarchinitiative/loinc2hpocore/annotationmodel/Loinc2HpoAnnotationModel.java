@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
 import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -86,21 +87,9 @@ public class Loinc2HpoAnnotationModel {
             String isNegated = annotation.getValue().isNegated()? "true" : "false";
             String hpo_term = annotation.getValue().getId().getValue();
 
-            Loinc2HpoAnnotationCsvEntry entry = Loinc2HpoAnnotationCsvEntry.Builder.builder()
-                    .withLoincId(loincId)
-                    .withLoincScale(loincScale)
-                    .withSystem(system)
-                    .withCode(code_id)
-                    .withHpoTermId(hpo_term)
-                    .withIsNegated(isNegated)
-                    .withCreatedOn(createdOn)
-                    .withCreatedBy(createdBy)
-                    .withLastEditedOn(lastEditedOn)
-                    .withLastEditedBy(lastEditedBy)
-                    .withVersion(version)
-                    .withIsFinalized(isFinalized)
-                    .withComment(comment)
-                    .build();
+            Loinc2HpoAnnotationCsvEntry entry = Loinc2HpoAnnotationCsvEntry.of(
+                    loincId,loincScale, system, code_id, hpo_term, isNegated, createdOn,
+                            createdBy, lastEditedOn, lastEditedBy, version,isFinalized,comment);
 
             entries.add(entry);
         }
@@ -124,7 +113,7 @@ public class Loinc2HpoAnnotationModel {
 
     public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws MalformedLoincCodeException {
 
-        List<Loinc2HpoAnnotationCsvEntry> csvEntries = Loinc2HpoAnnotationCsvEntry.importAnnotations(path);
+        List<Loinc2HpoAnnotationCsvEntry> csvEntries = Loinc2HpoAnnotationParser.load(path);
 
         //organize the TSV entries into data models
         Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap = new LinkedHashMap<>();

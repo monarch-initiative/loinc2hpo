@@ -13,6 +13,7 @@ import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationCs
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservation2Hpo;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.FhirObservationDecorator;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.Term;
@@ -43,7 +44,7 @@ public class FhirObservationDecoratorTest extends TestBase {
     private final Map<String, Term> hpoTermMap = getHpoTermMap();
     private final String annotationPath = this.getClass().getClassLoader().getResource("annotations.tsv").getPath();
     private final String coreTablePath = this.getClass().getClassLoader().getResource("LoincTableCoreTiny.csv").getPath();
-    private final List<Loinc2HpoAnnotationCsvEntry> entries = Loinc2HpoAnnotationCsvEntry.importAnnotations(annotationPath);
+    private final List<Loinc2HpoAnnotationCsvEntry> entries = Loinc2HpoAnnotationParser.load(annotationPath);
     private final TermId descreasedRbcs = TermId.of("HP:0020060");
     private final CodeSystemConvertor convertor = new CodeSystemConvertor();
     private final Loinc2Hpo loinc2Hpo = new Loinc2Hpo(annotationPath, convertor);
