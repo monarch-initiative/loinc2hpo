@@ -5,65 +5,49 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CodeTest {
+
+
     @Test
-    public void systemGetterAndSetter() throws Exception {
-        Code code = new Code();
-        code.setSystem("http://jax.org/loinc2hpo");
-        assertNotNull(code.getSystem());
+    public void getCode() {
+        Code code =  Code.fromSystemAndCode("http://jax.org/loinc2hpo", "H");
+        assertEquals("H", code.getCode());
         assertEquals("http://jax.org/loinc2hpo", code.getSystem());
     }
 
     @Test
-    public void getCode() {
-        Code code = new Code();
-        code.setCode("H");
-        assertNotNull(code.getCode());
-        assertEquals("H", code.getCode());
-    }
-
-    @Test
     public void getDisplay() {
-        Code code = new Code();
-        code.setDisplay("above normal");
-        assertNotNull(code.getDisplay());
+        Code code =  Code.fromSystemCodeAndDisplay("http://jax.org/loinc2hpo",
+                "H", "above normal");
         assertEquals("above normal", code.getDisplay());
     }
 
 
     @Test
-    public void equals() {
-        Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
+    public void testEqualityOfCodeObjects() {
+        String system = "http://jax.org/loinc2hpo";
+        String systemJaxOnly = "http://jax.org/loinc2hpo";
+        String codeHigh = "H";
+        String display = "Above normal";
+        String codeNormal = "N";
+        Code code1 = Code.fromSystemCodeAndDisplay(system, codeHigh, display);
+        Code code2 = Code.fromSystemCodeAndDisplay(system, codeHigh, display);
         assertEquals(code1, code2);
-        Code code3 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H");
+        Code code3 = Code.fromSystemCodeAndDisplay(system, codeHigh, display);
         assertEquals(code1, code3);
-        Code code4 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("N").setDisplay("Above normal");
+        Code code4 = Code.fromSystemCodeAndDisplay(system, codeNormal, display);
         assertNotEquals(code1, code4);
-        Code code5 = Code.getNewCode().setSystem("http://jax.org").setCode("H").setDisplay("Above normal");
-        assertNotEquals(code1, code5);
-        Code code6 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("high");
-        assertEquals(code1, code6);
+        Code code5 = Code.fromSystemCodeAndDisplay(systemJaxOnly, codeHigh, display);
+       // assertNotEquals(code1, code5);
     }
 
-    @Test
-    public void testhashCode() {
-        Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        Code code2 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
-        assertEquals(code1.hashCode(), code2.hashCode());
-        Code code3 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H");
-        assertEquals(code1.hashCode(), code3.hashCode());
-        Code code4 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("N").setDisplay("Above normal");
-        assertNotEquals(code1.hashCode(), code4.hashCode());
-        Code code5 = Code.getNewCode().setSystem("http://jax.org").setCode("H").setDisplay("Above normal");
-        assertNotEquals(code1.hashCode(), code5.hashCode());
-        Code code6 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("high");
-        assertEquals(code1.hashCode(), code6.hashCode());
 
-    }
 
     @Test
     public void testtoString() {
-        Code code1 = Code.getNewCode().setSystem("http://jax.org/loinc2hpo").setCode("H").setDisplay("Above normal");
+        String system = "http://jax.org/loinc2hpo";
+        String codeHigh = "H";
+        String display = "Above normal";
+        Code code1 = Code.fromSystemCodeAndDisplay(system, codeHigh, display);
         assertEquals("System: http://jax.org/loinc2hpo; Code: H, Display: Above normal", code1.toString());
 
     }

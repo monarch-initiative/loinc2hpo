@@ -31,7 +31,7 @@ public class Loinc2HpoTest {
         LoincId loincId = new LoincId("2823-3");
 
         //Assume result is lower than normal, then interpretation code is L (low) in FHIR system .
-        Code low = new Code().setSystem("FHIR").setCode("L");
+        Code low = Code.fromSystemAndCode("FHIR", "L");
 
         //Query with loincId and interpretation code to get HPO term
         HpoTerm4TestOutcome hpo_coded_phenotype = loinc2Hpo.query(loincId, low);
@@ -40,7 +40,7 @@ public class Loinc2HpoTest {
         assertEquals(hpo_coded_phenotype.getId().getValue(), "HP:0002900");
 
         //Assume result if normal, then the interpretation code is N (normal) in FHIR system
-        Code normal = new Code().setSystem("FHIR").setCode("N");
+        Code normal = Code.fromSystemAndCode("FHIR", "N");
         hpo_coded_phenotype = loinc2Hpo.query(loincId, normal);
         //The result should be NOT
         assertTrue(hpo_coded_phenotype.isNegated());
@@ -51,14 +51,14 @@ public class Loinc2HpoTest {
         loincId = new LoincId("2349-9");
 
         //Assume result is positive
-        Code positive = new Code().setSystem("FHIR").setCode("POS");
+        Code positive = Code.fromSystemAndCode("FHIR", "POS");
         hpo_coded_phenotype = loinc2Hpo.query(loincId, positive);
         //The result should be Glycosuria HP:0003076
         assertFalse(hpo_coded_phenotype.isNegated());
         assertEquals(hpo_coded_phenotype.getId().getValue(), "HP:0003076");
 
         //Assume result is negative, then the result should be NOT Glycosuria HP:0003076
-        Code negative = new Code().setSystem("FHIR").setCode("NEG");
+        Code negative =  Code.fromSystemAndCode("FHIR", "NEG");
         hpo_coded_phenotype = loinc2Hpo.query(loincId, negative);
         assertTrue(hpo_coded_phenotype.isNegated());
         assertEquals(hpo_coded_phenotype.getId().getValue(), "HP:0003076");
@@ -68,7 +68,7 @@ public class Loinc2HpoTest {
         loincId = new LoincId("5778-6");
 
         //Assume the result is coded by SNOMED concept Pink Urine: id 449071000124107
-        Code snomed_code = new Code().setSystem("snomed-ct").setCode("449071000124107");
+        Code snomed_code = Code.fromSystemAndCode("snomed-ct", "449071000124107");
         hpo_coded_phenotype = loinc2Hpo.query(loincId, snomed_code);
         assertFalse(hpo_coded_phenotype.isNegated());
         assertEquals(hpo_coded_phenotype.getId().getValue(), "HP:0032001");

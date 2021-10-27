@@ -60,7 +60,7 @@ public class Loinc2HpoAnnotationModel {
 
     }
 
-    public static List<Loinc2HpoAnnotationCsvEntry> to_csv_entries(Loinc2HpoAnnotationModel dataModel){
+    public static List<Loinc2HpoAnnotationEntry> to_csv_entries(Loinc2HpoAnnotationModel dataModel){
 
         //convert objects to string
         String loincId = dataModel.getLoincId().toString();
@@ -74,7 +74,7 @@ public class Loinc2HpoAnnotationModel {
         String isFinalized = dataModel.getFlag()? "false" : "true";
         String comment = dataModel.getNote();
 
-        List<Loinc2HpoAnnotationCsvEntry> entries = new ArrayList<>();
+        List<Loinc2HpoAnnotationEntry> entries = new ArrayList<>();
         for (Map.Entry<Code, HpoTerm4TestOutcome> annotation :
                 dataModel.getCandidateHpoTerms().entrySet()){
             //skip record if the mapped term is null
@@ -87,7 +87,7 @@ public class Loinc2HpoAnnotationModel {
             String isNegated = annotation.getValue().isNegated()? "true" : "false";
             String hpo_term = annotation.getValue().getId().getValue();
 
-            Loinc2HpoAnnotationCsvEntry entry = Loinc2HpoAnnotationCsvEntry.of(
+            Loinc2HpoAnnotationEntry entry = Loinc2HpoAnnotationEntry.of(
                     loincId,loincScale, system, code_id, hpo_term, isNegated, createdOn,
                             createdBy, lastEditedOn, lastEditedBy, version,isFinalized,comment);
 
@@ -101,7 +101,7 @@ public class Loinc2HpoAnnotationModel {
         List<String> lines_to_write = annotationMap.values().stream()
                 .map(Loinc2HpoAnnotationModel::to_csv_entries)
                 .flatMap(Collection::stream)
-                .map(Loinc2HpoAnnotationCsvEntry::toString)
+                .map(Loinc2HpoAnnotationEntry::toString)
                 .map(String::trim)
                 .collect(Collectors.toList());
         lines_to_write.add(0, header);
@@ -113,14 +113,14 @@ public class Loinc2HpoAnnotationModel {
 
     public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws MalformedLoincCodeException {
 
-        List<Loinc2HpoAnnotationCsvEntry> csvEntries = Loinc2HpoAnnotationParser.load(path);
+        List<Loinc2HpoAnnotationEntry> csvEntries = Loinc2HpoAnnotationParser.load(path);
 
         //organize the TSV entries into data models
         Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap = new LinkedHashMap<>();
 
         //go through each entry, create a new data model if it is first seen
         //otherwise, just add more additional information
-        for (Loinc2HpoAnnotationCsvEntry entry : csvEntries){
+        for (Loinc2HpoAnnotationEntry entry : csvEntries){
             String loincId_str = entry.getLoincId();
             String loincScale_str = entry.getLoincScale();
             String system = entry.getSystem();
@@ -138,7 +138,7 @@ public class Loinc2HpoAnnotationModel {
             //convert strings to the correct object
             LoincId loincId = new LoincId(loincId_str);
             LoincScale loincScale = LoincScale.string2enum(loincScale_str);
-            Code interpretationCode = new Code().setSystem(system).setCode(code);
+            Code interpretationCode = Code.fromSystemAndCode(system, code);
             HpoTerm4TestOutcome mappedTo = new HpoTerm4TestOutcome(TermId.of(hpoTermId_str),
                     isNegated_str.equals("true"));
             LocalDateTime createdOn = createdOn_str == null? null :
@@ -273,7 +273,7 @@ public class Loinc2HpoAnnotationModel {
         StringBuilder stringBuilder = new StringBuilder();
         candidateHpoTerms.forEach((code, hpoTermId4LoincTest) -> {
             stringBuilder.append(this.loincId);
-            stringBuilder.append("\t" + this.loincScale.toString());
+            stringBuilder.append("\t").append(this.loincScale.toString());
             stringBuilder.append("\t" + code.getSystem());
             stringBuilder.append("\t" + code.getCode());
             stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());

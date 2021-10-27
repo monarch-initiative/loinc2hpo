@@ -1,18 +1,16 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoException;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Loinc2HpoAnnotationCsvEntry {
+/**
+ * This class represents one annotation in the {@code loinc2hpo-annotations.tsv} file that is available
+ *  * at https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation
+ */
+public class Loinc2HpoAnnotationEntry {
 
     private final String loincId;
     private final String loincScale;
@@ -29,7 +27,7 @@ public class Loinc2HpoAnnotationCsvEntry {
     private final String comment;
 
 
-    public Loinc2HpoAnnotationCsvEntry(String loincId, String loincScale, String system, String code, String hpoTermId, String isNegated, String createdOn, String createdBy, String lastEditedOn, String lastEditedBy, String version, String isFinalized, String comment) {
+    public Loinc2HpoAnnotationEntry(String loincId, String loincScale, String system, String code, String hpoTermId, String isNegated, String createdOn, String createdBy, String lastEditedOn, String lastEditedBy, String version, String isFinalized, String comment) {
         this.loincId = loincId;
         this.loincScale = loincScale;
         this.system = system;
@@ -45,7 +43,7 @@ public class Loinc2HpoAnnotationCsvEntry {
         this.comment = comment;
     }
 
-    public static Loinc2HpoAnnotationCsvEntry fromTsvLine(String line) {
+    public static Loinc2HpoAnnotationEntry fromTsvLine(String line) {
         String[] elements = line.split("\t");
         if (elements.length != 13){
             throw new RuntimeException("Line does not have expected length: " + line);
@@ -66,7 +64,7 @@ public class Loinc2HpoAnnotationCsvEntry {
         String version = elements[10];
         String isFinalized = elements[11];
         String comment = elements[12];
-        return new Loinc2HpoAnnotationCsvEntry(loincId, loincScale, system, code, hpoTermId, isNegated,
+        return new Loinc2HpoAnnotationEntry(loincId, loincScale, system, code, hpoTermId, isNegated,
                 createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
     }
     public String getLoincId() {
@@ -134,19 +132,19 @@ public class Loinc2HpoAnnotationCsvEntry {
     }
 
 
-    public static Loinc2HpoAnnotationCsvEntry of(String loincId,
-                     String loincScale,
-                     String system,
-                     String code,
-                     String hpoTermId,
-                     String isNegated,
-                     String createdOn,
-                     String createdBy,
-                     String lastEditedOn,
-                     String lastEditedBy,
-                     String version,
-                     String isFinalized,
-                     String comment)  {
-        return new Loinc2HpoAnnotationCsvEntry(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
+    public static Loinc2HpoAnnotationEntry of(String loincId,
+                                              String loincScale,
+                                              String system,
+                                              String code,
+                                              String hpoTermId,
+                                              String isNegated,
+                                              String createdOn,
+                                              String createdBy,
+                                              String lastEditedOn,
+                                              String lastEditedBy,
+                                              String version,
+                                              String isFinalized,
+                                              String comment)  {
+        return new Loinc2HpoAnnotationEntry(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
     }
 }
