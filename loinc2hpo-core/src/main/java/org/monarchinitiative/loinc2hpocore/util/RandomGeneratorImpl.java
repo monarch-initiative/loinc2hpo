@@ -115,8 +115,8 @@ public class RandomGeneratorImpl implements RandomGenerator{
         List<Character> chars = randChars(charCount);
         List<Integer> ints = randIntegers(0, 10, intCount);
         List<String> all = new ArrayList<>();
-        all.addAll(chars.stream().map(c -> c.toString()).collect(Collectors.toList()));
-        all.addAll(ints.stream().map(i -> i.toString()).collect(Collectors.toList()));
+        all.addAll(chars.stream().map(Object::toString).collect(Collectors.toList()));
+        all.addAll(ints.stream().map(Object::toString).collect(Collectors.toList()));
         Collections.shuffle(all);
         return String.join("", all);
     }

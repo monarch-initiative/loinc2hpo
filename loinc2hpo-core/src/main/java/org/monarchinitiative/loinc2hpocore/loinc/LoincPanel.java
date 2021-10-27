@@ -171,26 +171,24 @@ public class LoincPanel {
         writer.write(header);
         writer.write("\n");
         loincPanelMap.entrySet().stream().forEach(
-                entry -> {
-                    entry.getValue().chidren.entrySet().stream().forEach(component -> {
-                        try {
-                            writer.write(entry.getKey().toString());
-                            writer.write("\t");
-                            writer.write(entry.getValue().interpretableInHPO? "Y" : "N");
-                            writer.write("\t");
-                            writer.write(component.getKey().toString());
-                            writer.write("\t");
-                            writer.write(component.getValue().getTestingConditionality() != null ? component.getValue().getTestingConditionality().toString() : "U");
-                            writer.write("\t");
-                            writer.write(component.getValue().getConditionalityForParentMapping() != null ? component.getValue().getConditionalityForParentMapping().toString() : "U");
-                            writer.write("\t");
-                            writer.write(component.getValue().isInterpretableInHPO() ? "Y" : "N");
-                            writer.write("\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
+                entry -> entry.getValue().chidren.entrySet().stream().forEach(component -> {
+                    try {
+                        writer.write(entry.getKey().toString());
+                        writer.write("\t");
+                        writer.write(entry.getValue().interpretableInHPO? "Y" : "N");
+                        writer.write("\t");
+                        writer.write(component.getKey().toString());
+                        writer.write("\t");
+                        writer.write(component.getValue().getTestingConditionality() != null ? component.getValue().getTestingConditionality().toString() : "U");
+                        writer.write("\t");
+                        writer.write(component.getValue().getConditionalityForParentMapping() != null ? component.getValue().getConditionalityForParentMapping().toString() : "U");
+                        writer.write("\t");
+                        writer.write(component.getValue().isInterpretableInHPO() ? "Y" : "N");
+                        writer.write("\n");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                })
         );
 
         writer.close();

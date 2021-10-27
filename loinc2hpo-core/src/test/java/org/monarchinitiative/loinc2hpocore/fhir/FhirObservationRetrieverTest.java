@@ -2,9 +2,7 @@ package org.monarchinitiative.loinc2hpocore.fhir;
 
 import java.io.File;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.IdDt;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
 import ca.uhn.fhir.parser.DataFormatException;
 

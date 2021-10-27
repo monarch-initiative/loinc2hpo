@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpocore.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.*;
 
-import org.hl7.fhir.utilities.graphql.Value;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
