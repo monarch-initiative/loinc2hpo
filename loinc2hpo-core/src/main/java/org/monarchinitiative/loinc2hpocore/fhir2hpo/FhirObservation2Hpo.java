@@ -22,19 +22,10 @@ public class FhirObservation2Hpo {
         this.loincIdSet = loincIdSet;
     }
 
-    public Optional<HpoTerm4TestOutcome> fhir2hpo(Observation observation)
-            throws LoincCodeNotFoundException,
-            MalformedLoincCodeException,
-            UnrecognizedLoincCodeException,
-            AmbiguousResultsFoundException,
-            AnnotationNotFoundException,
-            LoincCodeNotAnnotatedException,
-            UnrecognizedCodeException,
-            AmbiguousReferenceException,
-            ReferenceNotFoundException {
+    public Optional<HpoTerm4TestOutcome> fhir2hpo(Observation observation) {
         LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
         if (!loincIdSet.contains(loincId)){
-            throw new UnrecognizedLoincCodeException();
+            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
         }
         HpoTerm4TestOutcome result;
         if (observation.hasInterpretation()){

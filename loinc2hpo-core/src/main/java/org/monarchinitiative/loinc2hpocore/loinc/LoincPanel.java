@@ -1,8 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import com.google.common.collect.ImmutableMap;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedLoincCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +90,7 @@ public class LoincPanel {
 
     }
 
-    public static Map<LoincId, LoincPanel> getPanels(String path, ImmutableMap<LoincId, LoincEntry> loincEntryMapX) throws IOException, MalformedLoincCodeException, UnrecognizedLoincCodeException {
+    public static Map<LoincId, LoincPanel> getPanels(String path, ImmutableMap<LoincId, LoincEntry> loincEntryMapX) throws IOException {
         loincEntryMap = loincEntryMapX;
         Map<LoincId, LoincPanel> loincPanelMap = new HashMap<>();
 
@@ -153,12 +152,12 @@ public class LoincPanel {
         if (!invalidPanelId.isEmpty()) {
             logger.error("no. unrecognized panel Loinc from loinc entry map: " + invalidPanelId.size());
             invalidPanelId.forEach(System.out::println);
-            throw new UnrecognizedLoincCodeException();
+            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
         }
         if (!invalidChildId.isEmpty()) {
             logger.error("no. invalid child Loinc from loinc entry map: " + invalidChildId.size());
             invalidChildId.forEach(System.out::println);
-            throw new UnrecognizedLoincCodeException();
+            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
         }
 
         reader.close();
@@ -224,7 +223,7 @@ public class LoincPanel {
                 component.setInterpretableInHPO(componentInterpretableInHpo);
                 loincPanelMap.get(panelLoinc).setInterpretableInHPO(interpretableInHpo);
                 loincPanelMap.get(panelLoinc).addChild(componentLoinc, component);
-            } catch (MalformedLoincCodeException e) {
+            } catch (Loinc2HpoRuntimeException e) {
                 e.printStackTrace();
             }
         }

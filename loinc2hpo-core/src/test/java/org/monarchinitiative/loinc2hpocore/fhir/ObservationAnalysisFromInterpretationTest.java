@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.exception.AmbiguousResultsFoundException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromInterpretation;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
@@ -89,7 +89,7 @@ public class ObservationAnalysisFromInterpretationTest {
         when(loinc2Hpo.convertToInternal(new Code(exLow.getSystem(),
                 exLow.getCode(), ""))).thenReturn(inLow);
 
-        Assertions.assertThrows(AmbiguousResultsFoundException.class, () -> {
+        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
             ObservationAnalysisFromInterpretation analyzer =
                 new ObservationAnalysisFromInterpretation(loinc2Hpo,
                         observation);

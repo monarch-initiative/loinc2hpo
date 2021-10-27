@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpocore.loinc;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
 import java.io.Serializable;
 
@@ -15,23 +15,23 @@ public class LoincId  implements Serializable {
     /** The part of the Loinc code following the dash */
     private final int suffix;
 
-    public LoincId(String loinccode) throws MalformedLoincCodeException {
+    public LoincId(String loinccode)  {
         this(loinccode, false);
     }
 
-    public LoincId(String loinccode, boolean hasPrefix) throws MalformedLoincCodeException {
+    public LoincId(String loinccode, boolean hasPrefix) {
         if (hasPrefix){
             loinccode = loinccode.split(":")[1];
         }
         int dash_pos=loinccode.indexOf("-");
-        if (dash_pos<=0) throw new MalformedLoincCodeException("No dash found in "+loinccode);
+        if (dash_pos<=0) throw Loinc2HpoRuntimeException.malformedLoincCode("No dash found in "+loinccode);
         if (dash_pos >loinccode.length()-2)
-            throw new MalformedLoincCodeException("No character found after dash in " + loinccode);
+            throw Loinc2HpoRuntimeException.malformedLoincCode("No character found after dash in " + loinccode);
         try {
             num=Integer.parseInt(loinccode.substring(0,dash_pos));
             suffix=Integer.parseInt(loinccode.substring(dash_pos+1));
         } catch (NumberFormatException nfe) {
-            throw new MalformedLoincCodeException("Unable to parse numerical part of "+ loinccode);
+            throw Loinc2HpoRuntimeException.malformedLoincCode("Unable to parse numerical part of "+ loinccode);
         }
     }
 

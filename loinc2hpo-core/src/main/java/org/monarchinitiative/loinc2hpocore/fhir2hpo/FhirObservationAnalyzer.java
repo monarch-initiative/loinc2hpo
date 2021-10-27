@@ -53,7 +53,7 @@ public class FhirObservationAnalyzer {
     }
     public static Observation getObservation(){ return observation; }
 
-    public static LabTestOutcome getHPO4ObservationOutcome(Observation observationToAnalyze) throws FHIRException, ReferenceNotFoundException, LoincCodeNotAnnotatedException, AmbiguousResultsFoundException, UnrecognizedCodeException, LoincCodeNotFoundException, MalformedLoincCodeException, AnnotationNotFoundException, UnsupportedCodingSystemException, AmbiguousReferenceException {
+    public static LabTestOutcome getHPO4ObservationOutcome(Observation observationToAnalyze) throws FHIRException {
         observation = observationToAnalyze;
         return getHPO4ObservationOutcome(loincIds, annotationMap);
     }
@@ -68,18 +68,17 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, Loinc2HpoAnnotationModel> loinc2HPOannotationMap) throws MalformedLoincCodeException, UnsupportedCodingSystemException, LoincCodeNotFoundException, AmbiguousResultsFoundException, AnnotationNotFoundException, UnrecognizedCodeException, LoincCodeNotAnnotatedException, AmbiguousReferenceException, ReferenceNotFoundException, FHIRException {
-
+    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, Loinc2HpoAnnotationModel> loinc2HPOannotationMap) throws
+             FHIRException {
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
-            //TODO: consider handling this as a future project
-            throw new LoincCodeNotFoundException();
+            throw Loinc2HpoRuntimeException.loincCodeNotFound();
         }
 
         LoincId loincId = getLoincIdOfObservation();
 
         if (!loinc2HPOannotationMap.containsKey(loincId)) {
-            throw new LoincCodeNotAnnotatedException();
+            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
         }
 
         HpoTerm4TestOutcome hpoterm = null;
@@ -91,11 +90,9 @@ public class FhirObservationAnalyzer {
                         , observation).getHPOforObservation();
 //                        new ObservationAnalysisFromInterpretation(loincId, observation.getInterpretation(), loinc2HPOannotationMap, codeSystemConvertor).getHPOforObservation();
                 return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
-            } catch (AnnotationNotFoundException e) {
+            } catch (Loinc2HpoRuntimeException e) {
                 logger.trace("Annotation for the interpretation code is not found; try other methods");
-            } //catch (AmbiguousResultsFoundException e) {  //we should not catch this exception, I think --@azhang
-              //  logger.trace("Interpretation code resulted conflicting hpo interpretation; try other methods");
-            //}
+            }
         }
 
         //if we failed to analyze the outcome through the interpretation field, we try to analyze the raw value using
@@ -141,8 +138,8 @@ public class FhirObservationAnalyzer {
                         logger.info("The observation has a correctly formed loinc code, but the code is not found in the loinc table. Check whether it is a new loinc code: " + loincId);
                     }
                     return loincIds.contains(loincId);
-                } catch (MalformedLoincCodeException e) {
-                    logger.error("The loinc code is not formed correctly: " + coding.getCode());
+                } catch (Loinc2HpoRuntimeException e) {
+                    logger.error(e.getMessage());
                     return false;
                 }
             }
@@ -155,18 +152,17 @@ public class FhirObservationAnalyzer {
     /**
      * A method to get the loinc id from a FHIR observation
      * @return
-     * @throws MalformedLoincCodeException
-     * @throws LoincCodeNotFoundException
      * @throws UnsupportedCodingSystemException
      */
-    public static LoincId getLoincIdOfObservation() throws MalformedLoincCodeException, LoincCodeNotFoundException{
+    public static LoincId getLoincIdOfObservation() {
         LoincId loincId = null;
         for (Coding coding : observation.getCode().getCoding()) {
             if (coding.getSystem().equals("http://loinc.org")) {
                 loincId = new LoincId(coding.getCode());
             }
         }
-        if (loincId == null) throw new LoincCodeNotFoundException();
+        if (loincId == null)
+            throw Loinc2HpoRuntimeException.loincCodeNotFound();
         return loincId;
     }
 

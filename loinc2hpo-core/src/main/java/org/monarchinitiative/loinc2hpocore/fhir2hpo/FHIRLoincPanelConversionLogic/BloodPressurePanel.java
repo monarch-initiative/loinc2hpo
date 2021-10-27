@@ -24,7 +24,7 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
     }
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws MalformedLoincCodeException, MissingPanelComponentException, FHIRException, ReferenceNotFoundException, LoincCodeNotAnnotatedException, AmbiguousResultsFoundException, UnrecognizedCodeException, LoincCodeNotFoundException, AnnotationNotFoundException, UnsupportedCodingSystemException, AmbiguousReferenceException {
+    public HpoTerm4TestOutcome getHPOforObservation() throws  FHIRException {
         if (components.size() < 2) {
             return null;
         }
@@ -32,7 +32,7 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         Observation systolic = components.get(new LoincId("8480-6"));
         Observation dystolic = components.get(new LoincId("8462-4"));
         if (systolic == null || dystolic == null) {
-            throw new MissingPanelComponentException();
+            throw Loinc2HpoRuntimeException.missingPanelComponent();
         }
         LabTestOutcome systolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(systolic);
         LabTestOutcome dystolicOutcome = FhirObservationAnalyzer.getHPO4ObservationOutcome(dystolic);

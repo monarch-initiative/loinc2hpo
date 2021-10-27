@@ -3,7 +3,6 @@ package org.monarchinitiative.loinc2hpocore.annotationmodel;
 import org.apache.commons.lang3.StringUtils;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
 import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -111,7 +110,7 @@ public class Loinc2HpoAnnotationModel {
         writer.close();
     }
 
-    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) throws MalformedLoincCodeException {
+    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) {
 
         List<Loinc2HpoAnnotationEntry> csvEntries = Loinc2HpoAnnotationParser.load(path);
 

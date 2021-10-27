@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysis;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromCodedValues;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
@@ -39,7 +38,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 
 
     @BeforeAll
-    public static void setup() throws MalformedLoincCodeException, IOException {
+    public static void setup() throws IOException {
         FhirContext ctx = FhirContext.forDstu3();
         IParser jsonparser = ctx.newJsonParser();
         Observation observation1 = (Observation)
@@ -111,7 +110,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 
     @Test
     public void testGetInterpretationCodes2()  {
-        Assertions.assertThrows(UnrecognizedCodeException.class, () -> {
+        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
             ObservationAnalysis analyzer =
                     new ObservationAnalysisFromCodedValues(loinc2Hpo,
                             observations[3]);

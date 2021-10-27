@@ -9,8 +9,7 @@ import ca.uhn.fhir.rest.gclient.ReferenceClientParam;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.monarchinitiative.loinc2hpocore.exception.AmbiguousSubjectException;
-import org.monarchinitiative.loinc2hpocore.exception.SubjectNotFoundException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +41,7 @@ public class FhirResourceRetriever {
      */
     @Deprecated
     public static Observation parseJsonFile2Observation(String filepath) throws IOException, DataFormatException {
-        Observation observation = null;
+        Observation observation;
 
         File file = new File(filepath);
         byte[] bytes = new byte[(int)file.length()];
@@ -110,7 +109,7 @@ public class FhirResourceRetriever {
      * @return
      */
     @Deprecated
-    public static Patient retrievePatientFromServer(Reference subject) throws SubjectNotFoundException, AmbiguousSubjectException {
+    public static Patient retrievePatientFromServer(Reference subject) {
 
         List<Patient> patients = new ArrayList<>();
         if (subject.hasReference()) {
@@ -136,9 +135,9 @@ public class FhirResourceRetriever {
         if (patients.size() == 1) {
             return patients.iterator().next();
         } else if (patients.isEmpty()) {
-            throw new SubjectNotFoundException("Expect one subject, but found none");
+            throw Loinc2HpoRuntimeException.subjectNotFound();
         } else {
-            throw new AmbiguousSubjectException("Except one subject, but found multiple");
+            throw Loinc2HpoRuntimeException.ambiguousSubject();
         }
 
     }

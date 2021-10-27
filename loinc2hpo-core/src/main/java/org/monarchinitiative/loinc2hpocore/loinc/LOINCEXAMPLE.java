@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +80,7 @@ public enum LOINCEXAMPLE{
         return Arrays.stream(LOINCEXAMPLE.values()).map(p -> {
             try {
                 return new LoincId(p.toString());
-            } catch (MalformedLoincCodeException e) {
+            } catch (Loinc2HpoRuntimeException e) {
                 e.printStackTrace();
             }
             return null;

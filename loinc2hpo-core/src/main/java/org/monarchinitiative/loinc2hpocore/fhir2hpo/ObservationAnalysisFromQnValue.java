@@ -23,7 +23,7 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws ReferenceNotFoundException, AmbiguousReferenceException, UnrecognizedCodeException, LoincCodeNotAnnotatedException, AnnotationNotFoundException, LoincCodeNotFoundException, MalformedLoincCodeException {
+    public HpoTerm4TestOutcome getHPOforObservation() {
 
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
@@ -34,11 +34,11 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
                 this.observation.getReferenceRange();
 
         if (references.size() == 0) {
-            throw new ReferenceNotFoundException();
+            throw Loinc2HpoRuntimeException.referenceRangeNotFound();
         }
 
         if (references.size() >= 2){
-            throw new AmbiguousReferenceException();
+            throw Loinc2HpoRuntimeException.ambiguousReferenceRange();
             //An exception: three reference sizes
             //it can happen when there is actually one range but coded in three ranges
             //e.g. normal 20-30

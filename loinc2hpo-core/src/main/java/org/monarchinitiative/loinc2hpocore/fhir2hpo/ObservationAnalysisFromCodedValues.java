@@ -51,15 +51,12 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws AmbiguousResultsFoundException, UnrecognizedCodeException, AnnotationNotFoundException, LoincCodeNotFoundException, MalformedLoincCodeException {
+    public HpoTerm4TestOutcome getHPOforObservation() throws Loinc2HpoRuntimeException {
 
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
-
         this.annotationMap = loinc2Hpo.getAnnotationMap();
-
-        if (annotationMap.get(loincId) == null) throw new AnnotationNotFoundException();
-
+        if (annotationMap.get(loincId) == null) throw Loinc2HpoRuntimeException.notAnnotated(loincId);
         CodeableConcept codedValue = this.observation.getValueCodeableConcept();
 
         Set<HpoTerm4TestOutcome> results = codedValue.getCoding()
@@ -69,12 +66,12 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
                         c.getCode(), null)))
                 .collect(Collectors.toSet());
         if (results.size() > 1) {
-            throw new AmbiguousResultsFoundException();
+            throw Loinc2HpoRuntimeException.ambiguousResults();
         }
         if (results.size() == 1) {
             return results.iterator().next();
         } else {
-            throw new UnrecognizedCodeException();
+            throw Loinc2HpoRuntimeException.noCodeFound();
         }
 
     }

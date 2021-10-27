@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
-import org.monarchinitiative.loinc2hpocore.exception.ReferenceNotFoundException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.fhir2hpo.ObservationAnalysisFromQnValue;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -30,7 +29,7 @@ public class ObservationAnalysisFromQnValueTest {
 
 
     @BeforeAll
-    public static void setup() throws MalformedLoincCodeException {
+    public static void setup() {
         FhirContext ctx = FhirContext.forDstu3();
         IParser parser = ctx.newJsonParser();
 
@@ -75,7 +74,7 @@ public class ObservationAnalysisFromQnValueTest {
 
     @Test
     public void testNoRef() {
-        Assertions.assertThrows(ReferenceNotFoundException.class, () -> {
+        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
             ObservationAnalysisFromQnValue analyzer =
                     new ObservationAnalysisFromQnValue(loinc2Hpo,
                             observations[1]);

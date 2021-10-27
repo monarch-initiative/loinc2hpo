@@ -3,11 +3,9 @@ package org.monarchinitiative.loinc2hpocore;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
-import org.monarchinitiative.loinc2hpocore.exception.AnnotationNotFoundException;
-import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundException;
-import org.monarchinitiative.loinc2hpocore.exception.LoincCodeNotAnnotatedException;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +18,6 @@ import java.util.Map;
  * @version 1.1.7
  */
 public class Loinc2Hpo {
-
     private static final Logger logger = LoggerFactory.getLogger(Loinc2Hpo.class);
 
     private final Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
@@ -50,26 +47,25 @@ public class Loinc2Hpo {
         return converter;
     }
 
-    public Code convertToInternal(Code original) throws InternalCodeNotFoundException {
+    public Code convertToInternal(Code original) {
         return this.converter.convertToInternalCode(original);
     }
 
-    public HpoTerm4TestOutcome query(LoincId loincId, Code testResult) throws AnnotationNotFoundException, LoincCodeNotAnnotatedException {
-
+    public HpoTerm4TestOutcome query(LoincId loincId, Code testResult)  {
         //The loinc id is not annotated yet
         if (!this.annotationMap.containsKey(loincId)) {
-            throw new LoincCodeNotAnnotatedException();
+            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
         }
 
         //The result code is not annotated
         if (!this.annotationMap.get(loincId).getCandidateHpoTerms().containsKey(testResult)){
-            throw new AnnotationNotFoundException();
+            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
         }
 
         return this.annotationMap.get(loincId).getCandidateHpoTerms().get(testResult);
     }
 
-    public HpoTerm4TestOutcome query(LoincId loincId, String system, String id) throws LoincCodeNotAnnotatedException, AnnotationNotFoundException {
+    public HpoTerm4TestOutcome query(LoincId loincId, String system, String id) {
         Code code = Code.fromSystemAndCode(system, id);
         return query(loincId, code);
     }

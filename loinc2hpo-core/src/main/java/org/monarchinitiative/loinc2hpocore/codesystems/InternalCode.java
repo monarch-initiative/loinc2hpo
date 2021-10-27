@@ -1,9 +1,12 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
 
-import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
+/**
+ * These are the code used for the results of lab tests. Other codes, e.g., FHIR, should be
+ * mapped onto these codes for annotation of data.
+ */
 public enum InternalCode {
-
     A,
     L,
     N,
@@ -14,7 +17,7 @@ public enum InternalCode {
     NEG,
     POS;
 
-    public static InternalCode fromCode(String codeString) throws UnrecognizedCodeException{
+    public static InternalCode fromCode(String codeString) throws Loinc2HpoRuntimeException {
         if (codeString == null || codeString.isEmpty()) {
             return null;
         }
@@ -45,7 +48,7 @@ public enum InternalCode {
         if (codeString.equals("NEG")) {
             return NEG;
         }
-        throw new UnrecognizedCodeException("Cannot recognize the code: " + codeString);
+        throw Loinc2HpoRuntimeException.unrecognizedCode(codeString);
     }
 
     public String toCodeString(){

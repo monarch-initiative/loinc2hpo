@@ -28,10 +28,9 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws AmbiguousResultsFoundException, AnnotationNotFoundException, LoincCodeNotFoundException, MalformedLoincCodeException, LoincCodeNotAnnotatedException {
+    public HpoTerm4TestOutcome getHPOforObservation() {
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
-
         Collection<Code> interpretationCodes = getInterpretationCodes(); //all
         // interpretation codes in different coding systems. Expect one in most cases.
 
@@ -45,14 +44,14 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
                     try {
                         internalCode = loinc2Hpo.convertToInternal(p);
                         results.put(p, internalCode);
-                    } catch (InternalCodeNotFoundException e) {
+                    } catch (Loinc2HpoRuntimeException e) {
                         e.printStackTrace();
                     }
                 });
         List<Code> distinct = results.values().stream().distinct().collect(Collectors.toList());
 
         if (distinct.size() > 1){
-            throw new AmbiguousResultsFoundException();
+            throw Loinc2HpoRuntimeException.ambiguousResults();
         }
 
         return loinc2Hpo.query(loincId, distinct.get(0));
