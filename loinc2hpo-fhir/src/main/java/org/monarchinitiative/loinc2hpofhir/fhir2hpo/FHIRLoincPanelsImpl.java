@@ -15,7 +15,7 @@ public class FHIRLoincPanelsImpl implements FHIRLoincPanels {
     private final Patient subject;
     private String patientId;
     //
-    private HashMap<LoincId, List<FHIRLoincPanel>> loincPanels;
+    private final HashMap<LoincId, List<FHIRLoincPanel>> loincPanels;
 
     public FHIRLoincPanelsImpl(Patient subject) {
         this.subject = subject;

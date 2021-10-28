@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  * concentration is in one set.
  */
 public class PhenoSetUnionFind {
-    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
-    private UnionFind<TermId> unionFind;
+    private final Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
+    private final UnionFind<TermId> unionFind;
 
     public PhenoSetUnionFind(Set<TermId> hpoTermSet, Map<LoincId, Loinc2HpoAnnotationModel> annotationMap) {
         this.annotationMap = annotationMap;

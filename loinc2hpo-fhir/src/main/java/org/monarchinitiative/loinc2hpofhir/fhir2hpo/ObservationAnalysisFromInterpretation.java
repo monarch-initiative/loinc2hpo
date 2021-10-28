@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 public class ObservationAnalysisFromInterpretation implements ObservationAnalysis {
 
-    private Loinc2Hpo loinc2Hpo;
-    private Observation observation;
+    private final Loinc2Hpo loinc2Hpo;
+    private final Observation observation;
     public ObservationAnalysisFromInterpretation(Loinc2Hpo loinc2Hpo,
                                                  Observation observation){
         this.loinc2Hpo = loinc2Hpo;

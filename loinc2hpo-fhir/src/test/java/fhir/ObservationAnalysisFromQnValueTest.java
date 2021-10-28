@@ -23,8 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 public class ObservationAnalysisFromQnValueTest {
-    private static Observation[] observations = new Observation[2];
-    private static Map<LoincId, Loinc2HpoAnnotationModel> testmap = new HashMap<>();
+    private static final Observation[] observations = new Observation[2];
+    private static final Map<LoincId, Loinc2HpoAnnotationModel> testmap = new HashMap<>();
     private static Loinc2Hpo loinc2Hpo;
 
 

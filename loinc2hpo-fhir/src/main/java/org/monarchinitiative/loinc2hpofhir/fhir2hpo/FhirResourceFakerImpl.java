@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 public class FhirResourceFakerImpl implements FhirResourceFaker {
     public static final String LOINCSYSTEM = "http://loinc.org";
     public static final String V2OBSERVATIONINTERPRETATION = "http://hl7.org/fhir/v2/0078";
-    private RandomGenerator randomGenerator;
-    private FhirResourceComponentFaker fhirResourceComponentFaker = new FhirResourceComponentFaker();
-    private Map<LoincId, LoincEntry> loincEntryMap;
+    private final RandomGenerator randomGenerator;
+    private final FhirResourceComponentFaker fhirResourceComponentFaker = new FhirResourceComponentFaker();
+    private final Map<LoincId, LoincEntry> loincEntryMap;
 
     /**
      * Constructor takes in a loincEntry map, which is created by calling method {@link LoincEntry#getLoincEntryMap(String)}  getLoincEntryMap}.

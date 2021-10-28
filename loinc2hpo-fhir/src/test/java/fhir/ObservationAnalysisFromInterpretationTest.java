@@ -44,10 +44,9 @@ public class ObservationAnalysisFromInterpretationTest {
         HpoTerm4TestOutcome hpoForHigh = mock(HpoTerm4TestOutcome.class);
         Loinc2HpoAnnotationModel forGlucose =
                 mock(Loinc2HpoAnnotationModel.class);
-        Map<Code, HpoTerm4TestOutcome> map = new HashMap<>();
+        HashMap<Code, HpoTerm4TestOutcome> map = new HashMap<>();
         map.put(inHigh, hpoForHigh);
-        when(forGlucose.getCandidateHpoTerms()).thenReturn((HashMap<Code,
-                HpoTerm4TestOutcome>) map);
+        when(forGlucose.getCandidateHpoTerms()).thenReturn(map);
 
         Map<LoincId, Loinc2HpoAnnotationModel> loinc2HpoAnnotationMap =
                 new HashMap<>();

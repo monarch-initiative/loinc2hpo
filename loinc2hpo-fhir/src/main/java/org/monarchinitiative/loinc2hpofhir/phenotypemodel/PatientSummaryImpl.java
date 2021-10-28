@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 public class PatientSummaryImpl implements PatientSummary{
 
-    private Patient patient;
-    private List<LabTest> labTests;
-    private List<PhenoSetTimeLine> phenoSetTimeLines;
-    private UnionFind<TermId> hpoTermUnionFind;
+    private final Patient patient;
+    private final List<LabTest> labTests;
+    private final List<PhenoSetTimeLine> phenoSetTimeLines;
+    private final UnionFind<TermId> hpoTermUnionFind;
 
     public PatientSummaryImpl(Patient patient, UnionFind<TermId> hpoTermUnionFind){
         this.patient = patient;

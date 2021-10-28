@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 public class PhenoSetTimeLineImpl implements PhenoSetTimeLine {
 
-    private List<PhenotypeComponent> phenosetTimeLine;
-    private PhenoSet phenoset;
+    private final List<PhenotypeComponent> phenosetTimeLine;
+    private final PhenoSet phenoset;
 
     public PhenoSetTimeLineImpl(PhenoSet phenoset) {
         this.phenoset = phenoset;

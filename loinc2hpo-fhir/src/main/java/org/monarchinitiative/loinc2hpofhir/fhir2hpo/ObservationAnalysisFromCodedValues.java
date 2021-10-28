@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 
 import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
@@ -25,8 +24,8 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
     private CodeableConcept codedValue;
     private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
 
-    private Loinc2Hpo loinc2Hpo;
-    private Observation observation;
+    private final Loinc2Hpo loinc2Hpo;
+    private final Observation observation;
 
     public ObservationAnalysisFromCodedValues(Loinc2Hpo loinc2Hpo,
                                               Observation observation){

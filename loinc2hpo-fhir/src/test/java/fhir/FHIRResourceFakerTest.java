@@ -51,7 +51,7 @@ public class FHIRResourceFakerTest {
         Address address = patient.getAddress().get(0);
        System.out.println(address.getCity() );
 
-        System.out.println(address.toString());
+        System.out.println(address);
 
 //        System.out.println(faker.phoneNumber().phoneNumber());
 //

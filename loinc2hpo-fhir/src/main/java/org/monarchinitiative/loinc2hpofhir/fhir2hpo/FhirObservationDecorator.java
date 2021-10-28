@@ -33,7 +33,7 @@ public class FhirObservationDecorator {
     public Optional<Observation> hpoObservation(Observation observation) {
         try {
             Optional<HpoTerm4TestOutcome> opt = fhir2hpo.fhir2hpo(observation);
-            if (! opt.isPresent()) {
+            if (opt.isEmpty()) {
                 return Optional.empty();
             }
             HpoTerm4TestOutcome result = opt.get();

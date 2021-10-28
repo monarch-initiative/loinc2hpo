@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class PhenoSetImpl implements PhenoSet {
 
-    private Set<TermId> termSet; //tracks how hpo terms that are used in a time line. Note that it is not a complete set of a phenoset terms
-    private UnionFind<TermId> hpoTermUnionFind;
+    private final Set<TermId> termSet; //tracks how hpo terms that are used in a time line. Note that it is not a complete set of a phenoset terms
+    private final UnionFind<TermId> hpoTermUnionFind;
 
     public PhenoSetImpl(UnionFind<TermId> hpoTermUnionFind) {
 
