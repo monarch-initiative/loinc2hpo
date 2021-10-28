@@ -1,7 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,7 +126,7 @@ public class Loinc2HpoAnnotationEntry {
         List<String> replaceNullWithNA =
                 fields.stream().map(f -> f == null || f.equals("")?
                 "NA" : f).collect(Collectors.toList());
-        return StringUtils.join(replaceNullWithNA, "\t");
+        return String.join("\t", replaceNullWithNA);
     }
 
 

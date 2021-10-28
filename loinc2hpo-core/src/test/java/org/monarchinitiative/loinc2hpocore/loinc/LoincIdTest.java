@@ -18,6 +18,7 @@ public class LoincIdTest {
         assertEquals(code,id.toString());
     }
 
+
     @Test
     public void testConstructor2()  {
         String code = "3141-9";

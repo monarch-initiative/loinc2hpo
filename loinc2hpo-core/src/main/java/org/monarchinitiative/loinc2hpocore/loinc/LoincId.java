@@ -1,15 +1,17 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class LoincId  implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoincId.class);
     /** The part of the Loinc code prior to the dash */
     private final int num;
     /** The part of the Loinc code following the dash */
@@ -50,9 +52,7 @@ public class LoincId  implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result += 31 * num;
-        return result + 31*suffix;
+        return Objects.hash(num, suffix);
     }
 
     @Override

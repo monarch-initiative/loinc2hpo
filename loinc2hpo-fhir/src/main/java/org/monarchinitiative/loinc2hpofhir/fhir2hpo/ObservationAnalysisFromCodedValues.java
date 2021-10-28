@@ -1,8 +1,8 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
@@ -10,6 +10,8 @@ import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(ObservationAnalysisFromCodedValues.class);
 
     private LoincId loincId;
     private CodeableConcept codedValue;
@@ -61,7 +63,7 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
         Set<HpoTerm4TestOutcome> results = codedValue.getCoding()
                 .stream()
-                .filter(p -> annotationMap.get(loincId).getCandidateHpoTerms().containsKey(new Code(p)))
+                .filter(p -> annotationMap.get(loincId).getCandidateHpoTerms().containsKey(p))
                 .map(c -> annotationMap.get(loincId).getCandidateHpoTerms().get(new Code(c.getSystem(),
                         c.getCode(), null)))
                 .collect(Collectors.toSet());

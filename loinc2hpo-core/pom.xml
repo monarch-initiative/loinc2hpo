@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Loinc2Hpo</artifactId>
+        <artifactId>loinc2hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
         <version>1.3.0</version>
     </parent>
@@ -21,11 +21,32 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.monarchinitiative.phenol</groupId>
+            <artifactId>phenol-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.monarchinitiative.phenol</groupId>
+            <artifactId>phenol-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jgrapht</groupId>
+            <artifactId>jgrapht-core</artifactId>
+            <version>1.2.0</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <finalName>Loinc2HpoLib</finalName>
+        <finalName>loinc2hpo-core</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -35,7 +56,7 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Specify the dependencies to copy -->
+            <!-- Specify the dependencies to copy
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -55,22 +76,27 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.7.0</version>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
 
             <!-- Specify the resources which need to be made accessible to the user -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -103,7 +129,7 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
+            <version>3.2.0</version>
             <configuration>
                 <archive>
                     <!--<index>true</index>-->

@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelConversionLogic;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
@@ -39,8 +40,8 @@ public class GlasgowComaPanel extends FHIRLoincPanelImpl {
             return null;
         }
 
-        Code score = new Code(target.getValueCodeableConcept().getCoding().get(0));
-        return loincAnnotationMap.get(new LoincId("9269-2")).loincInterpretationToHPO(score);
-
+      //  Code score = new Code(target.getValueCodeableConcept().);
+       // return loincAnnotationMap.get(new LoincId("9269-2")).loincInterpretationToHPO(score);
+        throw new NotImplementedException("TODO NOT IMPLEMENTED");
     }
 }

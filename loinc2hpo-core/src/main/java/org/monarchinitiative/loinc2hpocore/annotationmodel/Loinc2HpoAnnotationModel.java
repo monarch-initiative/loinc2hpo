@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
-import org.apache.commons.lang3.StringUtils;
 import org.monarchinitiative.loinc2hpocore.codesystems.Code;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
@@ -42,7 +41,7 @@ public class Loinc2HpoAnnotationModel {
 
     public static String csv_header(String delim){
 
-        return StringUtils.join(
+        return String.join(delim,
                 Arrays.asList("loincId",
                         "loincScale",
                         "system",
@@ -55,7 +54,7 @@ public class Loinc2HpoAnnotationModel {
                         "lastEditedBy",
                         "version",
                         "isFinalized",
-                        "comment"), delim);
+                        "comment"));
 
     }
 
@@ -104,7 +103,7 @@ public class Loinc2HpoAnnotationModel {
                 .map(String::trim)
                 .collect(Collectors.toList());
         lines_to_write.add(0, header);
-        String content = StringUtils.join(lines_to_write, "\n");
+        String content = String.join("\n", lines_to_write);
         BufferedWriter writer = new BufferedWriter(new FileWriter(file_path));
         writer.write(content);
         writer.close();

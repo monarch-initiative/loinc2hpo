@@ -17,6 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hapi-fhir.version>5.5.1</hapi-fhir.version>
     </properties>
 
 
@@ -26,8 +27,43 @@
             <artifactId>loinc2hpo-core</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-base</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-dstu3</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-client</artifactId>
+            <version>${hapi-fhir.version}</version>
+        </dependency>
 
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,42 +76,19 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Specify the dependencies to copy -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                        </configuration>
-                    </execution>
-                </executions>
+                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                </configuration>
             </plugin>
 
             <!-- Specify the resources which need to be made accessible to the user -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
@@ -104,25 +117,11 @@
                 </executions>
             </plugin>
 
-        <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% JAR %%%%%%%%%%%%%%%%%%%%% JAR %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>2.6</version>
-            <configuration>
-                <archive>
-                    <!--<index>true</index>-->
-                    <manifest>
-                        <addClasspath>true</addClasspath>
-                        <classpathPrefix>lib/</classpathPrefix>
-                        <!-- set useUniqueVersions=false in order that the classpath has the
-                            SNAPSHOT instead of the build number prefixed to the dependency -->
-                        <!--<useUniqueVersions>false</useUniqueVersions>-->
-                        <!--<mainClass>org.monarchinitiative.loinc2hpo.Loinc2Hpo</mainClass>-->
-                    </manifest>
-                </archive>
-            </configuration>
-        </plugin>
+            <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% JAR %%%%%%%%%%%%%%%%%%%%%%%%%% -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 </project>

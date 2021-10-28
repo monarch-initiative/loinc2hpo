@@ -1,7 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CodeSystemConvertor {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(CodeSystemConvertor.class);
 
     private final Map<Code, Code> codeConversionmap = new HashMap<>();
 

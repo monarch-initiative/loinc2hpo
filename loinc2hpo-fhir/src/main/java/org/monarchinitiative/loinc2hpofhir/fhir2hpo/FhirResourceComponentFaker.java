@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
-import edu.emory.mathcs.backport.java.util.Collections;
 
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.Address;
@@ -17,11 +16,12 @@ import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.Range;
 import org.hl7.fhir.dstu3.model.SimpleQuantity;
 import org.hl7.fhir.dstu3.model.Identifier.IdentifierUse;
-import org.monarchinitiative.loinc2hpocore.util.RandomGenerator;
-import org.monarchinitiative.loinc2hpocore.util.RandomGeneratorImpl;
+import org.monarchinitiative.loinc2hpocore.legacy.util.RandomGenerator;
+import org.monarchinitiative.loinc2hpocore.legacy.util.RandomGeneratorImpl;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

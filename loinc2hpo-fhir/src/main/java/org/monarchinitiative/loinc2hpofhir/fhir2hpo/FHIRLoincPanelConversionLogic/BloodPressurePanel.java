@@ -8,10 +8,9 @@ import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
 import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelImpl;
-import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FhirObservationAnalyzer;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.phenotypemodel.LabTestOutcome;
+import org.monarchinitiative.loinc2hpofhir.phenotypemodel.LabTestOutcome;
 
 public class BloodPressurePanel extends FHIRLoincPanelImpl {
 

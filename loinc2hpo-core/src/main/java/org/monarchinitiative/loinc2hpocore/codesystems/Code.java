@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
 
-import org.hl7.fhir.dstu3.model.Coding;
+//import org.hl7.fhir.dstu3.model.Coding;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -28,13 +28,13 @@ public class Code implements Serializable {
         this.code = otherCode.code;
         this.display = otherCode.display;
     }
-
+/*
     public Code(Coding coding) {
         this.system = coding.getSystem();
         this.code = coding.getCode();
         this.display = DISPLAY_NOT_AVAILABLE;
     }
-
+*/
 
     public String getSystem() {
         return system;

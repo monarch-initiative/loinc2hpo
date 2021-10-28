@@ -3,8 +3,8 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Observation.ObservationStatus;
-import org.monarchinitiative.loinc2hpocore.util.RandomGenerator;
-import org.monarchinitiative.loinc2hpocore.util.RandomGeneratorImpl;
+import org.monarchinitiative.loinc2hpocore.legacy.util.RandomGenerator;
+import org.monarchinitiative.loinc2hpocore.legacy.util.RandomGeneratorImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
@@ -80,12 +80,9 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
 
     @Override
     public Observation fakeObservation(LoincId loincId, Patient patient) {
-        Observation observation = null;
-        observation = new Observation();
-
+        Observation observation = new Observation();
         //add a fake id
         observation.setId(randomGenerator.randString(1, 3, true));
-
         //add two fake identifiers
         observation.addIdentifier(fhirResourceComponentFaker.fakeIdentifier())
                 .addIdentifier(fhirResourceComponentFaker.fakeIdentifier());
