@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpocore.loinc;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.monarchinitiative.loinc2hpocore.exception.MalformedLoincCodeException;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,10 +39,10 @@ public class LoincEntry {
 
 
 
-    public LoincEntry(String line) throws MalformedLoincCodeException {
+    public LoincEntry(String line) {
         List<String> F = LoincImporter.splitCSVquoted(line);
         if (F.size()<MIN_FIELDS_LOINC) {
-            throw new MalformedLoincCodeException("malformed LOINC line: "+line);
+            throw Loinc2HpoRuntimeException.malformedLoincCode(line);
         }
         LOINC_Number= new LoincId(F.get(0));
         component=F.get(1);
@@ -95,8 +95,8 @@ public class LoincEntry {
                     LoincEntry entry = new LoincEntry(line);
                     builder.put(entry.getLOINC_Number(),entry);
                     count_correct++;
-                } catch (MalformedLoincCodeException e) {
-                    logger.error("Malformed loinc code in the line:\n " + line);
+                } catch (Loinc2HpoRuntimeException e) {
+                    logger.error(e.getMessage());
                     count_malformed++;
                 }
             }

@@ -1,6 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -38,7 +40,7 @@ import java.util.List;
  q
  */
 public class LoincImporter {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(LoincImporter.class);
 
     /**
      * A utility to import a line of the LOINC code csv file that represents a sinble LOINC entry into the file

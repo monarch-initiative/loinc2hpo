@@ -1,8 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundException;
-import org.monarchinitiative.loinc2hpocore.exception.UnrecognizedCodeException;
+
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CodeSystemConvertor {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LoggerFactory.getLogger(CodeSystemConvertor.class);
 
     private final Map<Code, Code> codeConversionmap = new HashMap<>();
 
@@ -38,9 +38,6 @@ public class CodeSystemConvertor {
             }
         } catch (IOException  e) {
             e.printStackTrace();
-        } catch (UnrecognizedCodeException e) {
-            e.printStackTrace();
-            throw new RuntimeException("unrecognized code encountered");
         }
     }
 
@@ -53,10 +50,10 @@ public class CodeSystemConvertor {
     }
 
 
-    public Code convertToInternalCode(Code code) throws InternalCodeNotFoundException {
+    public Code convertToInternalCode(Code code) {
         System.out.println(code);
         if (!this.codeConversionmap.containsKey(code)) {
-            throw new InternalCodeNotFoundException("Could not find an internal code that match to: " + code.getSystem() + " " + code.getCode());
+            throw Loinc2HpoRuntimeException.internalCodeNotFound(code.getSystem() + ":" + code.getCode());
         }
         return this.codeConversionmap.get(code);
 

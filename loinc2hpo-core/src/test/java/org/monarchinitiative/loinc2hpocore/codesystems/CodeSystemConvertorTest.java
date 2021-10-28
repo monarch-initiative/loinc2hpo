@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.exception.InternalCodeNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,7 +9,7 @@ class CodeSystemConvertorTest {
     private final static CodeSystemConvertor codeSystemConvertor = new CodeSystemConvertor();
 
     @Test
-    public void convertPosToInternalCode() throws InternalCodeNotFoundException {
+    public void convertPosToInternalCode() {
         Code v2 = Code.fromSystemAndCode("http://hl7.org/fhir/v2/0078", "POS");
         Code internal = codeSystemConvertor.convertToInternalCode(v2);
         assertEquals(InternalCodeSystem.SYSTEMNAME, internal.getSystem());
@@ -19,7 +18,7 @@ class CodeSystemConvertorTest {
     }
 
     @Test
-    public void convertWToInternalCode() throws InternalCodeNotFoundException {
+    public void convertWToInternalCode() {
         Code v2_1 = Code.fromSystemAndCode("http://hl7.org/fhir/v2/0078", "W");
         Code internal2 = codeSystemConvertor.convertToInternalCode(v2_1);
         assertEquals(InternalCodeSystem.SYSTEMNAME, internal2.getSystem());
@@ -29,12 +28,10 @@ class CodeSystemConvertorTest {
         assertEquals(InternalCodeSystem.SYSTEMNAME, internal2.getSystem());
         assertNotEquals("POS", internal2.getCode());
         assertNotEquals("present", internal2.getDisplay());
-
-
     }
 
     @Test
-    public void convertAAToInternalCode() throws InternalCodeNotFoundException {
+    public void convertAAToInternalCode() {
         Code v2_1 = Code.fromSystemAndCode("http://hl7.org/fhir/v2/0078", "W");
         Code internal2 = codeSystemConvertor.convertToInternalCode(v2_1);
         Code v2_3 = Code.fromSystemAndCode("http://hl7.org/fhir/v2/0078", "AA");
