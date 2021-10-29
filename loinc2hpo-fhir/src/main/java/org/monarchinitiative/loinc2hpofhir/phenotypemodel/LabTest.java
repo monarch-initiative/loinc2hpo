@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpofhir.phenotypemodel;
 
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.Date;
@@ -47,5 +47,5 @@ public interface LabTest {
      * What is the outcome
      * @return
      */
-    HpoTerm4TestOutcome outcome();
+    Hpo2Outcome outcome();
 }

@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.legacy.util;
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -9,10 +9,10 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.*;
 
 public class AnnotationQC {
-    public static boolean hasUnrecognizedTermId(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap, Ontology hpo) {
-        for (Loinc2HpoAnnotationModel annotation : annotationMap.values()) {
+    public static boolean hasUnrecognizedTermId(Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationMap, Ontology hpo) {
+        for (Loinc2HpoAnnotationModelLEGACY annotation : annotationMap.values()) {
             boolean hasUnregnizedTerm = annotation.getCandidateHpoTerms().values().stream()
-                    .map(HpoTerm4TestOutcome::getId)
+                    .map(Hpo2Outcome::getId)
                     .anyMatch(id -> !hpo.getTermMap().containsKey(id));
             if (hasUnregnizedTerm) {
                 return true;
@@ -21,11 +21,11 @@ public class AnnotationQC {
         return false;
     }
 
-    public static String unrecognizedTermId(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap, Ontology hpo) {
+    public static String unrecognizedTermId(Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationMap, Ontology hpo) {
         Set<TermId> unrecognizedTerms = new HashSet<>();
-        for (Loinc2HpoAnnotationModel annotation : annotationMap.values()) {
+        for (Loinc2HpoAnnotationModelLEGACY annotation : annotationMap.values()) {
             annotation.getCandidateHpoTerms().values().stream()
-                    .map(HpoTerm4TestOutcome::getId)
+                    .map(Hpo2Outcome::getId)
                     .filter(id -> !hpo.getTermMap().containsKey(id))
                     .forEach(unrecognizedTerms::add);
         }

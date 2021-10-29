@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpofhir.phenotypemodel;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,16 +17,16 @@ public class BasicLabTestOutcome implements LabTestOutcome {
     private Observation observation;
     private Reference subject;
     private List<Identifier> identifiers;
-    private final HpoTerm4TestOutcome hpoId;
+    private final Hpo2Outcome hpoId;
 
     private final String comment;
 
-    public BasicLabTestOutcome(HpoTerm4TestOutcome id, @Nullable String text) {
+    public BasicLabTestOutcome(Hpo2Outcome id, @Nullable String text) {
         this.hpoId = id;
         this.comment = text;
     }
 
-    public BasicLabTestOutcome(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable Reference subject, @Nullable List<Identifier> identifiers) {
+    public BasicLabTestOutcome(Hpo2Outcome outcome, @Nullable String comment, @Nullable Reference subject, @Nullable List<Identifier> identifiers) {
         this.subject = subject;
         this.identifiers = new ArrayList<>();
         if (identifiers != null) {
@@ -36,7 +36,7 @@ public class BasicLabTestOutcome implements LabTestOutcome {
         this.comment = comment;
     }
 
-    public BasicLabTestOutcome(HpoTerm4TestOutcome outcome, @Nullable String comment, @Nullable Observation observation) {
+    public BasicLabTestOutcome(Hpo2Outcome outcome, @Nullable String comment, @Nullable Observation observation) {
 
         this.observation = observation;
         this.hpoId = outcome;
@@ -65,7 +65,7 @@ public class BasicLabTestOutcome implements LabTestOutcome {
     }
 
     @Override
-    public HpoTerm4TestOutcome getOutcome() {
+    public Hpo2Outcome getOutcome() {
 
         return this.hpoId;
 

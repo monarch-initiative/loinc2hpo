@@ -1,5 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,12 +10,12 @@ import java.util.stream.Collectors;
  * This class represents one annotation in the {@code loinc2hpo-annotations.tsv} file that is available
  *  * at https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation
  */
-public class Loinc2HpoAnnotationEntry {
+public class Loinc2HpoAnnotationEntryLEGACY {
 
     private final String loincId;
     private final String loincScale;
     private final String system;
-    private final String code;
+    private final ShortCode code;
     private final String hpoTermId;
     private final String isNegated;
     private final String createdOn;
@@ -25,7 +27,7 @@ public class Loinc2HpoAnnotationEntry {
     private final String comment;
 
 
-    public Loinc2HpoAnnotationEntry(String loincId, String loincScale, String system, String code, String hpoTermId, String isNegated, String createdOn, String createdBy, String lastEditedOn, String lastEditedBy, String version, String isFinalized, String comment) {
+    public Loinc2HpoAnnotationEntryLEGACY(String loincId, String loincScale, String system, ShortCode code, String hpoTermId, String isNegated, String createdOn, String createdBy, String lastEditedOn, String lastEditedBy, String version, String isFinalized, String comment) {
         this.loincId = loincId;
         this.loincScale = loincScale;
         this.system = system;
@@ -41,7 +43,7 @@ public class Loinc2HpoAnnotationEntry {
         this.comment = comment;
     }
 
-    public static Loinc2HpoAnnotationEntry fromTsvLine(String line) {
+    public static Loinc2HpoAnnotationEntryLEGACY fromTsvLine(String line) {
         String[] elements = line.split("\t");
         if (elements.length != 13){
             throw new RuntimeException("Line does not have expected length: " + line);
@@ -52,7 +54,7 @@ public class Loinc2HpoAnnotationEntry {
         String loincId = elements[0];
         String loincScale = elements[1];
         String system = elements[2];
-        String code = elements[3];
+        ShortCode code = ShortCode.fromShortCode(elements[3]);
         String hpoTermId = elements[4];
         String isNegated = elements[5];
         String createdOn = elements[6];
@@ -62,7 +64,7 @@ public class Loinc2HpoAnnotationEntry {
         String version = elements[10];
         String isFinalized = elements[11];
         String comment = elements[12];
-        return new Loinc2HpoAnnotationEntry(loincId, loincScale, system, code, hpoTermId, isNegated,
+        return new Loinc2HpoAnnotationEntryLEGACY(loincId, loincScale, system, code, hpoTermId, isNegated,
                 createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
     }
     public String getLoincId() {
@@ -77,7 +79,7 @@ public class Loinc2HpoAnnotationEntry {
         return system;
     }
 
-    public String getCode() {
+    public ShortCode getCode() {
         return code;
     }
 
@@ -119,8 +121,8 @@ public class Loinc2HpoAnnotationEntry {
 
     @Override
     public String toString(){
-        List<String> fields = Arrays.asList(loincId, loincScale, system, code
-                , hpoTermId, isNegated, createdOn, createdBy, lastEditedOn,
+        List<String> fields = Arrays.asList(loincId, loincScale, system, code.shortForm(),
+                hpoTermId, isNegated, createdOn, createdBy, lastEditedOn,
                 lastEditedBy, version, isFinalized, comment);
         //replace any null value or empty value with "NA"
         List<String> replaceNullWithNA =
@@ -130,19 +132,19 @@ public class Loinc2HpoAnnotationEntry {
     }
 
 
-    public static Loinc2HpoAnnotationEntry of(String loincId,
-                                              String loincScale,
-                                              String system,
-                                              String code,
-                                              String hpoTermId,
-                                              String isNegated,
-                                              String createdOn,
-                                              String createdBy,
-                                              String lastEditedOn,
-                                              String lastEditedBy,
-                                              String version,
-                                              String isFinalized,
-                                              String comment)  {
-        return new Loinc2HpoAnnotationEntry(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
+    public static Loinc2HpoAnnotationEntryLEGACY of(String loincId,
+                                                    String loincScale,
+                                                    String system,
+                                                    ShortCode code,
+                                                    String hpoTermId,
+                                                    String isNegated,
+                                                    String createdOn,
+                                                    String createdBy,
+                                                    String lastEditedOn,
+                                                    String lastEditedBy,
+                                                    String version,
+                                                    String isFinalized,
+                                                    String comment)  {
+        return new Loinc2HpoAnnotationEntryLEGACY(loincId, loincScale, system, code, hpoTermId, isNegated, createdOn, createdBy, lastEditedOn, lastEditedBy, version, isFinalized, comment);
     }
 }

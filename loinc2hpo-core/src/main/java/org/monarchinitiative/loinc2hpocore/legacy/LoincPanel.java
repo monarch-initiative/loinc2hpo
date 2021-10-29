@@ -1,7 +1,9 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
+package org.monarchinitiative.loinc2hpocore.legacy;
 
 import com.google.common.collect.ImmutableMap;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

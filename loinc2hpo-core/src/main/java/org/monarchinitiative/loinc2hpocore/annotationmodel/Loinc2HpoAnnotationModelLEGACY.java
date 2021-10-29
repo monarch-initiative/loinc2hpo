@@ -1,9 +1,8 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
+import org.monarchinitiative.loinc2hpocore.codesystems.OutcomeCodeOLD;
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParserLEGACY;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  * This class is responsible for managing the annotation information for a
  * LOINC coded lab test. In essence, is uses a map to record mappings from an
  * interpretation code to a HPO term (plus a negation boolean value). The key
- * of this map, {@link org.monarchinitiative.loinc2hpocore.codesystems.Code},
+ * of this map, {@link OutcomeCodeOLD},
  * must have two parts (code system and
  * actual code). We use a set of internal codes for the annotation, which is
  * a subset of FHIR codes:
@@ -35,32 +34,47 @@ import java.util.stream.Collectors;
  * It is also okay to annotate with code from any coding system, for example,
  * one could use SNOMED concepts.
  */
-public class Loinc2HpoAnnotationModel {
+public class Loinc2HpoAnnotationModelLEGACY {
 
     private static final String MISSINGVALUE = "NA";
 
-    public static String csv_header(String delim){
+    private static final String [] headerFields = {"loincId", "loincScale", "system",
+            "code", "hpoTermId", "isNegated", "createdOn", "createdBy",  "lastEditedOn",
+            "lastEditedBy", "version", "isFinalized",  "comment"};
 
-        return String.join(delim,
-                Arrays.asList("loincId",
-                        "loincScale",
-                        "system",
-                        "code",
-                        "hpoTermId",
-                        "isNegated",
-                        "createdOn",
-                        "createdBy",
-                        "lastEditedOn",
-                        "lastEditedBy",
-                        "version",
-                        "isFinalized",
-                        "comment"));
 
+
+    private final LoincId loincId;
+    private final LoincScale loincScale;
+    private final HashMap<ShortCode, Hpo2Outcome> candidateHpoTerms;
+    private final LocalDateTime createdOn;
+    private final String createdBy;
+    private final LocalDateTime lastEditedOn;
+    private final String lastEditedBy;
+    private double version;
+    private final String note; //any comment for this annotation, say e.g. "highly confident about this annotation"
+    private final boolean flag; //a simpler version that equals a comment "not sure about the annotation, come back later"
+
+
+    public Loinc2HpoAnnotationModelLEGACY(LoincId loincId, LoincScale loincScale,
+                                          Map<ShortCode, Hpo2Outcome> annotationMap,
+                                          LocalDateTime createdOn, String createdBy,
+                                          LocalDateTime lastEditedOn, String lastEditedBy,
+                                          String note, boolean flag, double version) {
+        this.loincId = loincId;
+        this.loincScale = loincScale;
+        this.createdOn = createdOn;
+        this.createdBy = createdBy;
+        this.lastEditedOn = lastEditedOn;
+        this.lastEditedBy = lastEditedBy;
+        this.note = note;
+        this.flag = flag;
+        this.version = version;
+        this.candidateHpoTerms = new LinkedHashMap<>(annotationMap);
     }
 
-    public static List<Loinc2HpoAnnotationEntry> to_csv_entries(Loinc2HpoAnnotationModel dataModel){
 
-        //convert objects to string
+    public static List<Loinc2HpoAnnotationEntryLEGACY> to_csv_entries(Loinc2HpoAnnotationModelLEGACY dataModel){
         String loincId = dataModel.getLoincId().toString();
         String loincScale = dataModel.getLoincScale().toString();
         String createdOn = dataModel.getCreatedOn() == null ? MISSINGVALUE :
@@ -72,21 +86,22 @@ public class Loinc2HpoAnnotationModel {
         String isFinalized = dataModel.getFlag()? "false" : "true";
         String comment = dataModel.getNote();
 
-        List<Loinc2HpoAnnotationEntry> entries = new ArrayList<>();
-        for (Map.Entry<Code, HpoTerm4TestOutcome> annotation :
-                dataModel.getCandidateHpoTerms().entrySet()){
+        Map<ShortCode, Hpo2Outcome> annotations = dataModel.getCandidateHpoTerms();
+
+        List<Loinc2HpoAnnotationEntryLEGACY> entries = new ArrayList<>();
+        for (var annotation: annotations.entrySet()){
             //skip record if the mapped term is null
             if (annotation.getValue() == null ||
                     annotation.getValue().getId() == null){
                 continue;
             }
-            String system = annotation.getKey().getSystem();
-            String code_id = annotation.getKey().getCode();
+            String system = "TODO";
+            ShortCode code_id = annotation.getKey();
             String isNegated = annotation.getValue().isNegated()? "true" : "false";
             String hpo_term = annotation.getValue().getId().getValue();
 
-            Loinc2HpoAnnotationEntry entry = Loinc2HpoAnnotationEntry.of(
-                    loincId,loincScale, system, code_id, hpo_term, isNegated, createdOn,
+            Loinc2HpoAnnotationEntryLEGACY entry = Loinc2HpoAnnotationEntryLEGACY.of(
+                    loincId, loincScale, system, code_id, hpo_term, isNegated, createdOn,
                             createdBy, lastEditedOn, lastEditedBy, version,isFinalized,comment);
 
             entries.add(entry);
@@ -94,12 +109,12 @@ public class Loinc2HpoAnnotationModel {
         return entries;
     }
 
-    public static void to_csv_file(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap, String file_path) throws IOException{
-        String header = Loinc2HpoAnnotationModel.csv_header("\t");
+    public static void to_csv_file(Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationMap, String file_path) throws IOException{
+        String header = String.join("\t", headerFields);
         List<String> lines_to_write = annotationMap.values().stream()
-                .map(Loinc2HpoAnnotationModel::to_csv_entries)
+                .map(Loinc2HpoAnnotationModelLEGACY::to_csv_entries)
                 .flatMap(Collection::stream)
-                .map(Loinc2HpoAnnotationEntry::toString)
+                .map(Loinc2HpoAnnotationEntryLEGACY::toString)
                 .map(String::trim)
                 .collect(Collectors.toList());
         lines_to_write.add(0, header);
@@ -109,20 +124,19 @@ public class Loinc2HpoAnnotationModel {
         writer.close();
     }
 
-    public static Map<LoincId, Loinc2HpoAnnotationModel> from_csv(String path) {
+    public static Map<LoincId, Loinc2HpoAnnotationModelLEGACY> from_csv(String path) {
 
-        List<Loinc2HpoAnnotationEntry> csvEntries = Loinc2HpoAnnotationParser.load(path);
+        List<Loinc2HpoAnnotationEntryLEGACY> csvEntries = Loinc2HpoAnnotationParserLEGACY.load(path);
 
         //organize the TSV entries into data models
-        Map<LoincId, Loinc2HpoAnnotationModel> annotationModelMap = new LinkedHashMap<>();
+        Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationModelMap = new LinkedHashMap<>();
 
         //go through each entry, create a new data model if it is first seen
         //otherwise, just add more additional information
-        for (Loinc2HpoAnnotationEntry entry : csvEntries){
+        for (Loinc2HpoAnnotationEntryLEGACY entry : csvEntries){
             String loincId_str = entry.getLoincId();
             String loincScale_str = entry.getLoincScale();
-            String system = entry.getSystem();
-            String code = entry.getCode();
+            ShortCode outcomeCode = entry.getCode();
             String hpoTermId_str = entry.getHpoTermId();
             String isNegated_str = entry.getIsNegated();
             String createdOn_str = entry.getCreatedOn();
@@ -136,9 +150,10 @@ public class Loinc2HpoAnnotationModel {
             //convert strings to the correct object
             LoincId loincId = new LoincId(loincId_str);
             LoincScale loincScale = LoincScale.string2enum(loincScale_str);
-            Code interpretationCode = Code.fromSystemAndCode(system, code);
-            HpoTerm4TestOutcome mappedTo = new HpoTerm4TestOutcome(TermId.of(hpoTermId_str),
-                    isNegated_str.equals("true"));
+//            Hpo2Outcome mappedTo = new Hpo2Outcome(TermId.of(hpoTermId_str),
+//                    isNegated_str.equals("true"));
+            Hpo2Outcome mappedTo = new Hpo2Outcome(TermId.of(hpoTermId_str),
+                    ShortCode.U);
             LocalDateTime createdOn = createdOn_str == null? null :
                     LocalDateTime.parse(createdOn_str);
             LocalDateTime lastEditedOn = lastEditedOn_str == null? null :
@@ -146,8 +161,8 @@ public class Loinc2HpoAnnotationModel {
 
             //create a new annotation model if it does not exist for current loincId
             if (!annotationModelMap.containsKey(loincId)){
-                Loinc2HpoAnnotationModel newModel =
-                        new Loinc2HpoAnnotationModel.Builder()
+                Loinc2HpoAnnotationModelLEGACY newModel =
+                        new Loinc2HpoAnnotationModelLEGACY.Builder()
                         .setLoincId(loincId)
                         .setLoincScale(loincScale)
                         .setCreatedOn(createdOn)
@@ -160,48 +175,16 @@ public class Loinc2HpoAnnotationModel {
                         .build();
                 annotationModelMap.put(loincId, newModel);
             }
-
-            //add annotation data
             annotationModelMap.get(loincId)
                     .getCandidateHpoTerms()
-                    .put(interpretationCode, mappedTo);
+                    .put(outcomeCode, mappedTo);
 
         }
 
         return annotationModelMap;
     }
 
-    private final LoincId loincId;
-    private final LoincScale loincScale;
-    private final HashMap<Code, HpoTerm4TestOutcome> candidateHpoTerms;
-    private final LocalDateTime createdOn;
-    private final String createdBy;
-    private final LocalDateTime lastEditedOn;
-    private final String lastEditedBy;
-    private double version;
-    private final String note; //any comment for this annotation, say e.g. "highly confident about this annotation"
-    private final boolean flag; //a simpler version that equals a comment "not sure about the annotation, come back later"
 
-
-    public Loinc2HpoAnnotationModel(LoincId loincId, LoincScale loincScale,
-                                    Map<Code, HpoTerm4TestOutcome> annotationMap,
-                                    LocalDateTime createdOn, String createdBy,
-                                    LocalDateTime lastEditedOn, String lastEditedBy,
-                                    String note, boolean flag, double version) {
-
-        this.loincId = loincId;
-        this.loincScale = loincScale;
-        this.createdOn = createdOn;
-        this.createdBy = createdBy;
-        this.lastEditedOn = lastEditedOn;
-        this.lastEditedBy = lastEditedBy;
-        this.note = note;
-        this.flag = flag;
-        this.version = version;
-
-        //put other terms into the map
-        this.candidateHpoTerms = new LinkedHashMap<>(annotationMap);
-    }
 
     public LoincId getLoincId(){ return this.loincId; }
 
@@ -217,11 +200,6 @@ public class Loinc2HpoAnnotationModel {
 
     public double getVersion() {
         return version;
-    }
-
-    public Loinc2HpoAnnotationModel setVersion(double version) {
-        this.version = version;
-        return this;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -247,7 +225,7 @@ public class Loinc2HpoAnnotationModel {
      *             an external coding system
      * @return the hpo term wrapped in the HpoTerm4TestOutcome class
      */
-    public HpoTerm4TestOutcome loincInterpretationToHPO(Code code) {
+    public Hpo2Outcome loincInterpretationToHPO(ShortCode code) {
         return candidateHpoTerms.get(code);
     }
 
@@ -257,7 +235,7 @@ public class Loinc2HpoAnnotationModel {
      * @TODO: consider return a copy of the map, but it will affect the parsing method.
      * @return
      */
-    public HashMap<Code, HpoTerm4TestOutcome> getCandidateHpoTerms() {
+    public HashMap<ShortCode, Hpo2Outcome> getCandidateHpoTerms() {
         return candidateHpoTerms;
     }
 
@@ -272,8 +250,7 @@ public class Loinc2HpoAnnotationModel {
         candidateHpoTerms.forEach((code, hpoTermId4LoincTest) -> {
             stringBuilder.append(this.loincId);
             stringBuilder.append("\t").append(this.loincScale.toString());
-            stringBuilder.append("\t" + code.getSystem());
-            stringBuilder.append("\t" + code.getCode());
+            stringBuilder.append("\t" + code.shortForm());
             stringBuilder.append("\t" + hpoTermId4LoincTest.getId().getValue());
             stringBuilder.append("\t" + hpoTermId4LoincTest.isNegated());
             stringBuilder.append("\t" + this.note);
@@ -296,9 +273,8 @@ public class Loinc2HpoAnnotationModel {
      * @return
      */
     public TermId whenValueLow() {
-
-        if (loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.L)) != null) {
-            return loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.L)).getId();
+        if (loincInterpretationToHPO(ShortCode.L) != null) {
+            return loincInterpretationToHPO(ShortCode.L).getId();
         } else {
             return null;
         }
@@ -310,14 +286,13 @@ public class Loinc2HpoAnnotationModel {
      */
     public TermId whenValueNormalOrNegative() {
 
-        if (loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.N)) != null) {
-            return loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.N)).getId();
-        } else if (loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.NEG)) != null) {
-            return loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.NEG)).getId();
+        if (loincInterpretationToHPO(ShortCode.N) != null) {
+            return loincInterpretationToHPO(ShortCode.N).getId();
+        } else if (loincInterpretationToHPO(ShortCode.ABSENT) != null) {
+            return loincInterpretationToHPO(ShortCode.ABSENT).getId();
         } else {
             return null;
         }
-
     }
 
 
@@ -327,10 +302,10 @@ public class Loinc2HpoAnnotationModel {
      */
     public TermId whenValueHighOrPositive() {
 
-        if (loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.H)) != null) {
-            return loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.H)).getId();
-        } else if (loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.POS)) != null) {
-            return loincInterpretationToHPO(InternalCodeSystem.getCode(InternalCode.POS)).getId();
+        if (loincInterpretationToHPO(ShortCode.H) != null) {
+            return loincInterpretationToHPO(ShortCode.H).getId();
+        } else if (loincInterpretationToHPO(ShortCode.PRESENT) != null) {
+            return loincInterpretationToHPO(ShortCode.PRESENT).getId();
         } else {
             return null;
         }
@@ -342,7 +317,7 @@ public class Loinc2HpoAnnotationModel {
 
         private LoincId loincId = null;
         private LoincScale loincScale = null;
-        private Map<Code, HpoTerm4TestOutcome> annotationMap = new LinkedHashMap<>();
+        private Map<ShortCode, Hpo2Outcome> annotationMap = new LinkedHashMap<>();
         private LocalDateTime createdOn = null;
         private String createdBy = null;
         private LocalDateTime lastEditedOn = null;
@@ -360,10 +335,8 @@ public class Loinc2HpoAnnotationModel {
          * @param loincId
          */
         public Builder setLoincId(LoincId loincId) {
-
             this.loincId = loincId;
             return this;
-
         }
 
         /**
@@ -371,10 +344,8 @@ public class Loinc2HpoAnnotationModel {
          * @param loincScale
          */
         public Builder setLoincScale(LoincScale loincScale) {
-
             this.loincScale = loincScale;
             return this;
-
         }
 
         /**
@@ -382,11 +353,8 @@ public class Loinc2HpoAnnotationModel {
          * @param low
          */
         public Builder setLowValueHpoTerm(@NotNull TermId low) {
-
-            Code internalLow = InternalCodeSystem.getCode(InternalCode.L);
-            return addAnnotation(internalLow, new HpoTerm4TestOutcome(low,
-                    false));
-
+            return addAnnotation(ShortCode.L, new Hpo2Outcome(low,
+                    ShortCode.L));
         }
 
         /**
@@ -394,11 +362,8 @@ public class Loinc2HpoAnnotationModel {
          * @param intermediate
          */
         public Builder setIntermediateValueHpoTerm(@NotNull TermId intermediate, boolean isNegated) {
-
-            Code internalNormal = InternalCodeSystem.getCode(InternalCode.N);
-            return addAnnotation(internalNormal,
-                    new HpoTerm4TestOutcome(intermediate, isNegated));
-
+            return addAnnotation(ShortCode.N,
+                    new Hpo2Outcome(intermediate, ShortCode.N));
         }
 
         /**
@@ -406,28 +371,16 @@ public class Loinc2HpoAnnotationModel {
          * @param high
          */
         public Builder setHighValueHpoTerm(@NotNull TermId high) {
-
-            Code internalHigh = InternalCodeSystem.getCode(InternalCode.H);
-            return addAnnotation(internalHigh, new HpoTerm4TestOutcome(high,
-                    false));
-
+            return addAnnotation(ShortCode.H, new Hpo2Outcome(high, ShortCode.H));
         }
 
         public Builder setPosValueHpoTerm(@NotNull TermId pos) {
-
-            Code internalPos = InternalCodeSystem.getCode(InternalCode.POS);
-            return addAnnotation(internalPos, new HpoTerm4TestOutcome(pos,
-                    false));
-
+            return addAnnotation(ShortCode.PRESENT, new Hpo2Outcome(pos, ShortCode.PRESENT));
         }
 
         public Builder setNegValueHpoTerm(@NotNull TermId neg,
                                           boolean inverse) {
-
-            Code internalNeg = InternalCodeSystem.getCode(InternalCode.NEG);
-            return addAnnotation(internalNeg, new HpoTerm4TestOutcome(neg,
-                    inverse));
-
+            return addAnnotation(ShortCode.ABSENT, new Hpo2Outcome(neg, ShortCode.A));
         }
 
         /**
@@ -436,11 +389,9 @@ public class Loinc2HpoAnnotationModel {
          * @param annotation
          * @return
          */
-        public Builder addAnnotation(Code code, HpoTerm4TestOutcome annotation) {
-
+        public Builder addAnnotation(ShortCode code, Hpo2Outcome annotation) {
             this.annotationMap.put(code, annotation);
             return this;
-
         }
 
         /**
@@ -448,10 +399,8 @@ public class Loinc2HpoAnnotationModel {
          * @param createdOn
          */
         public Builder setCreatedOn(LocalDateTime createdOn) {
-
             this.createdOn = createdOn;
             return this;
-
         }
 
         /**
@@ -459,10 +408,8 @@ public class Loinc2HpoAnnotationModel {
          * @param biocurator
          */
         public Builder setCreatedBy(String biocurator) {
-
             this.createdBy = biocurator;
             return this;
-
         }
 
         /**
@@ -470,10 +417,8 @@ public class Loinc2HpoAnnotationModel {
          * @param lastEditedOn
          */
         public Builder setLastEditedOn(LocalDateTime lastEditedOn) {
-
             this.lastEditedOn = lastEditedOn;
             return this;
-
         }
 
         /**
@@ -481,10 +426,8 @@ public class Loinc2HpoAnnotationModel {
          * @param biocurator
          */
         public Builder setLastEditedBy(String biocurator) {
-
             this.lastEditedBy = biocurator;
             return this;
-
         }
 
         /**
@@ -493,10 +436,8 @@ public class Loinc2HpoAnnotationModel {
          * @return the annotation object
          */
         public Builder setNote(String note) {
-
             this.note = note;
             return this;
-
         }
 
         /**
@@ -505,10 +446,8 @@ public class Loinc2HpoAnnotationModel {
          * @return the annotation object
          */
         public Builder setFlag(boolean flag) {
-
             this.flag = flag;
             return this;
-
         }
 
         /**
@@ -517,15 +456,12 @@ public class Loinc2HpoAnnotationModel {
          * @return
          */
         public Builder setVersion(double version) {
-
             this.version = version;
             return this;
-
         }
 
-        public Loinc2HpoAnnotationModel build() {
-
-            return new Loinc2HpoAnnotationModel(loincId,
+        public Loinc2HpoAnnotationModelLEGACY build() {
+            return new Loinc2HpoAnnotationModelLEGACY(loincId,
                     loincScale,
                     annotationMap,
                     createdOn,

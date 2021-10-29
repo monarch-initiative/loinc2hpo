@@ -3,12 +3,10 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelConversionLog
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelImpl;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpofhir.phenotypemodel.LabTestOutcome;
 
@@ -23,7 +21,7 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
     }
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws  FHIRException {
+    public Hpo2Outcome getHPOforObservation() throws  FHIRException {
         if (components.size() < 2) {
             return null;
         }
@@ -38,18 +36,15 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         //"Elevated systolic blood pressure" or "Elevated diastolic blood pressure"
         if (systolicOutcome.getOutcome().getId().getValue().equals("HP:0004421") ||
                 dystolicOutcome.getOutcome().getId().getValue().equals("HP:0005117")){
-            Code high = InternalCodeSystem.getCode(InternalCode.H);
-            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(high);
+            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(ShortCode.H);
         }
         //"Hypotension"
         if (systolicOutcome.getOutcome().getId().getValue().equals("HP:0002615") &&
                 dystolicOutcome.getOutcome().getId().getValue().equals("HP:0002615")) {
-            Code low = InternalCodeSystem.getCode(InternalCode.L);
-            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(low);
+            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(ShortCode.L);
         }
         else {
-            Code normal = InternalCodeSystem.getCode(InternalCode.N);
-            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(normal);
+            return loincAnnotationMap.get(panelId).loincInterpretationToHPO(ShortCode.N);
         }
     }
 }

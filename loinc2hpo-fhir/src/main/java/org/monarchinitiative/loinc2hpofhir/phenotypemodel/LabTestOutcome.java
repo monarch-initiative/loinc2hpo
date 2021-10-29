@@ -3,7 +3,7 @@ package org.monarchinitiative.loinc2hpofhir.phenotypemodel;
 import org.hl7.fhir.dstu3.model.Identifier;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Reference;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 
 import java.util.List;
 
@@ -37,6 +37,6 @@ public interface LabTestOutcome {
      * Returns the outcome for the patient in hpo terms.
      * @return
      */
-    HpoTerm4TestOutcome getOutcome();
+    Hpo2Outcome getOutcome();
 
 }

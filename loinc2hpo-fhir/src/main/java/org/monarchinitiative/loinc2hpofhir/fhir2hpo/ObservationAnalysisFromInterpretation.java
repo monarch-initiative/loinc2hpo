@@ -2,9 +2,9 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.*;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.*;
@@ -20,35 +20,20 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
         this.observation = observation;
     }
 
-    public Set<Code> getInterpretationCodes() {
+    public Set<ShortCode> getInterpretationCodes() {
         return this.observation.getInterpretation().getCoding().stream()
-                .map(c -> new Code(c.getSystem(), c.getCode(), null))
+                .map(c -> ShortCode.fromShortCode(c.getCode()))
                 .collect(Collectors.toSet());
     }
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() {
+    public Hpo2Outcome getHPOforObservation() {
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
-        Collection<Code> interpretationCodes = getInterpretationCodes(); //all
+        Collection<ShortCode> interpretationCodes = getInterpretationCodes(); //all
         // interpretation codes in different coding systems. Expect one in most cases.
-
-        //here we use a map to store the results: since there could be more than one interpretation coding system,
-        //we try them all and store the results in a map <external code, result in internal code>
-        Map<Code, Code> results = new HashMap<>();
-
-        interpretationCodes
-                .forEach(p -> {
-                    Code internalCode = null;
-                    try {
-                        internalCode = loinc2Hpo.convertToInternal(p);
-                        results.put(p, internalCode);
-                    } catch (Loinc2HpoRuntimeException e) {
-                        e.printStackTrace();
-                    }
-                });
-        List<Code> distinct = results.values().stream().distinct().collect(Collectors.toList());
+        List<ShortCode> distinct = interpretationCodes.stream().distinct().collect(Collectors.toList());
 
         if (distinct.size() > 1){
             throw Loinc2HpoRuntimeException.ambiguousResults();

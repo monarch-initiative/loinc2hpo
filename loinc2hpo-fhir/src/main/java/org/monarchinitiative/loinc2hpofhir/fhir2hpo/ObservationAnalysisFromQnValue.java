@@ -3,9 +3,8 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 import org.hl7.fhir.dstu3.model.*;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.exception.*;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.List;
@@ -23,12 +22,12 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() {
+    public Hpo2Outcome getHPOforObservation() {
 
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
 
-        HpoTerm4TestOutcome hpoTerm4TestOutcome = null;
+        Hpo2Outcome hpoTerm4TestOutcome = null;
         //find applicable reference range
         List<Observation.ObservationReferenceRangeComponent> references =
                 this.observation.getReferenceRange();
@@ -52,17 +51,15 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         double high = targetReference.hasHigh() ? targetReference.getHigh().getValue().doubleValue() : Double.MAX_VALUE;
         double observed =
                 this.observation.getValueQuantity().getValue().doubleValue();
-        InternalCode internalCode;
+        ShortCode internalCode;
         if (observed < low) {
-            internalCode = InternalCode.fromCode("L");
+            internalCode = ShortCode.fromShortCode("L");
         } else if (observed > high) {
-            internalCode = InternalCode.fromCode("H");
+            internalCode = ShortCode.fromShortCode("H");
         } else {
-            internalCode = InternalCode.fromCode("N");
+            internalCode = ShortCode.fromShortCode("N");
         }
-
-        hpoTerm4TestOutcome = loinc2Hpo.query(loincId,
-                InternalCodeSystem.getCode(internalCode));
+        hpoTerm4TestOutcome = loinc2Hpo.query(loincId, internalCode);
 
         return hpoTerm4TestOutcome;
     }

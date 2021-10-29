@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.*;
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.ArrayList;
@@ -32,11 +32,11 @@ public class FhirObservationDecorator {
 
     public Optional<Observation> hpoObservation(Observation observation) {
         try {
-            Optional<HpoTerm4TestOutcome> opt = fhir2hpo.fhir2hpo(observation);
+            Optional<Hpo2Outcome> opt = fhir2hpo.fhir2hpo(observation);
             if (opt.isEmpty()) {
                 return Optional.empty();
             }
-            HpoTerm4TestOutcome result = opt.get();
+            Hpo2Outcome result = opt.get();
             TermId hpoId = result.getId();
             if (! this.id2labelMap.containsKey(hpoId))
                 return Optional.empty();

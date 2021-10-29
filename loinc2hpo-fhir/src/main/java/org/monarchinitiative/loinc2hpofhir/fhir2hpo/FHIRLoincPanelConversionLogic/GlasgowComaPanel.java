@@ -4,7 +4,7 @@ import org.apache.commons.lang.NotImplementedException;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelImpl;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 public class GlasgowComaPanel extends FHIRLoincPanelImpl {
@@ -18,7 +18,7 @@ public class GlasgowComaPanel extends FHIRLoincPanelImpl {
     }
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws Exception {
+    public Hpo2Outcome getHPOforObservation() throws Exception {
         if (components.size() < 4){
             return null;
         }
