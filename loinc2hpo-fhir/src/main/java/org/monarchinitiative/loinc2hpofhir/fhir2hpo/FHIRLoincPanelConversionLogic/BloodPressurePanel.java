@@ -1,14 +1,10 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelConversionLogic;
 
-import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.exceptions.FHIRException;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelImpl;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpofhir.phenotypemodel.LabTestOutcome;
 
 public class BloodPressurePanel extends FHIRLoincPanelImpl {
 
