@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
+package org.monarchinitiative.loinc2hpocore.legacy;
 
 /**
  * Indicate the conditionality of a LOINC test in a panel.

@@ -1,9 +1,9 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 
 public interface ObservationAnalysis {
 
-    HpoTerm4TestOutcome getHPOforObservation() throws Exception;
+    Hpo2Outcome getHPOforObservation() throws Exception;
 
 }

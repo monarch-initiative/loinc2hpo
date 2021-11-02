@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpofhir.phenotypemodel;
 
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.Date;
@@ -18,10 +18,10 @@ public class LabTestImpl implements LabTest{
     private final Date effectiveEnd;
     private final LoincId loincId;
     private final String resourceId;
-    private final HpoTerm4TestOutcome outcome;
+    private final Hpo2Outcome outcome;
 
 
-    private LabTestImpl(Patient patient, Date effectiveStart, Date effectiveEnd, LoincId loincId, String resourceId, HpoTerm4TestOutcome outcome) {
+    private LabTestImpl(Patient patient, Date effectiveStart, Date effectiveEnd, LoincId loincId, String resourceId, Hpo2Outcome outcome) {
         this.patient = patient;
         this.effectiveStart = effectiveStart;
         this.effectiveEnd = effectiveEnd;
@@ -57,7 +57,7 @@ public class LabTestImpl implements LabTest{
     }
 
     @Override
-    public HpoTerm4TestOutcome outcome() {
+    public Hpo2Outcome outcome() {
         return this.outcome;
     }
 
@@ -67,7 +67,7 @@ public class LabTestImpl implements LabTest{
         private Date effectiveEnd;
         private LoincId loincId;
         private String resourceId;
-        private HpoTerm4TestOutcome outcome;
+        private Hpo2Outcome outcome;
 
         public Builder patient(Patient patient) {
             this.patient = patient;
@@ -94,7 +94,7 @@ public class LabTestImpl implements LabTest{
             return this;
         }
 
-        public Builder outcome(HpoTerm4TestOutcome outcome) {
+        public Builder outcome(Hpo2Outcome outcome) {
             this.outcome = outcome;
             return this;
         }

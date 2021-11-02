@@ -1,6 +1,8 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
+package org.monarchinitiative.loinc2hpocore.legacy;
 
 import com.google.common.collect.ImmutableMap;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 public class LoincPanelComponent {
 

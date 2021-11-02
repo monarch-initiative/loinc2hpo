@@ -24,8 +24,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
     private final Map<LoincId, LoincEntry> loincEntryMap;
 
     /**
-     * Constructor takes in a loincEntry map, which is created by calling method {@link LoincEntry#getLoincEntryMap(String)}  getLoincEntryMap}.
-     * @param loincEntryMap
+     * @param loincEntryMap (entries from LoincTableCore)
      */
     public FhirResourceFakerImpl(Map<LoincId, LoincEntry> loincEntryMap) {
 
@@ -121,7 +120,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
 
 
         //for Qn, add measured value and add interpretation code
-        if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Qn) {
+        if (loincEntryMap.get(loincId).getScale() == LoincScale.Qn) {
             //add a reference range
             Observation.ObservationReferenceRangeComponent referenceRange = fhirResourceComponentFaker.fakeReferenceRangeComponent(4, 8, "fake unit");
             observation.addReferenceRange(referenceRange);
@@ -168,7 +167,7 @@ public class FhirResourceFakerImpl implements FhirResourceFaker {
 
         }
 
-        else if (LoincScale.string2enum(loincEntryMap.get(loincId).getScale()) == LoincScale.Ord &&
+        else if (loincEntryMap.get(loincId).getScale() == LoincScale.Ord &&
                 loincEntryMap.get(loincId).isPresentOrd()) {
             //add measured value: it is usually a threshold with an indication whether measured value below or above it
             double threshold = randomGenerator.randDouble(0.01, 0.1); //possible outcome: -1, 0, 1

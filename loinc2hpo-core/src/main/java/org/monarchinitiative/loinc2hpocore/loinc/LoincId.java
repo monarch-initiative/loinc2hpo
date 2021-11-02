@@ -6,11 +6,9 @@ import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class LoincId  implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class LoincId {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoincId.class);
     /** The part of the Loinc code prior to the dash */
     private final int num;

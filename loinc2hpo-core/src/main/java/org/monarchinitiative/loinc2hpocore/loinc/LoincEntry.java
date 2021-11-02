@@ -1,20 +1,17 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
-import com.google.common.collect.ImmutableMap;
-
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LoincEntry {
     private static final Logger logger = LoggerFactory.getLogger(LoincEntry.class);
 
-    private final LoincId LOINC_Number;
+    private final LoincId loincId;
 
     private final String component;
 
@@ -24,50 +21,40 @@ public class LoincEntry {
 
     private final String system;
 
-    private final String scale;
+    private final LoincScale scale;
 
     private final String method;
 
-    private final String longName;
-
-    //parse long name into single components
-    private final LoincLongNameComponents longNameComponents;
+    private final LoincLongName loincLongName;
 
     private static final int MIN_FIELDS_LOINC=10;
 
     private static final String HEADER_LINE="FLAG\t#LOINC.id\tLOINC.scale\tHPO.low\tHPO.wnl\tHPO.high\tnote";
 
 
-
-    public LoincEntry(String line) {
-        List<String> F = LoincImporter.splitCSVquoted(line);
-        if (F.size()<MIN_FIELDS_LOINC) {
-            throw Loinc2HpoRuntimeException.malformedLoincCode(line);
-        }
-        LOINC_Number= new LoincId(F.get(0));
-        component=F.get(1);
-        property=F.get(2);
-        timeAspect=F.get(3);
-        system=F.get(4);
-        scale=F.get(5);
-        method=F.get(6);
-        longName=F.get(9);
-
-        this.longNameComponents = LoincLongNameParser.parse(longName);
-
+    public LoincEntry(LoincId loincId, String comp, String property, String timeAspect, String system,
+                      LoincScale scale, String method, LoincLongName longName) {
+        this.loincId = loincId;
+        this.component = comp;
+        this.property = property;
+        this.timeAspect = timeAspect;
+        this.system = system;
+        this.scale = scale;
+        this.method = method;
+        this.loincLongName = longName;
     }
 
 
-    public LoincId getLOINC_Number(){ return LOINC_Number;}
+    public LoincId getLoincId(){ return loincId;}
     public String getComponent() { return component; }
     public String getProperty() { return property; }
     public String getTimeAspect() { return timeAspect; }
     public String getMethod() { return method; }
-    public String getScale() { return scale; }
+    public LoincScale getScale() { return scale; }
     public String getSystem() { return system; }
-    public String getLongName() { return longName; }
-    public LoincLongNameComponents getLongNameComponents() {
-        return this.longNameComponents;
+    public String getLongName() { return loincLongName.getName(); }
+    public LoincLongName getLoincLongName() {
+        return this.loincLongName;
     }
 
     /**
@@ -75,55 +62,64 @@ public class LoincEntry {
      * @return true if the LOINC is "Ord" and the outcome is either "Presence" or "Absence"
      */
     public boolean isPresentOrd() {
-        return this.longNameComponents.getLoincType().startsWith("Presen");
-    }
-
-
-    public static ImmutableMap<LoincId,LoincEntry> getLoincEntryMap(String pathToLoincCoreTable) {
-        ImmutableMap.Builder<LoincId,LoincEntry> builder = new ImmutableMap.Builder<>();
-        int count_malformed = 0;
-        int count_correct = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable))){
-            String line;
-            String header=br.readLine();
-            if (! header.contains("\"LOINC_NUM\"")) {
-                logger.error(String.format("Malformed header line (%s) in Loinc File %s",header,pathToLoincCoreTable));
-                return builder.build(); // empty list
-            }
-            while ((line=br.readLine())!=null) {
-                try {
-                    LoincEntry entry = new LoincEntry(line);
-                    builder.put(entry.getLOINC_Number(),entry);
-                    count_correct++;
-                } catch (Loinc2HpoRuntimeException e) {
-                    logger.error(e.getMessage());
-                    count_malformed++;
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        logger.info(count_correct+ " loinc entries are created");
-        logger.warn(count_malformed + " loinc numbers are malformed");
-
-        return builder.build();
-
+        return this.loincLongName.getLoincType().startsWith("Presen");
     }
 
     @Override
     public boolean equals(Object obj){
-        if (this.LOINC_Number != null && obj instanceof LoincEntry) {
+        if (this.loincId != null && obj instanceof LoincEntry) {
             LoincEntry other = (LoincEntry) obj;
-            return this.LOINC_Number.equals(other.getLOINC_Number());
+            return this.loincId.equals(other.getLoincId());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return this.LOINC_Number.hashCode();
+        return this.loincId.hashCode();
     }
+
+
+    /**
+     * Structure of file:
+     * "LOINC_NUM",
+     * "COMPONENT",
+     * "PROPERTY",
+     * "TIME_ASPCT",
+     * "SYSTEM",
+     * "SCALE_TYP",
+     * "METHOD_TYP","
+     * CLASS",
+     * "CLASSTYPE","
+     * LONG_COMMON_NAME",
+     * "SHORTNAME",
+     * "EXTERNAL_COPYRIGHT_NOTICE",
+     * "STATUS","
+     * VersionFirstReleased",
+     * "VersionLastChanged"
+     * @param line e.g., "10000-8","R wave duration.lead AVR","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R wave duration in lead AVR","R wave dur L-AVR","","ACTIVE","1.0i","2.48"
+     * @return corresponding line
+     */
+    public static LoincEntry fromQuotedCsvLine(String line) {
+        String [] fields = line.split(",");
+        if (fields.length <MIN_FIELDS_LOINC) {
+                throw Loinc2HpoRuntimeException.malformedLoincCode(line);
+        }
+        List<String> fieldsWithNoQuotes = Arrays.stream(fields)
+                .map(w -> w.replaceAll("\"", ""))
+                .collect(Collectors.toList());
+        LoincId loincId = new LoincId(fieldsWithNoQuotes.get(0));
+        String component = fieldsWithNoQuotes.get(1);
+        String property = fieldsWithNoQuotes.get(2);
+        String timeAspect = fieldsWithNoQuotes.get(3);
+        String system = fieldsWithNoQuotes.get(4);
+        LoincScale scale = LoincScale.fromString(fieldsWithNoQuotes.get(5));
+        String method = fieldsWithNoQuotes.get(6);
+        String longName = fieldsWithNoQuotes.get(9);
+        return new LoincEntry(loincId, component, property, timeAspect, system, scale, method, LoincLongName.of(longName));
+    }
+
+
 
 
 }

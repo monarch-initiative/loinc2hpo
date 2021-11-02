@@ -68,7 +68,7 @@ public class Loinc2HpoRuntimeException extends RuntimeException {
     }
 
 
-
-
-
+    public static Exception malFormedAnnotationLine(String line, int length) {
+        return new Loinc2HpoRuntimeException(String.format("Malformed line with %d fields: %s", length, line));
+    }
 }

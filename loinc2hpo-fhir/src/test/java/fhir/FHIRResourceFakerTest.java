@@ -6,6 +6,7 @@ import org.hl7.fhir.dstu3.model.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.io.LoincTableCoreParser;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FhirResourceFaker;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FhirResourceFakerImpl;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
@@ -25,19 +26,12 @@ public class FHIRResourceFakerTest {
 
 
     @BeforeAll
-    public static void setup() {
-        Path path = Paths.get("src", "test", "resources", "LoincTableCoreTiny.csv");
-       Map<LoincId, LoincEntry> loincEntryMap = LoincEntry.getLoincEntryMap(path.toAbsolutePath().toString());
+    public static void setup() {Path path = Paths.get("src", "test", "resources", "LoincTableCoreTiny.csv");
+       Map<LoincId, LoincEntry> loincEntryMap = LoincTableCoreParser.load(path.toAbsolutePath().toString());
 
-        resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
+       resourceGenerator = new FhirResourceFakerImpl(loincEntryMap);
        randPatients = resourceGenerator.fakePatients(10);
     }
-
-//    @Test
-//    public void testLoincEntryMapSize() {
-//        assertNotNull(loincEntryMap);
-//        assertTrue(loincEntryMap.size() > 1000);
-//    }
 
    @Test
     public void testFaker() {
