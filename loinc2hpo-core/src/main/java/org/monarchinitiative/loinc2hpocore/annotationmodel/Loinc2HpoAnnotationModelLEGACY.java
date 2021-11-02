@@ -149,7 +149,7 @@ public class Loinc2HpoAnnotationModelLEGACY {
 
             //convert strings to the correct object
             LoincId loincId = new LoincId(loincId_str);
-            LoincScale loincScale = LoincScale.string2enum(loincScale_str);
+            LoincScale loincScale = LoincScale.fromString(loincScale_str);
 //            Hpo2Outcome mappedTo = new Hpo2Outcome(TermId.of(hpoTermId_str),
 //                    isNegated_str.equals("true"));
             Hpo2Outcome mappedTo = new Hpo2Outcome(TermId.of(hpoTermId_str),
@@ -231,9 +231,7 @@ public class Loinc2HpoAnnotationModelLEGACY {
 
 
     /**
-     * Return the annotation map.
-     * @TODO: consider return a copy of the map, but it will affect the parsing method.
-     * @return
+     * @return annotation map
      */
     public HashMap<ShortCode, Hpo2Outcome> getCandidateHpoTerms() {
         return candidateHpoTerms;
@@ -241,9 +239,6 @@ public class Loinc2HpoAnnotationModelLEGACY {
 
 
     @Override
-    /**
-     * The default toString method will serialize all the annotations to a string
-     */
     public String toString(){
 
         StringBuilder stringBuilder = new StringBuilder();

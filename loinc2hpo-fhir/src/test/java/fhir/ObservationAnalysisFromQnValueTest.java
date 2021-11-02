@@ -4,12 +4,8 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import org.hl7.fhir.dstu3.model.Observation;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationAnalysisFromQnValue;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
@@ -44,7 +40,7 @@ public class ObservationAnalysisFromQnValueTest {
         Loinc2HpoAnnotationModelLEGACY.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
+        LoincScale loincScale = LoincScale.fromString("Qn");
         TermId low = TermId.of("HP:001");
         TermId normal = TermId.of("HP:002");
         TermId hi = TermId.of("HP:003");

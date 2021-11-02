@@ -8,8 +8,6 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.jupiter.api.BeforeAll;
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.OutcomeCodeOLD;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
@@ -20,8 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 
 
 public class ObservationAnalysisFromCodedValuesTest {
@@ -31,7 +27,7 @@ public class ObservationAnalysisFromCodedValuesTest {
 
 
     @BeforeAll
-    public static void setup() throws IOException {
+    public static void setup() {
         FhirContext ctx = FhirContext.forDstu3();
         IParser jsonparser = ctx.newJsonParser();
         Observation observation1 = (Observation)
@@ -45,7 +41,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         Loinc2HpoAnnotationModelLEGACY.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
+        LoincScale loincScale = LoincScale.fromString("Qn");
         TermId low = TermId.of("HP:001");
         TermId normal = TermId.of("HP:002");
         TermId hi = TermId.of("HP:003");
@@ -64,7 +60,7 @@ public class ObservationAnalysisFromCodedValuesTest {
         loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         loincId = new LoincId("600-7");
-        loincScale = LoincScale.string2enum("Nom");
+        loincScale = LoincScale.fromString("Nom");
         TermId ecoli = TermId.of("HP:004");
         TermId staphaureus = TermId.of("HP:005");
         TermId bacterial = TermId.of("HP:006");
