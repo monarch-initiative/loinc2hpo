@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.*;
@@ -70,5 +70,5 @@ public abstract class FHIRLoincPanelImpl implements FHIRLoincPanel {
     }
 
     @Override
-    public abstract HpoTerm4TestOutcome getHPOforObservation() throws Exception;
+    public abstract Hpo2Outcome getHPOforObservation() throws Exception;
 }

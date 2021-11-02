@@ -1,29 +1,27 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.Serializable;
-
-public class HpoTerm4TestOutcome implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Hpo2Outcome {
 
     private final boolean isNegated;
     private final TermId tid;
+    private final ShortCode outcome;
 
 
-    public HpoTerm4TestOutcome(TermId id) {
+    public Hpo2Outcome(TermId id, ShortCode outcome) {
         this.tid=id;
         this.isNegated = false;
+        this.outcome = outcome;
     }
 
-    public HpoTerm4TestOutcome(TermId id, boolean negated) {
-        this.tid = id;
-        isNegated=negated;
-    }
 
     public TermId getId() {return tid; }
 
     public boolean isNegated() {
         return isNegated;
     }
+
+    public ShortCode outcome() { return outcome; }
 }

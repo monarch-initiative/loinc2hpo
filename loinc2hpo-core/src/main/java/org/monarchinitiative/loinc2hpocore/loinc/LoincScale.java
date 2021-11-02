@@ -11,7 +11,7 @@ public enum LoincScale {
     Set,
     Unknown;
 
-    public static LoincScale string2enum(String s) {
+    public static LoincScale fromString(String s) {
         s=s.toLowerCase();
         switch (s) {
             case "qn" : return Qn;

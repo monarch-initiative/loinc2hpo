@@ -2,13 +2,14 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.*;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
+import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.exception.*;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCode;
-import org.monarchinitiative.loinc2hpocore.codesystems.InternalCodeSystem;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
@@ -23,12 +24,13 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
 
 
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() {
+    public Hpo2Outcome getHPOforObservation() {
 
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
+        TermId termLoincId = TermId.of("LNC",loincId.toString());
 
-        HpoTerm4TestOutcome hpoTerm4TestOutcome = null;
+        Optional<Hpo2Outcome> hpoTerm4TestOutcome = null;
         //find applicable reference range
         List<Observation.ObservationReferenceRangeComponent> references =
                 this.observation.getReferenceRange();
@@ -52,18 +54,18 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         double high = targetReference.hasHigh() ? targetReference.getHigh().getValue().doubleValue() : Double.MAX_VALUE;
         double observed =
                 this.observation.getValueQuantity().getValue().doubleValue();
-        InternalCode internalCode;
+        Outcome internalCode;
         if (observed < low) {
-            internalCode = InternalCode.fromCode("L");
+            internalCode = Outcome.LOW();// ShortCode.fromShortCode("L");
         } else if (observed > high) {
-            internalCode = InternalCode.fromCode("H");
+            internalCode = Outcome.HIGH();// ShortCode.fromShortCode("H");
         } else {
-            internalCode = InternalCode.fromCode("N");
+            internalCode = Outcome.NORMAL();//ShortCode.fromShortCode("N");
         }
-
-        hpoTerm4TestOutcome = loinc2Hpo.query(loincId,
-                InternalCodeSystem.getCode(internalCode));
-
-        return hpoTerm4TestOutcome;
+        hpoTerm4TestOutcome = loinc2Hpo.query(termLoincId, internalCode);
+        if (hpoTerm4TestOutcome.isEmpty()) {
+            throw new Loinc2HpoRuntimeException("TODO");
+        }
+        return hpoTerm4TestOutcome.get();
     }
 }

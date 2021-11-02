@@ -4,14 +4,13 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo.FHIRLoincPanelConversionLog
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.legacy.FhirCodeSystemConvertor;
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FhirResourceComponentFaker;
-import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationAnalysisFromCodedValues;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationAnalysisFromInterpretation;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationAnalysisFromQnValue;
 import org.monarchinitiative.loinc2hpofhir.phenotypemodel.BasicLabTestOutcome;
@@ -35,8 +34,8 @@ public class FhirObservationAnalyzer {
 
     static private Observation observation;
     static private Set<LoincId> loincIds;
-    static Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
-    static CodeSystemConvertor codeSystemConvertor;
+    static Map<LoincId, Loinc2HpoAnnotation> annotationMap;
+    static FhirCodeSystemConvertor codeSystemConvertor;
     static Loinc2Hpo loinc2Hpo;
 
     /**
@@ -44,7 +43,7 @@ public class FhirObservationAnalyzer {
      * @param loincIdsSet
      * @param loincAnnotationMap
      */
-    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, Loinc2HpoAnnotationModel> loincAnnotationMap) {
+    public static void init(Set<LoincId> loincIdsSet, Map<LoincId, Loinc2HpoAnnotation> loincAnnotationMap) {
         loincIds = loincIdsSet;
         annotationMap = loincAnnotationMap;
     }
@@ -55,7 +54,7 @@ public class FhirObservationAnalyzer {
 
     public static void setObservation(Observation aFhirObservation) {
         observation = aFhirObservation;
-        codeSystemConvertor = new CodeSystemConvertor();
+        codeSystemConvertor = new FhirCodeSystemConvertor();
     }
     public static Observation getObservation(){ return observation; }
 
@@ -74,7 +73,7 @@ public class FhirObservationAnalyzer {
      * @param loincIds
      * @return
      */
-    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, Loinc2HpoAnnotationModel> loinc2HPOannotationMap) throws  FHIRException {
+    public static LabTestOutcome getHPO4ObservationOutcome(Set<LoincId> loincIds, Map<LoincId, Loinc2HpoAnnotation> loinc2HPOannotationMap) throws  FHIRException {
 
         //first make sure the observation has a valid loinc code; otherwise, we cannot handle it
         if (!hasValidLoincCode(loincIds)) {
@@ -88,7 +87,7 @@ public class FhirObservationAnalyzer {
             throw Loinc2HpoRuntimeException.loincCodeNotFound();
         }
 
-        HpoTerm4TestOutcome hpoterm = null;
+        Hpo2Outcome hpoterm = null;
         if (observation.hasInterpretation()) {
             logger.debug("enter analyzer using the interpretation field");
             try {
@@ -115,6 +114,7 @@ public class FhirObservationAnalyzer {
         }
 
         //Ord will have a ValueCodeableConcept field
+        /*
         if (observation.hasValueCodeableConcept()) {
             hpoterm = new ObservationAnalysisFromCodedValues(loinc2Hpo,
                     observation).getHPOforObservation();
@@ -123,7 +123,7 @@ public class FhirObservationAnalyzer {
             if (hpoterm != null) {
                 return new BasicLabTestOutcome(hpoterm, null, observation.getSubject(), observation.getIdentifier());
             }
-        }
+        }*/
 
         //@TODO: analyze observations with
 

@@ -8,30 +8,23 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.jupiter.api.BeforeAll;
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 
 
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
-    private static Map<LoincId, Loinc2HpoAnnotationModel> testmap = new HashMap<>();
+    private static Map<LoincId, Loinc2HpoAnnotation> testmap = new HashMap<>();
     private static Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
     @BeforeAll
-    public static void setup() throws IOException {
+    public static void setup() {
         FhirContext ctx = FhirContext.forDstu3();
         IParser jsonparser = ctx.newJsonParser();
         Observation observation1 = (Observation)
@@ -41,11 +34,11 @@ public class ObservationAnalysisFromCodedValuesTest {
 
         observations[0] = observation1;
         observations[3] = observation4;
-
-        Loinc2HpoAnnotationModel.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModel.Builder();
+    /*
+        Loinc2HpoAnnotation.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         LoincId loincId = new LoincId("15074-8");
-        LoincScale loincScale = LoincScale.string2enum("Qn");
+        LoincScale loincScale = LoincScale.fromString("Qn");
         TermId low = TermId.of("HP:001");
         TermId normal = TermId.of("HP:002");
         TermId hi = TermId.of("HP:003");
@@ -56,33 +49,34 @@ public class ObservationAnalysisFromCodedValuesTest {
                 .setIntermediateValueHpoTerm(normal, true)
                 .setHighValueHpoTerm(hi);
 
-        Loinc2HpoAnnotationModel annotation15074 = loinc2HpoAnnotationBuilder.build();
+        Loinc2HpoAnnotationModelLEGACY annotation15074 = loinc2HpoAnnotationBuilder.build();
 
 
         testmap.put(loincId, annotation15074);
 
-        loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModel.Builder();
+        loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         loincId = new LoincId("600-7");
-        loincScale = LoincScale.string2enum("Nom");
+        loincScale = LoincScale.fromString("Nom");
         TermId ecoli = TermId.of("HP:004");
         TermId staphaureus = TermId.of("HP:005");
         TermId bacterial = TermId.of("HP:006");
-
-        Code ecoli_snomed = Code.fromSystemAndCode("http://snomed.info/sct", "112283007");
-        Code staph_snomed = Code.fromSystemAndCode("http://snomed.info/sct", "3092008");
+        OutcomeCodeOLD ecoli_snomed = OutcomeCodeOLD.fromSystemAndCode("http://snomed.info/sct", "112283007");
+        OutcomeCodeOLD staph_snomed = OutcomeCodeOLD.fromSystemAndCode("http://snomed.info/sct", "3092008");
 
         loinc2HpoAnnotationBuilder.setLoincId(loincId)
                 .setLoincScale(loincScale)
                 .setHighValueHpoTerm(bacterial)
-                .addAnnotation(ecoli_snomed, new HpoTerm4TestOutcome(ecoli, false))
-                .addAnnotation(staph_snomed, new HpoTerm4TestOutcome(staphaureus, false));
+                .addAnnotation(ecoli_snomed, new Hpo2Outcome(ecoli, false))
+                .addAnnotation(staph_snomed, new Hpo2Outcome(staphaureus, false));
 
-        Loinc2HpoAnnotationModel annotation600 = loinc2HpoAnnotationBuilder.build();
+        Loinc2HpoAnnotationModelLEGACY annotation600 = loinc2HpoAnnotationBuilder.build();
 
         testmap.put(loincId, annotation600);
 
         when(loinc2Hpo.getAnnotationMap()).thenReturn(testmap);
+
+ */
     }
 
     /*

@@ -4,17 +4,13 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.exception.*;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
@@ -22,7 +18,7 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 
     private LoincId loincId;
     private CodeableConcept codedValue;
-    private Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
+    private Map<LoincId, Loinc2HpoAnnotation> annotationMap;
 
     private final Loinc2Hpo loinc2Hpo;
     private final Observation observation;
@@ -31,6 +27,11 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
                                               Observation observation){
         this.loinc2Hpo = loinc2Hpo;
         this.observation = observation;
+    }
+
+    @Override
+    public Hpo2Outcome getHPOforObservation() throws Exception {
+        return null;
     }
 
 //    public ObservationAnalysisFromCodedValues(LoincId loincId, CodeableConcept codedvalue, Map<LoincId, LOINC2HpoAnnotationImpl> annotationMap) {
@@ -50,9 +51,9 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
 //        this.annotationMap = annotationMap;
 //    }
 
-
+/*
     @Override
-    public HpoTerm4TestOutcome getHPOforObservation() throws Loinc2HpoRuntimeException {
+    public Hpo2Outcome getHPOforObservation() throws Loinc2HpoRuntimeException {
 
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
@@ -60,10 +61,10 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
         if (annotationMap.get(loincId) == null) throw Loinc2HpoRuntimeException.notAnnotated(loincId);
         CodeableConcept codedValue = this.observation.getValueCodeableConcept();
 
-        Set<HpoTerm4TestOutcome> results = codedValue.getCoding()
+        Set<Hpo2Outcome> results = codedValue.getCoding()
                 .stream()
                 .filter(p -> annotationMap.get(loincId).getCandidateHpoTerms().containsKey(p))
-                .map(c -> annotationMap.get(loincId).getCandidateHpoTerms().get(new Code(c.getSystem(),
+                .map(c -> annotationMap.get(loincId).getCandidateHpoTerms().get(new OutcomeCodeOLD(c.getSystem(),
                         c.getCode(), null)))
                 .collect(Collectors.toSet());
         if (results.size() > 1) {
@@ -76,4 +77,6 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
         }
 
     }
+
+ */
 }

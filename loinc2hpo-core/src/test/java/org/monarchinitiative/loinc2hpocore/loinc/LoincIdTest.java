@@ -47,7 +47,7 @@ public class LoincIdTest {
 
     // test custom equals function
     @Test
-    public void testEquals()throws Loinc2HpoRuntimeException {
+    public void testEquals()  {
         String code1="19048-8";
         String code2="19048-8";
         LoincId id1=new LoincId(code1);

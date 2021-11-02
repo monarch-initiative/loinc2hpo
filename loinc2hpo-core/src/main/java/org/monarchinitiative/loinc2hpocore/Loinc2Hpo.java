@@ -1,16 +1,24 @@
 package org.monarchinitiative.loinc2hpocore;
 
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Code;
-import org.monarchinitiative.loinc2hpocore.codesystems.CodeSystemConvertor;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.HpoTerm4TestOutcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModel;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
+import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Entry point for the Loinc2Hpo tool
@@ -20,54 +28,20 @@ import java.util.Map;
 public class Loinc2Hpo {
     private static final Logger logger = LoggerFactory.getLogger(Loinc2Hpo.class);
 
-    private final Map<LoincId, Loinc2HpoAnnotationModel> annotationMap;
-    private final CodeSystemConvertor converter;
+    private final Map<TermId, LoincAnnotation> loincToHpoAnnotationMap;
 
-    public Loinc2Hpo(Map<LoincId, Loinc2HpoAnnotationModel> annotationMap,
-                     CodeSystemConvertor converter){
-        this.annotationMap = annotationMap;
-        this.converter = converter;
+    public Loinc2Hpo(String path){
+        Loinc2HpoAnnotationParser parser = new Loinc2HpoAnnotationParser(path);
+        loincToHpoAnnotationMap = parser.loincToHpoAnnotationMap();
     }
 
-    public Loinc2Hpo(String path, CodeSystemConvertor converter){
-        try {
-            annotationMap = Loinc2HpoAnnotationModel.from_csv(path);
-        } catch (Exception e) {
-            logger.error("Failed to import loinc2hpo annotation");
-            throw new RuntimeException("failed to import loinc2hpo annotation");
+    public Optional<Hpo2Outcome> query(TermId loincId, Outcome outcome)  {
+        if (! loincToHpoAnnotationMap.containsKey(loincId)) {
+            return Optional.empty();
+        } else {
+            LoincAnnotation annot = loincToHpoAnnotationMap.get(loincId);
+            return annot.getAnnotation(outcome);
         }
-        this.converter = converter;
-    }
-
-    public Map<LoincId, Loinc2HpoAnnotationModel> getAnnotationMap() {
-        return annotationMap;
-    }
-
-    public CodeSystemConvertor getConverter() {
-        return converter;
-    }
-
-    public Code convertToInternal(Code original) {
-        return this.converter.convertToInternalCode(original);
-    }
-
-    public HpoTerm4TestOutcome query(LoincId loincId, Code testResult)  {
-        //The loinc id is not annotated yet
-        if (!this.annotationMap.containsKey(loincId)) {
-            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
-        }
-
-        //The result code is not annotated
-        if (!this.annotationMap.get(loincId).getCandidateHpoTerms().containsKey(testResult)){
-            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
-        }
-
-        return this.annotationMap.get(loincId).getCandidateHpoTerms().get(testResult);
-    }
-
-    public HpoTerm4TestOutcome query(LoincId loincId, String system, String id) {
-        Code code = Code.fromSystemAndCode(system, id);
-        return query(loincId, code);
     }
 
 
