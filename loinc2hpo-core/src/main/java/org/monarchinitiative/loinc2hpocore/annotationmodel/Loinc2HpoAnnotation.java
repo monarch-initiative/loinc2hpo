@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
-import com.kenai.jaffl.annotations.Out;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;

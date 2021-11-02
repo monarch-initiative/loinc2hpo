@@ -1,16 +1,6 @@
 package org.monarchinitiative.loinc2hpocore;
 
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-
 public class Loinc2HpoTest {
 /*
     private static Loinc2Hpo loinc2Hpo;
