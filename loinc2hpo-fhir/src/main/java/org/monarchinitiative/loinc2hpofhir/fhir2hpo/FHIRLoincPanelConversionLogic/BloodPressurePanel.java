@@ -22,6 +22,8 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
 
     @Override
     public Hpo2Outcome getHPOforObservation() throws  FHIRException {
+        return null;
+        /*
         if (components.size() < 2) {
             return null;
         }
@@ -46,5 +48,7 @@ public class BloodPressurePanel extends FHIRLoincPanelImpl {
         else {
             return loincAnnotationMap.get(panelId).loincInterpretationToHPO(ShortCode.N);
         }
+
+         */
     }
 }

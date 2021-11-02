@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationEntryLEGACY;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParserLEGACY;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -28,8 +28,8 @@ public class AnnotationQcCommand implements Runnable{
     @Override
     public void run() {
         System.out.println(annotPath);
-        Loinc2HpoAnnotationParserLEGACY parser = new Loinc2HpoAnnotationParserLEGACY(annotPath);
-        List<Loinc2HpoAnnotationEntryLEGACY> entries = parser.getEntries();
+        Loinc2HpoAnnotationParser parser = new Loinc2HpoAnnotationParser(annotPath);
+        List<Loinc2HpoAnnotation> entries = parser.getEntries();
         System.out.println("[INFO] Got " + entries.size() + " LOINC annotations.");
         Ontology ontology = OntologyLoader.loadOntology(new File(hpJsonPath));
         System.out.println("[INFO] Got " + ontology.countNonObsoleteTerms() + " HPO terms.");
@@ -38,9 +38,9 @@ public class AnnotationQcCommand implements Runnable{
     }
 
 
-    private void checkValidityOfHpoTerms(List<Loinc2HpoAnnotationEntryLEGACY> entries, Ontology ontology) {
+    private void checkValidityOfHpoTerms(List<Loinc2HpoAnnotation> entries, Ontology ontology) {
         for (var entry : entries) {
-            TermId tid = TermId.of(entry.getHpoTermId());
+            TermId tid = entry.getHpoTermId();
             if (! ontology.containsTerm(tid)) {
                 System.err.println("[ERROR] HPO does not contain TermId " + tid.getValue());
             } else if ( ! ontology.getPrimaryTermId(tid).equals(tid)) {

@@ -8,12 +8,11 @@ import org.hl7.fhir.dstu3.model.Observation;
 import org.junit.jupiter.api.BeforeAll;
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.mock;
 
 public class ObservationAnalysisFromCodedValuesTest {
     private static Observation[] observations = new Observation[4];
-    private static Map<LoincId, Loinc2HpoAnnotationModelLEGACY> testmap = new HashMap<>();
+    private static Map<LoincId, Loinc2HpoAnnotation> testmap = new HashMap<>();
     private static Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
@@ -37,8 +36,8 @@ public class ObservationAnalysisFromCodedValuesTest {
 
         observations[0] = observation1;
         observations[3] = observation4;
-
-        Loinc2HpoAnnotationModelLEGACY.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
+    /*
+        Loinc2HpoAnnotation.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.fromString("Qn");
@@ -64,7 +63,6 @@ public class ObservationAnalysisFromCodedValuesTest {
         TermId ecoli = TermId.of("HP:004");
         TermId staphaureus = TermId.of("HP:005");
         TermId bacterial = TermId.of("HP:006");
-/*
         OutcomeCodeOLD ecoli_snomed = OutcomeCodeOLD.fromSystemAndCode("http://snomed.info/sct", "112283007");
         OutcomeCodeOLD staph_snomed = OutcomeCodeOLD.fromSystemAndCode("http://snomed.info/sct", "3092008");
 

@@ -6,7 +6,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincScale;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ObservationAnalysisFromQnValueTest {
     private static final Observation[] observations = new Observation[2];
-    private static final Map<LoincId, Loinc2HpoAnnotationModelLEGACY> testmap = new HashMap<>();
+    private static final Map<LoincId, Loinc2HpoAnnotation> testmap = new HashMap<>();
     private static Loinc2Hpo loinc2Hpo;
 
 
@@ -36,8 +36,8 @@ public class ObservationAnalysisFromQnValueTest {
                 (Observation) parser.parseResource(ObservationAnalysisFromQnValueTest.class.getClassLoader().getResourceAsStream("json/glucoseNoInterpretationNoReference.fhir"));
         observations[0] = observation1;
         observations[1] = observation2;
-
-        Loinc2HpoAnnotationModelLEGACY.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
+    /*
+        Loinc2HpoAnnotation.Builder loinc2HpoAnnotationBuilder = new Loinc2HpoAnnotationModelLEGACY.Builder();
 
         LoincId loincId = new LoincId("15074-8");
         LoincScale loincScale = LoincScale.fromString("Qn");
@@ -56,6 +56,8 @@ public class ObservationAnalysisFromQnValueTest {
 
         testmap.put(loincId, annotation15074);
        // loinc2Hpo = new Loinc2Hpo(testmap, null);
+
+     */
     }
 /*
     @Test

@@ -1,12 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationEntryLEGACY;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParserLEGACY;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class Loinc2HpoAnnotationCsvEntryTest {
 

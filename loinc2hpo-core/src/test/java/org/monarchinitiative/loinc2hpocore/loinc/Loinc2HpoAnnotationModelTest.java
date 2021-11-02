@@ -1,20 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationEntryLEGACY;
-import org.monarchinitiative.phenol.ontology.data.Term;
-import org.monarchinitiative.phenol.ontology.data.TermId;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class Loinc2HpoAnnotationModelTest {
 /*
     private static Map<String, Term> hpoTermMap = new HashMap<>();

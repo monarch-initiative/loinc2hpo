@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
@@ -15,9 +15,10 @@ public interface FHIRLoincPanel extends ObservationAnalysis {
 
     Set<LoincId> loincIdSet = new HashSet<>();
     Map<LoincId, LoincEntry> loincEntryMap = new HashMap<>();
-    Map<LoincId, Loinc2HpoAnnotationModelLEGACY> loincAnnotationMap = new HashMap<>();
+    Map<LoincId, Loinc2HpoAnnotation> loincAnnotationMap = new HashMap<>();
 
-    static void initResources(Set<LoincId> loincIdSetX, Map<LoincId, LoincEntry> loincEntryMapX, Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationMapX){
+    static void initResources(Set<LoincId> loincIdSetX, Map<LoincId, LoincEntry> loincEntryMapX,
+                              Map<LoincId, Loinc2HpoAnnotation> annotationMapX){
         loincIdSet.addAll(loincIdSetX);
         loincEntryMap.putAll(loincEntryMapX);
         loincAnnotationMap.putAll(annotationMapX);

@@ -1,16 +1,24 @@
 package org.monarchinitiative.loinc2hpocore;
 
 
+import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotationModelLEGACY;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Entry point for the Loinc2Hpo tool
@@ -20,40 +28,20 @@ import java.util.Map;
 public class Loinc2Hpo {
     private static final Logger logger = LoggerFactory.getLogger(Loinc2Hpo.class);
 
-    private final Map<LoincId, Loinc2HpoAnnotationModelLEGACY> annotationMap;
+    private final Map<TermId, LoincAnnotation> loincToHpoAnnotationMap;
 
     public Loinc2Hpo(String path){
-        try {
-            annotationMap = Loinc2HpoAnnotationModelLEGACY.from_csv(path);
-        } catch (Exception e) {
-            logger.error("Failed to import loinc2hpo annotation");
-            throw new RuntimeException("failed to import loinc2hpo annotation");
-        }
+        Loinc2HpoAnnotationParser parser = new Loinc2HpoAnnotationParser(path);
+        loincToHpoAnnotationMap = parser.loincToHpoAnnotationMap();
     }
 
-    public Map<LoincId, Loinc2HpoAnnotationModelLEGACY> getAnnotationMap() {
-        return annotationMap;
-    }
-
-
-    public Hpo2Outcome query(LoincId loincId, ShortCode testResult)  {
-        //The loinc id is not annotated yet
-        if (!this.annotationMap.containsKey(loincId)) {
-            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
+    public Optional<Hpo2Outcome> query(TermId loincId, Outcome outcome)  {
+        if (! loincToHpoAnnotationMap.containsKey(loincId)) {
+            return Optional.empty();
+        } else {
+            LoincAnnotation annot = loincToHpoAnnotationMap.get(loincId);
+            return annot.getAnnotation(outcome);
         }
-        Loinc2HpoAnnotationModelLEGACY annotation = this.annotationMap.get(loincId);
-        HashMap<ShortCode, Hpo2Outcome> annotations = annotation.getCandidateHpoTerms();
-
-        //The result code is not annotated
-        if (! annotations.containsKey(testResult)){
-            throw Loinc2HpoRuntimeException.notAnnotated(loincId);
-        }
-        return annotations.get(testResult);
-    }
-
-    public Hpo2Outcome query(LoincId loincId, String system, String id) {
-        ShortCode code = ShortCode.fromShortCode(id);
-        return query(loincId, code);
     }
 
 

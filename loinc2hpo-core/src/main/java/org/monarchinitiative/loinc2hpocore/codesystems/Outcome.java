@@ -1,8 +1,5 @@
 package org.monarchinitiative.loinc2hpocore.codesystems;
 
-
-import com.kenai.jaffl.annotations.Out;
-
 import java.util.Objects;
 
 public class Outcome {
