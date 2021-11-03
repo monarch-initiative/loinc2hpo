@@ -12,7 +12,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ObservationAnalysisFromInterpretation implements ObservationAnalysis {
+public class ObservationAnalysisFromInterpretation  {
 
     private final Loinc2Hpo loinc2Hpo;
     private final Observation observation;
@@ -29,7 +29,7 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
     }
 
 
-    @Override
+  /*
     public Hpo2Outcome getHPOforObservation() {
         LoincId loincId =
                 FhirObservationUtil.getLoincIdOfObservation(this.observation);
@@ -44,5 +44,5 @@ public class ObservationAnalysisFromInterpretation implements ObservationAnalysi
         TermId tid = TermId.of("LNC", loincId.toString());
         return loinc2Hpo.query(tid, Outcome.NORMAL()).get();
     }
-
+*/
 }

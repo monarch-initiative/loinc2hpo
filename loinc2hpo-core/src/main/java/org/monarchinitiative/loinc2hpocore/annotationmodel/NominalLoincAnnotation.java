@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.Optional;
 
 public class NominalLoincAnnotation implements LoincAnnotation {
 
-    private final TermId loincId;
+    private final LoincId loincId;
     private final Map<Outcome, Loinc2HpoAnnotation> nominalAnnotations;
 
     public NominalLoincAnnotation(Map<Outcome, Loinc2HpoAnnotation> annotations) {
@@ -25,7 +26,7 @@ public class NominalLoincAnnotation implements LoincAnnotation {
 
 
     @Override
-    public TermId getLoincId() {
+    public LoincId getLoincId() {
         return this.loincId;
     }
 

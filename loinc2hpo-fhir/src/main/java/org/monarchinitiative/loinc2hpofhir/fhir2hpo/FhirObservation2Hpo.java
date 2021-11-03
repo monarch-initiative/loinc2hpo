@@ -23,11 +23,11 @@ public class FhirObservation2Hpo {
     }
 
     public Optional<Hpo2Outcome> fhir2hpo(Observation observation) {
-        LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
-        if (!loincIdSet.contains(loincId)){
-            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
-        }
-        Hpo2Outcome result;
+//        LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
+//        if (!loincIdSet.contains(loincId)){
+//            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
+//        }
+//        Hpo2Outcome result;
         /*
         if (observation.hasInterpretation()){
             result = new ObservationAnalysisFromInterpretation(loinc2Hpo,

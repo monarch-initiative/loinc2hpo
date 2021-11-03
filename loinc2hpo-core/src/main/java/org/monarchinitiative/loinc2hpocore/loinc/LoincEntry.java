@@ -1,5 +1,6 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincScale;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

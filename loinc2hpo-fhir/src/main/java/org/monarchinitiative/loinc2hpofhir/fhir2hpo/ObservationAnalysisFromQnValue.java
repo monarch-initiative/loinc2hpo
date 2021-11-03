@@ -11,7 +11,7 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 import java.util.List;
 import java.util.Optional;
 
-public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
+public class ObservationAnalysisFromQnValue  {
 
     private Observation observation;
     private Loinc2Hpo loinc2Hpo;
@@ -21,9 +21,8 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         this.loinc2Hpo = loinc2Hpo;
         this.observation = observation;
     }
+/*
 
-
-    @Override
     public Hpo2Outcome getHPOforObservation() {
 
         LoincId loincId =
@@ -68,4 +67,6 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         }
         return hpoTerm4TestOutcome.get();
     }
+
+ */
 }

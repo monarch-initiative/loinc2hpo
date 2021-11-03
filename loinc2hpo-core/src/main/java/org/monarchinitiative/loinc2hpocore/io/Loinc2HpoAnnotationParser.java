@@ -5,13 +5,12 @@ import org.monarchinitiative.loinc2hpocore.annotationmodel.*;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -50,18 +49,34 @@ public class Loinc2HpoAnnotationParser {
         return entries;
     }
 
+
+    public static void exportToTsv(List<Loinc2HpoAnnotation> annotations, String path) throws IOException {
+        File outfile = new File(path);
+        LOGGER.info("Writing annotation data to {}", outfile.getAbsoluteFile());
+        BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
+        String header = String.join("\t", Loinc2HpoAnnotation.headerFields);
+        bw.write(header + "\n");
+        Collections.sort(annotations);
+        for (var ann : annotations) {
+            bw.write(ann.toTsv() + "\n");
+        }
+        bw.close();
+    }
+
+
+
     public List<Loinc2HpoAnnotation> getEntries() {
         return entries;
     }
 
-    public Map<TermId, LoincAnnotation> loincToHpoAnnotationMap() {
-        Map<TermId, List<Loinc2HpoAnnotation>> result = entries.stream()
+    public Map<LoincId, LoincAnnotation> loincToHpoAnnotationMap() {
+        Map<LoincId, List<Loinc2HpoAnnotation>> result = entries.stream()
                 .collect(Collectors.groupingBy(Loinc2HpoAnnotation::getLoincId,
                         Collectors.mapping(Function.identity(),
                                 Collectors.toList())));
-        Map<TermId, LoincAnnotation> outcomesMap = new HashMap<>();
+        Map<LoincId, LoincAnnotation> outcomesMap = new HashMap<>();
         for (var e : result.entrySet()) {
-            TermId loincId = e.getKey();
+            LoincId loincId = e.getKey();
             List<Loinc2HpoAnnotation> outcomes = e.getValue();
             LoincAnnotation lannot = getLoincAnnotation(outcomes);
             outcomesMap.put(loincId, lannot);

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
+public class ObservationAnalysisFromCodedValues  {
 
     private static final Logger logger = LoggerFactory.getLogger(ObservationAnalysisFromCodedValues.class);
 
@@ -29,7 +29,7 @@ public class ObservationAnalysisFromCodedValues implements ObservationAnalysis {
         this.observation = observation;
     }
 
-    @Override
+
     public Hpo2Outcome getHPOforObservation() throws Exception {
         return null;
     }

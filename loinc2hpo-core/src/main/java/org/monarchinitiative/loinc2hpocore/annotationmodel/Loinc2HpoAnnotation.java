@@ -3,13 +3,14 @@ package org.monarchinitiative.loinc2hpocore.annotationmodel;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Optional;
 
-public class Loinc2HpoAnnotation {
+public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
 
-    private final TermId loincId;
+    private final LoincId loincId;
     private final LoincScale loincScale;
     private final Outcome outcomeCode;
     private final TermId hpoTermId;
@@ -19,7 +20,7 @@ public class Loinc2HpoAnnotation {
 
     private static final String LOINC_PREFIX = "LNC";
 
-    public Loinc2HpoAnnotation(TermId loincId,
+    public Loinc2HpoAnnotation(LoincId loincId,
                                LoincScale loincScale,
                                Outcome code,
                                TermId hpoTermId,
@@ -35,7 +36,7 @@ public class Loinc2HpoAnnotation {
         this.comment = comment;
     }
 
-    public Loinc2HpoAnnotation(TermId loincId,
+    public Loinc2HpoAnnotation(LoincId loincId,
                                LoincScale loincScale,
                                Outcome code,
                                TermId hpoTermId,
@@ -50,7 +51,7 @@ public class Loinc2HpoAnnotation {
         this.comment = comment;
     }
 
-    public TermId getLoincId() {
+    public LoincId getLoincId() {
         return loincId;
     }
 
@@ -85,12 +86,27 @@ public class Loinc2HpoAnnotation {
     private static final int EXPECTED_NUMBER_OF_FIELDS = headerFields.length;
 
 
+    public String toTsv() {
+        String suppl = supplementalOntologyTermId.isPresent() ?
+                supplementalOntologyTermId.get().getValue() : "";
+        return String.format("%s\ts\t%s\t%s\t%s",
+                loincId,
+                loincScale,
+                outcomeCode.getOutcome(),
+                hpoTermId.getValue(),
+                suppl,
+                biocuration,
+                comment
+                );
+    }
+
+
     public static Loinc2HpoAnnotation fromAnnotationLine(String line)  {
         String [] fields = line.split("\t");
         if (fields.length != EXPECTED_NUMBER_OF_FIELDS) {
             throw new Loinc2HpoRuntimeException(String.format("Malformed line with %d fields: %s", fields.length, line));
         }
-        TermId loincId = TermId.of(LOINC_PREFIX, fields[0]);
+        LoincId loincId = new LoincId(fields[0]);
         LoincScale scale = LoincScale.fromString(fields[1]);
 
         TermId hpoId = TermId.of(fields[3]);
@@ -108,5 +124,10 @@ public class Loinc2HpoAnnotation {
         }
         TermId supplementalId = TermId.of(fields[4]);
         return new Loinc2HpoAnnotation(loincId, scale, outcome, hpoId, supplementalId, curation,comment);
+    }
+
+    @Override
+    public int compareTo(Loinc2HpoAnnotation that) {
+        return this.loincId.compareTo(that.loincId);
     }
 }

@@ -62,14 +62,7 @@ public class TestBase {
     }
 
 
-    public Map<String, Term> getHpoTermMap() {
-        List<Term> terms = Stream.of(
-                Term.of("HP:0020058", "Abnormal red blood cell count"),
-                Term.of("HP:0020060", "Decreased red blood cell count"),
-                Term.of("HP:0020059", "Increased red blood cell count")
-                ).collect(Collectors.toList());
-        return terms.stream().collect(Collectors.toMap(Term::getName, t-> t));
-    }
+
 
 
 }

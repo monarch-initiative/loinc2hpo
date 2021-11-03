@@ -74,13 +74,13 @@ public class ObservationAnalysisFromInterpretationTest {
         Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
-        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
-            ObservationAnalysisFromInterpretation analyzer =
-                new ObservationAnalysisFromInterpretation(loinc2Hpo,
-                        observation);
+//        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
+//            ObservationAnalysisFromInterpretation analyzer =
+//                new ObservationAnalysisFromInterpretation(loinc2Hpo,
+//                        observation);
 
-            Hpo2Outcome hpoterm = analyzer.getHPOforObservation();
-        });
+           // Hpo2Outcome hpoterm = analyzer.getHPOforObservation();
+      //  });
 
 
     }

@@ -2,6 +2,7 @@ package org.monarchinitiative.loinc2hpocore.annotationmodel;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 
 public class QuantitativeLoincAnnotation implements LoincAnnotation {
 
-    private final TermId loincId;
+    private final LoincId loincId;
     private final Loinc2HpoAnnotation low;
     private final Loinc2HpoAnnotation normal;
     private final Loinc2HpoAnnotation high;
@@ -41,7 +42,7 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
     }
 
     @Override
-    public TermId getLoincId() {
+    public LoincId getLoincId() {
         return this.loincId;
     }
 
