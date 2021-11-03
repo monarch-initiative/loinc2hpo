@@ -5,7 +5,7 @@
     <parent>
         <artifactId>loinc2hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
-        <version>1.4.0</version>
+        <version>1.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.monarchinitiative</groupId>
             <artifactId>loinc2hpo-core</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

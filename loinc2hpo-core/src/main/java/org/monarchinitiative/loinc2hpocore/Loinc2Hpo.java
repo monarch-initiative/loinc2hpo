@@ -32,7 +32,7 @@ public class Loinc2Hpo {
             return Optional.empty();
         } else {
             LoincAnnotation annot = loincToHpoAnnotationMap.get(loincId);
-            return annot.getAnnotation(outcome);
+            return annot.getOutcome(outcome);
         }
     }
 
