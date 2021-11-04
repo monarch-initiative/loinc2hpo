@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.annotationmodel;
+package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
@@ -6,7 +6,11 @@ import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
 
@@ -126,8 +130,70 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         return new Loinc2HpoAnnotation(loincId, scale, outcome, hpoId, supplementalId, curation,comment);
     }
 
+    private static LoincScale getScale(List<Loinc2HpoAnnotation> outcomes) {
+        List<LoincScale> scales = outcomes.stream()
+                .map(Loinc2HpoAnnotation::getLoincScale)
+                .distinct().collect(Collectors.toList());
+        if (scales.size() == 0) {
+            // should never happen
+            throw new Loinc2HpoRuntimeException("Could not extract LoincScale");
+        } else if (scales.size() > 1) {
+            // should never happen
+            throw new Loinc2HpoRuntimeException("Extracted more than one LoincScale");
+        }
+        return scales.get(0);
+    }
+
+    public static LoincAnnotation outcomes2LoincAnnotation(List<Loinc2HpoAnnotation> outcomes) {
+        int n = outcomes.size();
+        // map with all of the outcomes for the current LOINC test
+        Map<Outcome, Loinc2HpoAnnotation> outcomeMap = outcomes.stream()
+                .collect(Collectors.toMap(Loinc2HpoAnnotation::getOutcome, Function.identity()));
+        LoincScale scale = getScale(outcomes);
+        if (scale.equals(LoincScale.QUANTITATIVE)) {
+            if (outcomeMap.size() == 3) {
+                return new QuantitativeLoincAnnotation(outcomeMap.get(Outcome.LOW()),
+                        outcomeMap.get(Outcome.NORMAL()),
+                        outcomeMap.get(Outcome.HIGH()));
+            } else if (outcomeMap.size() == 2 &&
+                    outcomeMap.containsKey(Outcome.NORMAL()) &&
+                    outcomeMap.containsKey(Outcome.HIGH())) {
+                return QuantitativeLoincAnnotation.fromNormalAndHigh(outcomeMap.get(Outcome.NORMAL()),
+                        outcomeMap.get(Outcome.HIGH()));
+            } else {
+                // should never happen
+                throw new Loinc2HpoRuntimeException("Could not create LoincAnnotation for quantitative");
+            }
+        } else if (scale.equals(LoincScale.ORDINAL)) {
+            // there are only two possible Ordinal outcomes, so we just need to check for size
+            if (outcomeMap.size() == 2) {
+                return new OrdinalHpoAnnotation(outcomeMap.get(Outcome.ABSENT()), outcomeMap.get(Outcome.PRESENT()));
+            } else {
+                // should never happen
+                throw new Loinc2HpoRuntimeException("Could not create LoincAnnotation for ordinal");
+            }
+        } else if (scale.equals(LoincScale.NOMINAL)) {
+            return new NominalLoincAnnotation(outcomeMap);
+        } else {
+            for (var oc : outcomes) {
+                System.err.println("[ERROR] " + oc);
+            }
+            StringBuilder sb = new StringBuilder("Malformed outcomes\nn=").append(outcomes.size());
+            for (var oc : outcomes) {
+                sb.append("\t[ERROR] " + oc + "\n");
+            }
+            throw new Loinc2HpoRuntimeException(sb.toString());
+        }
+
+    }
+
     @Override
     public int compareTo(Loinc2HpoAnnotation that) {
         return this.loincId.compareTo(that.loincId);
+    }
+
+    @Override
+    public String toString() {
+        return toTsv();
     }
 }

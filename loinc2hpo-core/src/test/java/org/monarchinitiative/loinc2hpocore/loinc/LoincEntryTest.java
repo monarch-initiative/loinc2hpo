@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincScale;
+import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
 
 import java.util.Arrays;
 import java.util.List;

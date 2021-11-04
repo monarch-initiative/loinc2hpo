@@ -41,10 +41,10 @@ public enum ShortCode {
         if (codeString.equals("H")) {
             return H;
         }
-        if (codeString.equals("NP")) {
+        if (codeString.equals("NEG")) {
             return ABSENT;
         }
-        if (codeString.equals("P")) {
+        if (codeString.equals("POS")) {
             return PRESENT;
         }
         if (codeString.equals("U")) {
@@ -60,9 +60,9 @@ public enum ShortCode {
             case H: return "H";
             case NOM: return "NOM";
             case N: return "N";
-            case PRESENT: return "P";
+            case PRESENT: return "POS";
             case U: return "U";
-            case ABSENT: return "NP";
+            case ABSENT: return "NEG";
         }
         // needed by compiler, will never happen unless a new constant is added
         throw new Loinc2HpoRuntimeException("Could not find short form");

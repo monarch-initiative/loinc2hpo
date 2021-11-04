@@ -1,12 +1,10 @@
 package org.monarchinitiative.loinc2hpocore.io;
 
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.*;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
+import org.monarchinitiative.loinc2hpocore.annotation.*;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +36,9 @@ public class Loinc2HpoAnnotationParser {
         try (BufferedReader reader = new BufferedReader(new FileReader(path))){
             String line = reader.readLine(); // header
             if (!line.equals(String.join("\t", Loinc2HpoAnnotation.headerFields))){
-                throw new Loinc2HpoRuntimeException("Annotation header does not match expected fields!");
+                String msg = String.format("Annotation header (%s) does not match expected fields (%s)",
+                        line, String.join("\t", Loinc2HpoAnnotation.headerFields));
+                throw new Loinc2HpoRuntimeException(msg);
             }
             while ((line = reader.readLine()) != null){
                 entries.add(Loinc2HpoAnnotation.fromAnnotationLine(line));
@@ -78,36 +78,13 @@ public class Loinc2HpoAnnotationParser {
         for (var e : result.entrySet()) {
             LoincId loincId = e.getKey();
             List<Loinc2HpoAnnotation> outcomes = e.getValue();
-            LoincAnnotation lannot = getLoincAnnotation(outcomes);
+            LoincAnnotation lannot = Loinc2HpoAnnotation.outcomes2LoincAnnotation(outcomes);
             outcomesMap.put(loincId, lannot);
         }
         return outcomesMap;
     }
 
-    private LoincAnnotation getLoincAnnotation(List<Loinc2HpoAnnotation> outcomes) {
-        int n = outcomes.size();
-        // map with all of the outcomes for the current LOINC test
-        Map<Outcome, Loinc2HpoAnnotation> outcomeMap = outcomes.stream()
-                .collect(Collectors.toMap(Loinc2HpoAnnotation::getOutcome, Function.identity()));
-        // are there three distinct quantitative outcomes, i.e., L/N/H, i.e.,valid Qn?
-        if (n == 3 && outcomeMap.keySet().stream().filter(Outcome::isQuantitative).count() == 3) {
-            return new QuantitativeLoincAnnotation(outcomeMap.get(Outcome.LOW()),
-                    outcomeMap.get(Outcome.NORMAL()),
-                    outcomeMap.get(Outcome.HIGH()));
-            // are there two distinct ordinal outcomes, i.e., Absent/Present, i.e.,valid Ord?
-        } else if (n == 2 && outcomeMap.keySet().stream().filter(Outcome::isOrdinal).count() == 2) {
-            return new OrdinalHpoAnnotation(outcomeMap.get(Outcome.ABSENT()), outcomeMap.get(Outcome.PRESENT()));
-        }  // are all outcomes nominal
-        else if (n == outcomeMap.keySet().stream().filter(Outcome::isNominal).count()) {
-            return new NominalLoincAnnotation(outcomeMap);
-        } else {
-            for (var oc : outcomes) {
-                System.err.println("[ERROR] " + oc);
-            }
-            throw new Loinc2HpoRuntimeException("Malformed outcomes");
-        }
 
-    }
 
 
     public static List<Loinc2HpoAnnotation> load(String path) {

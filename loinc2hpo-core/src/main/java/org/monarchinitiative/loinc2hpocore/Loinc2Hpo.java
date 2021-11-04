@@ -1,14 +1,12 @@
 package org.monarchinitiative.loinc2hpocore;
 
 
-import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Optional;

@@ -6,7 +6,7 @@ import org.hl7.fhir.dstu3.model.Observation;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.annotation.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.HashMap;
