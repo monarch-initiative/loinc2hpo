@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,6 +105,26 @@ public class LoincEntry {
         return this.loincId.hashCode();
     }
 
+    /**
+     * Split on comma, but not if the comma occurs within a quoted string
+     * @param line input line such as "9806-1","2,4-Dichlorophenoxyacetate","MCnc","Pt",...
+     * @return List of String without quotes
+     */
+    private static List<String> splitQuotedCsvLine(String line) {
+        List<String> result = new ArrayList<>();
+        int start = 0;
+        boolean inQuotes = false;
+        for (int current = 0; current < line.length(); current++) {
+            if (line.charAt(current) == '\"') inQuotes = !inQuotes; // toggle state
+            else if (line.charAt(current) == ',' && !inQuotes) {
+                result.add(line.substring(start, current-1));// the -1 removes the trailing quote
+                start = current + 1;
+            }
+        }
+        result.add(line.substring(start));
+        return result;
+    }
+
 
     /**
      * Structure of file: see {@link #headerFields}
@@ -111,13 +132,17 @@ public class LoincEntry {
      * @return corresponding line
      */
     public static LoincEntry fromQuotedCsvLine(String line) {
-        String [] fields = line.split(",");
-        if (fields.length <MIN_FIELDS_LOINC) {
+//        String [] fields = line.split(",");
+//        if (fields.length <MIN_FIELDS_LOINC) {
+//                throw Loinc2HpoRuntimeException.malformedLoincCode(line);
+//        }
+//        List<String> fieldsWithNoQuotes = Arrays.stream(fields)
+//                .map(w -> w.replaceAll("\"", ""))
+//                .collect(Collectors.toList());
+        List<String> fieldsWithNoQuotes = splitQuotedCsvLine(line);
+        if (fieldsWithNoQuotes.size() <MIN_FIELDS_LOINC) {
                 throw Loinc2HpoRuntimeException.malformedLoincCode(line);
         }
-        List<String> fieldsWithNoQuotes = Arrays.stream(fields)
-                .map(w -> w.replaceAll("\"", ""))
-                .collect(Collectors.toList());
         LoincId loincId = new LoincId(fieldsWithNoQuotes.get(LOINC_ID_FIELD));
         String component = fieldsWithNoQuotes.get(COMPONENT_FIELD);
         String property = fieldsWithNoQuotes.get(PROPERTY_FIELD);

@@ -10,6 +10,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * Import a JSON file with a FHIR interpretation for testing.
+ */
 public class ObservationImporter {
 
     private static final FhirContext ctxDstu3 = FhirContext.forDstu3();

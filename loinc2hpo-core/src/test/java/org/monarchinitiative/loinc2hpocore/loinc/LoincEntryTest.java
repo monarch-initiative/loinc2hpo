@@ -15,12 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class LoincEntryTest {
 
-    private final static String [] entryFields = {"10000-8","R wave duration.lead AVR","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R wave duration in lead AVR","R wave dur L-AVR","","ACTIVE","1.0i","2.48"};
-    private final static List<String> quotedEntryFields = Arrays.stream(entryFields).map(w -> String.format("\"%s\"", w)).collect(Collectors.toList());
-    private final static String entryLine1 = String.join(",", quotedEntryFields);
-
     @Test
     void testConstruction() {
+        String [] entryFields = {"10000-8","R wave duration.lead AVR","Time","Pt","Heart","Qn","EKG","EKG.MEAS","2","R wave duration in lead AVR","R wave dur L-AVR","","ACTIVE","1.0i","2.48"};
+        List<String> quotedEntryFields = Arrays.stream(entryFields).map(w -> String.format("\"%s\"", w)).collect(Collectors.toList());
+        String entryLine1 = String.join(",", quotedEntryFields);
         LoincEntry entry = LoincEntry.fromQuotedCsvLine(entryLine1);
         assertEquals("R wave duration.lead AVR", entry.getComponent());
         assertEquals("Pt", entry.getTimeAspect());

@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ObservationDtu3 implements Uberobservation {
@@ -25,7 +24,7 @@ public class ObservationDtu3 implements Uberobservation {
 
     @Override
     public Optional<LoincId> getLoincId() {
-        LoincId loincId = null;
+        LoincId loincId;
         for (Coding coding : observation.getCode().getCoding()) {
             if (coding.getSystem().equals("http://loinc.org")) {
                 loincId = new LoincId(coding.getCode());

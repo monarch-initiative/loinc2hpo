@@ -2,13 +2,9 @@ package fhir;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.hl7.fhir.dstu3.model.*;
-import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TestBase {
     /**
