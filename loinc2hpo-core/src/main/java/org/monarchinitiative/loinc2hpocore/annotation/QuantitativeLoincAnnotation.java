@@ -2,9 +2,11 @@ package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -13,7 +15,8 @@ import java.util.Optional;
  * LOINC 6047-5 (Bloodworm IgE Ab [Units/volume] in Serum) does not have a "low" value, because there
  * is no abnormal low level of this analyte. In this case, we use the fromNormalAndHigh factory method,
  * store a null pointer for {@link #low} and return Optional.empty() for this value (which should actually
- * never be queried in the real world).
+ * never be queried in the real world). Similarly, in some occasions we just have Low and Normal.
+ * We do expect to have a normal annotation in all cases, and if not, an Exception is thrown.
  * @author Peter Robinson
  */
 public class QuantitativeLoincAnnotation implements LoincAnnotation {
@@ -36,10 +39,52 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
         this.loincId = this.normal.getLoincId();
     }
 
-    public static QuantitativeLoincAnnotation fromNormalAndHigh(Loinc2HpoAnnotation normal,
-                                                                Loinc2HpoAnnotation high) {
-        return new QuantitativeLoincAnnotation(null, normal, high);
+
+    private static String getDebugInfo(Map<Outcome, Loinc2HpoAnnotation> outcomeMap) {
+        StringBuilder sb = new StringBuilder("Malformed Quantitivate outcomes\nn=").append(outcomeMap.size());
+        for (var oc : outcomeMap.values()) {
+            sb.append("\t[ERROR] ").append(oc).append("\n");
+        }
+        return sb.toString();
     }
+
+
+
+
+    /**
+     * Create between 1 and 3 components. Note that we demand there be a NORMAL annotation,
+     * but LOW and HIGH are optional.
+     * @param outcomeMap outcomes and annotations for a LOINC test
+     * @return corresponding {@link LoincAnnotation} object
+     */
+    public static LoincAnnotation fromOutcomeMap(Map<Outcome, Loinc2HpoAnnotation> outcomeMap) {
+        if (! outcomeMap.containsKey(Outcome.NORMAL())) {
+            String msg = String.format("Attempt to create Quantitative LoincAnnotation without Normal annotation: %s",
+                    getDebugInfo(outcomeMap));
+            throw new Loinc2HpoRuntimeException(msg);
+        }
+        if (outcomeMap.size() == 3) {
+            return new QuantitativeLoincAnnotation(outcomeMap.get(Outcome.LOW()),
+                    outcomeMap.get(Outcome.NORMAL()),
+                    outcomeMap.get(Outcome.HIGH()));
+        } else if (outcomeMap.size() == 2 &&
+                outcomeMap.containsKey(Outcome.NORMAL()) &&
+                outcomeMap.containsKey(Outcome.HIGH())) {
+            return new QuantitativeLoincAnnotation(null, outcomeMap.get(Outcome.NORMAL()),
+                    outcomeMap.get(Outcome.HIGH()));
+        } else if (outcomeMap.size() == 2 &&
+                outcomeMap.containsKey(Outcome.LOW()) &&
+                outcomeMap.containsKey(Outcome.NORMAL())) {
+            return new QuantitativeLoincAnnotation(outcomeMap.get(Outcome.LOW()),
+                    outcomeMap.get(Outcome.NORMAL()), null);
+        } else if (outcomeMap.size() == 1 && outcomeMap.containsKey(Outcome.NORMAL())) {
+            return new QuantitativeLoincAnnotation(null, outcomeMap.get(Outcome.NORMAL()), null);
+        }
+        String msg = String.format("\"Unable to create Quantitative LoincAnnotation  annotation: %s",
+                getDebugInfo(outcomeMap));
+        throw new Loinc2HpoRuntimeException(msg);
+    }
+
 
 
     @Override
@@ -51,6 +96,7 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
             case N:
                 return Optional.of(new Hpo2Outcome(normal.getHpoTermId(), ShortCode.N));
             case H:
+                if (high == null) return Optional.empty();
                 return Optional.of(new Hpo2Outcome(high.getHpoTermId(), ShortCode.H));
             default:
                 return Optional.empty();

@@ -151,39 +151,22 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
                 .collect(Collectors.toMap(Loinc2HpoAnnotation::getOutcome, Function.identity()));
         LoincScale scale = getScale(outcomes);
         if (scale.equals(LoincScale.QUANTITATIVE)) {
-            if (outcomeMap.size() == 3) {
-                return new QuantitativeLoincAnnotation(outcomeMap.get(Outcome.LOW()),
-                        outcomeMap.get(Outcome.NORMAL()),
-                        outcomeMap.get(Outcome.HIGH()));
-            } else if (outcomeMap.size() == 2 &&
-                    outcomeMap.containsKey(Outcome.NORMAL()) &&
-                    outcomeMap.containsKey(Outcome.HIGH())) {
-                return QuantitativeLoincAnnotation.fromNormalAndHigh(outcomeMap.get(Outcome.NORMAL()),
-                        outcomeMap.get(Outcome.HIGH()));
-            } else {
-                // should never happen
-                throw new Loinc2HpoRuntimeException("Could not create LoincAnnotation for quantitative");
-            }
+            return QuantitativeLoincAnnotation.fromOutcomeMap(outcomeMap);
         } else if (scale.equals(LoincScale.ORDINAL)) {
-            // there are only two possible Ordinal outcomes, so we just need to check for size
-            if (outcomeMap.size() == 2) {
-                return new OrdinalHpoAnnotation(outcomeMap.get(Outcome.ABSENT()), outcomeMap.get(Outcome.PRESENT()));
-            } else {
-                // should never happen
-                throw new Loinc2HpoRuntimeException("Could not create LoincAnnotation for ordinal");
-            }
+            return OrdinalHpoAnnotation.fromOutcomeMap(outcomeMap);
         } else if (scale.equals(LoincScale.NOMINAL)) {
             return new NominalLoincAnnotation(outcomeMap);
-        } else {
-            for (var oc : outcomes) {
-                System.err.println("[ERROR] " + oc);
-            }
-            StringBuilder sb = new StringBuilder("Malformed outcomes\nn=").append(outcomes.size());
-            for (var oc : outcomes) {
-                sb.append("\t[ERROR] " + oc + "\n");
-            }
-            throw new Loinc2HpoRuntimeException(sb.toString());
         }
+         // if we get here, we did not match and there is some problem
+        for (var oc : outcomes) {
+            System.err.println("[ERROR] " + oc);
+        }
+        StringBuilder sb = new StringBuilder("Malformed outcomes\nn=").append(outcomes.size());
+        for (var oc : outcomes) {
+            sb.append("\t[ERROR] " + oc + "\n");
+        }
+        throw new Loinc2HpoRuntimeException(sb.toString());
+
 
     }
 
