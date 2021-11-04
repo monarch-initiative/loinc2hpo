@@ -1,13 +1,21 @@
-package org.monarchinitiative.loinc2hpocore.annotationmodel;
+package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class is for LOINC2HPO annotations with the {@code Qn} scale. Most of these annotations
+ * have values for Low, Normal, and High results, but some only have two relevant values. For instance,
+ * LOINC 6047-5 (Bloodworm IgE Ab [Units/volume] in Serum) does not have a "low" value, because there
+ * is no abnormal low level of this analyte. In this case, we use the fromNormalAndHigh factory method,
+ * store a null pointer for {@link #low} and return Optional.empty() for this value (which should actually
+ * never be queried in the real world).
+ * @author Peter Robinson
+ */
 public class QuantitativeLoincAnnotation implements LoincAnnotation {
 
     private final LoincId loincId;
@@ -22,16 +30,24 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
         this.low = low;
         this.normal = normal;
         this.high = high;
-        // assumption is that both annotation have the same LoincId, which will be true
-        // unless there is some insanity
-        this.loincId = this.low.getLoincId();
+        // assumption is that all annotation have the same LoincId
+        // we assume that although some annotation have just two values there will always be a
+        // normal value (this is enforced by the parser and not checked here)
+        this.loincId = this.normal.getLoincId();
     }
+
+    public static QuantitativeLoincAnnotation fromNormalAndHigh(Loinc2HpoAnnotation normal,
+                                                                Loinc2HpoAnnotation high) {
+        return new QuantitativeLoincAnnotation(null, normal, high);
+    }
+
 
     @Override
     public Optional<Hpo2Outcome> getOutcome(Outcome outcome) {
         switch (outcome.getCode()) {
             case L:
-                return Optional.of(new Hpo2Outcome(low.getHpoTermId(), ShortCode.L));
+                if (low == null) return Optional.empty();
+                else return Optional.of(new Hpo2Outcome(low.getHpoTermId(), ShortCode.L));
             case N:
                 return Optional.of(new Hpo2Outcome(normal.getHpoTermId(), ShortCode.N));
             case H:

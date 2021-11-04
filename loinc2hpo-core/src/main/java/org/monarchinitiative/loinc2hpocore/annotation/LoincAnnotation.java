@@ -1,8 +1,7 @@
-package org.monarchinitiative.loinc2hpocore.annotationmodel;
+package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
 import java.util.Optional;

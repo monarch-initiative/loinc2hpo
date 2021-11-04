@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.annotationmodel;
+package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 
