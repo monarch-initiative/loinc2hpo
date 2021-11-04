@@ -24,20 +24,23 @@ public class LoincTableCoreParser {
         Map<LoincId, LoincEntry> tmp = new HashMap<>();
         int count_malformed = 0;
         int count_correct = 0;
+        int n=0;
         try (BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable))){
             String line;
             String header=br.readLine();
-            if (! header.contains("\"LOINC_NUM\"")) {
+            if (! header.equals(LoincEntry.header)) {
                 LOGGER.error(String.format("Malformed header line (%s) in Loinc File %s",header,pathToLoincCoreTable));
-                throw new Loinc2HpoRuntimeException("Malformed LoincTableCore.csv file");
+                throw new Loinc2HpoRuntimeException("Malformed LoincTableCore.tsv header line");
             }
             while ((line=br.readLine())!=null) {
+                n++;
                 try {
                     LoincEntry entry = LoincEntry.fromQuotedCsvLine(line);
                     tmp.put(entry.getLoincId(),entry);
                     count_correct++;
                 } catch (Loinc2HpoRuntimeException e) {
                     LOGGER.error(e.getMessage());
+                    LOGGER.error("Line {}: {}", n, line);
                     count_malformed++;
                 }
             }

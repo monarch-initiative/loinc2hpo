@@ -2,16 +2,8 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.hl7.fhir.dstu3.model.*;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.exception.*;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
-import java.util.List;
-import java.util.Optional;
-
-public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
+public class ObservationAnalysisFromQnValue  {
 
     private Observation observation;
     private Loinc2Hpo loinc2Hpo;
@@ -21,9 +13,8 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         this.loinc2Hpo = loinc2Hpo;
         this.observation = observation;
     }
+/*
 
-
-    @Override
     public Hpo2Outcome getHPOforObservation() {
 
         LoincId loincId =
@@ -68,4 +59,6 @@ public class ObservationAnalysisFromQnValue implements ObservationAnalysis {
         }
         return hpoTerm4TestOutcome.get();
     }
+
+ */
 }

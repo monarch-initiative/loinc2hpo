@@ -2,13 +2,9 @@ package fhir;
 
 import ca.uhn.fhir.model.primitive.IdDt;
 import org.hl7.fhir.dstu3.model.*;
-import org.monarchinitiative.phenol.ontology.data.Term;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TestBase {
     /**
@@ -62,14 +58,7 @@ public class TestBase {
     }
 
 
-    public Map<String, Term> getHpoTermMap() {
-        List<Term> terms = Stream.of(
-                Term.of("HP:0020058", "Abnormal red blood cell count"),
-                Term.of("HP:0020060", "Decreased red blood cell count"),
-                Term.of("HP:0020059", "Increased red blood cell count")
-                ).collect(Collectors.toList());
-        return terms.stream().collect(Collectors.toMap(Term::getName, t-> t));
-    }
+
 
 
 }

@@ -4,13 +4,9 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.Observation;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationAnalysisFromInterpretation;
-import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -74,13 +70,13 @@ public class ObservationAnalysisFromInterpretationTest {
         Loinc2Hpo loinc2Hpo = mock(Loinc2Hpo.class);
 
 
-        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
-            ObservationAnalysisFromInterpretation analyzer =
-                new ObservationAnalysisFromInterpretation(loinc2Hpo,
-                        observation);
+//        Assertions.assertThrows(Loinc2HpoRuntimeException.class, () -> {
+//            ObservationAnalysisFromInterpretation analyzer =
+//                new ObservationAnalysisFromInterpretation(loinc2Hpo,
+//                        observation);
 
-            Hpo2Outcome hpoterm = analyzer.getHPOforObservation();
-        });
+           // Hpo2Outcome hpoterm = analyzer.getHPOforObservation();
+      //  });
 
 
     }

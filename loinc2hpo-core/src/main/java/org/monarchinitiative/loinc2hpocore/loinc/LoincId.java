@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-public class LoincId {
+public class LoincId implements Comparable<LoincId> {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoincId.class);
     /** The part of the Loinc code prior to the dash */
     private final int num;
@@ -58,5 +58,12 @@ public class LoincId {
     public String toString() { return String.format("%d-%d",num,suffix); }
 
 
-
+    @Override
+    public int compareTo(LoincId that) {
+        if (this.num != that.num) {
+            return Integer.compare(this.num, that.num);
+        } else {
+            return Integer.compare(this.suffix, that.suffix);
+        }
+    }
 }

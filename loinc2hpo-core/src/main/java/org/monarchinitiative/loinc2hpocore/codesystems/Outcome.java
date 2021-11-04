@@ -45,23 +45,23 @@ public class Outcome {
     }
 
     public static Outcome LOW() {
-        return new Outcome(ShortCode.L, ShortCode.L.name());
+        return new Outcome(ShortCode.L);
     }
 
     public static Outcome NORMAL() {
-        return new Outcome(ShortCode.L, ShortCode.L.name());
+        return new Outcome(ShortCode.N);
     }
 
     public static Outcome HIGH() {
-        return new Outcome(ShortCode.L, ShortCode.L.name());
+        return new Outcome(ShortCode.H);
     }
 
     public static Outcome PRESENT() {
-        return new Outcome(ShortCode.PRESENT, ShortCode.PRESENT.name());
+        return new Outcome(ShortCode.PRESENT);
     }
 
     public static Outcome ABSENT() {
-        return new Outcome(ShortCode.ABSENT, ShortCode.ABSENT.name());
+        return new Outcome(ShortCode.ABSENT);
     }
 
     @Override

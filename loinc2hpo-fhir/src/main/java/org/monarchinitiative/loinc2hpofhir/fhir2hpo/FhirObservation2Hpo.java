@@ -3,7 +3,6 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.annotationmodel.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.exception.*;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +22,11 @@ public class FhirObservation2Hpo {
     }
 
     public Optional<Hpo2Outcome> fhir2hpo(Observation observation) {
-        LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
-        if (!loincIdSet.contains(loincId)){
-            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
-        }
-        Hpo2Outcome result;
+//        LoincId loincId = FhirObservationUtil.getLoincIdOfObservation(observation);
+//        if (!loincIdSet.contains(loincId)){
+//            throw Loinc2HpoRuntimeException.unrecognizedLoincCodeException();
+//        }
+//        Hpo2Outcome result;
         /*
         if (observation.hasInterpretation()){
             result = new ObservationAnalysisFromInterpretation(loinc2Hpo,
