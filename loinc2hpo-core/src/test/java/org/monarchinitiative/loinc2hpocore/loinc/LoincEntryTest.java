@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.annotationmodel.LoincScale;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,13 +30,23 @@ public class LoincEntryTest {
     }
 
     @Test
-    void testLoin() {
+    void testDichlorophenoxyacetate() {
         String [] fields = { "9806-1","2,4-Dichlorophenoxyacetate","MCnc","Pt","Urine","Qn","","DRUG/TOX","1","2,4-Dichlorophenoxyacetate [Mass/volume] in Urine","2,4D Ur-mCnc","","ACTIVE","1.0i","2.42"};
         List<String> quotedEntryFields = Arrays.stream(fields).map(w -> String.format("\"%s\"", w)).collect(Collectors.toList());
         String line = String.join(",",quotedEntryFields);
         LoincEntry entry = LoincEntry.fromQuotedCsvLine(line);
         LoincId loincId = new LoincId("9806-1");
         assertEquals(loincId, entry.getLoincId());
+        assertEquals("2,4-Dichlorophenoxyacetate", entry.getComponent());
+        assertEquals("MCnc", entry.getProperty());
+        assertEquals("Pt", entry.getTimeAspect());
+        assertEquals("Urine", entry.getSystem());
+        assertEquals(LoincScale.QUANTITATIVE, entry.getScale());
+        assertEquals("", entry.getMethod());
+        assertEquals("2,4-Dichlorophenoxyacetate [Mass/volume] in Urine", entry.getLongName());
+        LoincLongName lln = entry.getLoincLongName();
+        assertEquals("Urine", lln.getLoincTissue());
+        assertEquals("2,4-Dichlorophenoxyacetate", lln.getLoincParameter());
     }
 
 

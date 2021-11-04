@@ -47,7 +47,7 @@ public class LoincEntry {
     private final static int TIMEASPECT_FIELD = 3;
     private final static int SYSTEM_FIELD = 4;
     private final static int SCALETYP_FIELD = 5;
-    private final static int METHOTYP_FIELD = 6;
+    private final static int METHODTYP_FIELD = 6;
     private final static int LONG_COMMON_NAME_FIELD = 9;
 
 
@@ -117,7 +117,7 @@ public class LoincEntry {
         for (int current = 0; current < line.length(); current++) {
             if (line.charAt(current) == '\"') inQuotes = !inQuotes; // toggle state
             else if (line.charAt(current) == ',' && !inQuotes) {
-                result.add(line.substring(start, current-1));// the -1 removes the trailing quote
+                result.add(line.substring(start+1, current-1));// the +1 and -1 remove the quotes
                 start = current + 1;
             }
         }
@@ -132,13 +132,6 @@ public class LoincEntry {
      * @return corresponding line
      */
     public static LoincEntry fromQuotedCsvLine(String line) {
-//        String [] fields = line.split(",");
-//        if (fields.length <MIN_FIELDS_LOINC) {
-//                throw Loinc2HpoRuntimeException.malformedLoincCode(line);
-//        }
-//        List<String> fieldsWithNoQuotes = Arrays.stream(fields)
-//                .map(w -> w.replaceAll("\"", ""))
-//                .collect(Collectors.toList());
         List<String> fieldsWithNoQuotes = splitQuotedCsvLine(line);
         if (fieldsWithNoQuotes.size() <MIN_FIELDS_LOINC) {
                 throw Loinc2HpoRuntimeException.malformedLoincCode(line);
@@ -149,7 +142,7 @@ public class LoincEntry {
         String timeAspect = fieldsWithNoQuotes.get(TIMEASPECT_FIELD);
         String system = fieldsWithNoQuotes.get(SYSTEM_FIELD);
         LoincScale scale = LoincScale.fromString(fieldsWithNoQuotes.get(SCALETYP_FIELD));
-        String method = fieldsWithNoQuotes.get(METHOTYP_FIELD);
+        String method = fieldsWithNoQuotes.get(METHODTYP_FIELD);
         String longName = fieldsWithNoQuotes.get(LONG_COMMON_NAME_FIELD);
         return new LoincEntry(loincId, component, property, timeAspect, system, scale, method, LoincLongName.of(longName));
     }
