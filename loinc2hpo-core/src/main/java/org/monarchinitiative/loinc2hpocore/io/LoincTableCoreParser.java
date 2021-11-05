@@ -20,10 +20,14 @@ public class LoincTableCoreParser {
 
     private final Map<LoincId, LoincEntry> loincEntries;
 
+    private final int malformed;
+    /** Count of LOINC codes with scales other than Qn, Ord, and Nom, which we skip. */
+    private final int invalidScale;
+
     public LoincTableCoreParser(String pathToLoincCoreTable) {
         Map<LoincId, LoincEntry> tmp = new HashMap<>();
         int count_malformed = 0;
-        int count_correct = 0;
+        int count_invalid_scale = 0;
         int n=0;
         try (BufferedReader br = new BufferedReader(new FileReader(pathToLoincCoreTable))){
             String line;
@@ -36,8 +40,11 @@ public class LoincTableCoreParser {
                 n++;
                 try {
                     LoincEntry entry = LoincEntry.fromQuotedCsvLine(line);
-                    tmp.put(entry.getLoincId(),entry);
-                    count_correct++;
+                    if (entry.getScale().validForLoinc2Hpo()) {
+                        tmp.put(entry.getLoincId(), entry);
+                    } else {
+                        count_invalid_scale++;
+                    }
                 } catch (Loinc2HpoRuntimeException e) {
                     LOGGER.error(e.getMessage());
                     LOGGER.error("Line {}: {}", n, line);
@@ -48,7 +55,9 @@ public class LoincTableCoreParser {
             e.printStackTrace();
         }
 
-        LOGGER.info(count_correct+ " LOINC entries were created");
+        LOGGER.info(tmp.size() + " LOINC entries were created");
+        malformed = count_malformed;
+        invalidScale = count_invalid_scale;
         if (count_malformed>0) {
             LOGGER.error(count_malformed + " LOINC entries are malformed");
         }
@@ -59,8 +68,17 @@ public class LoincTableCoreParser {
         return loincEntries;
     }
 
+    public int getMalformed() {
+        return malformed;
+    }
+
+    public int getInvalidScale() {
+        return invalidScale;
+    }
+
     public static Map<LoincId, LoincEntry> load(String pathToLoincCoreTable) {
         LoincTableCoreParser parser = new LoincTableCoreParser(pathToLoincCoreTable);
         return parser.getLoincEntries();
     }
+
 }

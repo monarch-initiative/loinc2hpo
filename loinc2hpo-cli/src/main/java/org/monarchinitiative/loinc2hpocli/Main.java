@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpocli;
 
 import org.monarchinitiative.loinc2hpocli.command.AnnotationQcCommand;
+import org.monarchinitiative.loinc2hpocli.command.LoincTableCoreStatsCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
@@ -16,7 +17,8 @@ public class Main implements Runnable {
             args = new String[]{"-h"};
         }
         CommandLine cline = new CommandLine(new Main())
-                .addSubcommand("annotation-qc", new AnnotationQcCommand());
+                .addSubcommand("annotation-qc", new AnnotationQcCommand())
+                .addSubcommand("stats", new LoincTableCoreStatsCommand());
         cline.setToggleBooleanFlags(false);
         int exitCode = cline.execute(args);
         System.exit(exitCode);

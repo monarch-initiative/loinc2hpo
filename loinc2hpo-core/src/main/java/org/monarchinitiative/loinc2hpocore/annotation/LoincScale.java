@@ -19,6 +19,10 @@ public enum LoincScale {
     Multi("Multi"),
     Doc("Doc"),
     Set("Set"),
+    /** some loinc entries such as 70871-9 do not have a scale and just show a dash. */
+    Dash("-"),
+    /** rare entries have an asterisk. */
+    Asterisk("*"),
     Unknown("Unknown");
     /*
 
@@ -49,10 +53,20 @@ public enum LoincScale {
             case "Multi": return Multi;
             case "Doc": return Doc;
             case "Set": return Set;
+            case "-": return Dash;
+            case "*": return Asterisk;
             case "Unknown": return Unknown;
             default:
                 throw new Loinc2HpoRuntimeException("MalformedScale: \"" + scale + "\".");
         }
+    }
+
+    /**
+     * We are only using Qn, Ord, and Nom scale LOINC codes. We will disregard other codes
+     * @return true if this is a scale type (Qn, Ord, Nom) that is usable for LOINC2HPO
+     */
+    public boolean validForLoinc2Hpo() {
+        return this.equals(QUANTITATIVE) || this.equals(ORDINAL) || this.equals(NOMINAL);
     }
 
 }
