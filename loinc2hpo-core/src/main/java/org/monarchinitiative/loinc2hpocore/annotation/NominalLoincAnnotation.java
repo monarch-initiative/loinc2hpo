@@ -31,8 +31,8 @@ public class NominalLoincAnnotation implements LoincAnnotation {
 
     @Override
     public Optional<Hpo2Outcome> getOutcome(Outcome outcome) {
-        if (nominalAnnotations.containsKey(outcome.getOutcome())) {
-            TermId hpoId = nominalAnnotations.get(outcome.getOutcome()).getHpoTermId();
+        if (nominalAnnotations.containsKey(outcome)) {
+            TermId hpoId = nominalAnnotations.get(outcome).getHpoTermId();
             return Optional.of(new Hpo2Outcome(hpoId, outcome.getCode()));
         } else {
             return Optional.empty();

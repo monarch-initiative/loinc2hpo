@@ -10,6 +10,7 @@ import org.monarchinitiative.loinc2hpofhir.fhir2hpo.Uberobservation;
 import java.io.IOException;
 import java.util.Optional;
 
+import static fhir.TestBase.importDstu3Observation;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Dstu3ObservationTest {
@@ -19,8 +20,7 @@ public class Dstu3ObservationTest {
     @Test
     void testGlucoseHigh() throws IOException {
         String jsonPath = "json/glucoseHigh.fhir";
-        Observation glucoseHigh =
-                ObservationImporter.importDstu3Observation(jsonPath);
+        Observation glucoseHigh = importDstu3Observation(jsonPath);
         Uberobservation uberobservation = new ObservationDtu3(glucoseHigh);
         LoincId expectedLoincId = new LoincId("15074-8");
         Optional<LoincId> opt = uberobservation.getLoincId();
@@ -36,8 +36,7 @@ public class Dstu3ObservationTest {
     @Test
     void testGlucoseLow() throws IOException {
         String jsonPath = "json/glucoseLow.fhir";
-        Observation glucoseAbnormal =
-                ObservationImporter.importDstu3Observation(jsonPath);
+        Observation glucoseAbnormal = importDstu3Observation(jsonPath);
         Uberobservation uberobservation = new ObservationDtu3(glucoseAbnormal);
         LoincId expectedLoincId = new LoincId("15074-8");
         Optional<LoincId> opt = uberobservation.getLoincId();
@@ -53,8 +52,7 @@ public class Dstu3ObservationTest {
     @Test
     void testGlucoseNormal() throws IOException {
         String jsonPath = "json/glucoseNormal.fhir";
-        Observation glucoseAbnormal =
-                ObservationImporter.importDstu3Observation(jsonPath);
+        Observation glucoseAbnormal = importDstu3Observation(jsonPath);
         Uberobservation uberobservation = new ObservationDtu3(glucoseAbnormal);
         LoincId expectedLoincId = new LoincId("15074-8");
         Optional<LoincId> opt = uberobservation.getLoincId();

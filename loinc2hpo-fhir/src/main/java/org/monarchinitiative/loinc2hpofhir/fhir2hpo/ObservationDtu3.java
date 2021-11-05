@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.apache.commons.lang.NotImplementedException;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 
 import org.hl7.fhir.dstu3.model.Observation;
@@ -64,16 +65,66 @@ public class ObservationDtu3 implements Uberobservation {
             ShortCode code = ShortCode.fromShortCode(codes.get(0));
             Outcome outcome = getOutcome(code, observation);
             return Optional.of(outcome);
-        } /*else if (observation.hasValueCodeableConcept()){
-            result = new ObservationAnalysisFromCodedValues(loinc2Hpo,
-                    observation).getHPOforObservation();
+        } else if (observation.hasValueCodeableConcept()){
+            return getOutcomeFromCodedValue();
         } else if (observation.hasValueQuantity()){
-            result = new ObservationAnalysisFromQnValue(loinc2Hpo,
-                    observation).getHPOforObservation();
+            return getOutcomeFromValueQuantity();
         } else {
-            logger.info("Unable to handle observation");
+            LOGGER.error("Unable to handle observation {}", observation);
             return Optional.empty();
-        } */
+        }
+    }
+
+
+    Optional<Outcome> getOutcomeFromCodedValue() {
+        CodeableConcept codeableConcept = this.observation.getValueCodeableConcept();
+        if (codeableConcept == null) { // should never happen
+            LOGGER.error("Codable concept null in getOutcomeFromCodedValue");
+        }
+        List<Coding> codings = codeableConcept != null ? codeableConcept.getCoding() : List.of();
+        for (Coding coding : codings) {
+            String code = coding.getCode();
+            String system = coding.getSystem();
+            String display = coding.getDisplay();
+            String outcomeString = code + ":" + system + ":" + display;
+            Outcome outcome = Outcome.nominal(outcomeString);
+            return Optional.of(outcome);
+        }
         return Optional.empty();
     }
+
+    Optional<Outcome> getOutcomeFromValueQuantity() {
+        List<Observation.ObservationReferenceRangeComponent> references =
+                this.observation.getReferenceRange();
+
+        if (references.size() == 0) {
+            LOGGER.error("Reference range not found");
+            return Optional.empty();
+        }
+
+        if (references.size() >= 2){
+            LOGGER.error("Reference range had more than two entries");
+            return Optional.empty();
+            // TODO sometimes this is observed.
+            //An exception: three reference sizes
+            //it can happen when there is actually one range but coded in three ranges
+            //e.g. normal 20-30
+            //in this case, one range ([20, 30]) is sufficient;
+            //however, it is written as three ranges: ( , 20) [20, 30] (30, )
+        }
+        Observation.ObservationReferenceRangeComponent targetReference = references.get(0);
+        double low = targetReference.hasLow() ?
+                targetReference.getLow().getValue().doubleValue() : Double.MIN_VALUE;
+        double high = targetReference.hasHigh() ?
+                targetReference.getHigh().getValue().doubleValue() : Double.MAX_VALUE;
+        double observed = this.observation.getValueQuantity().getValue().doubleValue();
+        if (observed < low) {
+            return Optional.of(Outcome.LOW());
+        } else if (observed > high) {
+            return Optional.of(Outcome.HIGH());
+        } else {
+            return Optional.of(Outcome.NORMAL());
+        }
+    }
+
 }

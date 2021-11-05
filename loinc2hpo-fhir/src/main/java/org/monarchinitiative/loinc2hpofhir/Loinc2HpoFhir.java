@@ -3,15 +3,20 @@ package org.monarchinitiative.loinc2hpofhir;
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
 import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationDtu3;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationR4;
+import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationR5;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.Uberobservation;
 
 import java.util.Optional;
 
 /**
  * Retrieve LOINC2HPO results for FHIR versions dstu3, r4, and r5, using a proxy pattern.
+ * We use HAPI FHIR to to get a {@link LoincId} and an {@link Outcome} from the FHIR Observation
+ * and then use the {@link Loinc2Hpo} object to transform that into an HPO code. The method returns
+ * an Optional which is empty if any of the steps fails.
  * @author Peter Robinson
  */
 public class Loinc2HpoFhir {
@@ -31,10 +36,18 @@ public class Loinc2HpoFhir {
         return query(observation);
     }
 
-    Optional<Hpo2Outcome> query(Uberobservation uberobservation) {
-        Optional<LoincId> opt = uberobservation.getLoincId();
+    Optional<Hpo2Outcome> r5(org.hl7.fhir.r5.model.Observation r5Observation) {
+        Uberobservation observation = new ObservationR5(r5Observation);
+        return query(observation);
+    }
 
-        return Optional.empty();
+
+    Optional<Hpo2Outcome> query(Uberobservation uberobservation) {
+        Optional<LoincId> loincOpt = uberobservation.getLoincId();
+        if (loincOpt.isEmpty()) return Optional.empty();
+        Optional<Outcome> outcomeOpt = uberobservation.getOutcome();
+        if (outcomeOpt.isEmpty()) return Optional.empty();
+        return loinc2Hpo.query(loincOpt.get(), outcomeOpt.get());
     }
 
 

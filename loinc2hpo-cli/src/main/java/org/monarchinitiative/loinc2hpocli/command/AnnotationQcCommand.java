@@ -12,7 +12,6 @@ import picocli.CommandLine;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "annotation-qc", aliases = {"qc"},
         mixinStandardHelpOptions = true,

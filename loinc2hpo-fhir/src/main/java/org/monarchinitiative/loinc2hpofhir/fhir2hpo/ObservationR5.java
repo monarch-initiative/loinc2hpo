@@ -1,9 +1,9 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.hl7.fhir.r4.model.CodeableConcept;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r5.model.Observation;
+import org.hl7.fhir.r5.model.CodeableConcept;
+import org.hl7.fhir.r5.model.Coding;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
@@ -15,12 +15,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ObservationR4 implements Uberobservation {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ObservationR4.class);
-    private final org.hl7.fhir.r4.model.Observation observation;
+public class ObservationR5 implements Uberobservation {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObservationR5.class);
+
+    private final org.hl7.fhir.r5.model.Observation observation;
 
 
-    public ObservationR4(org.hl7.fhir.r4.model.Observation observation) {
+    public ObservationR5(org.hl7.fhir.r5.model.Observation observation) {
         this.observation = observation;
     }
 
@@ -36,23 +37,17 @@ public class ObservationR4 implements Uberobservation {
         return Optional.empty();
     }
 
-    private Outcome getOutcome(ShortCode code, org.hl7.fhir.r4.model.Observation observation) {
+    private Outcome getOutcome(ShortCode code, org.hl7.fhir.r5.model.Observation observation) {
         if (code.equals(ShortCode.NOM)) {
             throw new NotImplementedException("TODO");
         }
         switch (code) {
-            case H:
-                return Outcome.HIGH();
-            case L:
-                return Outcome.LOW();
-            case N:
-                return Outcome.NORMAL();
-            case ABSENT:
-                return Outcome.ABSENT();
-            case PRESENT:
-                return Outcome.PRESENT();
-            case A:
-                throw new NotImplementedException("TODO");
+            case H: return Outcome.HIGH();
+            case L: return Outcome.LOW();
+            case N: return Outcome.NORMAL();
+            case ABSENT: return Outcome.ABSENT();
+            case PRESENT: return Outcome.PRESENT();
+            case A:  throw new NotImplementedException("TODO");
             default:
                 throw new NotImplementedException("TODO");
         }
@@ -61,12 +56,12 @@ public class ObservationR4 implements Uberobservation {
 
     @Override
     public Optional<Outcome> getOutcome() {
-        if (observation.hasInterpretation()) {
+        if (observation.hasInterpretation()){
             List<String> codes = this.observation.getInterpretation().stream()
                     .distinct()
                     .map(CodeableConcept::getCoding)
                     .flatMap(Collection::stream)
-                    .map(Coding::getCode)
+                    .map(org.hl7.fhir.r5.model.Coding::getCode)
                     .collect(Collectors.toList());
             if (codes.size() > 1) {
                 LOGGER.error("Multiple interpretation codes returned");
