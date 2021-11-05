@@ -77,4 +77,13 @@ public class Outcome {
         Outcome that = (Outcome) obj;
         return this.code.equals(that.code) && this.outcome.equals(that.outcome);
     }
+
+    @Override
+    public String toString() {
+        if (code.equals(ShortCode.NOM)) {
+            return "Nom: " + outcome;
+        } else {
+            return code.name();
+        }
+    }
 }

@@ -5,6 +5,7 @@ import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,6 +111,14 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
 
     @Override
     public List<Loinc2HpoAnnotation> allAnnotations() {
-        return List.of(low, normal, high);
+        List<Loinc2HpoAnnotation> allAnnots = new ArrayList<>();
+        if (low != null) {
+            allAnnots.add(low);
+        }
+        allAnnots.add(normal);
+        if (high != null) {
+            allAnnots.add(high);
+        }
+        return allAnnots;
     }
 }

@@ -24,24 +24,14 @@ public enum LoincScale {
     /** rare entries have an asterisk. */
     Asterisk("*"),
     Unknown("Unknown");
-    /*
-
-   case "qn" : return Qn;
-            case "ord": return Ord;
-            case "ordqn": return OrdQn;
-            case "nom" : return Nom;
-            case "nar" : return Nar;
-            case "multi" : return Multi;
-            case "doc" : return Doc;
-            case "set" : return Set;
-            default: return Unknown;
-     */
 
     private final String name;
 
     LoincScale(String label) {
         this.name = label;
     }
+
+    public String shortName() { return this.name; }
 
     public static LoincScale fromString(String scale) {
         switch (scale) {
