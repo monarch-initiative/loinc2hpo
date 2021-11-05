@@ -228,4 +228,12 @@ public class LoincLongName {
     public String getName() {
         return name;
     }
+
+    public boolean matches(String query) {
+        return this.name.equalsIgnoreCase(query) ||
+                this.parameter.equalsIgnoreCase(query) ||
+                this.tissue.equalsIgnoreCase(query) ||
+                this.assayMethod.equalsIgnoreCase(query) ||
+                this.assayType.equalsIgnoreCase(query);
+    }
 }

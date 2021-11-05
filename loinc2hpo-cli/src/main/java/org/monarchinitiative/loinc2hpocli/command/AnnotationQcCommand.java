@@ -1,7 +1,9 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
 import org.monarchinitiative.loinc2hpocore.annotation.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
 import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
+import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -9,6 +11,8 @@ import picocli.CommandLine;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @CommandLine.Command(name = "annotation-qc", aliases = {"qc"},
         mixinStandardHelpOptions = true,
@@ -34,6 +38,9 @@ public class AnnotationQcCommand implements Runnable{
         Ontology ontology = OntologyLoader.loadOntology(new File(hpJsonPath));
         System.out.println("[INFO] Got " + ontology.countNonObsoleteTerms() + " HPO terms.");
         checkValidityOfHpoTerms(entries, ontology);
+
+       Map<LoincId, LoincAnnotation> mymap = parser.loincToHpoAnnotationMap();
+       System.out.println("Got " + mymap.size() + " map entries");
 
     }
 

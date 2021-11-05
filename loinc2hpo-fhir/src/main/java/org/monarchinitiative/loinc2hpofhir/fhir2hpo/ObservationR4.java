@@ -1,25 +1,27 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
 import org.apache.commons.lang.NotImplementedException;
-import org.hl7.fhir.dstu3.model.Coding;
-
-import org.hl7.fhir.dstu3.model.Observation;
+import org.hl7.fhir.r4.model.CodeableConcept;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.Observation;
 import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ObservationDtu3 implements Uberobservation {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ObservationDtu3.class);
-    private final org.hl7.fhir.dstu3.model.Observation observation;
+public class ObservationR4 implements Uberobservation {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObservationR4.class);
+    private final org.hl7.fhir.r4.model.Observation observation;
 
-    public ObservationDtu3(org.hl7.fhir.dstu3.model.Observation dstu3Observation) {
-        this.observation = dstu3Observation;
+
+    public ObservationR4(org.hl7.fhir.r4.model.Observation observation) {
+        this.observation = observation;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class ObservationDtu3 implements Uberobservation {
         return Optional.empty();
     }
 
-    private Outcome getOutcome(ShortCode code, Observation observation) {
+    private Outcome getOutcome(ShortCode code, org.hl7.fhir.r4.model.Observation observation) {
         if (code.equals(ShortCode.NOM)) {
             throw new NotImplementedException("TODO");
         }
@@ -54,9 +56,12 @@ public class ObservationDtu3 implements Uberobservation {
     @Override
     public Optional<Outcome> getOutcome() {
         if (observation.hasInterpretation()){
-            List<String> codes = this.observation.getInterpretation().getCoding().
-                    stream().map(Coding::getCode).distinct().
-                    collect(Collectors.toList());
+            List<String> codes = this.observation.getInterpretation().stream()
+                    .distinct()
+                    .map(CodeableConcept::getCoding)
+                    .flatMap(Collection::stream)
+                    .map(Coding::getCode)
+                    .collect(Collectors.toList());
             if (codes.size() > 1) {
                 LOGGER.error("Multiple interpretation codes returned");
                 return Optional.empty();
