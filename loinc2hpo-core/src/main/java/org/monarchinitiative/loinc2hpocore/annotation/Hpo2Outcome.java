@@ -6,18 +6,18 @@ import org.monarchinitiative.phenol.ontology.data.TermId;
 public class Hpo2Outcome {
 
     private final boolean isNegated;
-    private final TermId tid;
+    private final TermId hpoTermId;
     private final ShortCode outcome;
 
 
     public Hpo2Outcome(TermId id, ShortCode outcome) {
-        this.tid=id;
+        this.hpoTermId =id;
         this.isNegated = false;
         this.outcome = outcome;
     }
 
 
-    public TermId getId() {return tid; }
+    public TermId getHpoId() {return hpoTermId; }
 
     public boolean isNegated() {
         return isNegated;

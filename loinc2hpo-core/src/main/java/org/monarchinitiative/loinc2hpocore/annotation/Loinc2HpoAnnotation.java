@@ -93,7 +93,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     public String toTsv() {
         String suppl = supplementalOntologyTermId.isPresent() ?
                 supplementalOntologyTermId.get().getValue() : "";
-        return String.format("%s\ts\t%s\t%s\t%s",
+        return String.format("%s\ts\t%s\t%s\t%s\t%s\t%s\t%s",
                 loincId,
                 loincScale,
                 outcomeCode.getOutcome(),

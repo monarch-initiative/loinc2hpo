@@ -6,7 +6,6 @@ import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +13,7 @@ import java.util.Optional;
 /**
  * Entry point for the Loinc2Hpo tool
  * @author <a href="mailto:aaron.zhang@sema4.com">Aaron Zhang</a>
- * @version 1.1.7
+ * @version 1.6.0
  */
 public class Loinc2Hpo {
     private final Map<LoincId, LoincAnnotation> loincToHpoAnnotationMap;
@@ -24,7 +23,7 @@ public class Loinc2Hpo {
         loincToHpoAnnotationMap = parser.loincToHpoAnnotationMap();
     }
 
-    public Optional<Hpo2Outcome> query(TermId loincId, Outcome outcome)  {
+    public Optional<Hpo2Outcome> query(LoincId loincId, Outcome outcome)  {
         if (! loincToHpoAnnotationMap.containsKey(loincId)) {
             return Optional.empty();
         } else {
