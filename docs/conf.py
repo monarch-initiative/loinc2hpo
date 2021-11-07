@@ -31,10 +31,10 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-# extensions = ['sphinx.ext.mathjax']
+extensions = []
 
 # Add any paths that contain templates here, relative to this directory.
-# templates_path = ['_templates']
+templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -97,9 +97,7 @@ html_theme = "sphinx_rtd_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 # File list in _static
-html_css_files = [
-    'loinc2hpo.css',
-]
+html_css_files = ['loinc2hpo.css']
 
 
 # -- Options for HTMLHelp output ------------------------------------------
@@ -157,4 +155,7 @@ texinfo_documents = [
      author, 'loinc2hpo', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+autosummary_generate = True
+html_theme = 'default'
 
