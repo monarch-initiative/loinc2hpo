@@ -2,10 +2,12 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = lr2pg
+SPHINXPROJ    = loinc2hpo
 SOURCEDIR     = .
 BUILDDIR      = _build
-html_static_path = ['..']
+html_static_path = ['_static']
+
+
 
 # Put it first so that "make" without argument is like "make help".
 help:
