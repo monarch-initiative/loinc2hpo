@@ -99,13 +99,15 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
             "supplementalTermId", "curation", "comment"};
     private static final int EXPECTED_NUMBER_OF_FIELDS = headerFields.length;
 
-
+    /**
+     * @return A tab-separate values line for the loinc2hpo-annotation.tsv file.
+     */
     public String toTsv() {
         String suppl = supplementalOntologyTermId != null ?
-                supplementalOntologyTermId.getValue() : "";
-        return String.format("%s\ts\t%s\t%s\t%s\t%s\t%s\t%s",
+                supplementalOntologyTermId.getValue() : ".";
+        return String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 loincId,
-                loincScale,
+                loincScale.shortName(),
                 outcomeCode.getOutcome(),
                 hpoTermId.getValue(),
                 suppl,
@@ -118,7 +120,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     public static Loinc2HpoAnnotation fromAnnotationLine(String line)  {
         String [] fields = line.split("\t");
         if (fields.length != EXPECTED_NUMBER_OF_FIELDS) {
-            System.err.println(String.format("Malformed line with %d fields: %s", fields.length, line));
+            System.err.printf("Malformed line with %d fields: %s%n", fields.length, line);
 
         }
         LoincId loincId = new LoincId(fields[0]);
@@ -174,7 +176,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         }
         StringBuilder sb = new StringBuilder("Malformed outcomes\nn=").append(outcomes.size());
         for (var oc : outcomes) {
-            sb.append("\t[ERROR] " + oc + "\n");
+            sb.append("\t[ERROR] ").append(oc).append("\n");
         }
         throw new Loinc2HpoRuntimeException(sb.toString());
 

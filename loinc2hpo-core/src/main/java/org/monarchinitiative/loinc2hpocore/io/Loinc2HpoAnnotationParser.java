@@ -22,7 +22,7 @@ public class Loinc2HpoAnnotationParser {
     private final static Logger LOGGER = LoggerFactory.getLogger(Loinc2HpoAnnotationParser.class);
 
     private final static Set<ShortCode> quantitativeCodeSet = Set.of(ShortCode.L, ShortCode.N, ShortCode.H);
-    private final static Set<ShortCode> ordinalCodeSet = Set.of(ShortCode.ABSENT, ShortCode.PRESENT);
+    private final static Set<ShortCode> ordinalCodeSet = Set.of(ShortCode.NEG, ShortCode.POS);
     private final static Set<ShortCode> nominalCodeSet = Set.of(ShortCode.NOM);
 
     private final List<Loinc2HpoAnnotation> entries;

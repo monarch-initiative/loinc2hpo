@@ -7,14 +7,13 @@ import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
  * mapped onto these codes for annotation of data.
  */
 public enum ShortCode {
-    A("abnormal"),
     L("below normal range"),
     N("within normal range"),
     H("above normal range"),
-    ABSENT("absent"),
-    PRESENT("present"),
-    U("unknown code"),
-    NOM("nominal");
+    NEG("negative"),
+    POS("positive"),
+    NOM("nominal"),
+    U("unknown code");
 
 
 
@@ -29,9 +28,6 @@ public enum ShortCode {
         if (codeString == null || codeString.isEmpty()) {
             return null;
         }
-        if (codeString.equals("A")) {
-            return A;
-        }
         if (codeString.equals("L")) {
             return L;
         }
@@ -42,10 +38,13 @@ public enum ShortCode {
             return H;
         }
         if (codeString.equals("NEG")) {
-            return ABSENT;
+            return NEG;
         }
         if (codeString.equals("POS")) {
-            return PRESENT;
+            return POS;
+        }
+        if (codeString.equals("NOM")) {
+            return NOM;
         }
         if (codeString.equals("U")) {
             return U;
@@ -55,14 +54,13 @@ public enum ShortCode {
 
     public String shortForm() {
         switch (this) {
-            case A: return "A";
             case L: return "L";
             case H: return "H";
-            case NOM: return "NOM";
             case N: return "N";
-            case PRESENT: return "POS";
+            case NOM: return "NOM";
+            case POS: return "POS";
+            case NEG: return "NEG";
             case U: return "U";
-            case ABSENT: return "NEG";
         }
         // needed by compiler, will never happen unless a new constant is added
         throw new Loinc2HpoRuntimeException("Could not find short form");

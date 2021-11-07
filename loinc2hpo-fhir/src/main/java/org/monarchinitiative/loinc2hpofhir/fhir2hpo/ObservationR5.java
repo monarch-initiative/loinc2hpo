@@ -45,9 +45,8 @@ public class ObservationR5 implements Uberobservation {
             case H: return Outcome.HIGH();
             case L: return Outcome.LOW();
             case N: return Outcome.NORMAL();
-            case ABSENT: return Outcome.ABSENT();
-            case PRESENT: return Outcome.PRESENT();
-            case A:  throw new NotImplementedException("TODO");
+            case NEG: return Outcome.ABSENT();
+            case POS: return Outcome.PRESENT();
             default:
                 throw new NotImplementedException("TODO");
         }
