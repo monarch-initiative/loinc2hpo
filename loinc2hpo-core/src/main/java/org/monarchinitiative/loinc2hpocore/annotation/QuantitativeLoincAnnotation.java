@@ -93,12 +93,12 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
         switch (outcome.getCode()) {
             case L:
                 if (low == null) return Optional.empty();
-                else return Optional.of(new Hpo2Outcome(low.getHpoTermId(), ShortCode.L));
+                else return Optional.of(new Hpo2Outcome(low.getHpoTermId(), Outcome.LOW()));
             case N:
-                return Optional.of(new Hpo2Outcome(normal.getHpoTermId(), ShortCode.N));
+                return Optional.of(new Hpo2Outcome(normal.getHpoTermId(), Outcome.NORMAL()));
             case H:
                 if (high == null) return Optional.empty();
-                return Optional.of(new Hpo2Outcome(high.getHpoTermId(), ShortCode.H));
+                return Optional.of(new Hpo2Outcome(high.getHpoTermId(), Outcome.HIGH()));
             default:
                 return Optional.empty();
         }

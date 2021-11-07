@@ -56,11 +56,11 @@ public class Outcome {
         return new Outcome(ShortCode.H);
     }
 
-    public static Outcome PRESENT() {
+    public static Outcome POSITIVE() {
         return new Outcome(ShortCode.POS);
     }
 
-    public static Outcome ABSENT() {
+    public static Outcome NEGATIVE() {
         return new Outcome(ShortCode.NEG);
     }
 

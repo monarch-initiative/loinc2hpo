@@ -1,27 +1,24 @@
 package org.monarchinitiative.loinc2hpocore.annotation;
 
+import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
 import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class Hpo2Outcome {
 
-    private final boolean isNegated;
     private final TermId hpoTermId;
-    private final ShortCode outcome;
+    private final Outcome outcome;
 
 
-    public Hpo2Outcome(TermId id, ShortCode outcome) {
+    public Hpo2Outcome(TermId id, Outcome outcome) {
         this.hpoTermId =id;
-        this.isNegated = false;
         this.outcome = outcome;
     }
 
 
     public TermId getHpoId() {return hpoTermId; }
 
-    public boolean isNegated() {
-        return isNegated;
-    }
+    public Outcome outcome() { return outcome; }
 
-    public ShortCode outcome() { return outcome; }
+    public ShortCode shortCode() { return outcome.getCode(); }
 }
