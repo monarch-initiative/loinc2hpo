@@ -63,10 +63,10 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   Intro to LOINC
-   Intro to FHIR
-   FHIR Mapping
-   Getting started
+   intro_to_LOINC
+   intro_to_FHIR
+   FHIR_mapping
+   getting_started
 
 GitHub repo
 -----------
@@ -76,12 +76,16 @@ https://github.com/monarch-initiative/loinc2hpo
 Contact
 -------
 
+Peter Robinson
 peter.robinson@jax.org
 
 `The Jackson Laboratory <https://www.jax.org/>`_
 10 Discovery Drive
 Farmington, CT
 USA
+
+Xingmin Aaron Zhang
+kingmanzhang@gmail.com
 
 Curation
 --------
