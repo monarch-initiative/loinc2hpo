@@ -28,10 +28,10 @@ public class OrdinalHpoAnnotation implements LoincAnnotation {
     @Override
     public Optional<Hpo2Outcome> getOutcome(Outcome outcome) {
         switch (outcome.getCode()) {
-            case ABSENT:
-                return Optional.of(new Hpo2Outcome(absent.getHpoTermId(), ShortCode.A));
-            case PRESENT:
-                return Optional.of(new Hpo2Outcome(present.getHpoTermId(), ShortCode.H));
+            case NEG:
+                return Optional.of(new Hpo2Outcome(absent.getHpoTermId(), ShortCode.NEG));
+            case POS:
+                return Optional.of(new Hpo2Outcome(present.getHpoTermId(), ShortCode.POS));
             default:
                 return Optional.empty();
         }

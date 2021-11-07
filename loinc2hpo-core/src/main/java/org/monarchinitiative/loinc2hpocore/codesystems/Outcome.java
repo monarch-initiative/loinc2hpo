@@ -16,7 +16,7 @@ public class Outcome {
 
     public Outcome(ShortCode code) {
         this.code = code;
-        this.outcome = code.name();
+        this.outcome = code.shortForm();
     }
 
     public ShortCode getCode() {
@@ -41,7 +41,7 @@ public class Outcome {
     }
 
     public boolean isOrdinal() {
-        return this.code.equals(ShortCode.ABSENT) || this.code.equals(ShortCode.PRESENT);
+        return this.code.equals(ShortCode.NEG) || this.code.equals(ShortCode.POS);
     }
 
     public static Outcome LOW() {
@@ -57,11 +57,11 @@ public class Outcome {
     }
 
     public static Outcome PRESENT() {
-        return new Outcome(ShortCode.PRESENT);
+        return new Outcome(ShortCode.POS);
     }
 
     public static Outcome ABSENT() {
-        return new Outcome(ShortCode.ABSENT);
+        return new Outcome(ShortCode.NEG);
     }
 
     @Override

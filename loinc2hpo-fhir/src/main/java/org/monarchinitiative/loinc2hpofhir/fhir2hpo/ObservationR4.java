@@ -47,12 +47,10 @@ public class ObservationR4 implements Uberobservation {
                 return Outcome.LOW();
             case N:
                 return Outcome.NORMAL();
-            case ABSENT:
+            case NEG:
                 return Outcome.ABSENT();
-            case PRESENT:
+            case POS:
                 return Outcome.PRESENT();
-            case A:
-                throw new NotImplementedException("TODO");
             default:
                 throw new NotImplementedException("TODO");
         }

@@ -31,5 +31,31 @@ public class Loinc2HpoAnnotationTest {
         assertNotNull(loincAnnotation);
     }
 
+    @Test
+    void testCreationOfTsv1() {
+        String expectedTsvLine = String.join("\t", fields1);
+        assertEquals(expectedTsvLine, normalAnnot.toTsv());
+    }
+
+    @Test
+    void testCreationOfTsv2() {
+        String expectedTsvLine = String.join("\t", fields2);
+        assertEquals(expectedTsvLine, highAnnot.toTsv());
+    }
+
+    /**
+     * This checks that the short form of the outcode code
+     * ({@link org.monarchinitiative.loinc2hpocore.codesystems.ShortCode}) is use for output.
+     */
+    @Test
+    void checkExportOfOrdNeg() {
+        String [] fields = {"4622-7", "Ord", "NEG", "HP:0011902", ".", "HPO:nvasilevsky[2019-06-14]", "."};
+        Loinc2HpoAnnotation negAnnot = fromStringList(fields);
+        String expectedTsvLine = String.join("\t", fields);
+        assertEquals(expectedTsvLine, negAnnot.toTsv());
+    }
+
+
+
 
 }

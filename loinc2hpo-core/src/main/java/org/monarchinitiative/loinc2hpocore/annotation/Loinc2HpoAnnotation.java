@@ -12,6 +12,17 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a line from the {@code loinc2hpo-annotations.tsv} file
+ * This file has the following format
+ * <pre>
+ * loincId	loincScale	outcome	hpoTermId	supplementalTermId	curation    comment
+ * 600-7	s	NOMINAL	POS	HP:0031864
+ * 600-7	s	NOMINAL	H	HP:0031864
+ * 600-7	s	NOMINAL	N	HP:0031864
+ * (...)
+ * </pre>
+ */
 public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
 
     private final LoincId loincId;
@@ -19,10 +30,9 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     private final Outcome outcomeCode;
     private final TermId hpoTermId;
     private final String biocuration;
-    private final Optional<TermId> supplementalOntologyTermId;
+    /** Term to provide additional information. Can be null. */
+    private final TermId supplementalOntologyTermId;
     private final String comment;
-
-    private static final String LOINC_PREFIX = "LNC";
 
     public Loinc2HpoAnnotation(LoincId loincId,
                                LoincScale loincScale,
@@ -35,7 +45,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         this.loincScale = loincScale;
         this.outcomeCode = code;
         this.hpoTermId = hpoTermId;
-        this.supplementalOntologyTermId = Optional.of(supplementalOntologyTermId);
+        this.supplementalOntologyTermId = supplementalOntologyTermId;
         this.biocuration = biocuration;
         this.comment = comment;
     }
@@ -51,7 +61,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         this.outcomeCode = code;
         this.hpoTermId = hpoTermId;
         this.biocuration = biocuration;
-        this.supplementalOntologyTermId = Optional.empty();
+        this.supplementalOntologyTermId = null;
         this.comment = comment;
     }
 
@@ -76,7 +86,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     }
 
     public Optional<TermId> getSupplementalOntologyTermId() {
-        return supplementalOntologyTermId;
+        return Optional.ofNullable(supplementalOntologyTermId);
     }
 
     public String getComment() {
@@ -89,13 +99,15 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
             "supplementalTermId", "curation", "comment"};
     private static final int EXPECTED_NUMBER_OF_FIELDS = headerFields.length;
 
-
+    /**
+     * @return A tab-separate values line for the loinc2hpo-annotation.tsv file.
+     */
     public String toTsv() {
-        String suppl = supplementalOntologyTermId.isPresent() ?
-                supplementalOntologyTermId.get().getValue() : "";
-        return String.format("%s\ts\t%s\t%s\t%s\t%s\t%s\t%s",
+        String suppl = supplementalOntologyTermId != null ?
+                supplementalOntologyTermId.getValue() : ".";
+        return String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 loincId,
-                loincScale,
+                loincScale.shortName(),
                 outcomeCode.getOutcome(),
                 hpoTermId.getValue(),
                 suppl,
@@ -108,7 +120,8 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     public static Loinc2HpoAnnotation fromAnnotationLine(String line)  {
         String [] fields = line.split("\t");
         if (fields.length != EXPECTED_NUMBER_OF_FIELDS) {
-            throw new Loinc2HpoRuntimeException(String.format("Malformed line with %d fields: %s", fields.length, line));
+            System.err.printf("Malformed line with %d fields: %s%n", fields.length, line);
+
         }
         LoincId loincId = new LoincId(fields[0]);
         LoincScale scale = LoincScale.fromString(fields[1]);
@@ -163,7 +176,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         }
         StringBuilder sb = new StringBuilder("Malformed outcomes\nn=").append(outcomes.size());
         for (var oc : outcomes) {
-            sb.append("\t[ERROR] " + oc + "\n");
+            sb.append("\t[ERROR] ").append(oc).append("\n");
         }
         throw new Loinc2HpoRuntimeException(sb.toString());
 
