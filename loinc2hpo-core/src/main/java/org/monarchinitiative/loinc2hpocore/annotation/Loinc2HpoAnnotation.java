@@ -89,7 +89,16 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
         return Optional.ofNullable(supplementalOntologyTermId);
     }
 
+    public String getSupplementalOntologyTermIdAsString() {
+        if (supplementalOntologyTermId == null) {
+            return ".";
+        } else {
+            return supplementalOntologyTermId.getValue();
+        }
+    }
+
     public String getComment() {
+        if (comment == null || comment.isEmpty()) return ".";
         return comment;
     }
 
@@ -103,16 +112,14 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
      * @return A tab-separate values line for the loinc2hpo-annotation.tsv file.
      */
     public String toTsv() {
-        String suppl = supplementalOntologyTermId != null ?
-                supplementalOntologyTermId.getValue() : ".";
         return String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s",
                 loincId,
                 loincScale.shortName(),
                 outcomeCode.getOutcome(),
                 hpoTermId.getValue(),
-                suppl,
+                getSupplementalOntologyTermIdAsString(),
                 biocuration,
-                comment
+                getComment()
                 );
     }
 
@@ -179,9 +186,9 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
             sb.append("\t[ERROR] ").append(oc).append("\n");
         }
         throw new Loinc2HpoRuntimeException(sb.toString());
-
-
     }
+
+
 
     @Override
     public int compareTo(Loinc2HpoAnnotation that) {
