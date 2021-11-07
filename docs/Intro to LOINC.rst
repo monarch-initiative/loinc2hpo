@@ -9,11 +9,13 @@ LOINC stands for Logical Observation Identifiers Names and Codes (LOINC). Accord
 
 The LOINC website provides a very detailed explaination of LOINC. Here, we try to briefly illustrate the essence of LOINC and focus on the aspects that are relevant to this app.
 
-In essence, LOINC is simply a big table with ~86,000 entries that define the names and IDs of laboratory tests. The following shows three examples of LOINC codes:
+LOINC provides ~92,000 entries that define the names and IDs of laboratory tests.
+The following shows three examples of LOINC codes:
 
   .. image:: images/loinc_examples.png
 
-You can see that each LOINC entry simply represents a laboratory test. The first column ``LOINC`` contains a value with at most 7 numbers, separated by a `-`. This number is unique so that using it can uniquely identify an laboratory test. For example, ``10450-5`` represents a glucose test called "Glucose [Mass/volume] in Serum or Plasma", while ``777-3``` represents a test on the count of platelets "Plates [#/volume] in Blood by Automated count". Each LOINC entry have several other fields that define the test from different aspects.
+Each LOINC entry represents a laboratory test.
+The first column ``LOINC`` contains a value with at most 7 numbers, separated by a `-`. This number is unique so that using it can uniquely identify an laboratory test. For example, ``10450-5`` represents a glucose test called "Glucose [Mass/volume] in Serum or Plasma", while ``777-3``` represents a test on the count of platelets "Plates [#/volume] in Blood by Automated count". Each LOINC entry have several other fields that define the test from different aspects.
 
 Parts of LOINC entry
 --------------------
@@ -30,7 +32,7 @@ Parts of LOINC entry
 
 ``Scale``" defines the scale of the measurement. Scale is the most important information for our application. The following table summarizes possible values of ``scale``.
 
-Table 12: Type of Scale (ref1)
+Table 1: LOINC Scale Types
 
 +----------------+------+-------------------------------------------------------------------------------------+
 | Scale Type     | Abbr.| Description                                                                         |
@@ -64,7 +66,7 @@ Table 12: Type of Scale (ref1)
 | Set            | Set  | Used for clinical attachments                                                       |
 +----------------+------+-------------------------------------------------------------------------------------+
 
-ref1: LOINC USERS' GUIDE, P32
+
 
 ``Qn``, ``Ord`` and ``Nom`` are the three most frequently used LOINC in real world, accounting for probably 99% cases, particularly ``Qn``, which may account for 80% cases alone. ``Qn`` values may be continuous (e.g. serum sodium concentration) or discrete (e.g. titers, 1:16, 1:32). The most frequent ``Ord`` type are "yes/no" tests (e.g. presence or absence of a substance in the blood).
 
@@ -74,10 +76,8 @@ Aside from the three main types, ``Nar`` are reported as free texts.
 ``Method``: defines the method used for the measurement.
 
 
-Common LOINC codes
-------------------
 
-The entire LOINC table has ~85,000 entries. Regenstrief also provides a subset of it containing commonly used top 2000 LOINC. According to Regenstrief, those top 2000 LOINC represent about 98% of all tests in real world applications (`ref <https://loinc.org/usage/obs/>`_).
+
 
 
 

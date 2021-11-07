@@ -29,7 +29,7 @@ loinc2hpo-core/src/main/resources/loinc_most_frequent.csv
 loinc2hpo-core/src/resource/
 
 docs/build/*
-docs/source/images/figures.pptx
+docs/images/figures.pptx
 # Maven
 target/
 
