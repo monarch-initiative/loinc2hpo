@@ -29,10 +29,8 @@ are shown on the index page of this documentation).
 Table 1: FHIR interpretation code set Mapping to internal code system
 
 +------------------------------------+---------------------------+
-|FHIR interpretation code value set  |internal FHIR subset       |
+|FHIR interpretation code value set  |internal code              |
 +-------+----------------------------+---------------------------+
-|system |http://hl7.org/fhir/v2/0078 |FHIR                       |
-+-------+----------------------------+--------+------------------+
 |Code   | Meaning                    |Code    | Meaning          |
 +=======+============================+========+==================+
 |<      |Off scale low               |L       |low               |
