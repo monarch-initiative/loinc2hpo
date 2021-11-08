@@ -65,7 +65,7 @@ Contents
 
    intro_to_LOINC
    intro_to_FHIR
-   FHIR_mapping
+   FHIR_mapping.rst
    getting_started
 
 GitHub repo
