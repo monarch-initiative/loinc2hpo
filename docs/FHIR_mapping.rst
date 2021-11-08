@@ -1,10 +1,12 @@
+============
 FHIR Mapping
 ============
 
+loinc2hpo can be used to convert LOINC-encoded laboratory results from FHIR.
 
 
 Mapping LOINC to candidate HPO terms
-------------------------------------
+====================================
 
 LOINC observations have four main categories, quantitative(Qn), ordinal(Ord),
 nominal (Nom) and narrative(Nar).
@@ -13,7 +15,7 @@ are ``Nom`` and ``Nar`` type (<10%). Currently, loinc2hpo maps QN, Ord, and Nom 
 but is not able to map Nar codes.
 
 FHIR Interpretation codes
--------------------------
+=========================
 
 Test outcomes can represented with a code from the
 `FHIR interpretation code valueset <https://www.hl7.org/fhir/valueset-observation-interpretation.html>`_.
@@ -120,24 +122,26 @@ Table 1: FHIR interpretation code set Mapping to internal code system
 
 The following graph summarizes the mapping.
 
-    .. image:: images/annotation_scheme.png
+  .. image:: images/annotation_scheme.png
+    :width: 400
+    :alt: Annotation scheme
 
-* note:
+Nominal outcomes
+================
 
-``Ord``(non-"presence"/"absence" outcome), ``Nom`` and ``Nar`` observations can use
-other coding systems that are more difficult to handle. For example, ``Loinc 600-7`` or
-"Bacteria identified in Blood by Culture" may use a SNOMED concept to represent the
+Nominal observations can use coding systems that are more difficult to handle.
+For example, `Loinc 600-7 <https://loinc.org/600-7/>`_ (Bacteria identified in Blood by Culture)
+may use a SNOMED concept to represent the
 finding that *Staphylococcus aureus* is detected::
 
-  "coding":[
-  {
+  "coding":[{
     "system": "http://snomed.info/sct",
     "code": "3092008",
     "display": "Staphylococcus aureus"
-  }
-  ]
+  }]
 
-map to  `Bacteremia HP:0031864 <https://hpo.jax.org/app/browse/term/HP:0031864>`_.
+We currently map this to  `Bacteremia HP:0031864 <https://hpo.jax.org/app/browse/term/HP:0031864>`_,
+but this term does not contain information about which bacterium was idenfitied in the blood.
 
 We are currently extending the annotations to enable one to indicate what kind of bacteremia. In the above mentioned case,
 one would use the NCBI `Taxonomy ID: 1280 <https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?lvl=0&id=1280>`_
