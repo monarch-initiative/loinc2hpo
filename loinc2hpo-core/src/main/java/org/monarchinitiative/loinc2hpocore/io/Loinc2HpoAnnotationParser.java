@@ -49,14 +49,13 @@ public class Loinc2HpoAnnotationParser {
         return entries;
     }
 
-
+    /* Export the list of annotations to file. Intended for use by the loinc2hpominer tool. */
     public static void exportToTsv(List<Loinc2HpoAnnotation> annotations, String path) throws IOException {
         File outfile = new File(path);
         LOGGER.info("Writing annotation data to {}", outfile.getAbsoluteFile());
         BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
         String header = String.join("\t", Loinc2HpoAnnotation.headerFields);
         bw.write(header + "\n");
-        Collections.sort(annotations);
         for (var ann : annotations) {
             bw.write(ann.toTsv() + "\n");
         }

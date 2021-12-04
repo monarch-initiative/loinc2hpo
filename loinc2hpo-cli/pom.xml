@@ -5,7 +5,7 @@
     <parent>
         <artifactId>loinc2hpo</artifactId>
         <groupId>org.monarchinitiative</groupId>
-        <version>1.8.1</version>
+        <version>1.8.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.monarchinitiative</groupId>
