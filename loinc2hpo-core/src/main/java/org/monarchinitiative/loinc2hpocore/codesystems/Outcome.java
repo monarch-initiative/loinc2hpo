@@ -2,7 +2,7 @@ package org.monarchinitiative.loinc2hpocore.codesystems;
 
 import java.util.Objects;
 
-public class Outcome {
+public class Outcome implements Comparable<Outcome> {
 
 
     private final ShortCode code;
@@ -85,5 +85,11 @@ public class Outcome {
         } else {
             return code.name();
         }
+    }
+
+    @Override
+    public int compareTo(Outcome that) {
+        int res = this.code.compareTo(that.code);
+        return res != 0 ? res : this.outcome.compareTo(that.outcome);
     }
 }

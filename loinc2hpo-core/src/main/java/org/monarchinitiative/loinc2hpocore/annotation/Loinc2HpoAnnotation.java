@@ -6,6 +6,7 @@ import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -189,10 +190,11 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     }
 
 
-
     @Override
     public int compareTo(Loinc2HpoAnnotation that) {
-        return this.loincId.compareTo(that.loincId);
+        //return Comparator.comparing(getLoincId()).thenComparing(getOutcome());
+        int res = this.loincId.compareTo(that.loincId);
+        return res != 0 ? res : this.outcomeCode.compareTo(that.outcomeCode);
     }
 
     @Override

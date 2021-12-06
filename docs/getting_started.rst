@@ -30,6 +30,7 @@ To use the loinc2hpo in your own Java project, add the following to your pom fil
   <properties>
     <loinc2hpo.version>1.7.0</loinc2hpo.version>
   </properties>
+  (...)
   <dependencies>
     <dependency>
       <groupId>org.monarchinitiative</groupId>
@@ -93,7 +94,12 @@ It can be used with the FHIR specifications DSTU3, R4, or R5.
     // The following is a R5 Observation
     Observation observation = getObservationFromSomewhere(); // your code does this
     Optional<Hpo2Outcome> opt = loinc2hpoFHIR.r5(observation);
-    // everything else as above
+    if (opt.isPresent()) {
+      Hpo2Outcome hpo2outcome = opt.get();
+      TermId hpoId = hpo2outcome.getHpoId();
+      Outcome outcome = hpo2outcome.outcome();
+      // do something with the HPO term and the outcome.
+    }
 
 
 The ``Loinc2HpoFhir`` has analogous methods called ``dstu3`` and ``r4`` for the other

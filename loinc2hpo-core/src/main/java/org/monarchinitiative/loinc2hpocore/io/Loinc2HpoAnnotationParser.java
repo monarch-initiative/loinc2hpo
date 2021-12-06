@@ -21,10 +21,6 @@ import java.util.stream.Collectors;
 public class Loinc2HpoAnnotationParser {
     private final static Logger LOGGER = LoggerFactory.getLogger(Loinc2HpoAnnotationParser.class);
 
-    private final static Set<ShortCode> quantitativeCodeSet = Set.of(ShortCode.L, ShortCode.N, ShortCode.H);
-    private final static Set<ShortCode> ordinalCodeSet = Set.of(ShortCode.NEG, ShortCode.POS);
-    private final static Set<ShortCode> nominalCodeSet = Set.of(ShortCode.NOM);
-
     private final List<Loinc2HpoAnnotation> entries;
 
     public Loinc2HpoAnnotationParser(String path) {
@@ -49,14 +45,14 @@ public class Loinc2HpoAnnotationParser {
         return entries;
     }
 
-
+    /* Export the list of annotations to file. Intended for use by the loinc2hpominer tool. */
     public static void exportToTsv(List<Loinc2HpoAnnotation> annotations, String path) throws IOException {
         File outfile = new File(path);
         LOGGER.info("Writing annotation data to {}", outfile.getAbsoluteFile());
+        Collections.sort(annotations);
         BufferedWriter bw = new BufferedWriter(new FileWriter(outfile));
         String header = String.join("\t", Loinc2HpoAnnotation.headerFields);
         bw.write(header + "\n");
-        Collections.sort(annotations);
         for (var ann : annotations) {
             bw.write(ann.toTsv() + "\n");
         }
@@ -74,7 +70,7 @@ public class Loinc2HpoAnnotationParser {
                 .collect(Collectors.groupingBy(Loinc2HpoAnnotation::getLoincId,
                         Collectors.mapping(Function.identity(),
                                 Collectors.toList())));
-        Map<LoincId, LoincAnnotation> outcomesMap = new HashMap<>();
+        Map<LoincId, LoincAnnotation> outcomesMap = new TreeMap<>();
         for (var e : result.entrySet()) {
             LoincId loincId = e.getKey();
             List<Loinc2HpoAnnotation> outcomes = e.getValue();

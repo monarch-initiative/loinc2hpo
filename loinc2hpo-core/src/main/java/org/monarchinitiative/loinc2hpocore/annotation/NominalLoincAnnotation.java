@@ -43,4 +43,19 @@ public class NominalLoincAnnotation implements LoincAnnotation {
     public List<Loinc2HpoAnnotation> allAnnotations() {
         return new ArrayList<>(this.nominalAnnotations.values());
     }
+
+    @Override
+    public LoincScale scale() {
+        return LoincScale.NOMINAL;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(loincId).append("\n");
+        for (var e : nominalAnnotations.entrySet()) {
+            sb.append("\t").append(e.getKey()).append(": ").append(e.getValue()).append("\n");
+        }
+        return sb.toString();
+    }
 }

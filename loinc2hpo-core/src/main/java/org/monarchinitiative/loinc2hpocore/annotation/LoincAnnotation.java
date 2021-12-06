@@ -14,4 +14,6 @@ public interface LoincAnnotation {
 
     List<Loinc2HpoAnnotation> allAnnotations();
 
+    LoincScale scale();
+
 }
