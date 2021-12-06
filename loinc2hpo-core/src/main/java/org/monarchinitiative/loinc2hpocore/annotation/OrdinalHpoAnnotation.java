@@ -64,4 +64,16 @@ public class OrdinalHpoAnnotation implements LoincAnnotation {
             throw new Loinc2HpoRuntimeException(msg);
         }
     }
+
+    @Override
+    public LoincScale scale() {
+        return LoincScale.ORDINAL;
+    }
+
+    @Override
+    public String toString() {
+        return loincId + "\n\t" +
+                (negative == null? " NEG: n/a" : "NEG: " + negative) + "\n\t" +
+                (positive == null? " POS: n/a" : "POS: " + positive);
+    }
 }

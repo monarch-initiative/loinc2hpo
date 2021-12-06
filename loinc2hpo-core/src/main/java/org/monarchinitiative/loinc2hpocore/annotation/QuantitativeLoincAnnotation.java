@@ -120,4 +120,17 @@ public class QuantitativeLoincAnnotation implements LoincAnnotation {
         }
         return allAnnots;
     }
+
+    @Override
+    public LoincScale scale() {
+        return LoincScale.QUANTITATIVE;
+    }
+
+    @Override
+    public String toString() {
+        return loincId + "\n\t" +
+                (low == null? " L: n/a" : "L: " + low) + "\n\t" +
+                (normal == null? " N: n/a" : "N: " + normal)+ "\n\t" +
+                (high == null? " H: n/a" : "H: " + high);
+    }
 }
