@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 
@@ -37,7 +36,7 @@ public class ObservationDtu3 implements Uberobservation {
 
     private Outcome getOutcome(ShortCode code, Observation observation) {
         if (code.equals(ShortCode.NOM)) {
-            throw new NotImplementedException("TODO");
+            throw new UnsupportedOperationException("TODO");
         }
         switch (code) {
             case H: return Outcome.HIGH();
@@ -46,7 +45,7 @@ public class ObservationDtu3 implements Uberobservation {
             case NEG: return Outcome.NEGATIVE();
             case POS: return Outcome.POSITIVE();
             default:
-                throw new NotImplementedException("TODO");
+                throw new UnsupportedOperationException("TODO");
         }
     }
 

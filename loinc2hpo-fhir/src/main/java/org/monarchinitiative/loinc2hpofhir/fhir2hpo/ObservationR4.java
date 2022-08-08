@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Observation;
@@ -38,7 +37,7 @@ public class ObservationR4 implements Uberobservation {
 
     private Outcome getOutcome(ShortCode code, org.hl7.fhir.r4.model.Observation observation) {
         if (code.equals(ShortCode.NOM)) {
-            throw new NotImplementedException("TODO");
+            throw new UnsupportedOperationException("TODO");
         }
         switch (code) {
             case H:
@@ -52,7 +51,7 @@ public class ObservationR4 implements Uberobservation {
             case POS:
                 return Outcome.POSITIVE();
             default:
-                throw new NotImplementedException("TODO");
+                throw new UnsupportedOperationException("TODO");
         }
     }
 

@@ -25,3 +25,16 @@ We are developing a separate app that will specialize in one functionality of th
 ## funding
 We gratefully acknowledge funding by NCATS (CD2H project, A NATIONAL CENTER FOR DIGITAL HEALTH INFORMATICS INNOVATION), 1U24TR002306
 
+Trying to modularize
+```bazaar
+module org.monarchinitiative.loinc2hpo.core {
+
+    requires curie.util;
+    requires org.yaml.snakeyaml;
+    requires org.apache.commons.io;
+
+    exports org.monarchinitiative.loinc2hpocore;
+    exports org.monarchinitiative.loinc2hpocore.annotation;
+
+}
+```
