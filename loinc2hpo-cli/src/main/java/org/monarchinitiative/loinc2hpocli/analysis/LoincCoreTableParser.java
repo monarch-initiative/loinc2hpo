@@ -23,7 +23,7 @@ public class LoincCoreTableParser {
         String line;
 
         try (BufferedReader br = new BufferedReader(new FileReader(coreTable))) {
-            line = br.readLine(); // header
+            br.readLine(); // header
             while ((line = br.readLine()) != null) {
                 LoincEntry entry = LoincEntry.fromQuotedCsvLine(line);
                 entryMap.put(entry.getLoincId(), entry);

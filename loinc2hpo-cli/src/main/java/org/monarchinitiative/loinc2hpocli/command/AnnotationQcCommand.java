@@ -90,7 +90,7 @@ public class AnnotationQcCommand implements Runnable{
     }
 
     /**
-     * @param annot
+     * @param annot A LOINC2HPO annotation of one LOINC test/outcome/HPO term
      * @return 1 if malformed, 0 if OK
      */
     private int checkInvalidQuantitative(LoincAnnotation annot) {
@@ -106,7 +106,7 @@ public class AnnotationQcCommand implements Runnable{
     }
 
     /**
-     * @param annot
+     * @param annot A LOINC2HPO annotation of one LOINC test/outcome/HPO term
      * @return 1 if malformed, 0 if OK
      */
     private int checkInvalidOrdinal(LoincAnnotation annot) {
@@ -122,7 +122,7 @@ public class AnnotationQcCommand implements Runnable{
     }
 
     /**
-     * @param annot
+     * @param annot A LOINC2HPO annotation of one LOINC test/outcome/HPO term
      * @return 1 if malformed, 0 if OK
      */
     private int checkInvalidNominal(LoincAnnotation annot) {

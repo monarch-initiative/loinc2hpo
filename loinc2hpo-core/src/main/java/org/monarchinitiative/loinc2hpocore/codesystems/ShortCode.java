@@ -52,6 +52,10 @@ public enum ShortCode {
         throw Loinc2HpoRuntimeException.unrecognizedCode(codeString);
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String shortForm() {
         switch (this) {
             case L: return "L";
