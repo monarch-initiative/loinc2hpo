@@ -1,6 +1,5 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
-import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
 import org.monarchinitiative.loinc2hpocore.annotation.Loinc2HpoAnnotation;
 import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
 import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;

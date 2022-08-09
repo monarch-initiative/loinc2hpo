@@ -2,7 +2,6 @@ package org.monarchinitiative.loinc2hpocore.io;
 
 
 import org.monarchinitiative.loinc2hpocore.annotation.*;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
 import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
 import org.slf4j.Logger;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * This class is responsible for parsing the {@code loinc2hpo-annotations.tsv} file that is available
- * at https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation
+ * at <a href="https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation">...</a>
  * @author Peter Robinson, Aaron Zhang
  */
 public class Loinc2HpoAnnotationParser {

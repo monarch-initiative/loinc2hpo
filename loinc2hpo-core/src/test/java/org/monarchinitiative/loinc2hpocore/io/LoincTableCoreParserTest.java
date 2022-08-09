@@ -16,7 +16,7 @@ public class LoincTableCoreParserTest {
     private static String LoincTableCoreTinyPath;
 
     @BeforeAll
-    private static void init() {
+    public static void init() {
         URL url = LoincTableCoreParserTest.class.getClassLoader().getResource("LoincTableCoreTiny.csv");
         if (url==null) {
             throw new Loinc2HpoRuntimeException("Could not get path to \"LoincTableCoreTiny.csv\"");
