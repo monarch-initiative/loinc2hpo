@@ -1,7 +1,6 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
 import org.monarchinitiative.loinc2hpocli.analysis.LoincCoreTableParser;
-import org.monarchinitiative.loinc2hpocli.html.AnnotVisualizable;
 import org.monarchinitiative.loinc2hpocli.html.Loinc2HpoTemplate;
 import org.monarchinitiative.loinc2hpocli.html.LoincVisualizable;
 import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
@@ -66,8 +65,21 @@ public class HtmlOutputCommand implements Runnable {
                 System.err.printf("[ERROR] Could not find loinc entry for %s.\n", loincId.toString());
                 continue;
             }
-            LoincVisualizable row = getRow(loincEntry, ontology, loincAnnotation);
-            rows.add(row);
+            LoincId id = loincEntry.getLoincId();
+            String component = loincEntry.getComponent();
+            String longName = loincEntry.getLongName();
+
+            for (var annot : loincAnnotation.allAnnotations()) {
+                Outcome outcome = annot.getOutcome();
+                TermId tid = annot.getHpoTermId();
+                String termlabel = ontology.getTermLabel(tid).orElse("n/a");
+                LoincScale scale = annot.getLoincScale();
+                String biocuration = annot.getBiocuration();
+                LoincVisualizable row = new LoincVisualizable(id,component,longName,outcome,tid,termlabel,scale,biocuration);
+                rows.add(row);
+            }
+
+
         }
         try {
             Loinc2HpoTemplate template = new Loinc2HpoTemplate(rows);
@@ -77,22 +89,4 @@ public class HtmlOutputCommand implements Runnable {
         }
     }
 
-    private LoincVisualizable getRow(LoincEntry loincEntry, Ontology ontology, LoincAnnotation loincAnnotation) {
-        LoincId id = loincEntry.getLoincId();
-        String component = loincEntry.getComponent();
-        String longName = loincEntry.getLongName();
-        List<AnnotVisualizable> annots = new ArrayList<>();
-        for (var annot : loincAnnotation.allAnnotations()) {
-            Outcome outcome = annot.getOutcome();
-            TermId tid = annot.getHpoTermId();
-            String termlabel = ontology.getTermLabel(tid).orElse("n/a");
-            LoincScale scale = annot.getLoincScale();
-            String biocuration = annot.getBiocuration();
-            AnnotVisualizable avis = new AnnotVisualizable(outcome, tid, termlabel, scale, biocuration);
-            annots.add(avis);
-        }
-        return new LoincVisualizable(id, component, longName, annots);
-
-
-    }
 }

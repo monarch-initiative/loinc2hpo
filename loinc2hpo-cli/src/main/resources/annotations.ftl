@@ -49,6 +49,8 @@
   <#-- Greet the user with his/her name -->
   <h1>LOINC2HPO Annotations</h1>
   <p>The file was produced from the
+    <a href="https://github.com/TheJacksonLaboratory/loinc2hpoAnnotation" target="__blank">loinc2hpoAnnotation</a>
+    project biocuration data.</p>
   <table class="l2h">
     <tr>
         <th>Loinc Item</th>
@@ -58,14 +60,12 @@
     </tr>
     <#list loincItems as itm>
 
-        <#list itm.annotations as annot>
         <tr>
           <td >${itm.loincAnchor}</td>
-            <td>${annot.loincscale}/${annot.outcome}</td>
-            <td>${annot.hpoAnchor}</td>
-             <td>${annot.biocuration}</td>
+            <td>${itm.loincscale}/${itm.outcome}</td>
+            <td>${itm.hpoAnchor}</td>
+             <td>${itm.biocuration}</td>
              </tr>
-            </#list>
 
        </#list>
     </table>
