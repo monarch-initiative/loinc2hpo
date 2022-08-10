@@ -3,7 +3,7 @@
 
 
 # loinc2hpo
-A Java library to map tests results from [LOINC](https://loinc.org/) codes to  
+A Java 17 library to map tests results from [LOINC](https://loinc.org/) codes to  
 [Human Phenotype Ontology.](https://hpo.jax.org/app/) terms.
 For details, please see [Zhang et al. (2012)](https://pubmed.ncbi.nlm.nih.gov/31119199/) Semantic integration of clinical laboratory tests from electronic 
 health records for deep phenotyping and biomarker discovery. *NPJ Digit Med*. 2019;2:32.
@@ -25,16 +25,3 @@ We are developing a separate app that will specialize in one functionality of th
 ## funding
 We gratefully acknowledge funding by NCATS (CD2H project, A NATIONAL CENTER FOR DIGITAL HEALTH INFORMATICS INNOVATION), 1U24TR002306
 
-Trying to modularize
-```bazaar
-module org.monarchinitiative.loinc2hpo.core {
-
-    requires curie.util;
-    requires org.yaml.snakeyaml;
-    requires org.apache.commons.io;
-
-    exports org.monarchinitiative.loinc2hpocore;
-    exports org.monarchinitiative.loinc2hpocore.annotation;
-
-}
-```

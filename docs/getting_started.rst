@@ -4,7 +4,7 @@ Getting started
 Overview
 --------
 
-loinc2hpo is a Java library. It requires at least Java 11. It is intended to be used by other applications
+loinc2hpo is a Java library. It requires at least Java 17. It is intended to be used by other applications
 for specific purposes. This tutorial shows how to install loinc2hpo and how to use it in a typical Java program.
 
 Installation
@@ -28,7 +28,7 @@ To use the loinc2hpo in your own Java project, add the following to your pom fil
 .. code-block:: XML
 
   <properties>
-    <loinc2hpo.version>1.7.0</loinc2hpo.version>
+    <loinc2hpo.version>1.10.3</loinc2hpo.version>
   </properties>
   (...)
   <dependencies>
@@ -44,7 +44,7 @@ To use the loinc2hpo in your own Java project, add the following to your pom fil
     </dependency>
   </dependencies>
 
-The ``loinc2hpo-fhir`` module is only required for working with FHIR of course.
+The ``loinc2hpo-fhir`` module is only required for working with FHIR, of course.
 
 
 Core module
