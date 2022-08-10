@@ -1,12 +1,15 @@
 package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.monarchinitiative.loinc2hpocore.annotation.Loinc2HpoAnnotation.outcomes2LoincAnnotation;
+import static org.monarchinitiative.loinc2hpocore.model.Loinc2HpoAnnotation.outcomes2LoincAnnotation;
 
 public class Loinc2HpoAnnotationTest {
 
@@ -45,7 +48,7 @@ public class Loinc2HpoAnnotationTest {
 
     /**
      * This checks that the short form of the outcode code
-     * ({@link org.monarchinitiative.loinc2hpocore.codesystems.ShortCode}) is use for output.
+     * ({@link ShortCode}) is use for output.
      */
     @Test
     void checkExportOfOrdNeg() {

@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.codesystems;
+package org.monarchinitiative.loinc2hpocore.model;
 
 import java.util.Objects;
 
@@ -71,10 +71,9 @@ public class Outcome implements Comparable<Outcome> {
 
     @Override
     public boolean equals(Object obj) {
-        if (! (obj instanceof Outcome)) {
+        if (! (obj instanceof Outcome that)) {
             return false;
         }
-        Outcome that = (Outcome) obj;
         return this.code.equals(that.code) && this.outcome.equals(that.outcome);
     }
 

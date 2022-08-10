@@ -1,10 +1,10 @@
-package org.monarchinitiative.loinc2hpocore.io;
+package org.monarchinitiative.loinc2hpocore.parser;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import java.net.URL;
 import java.util.Map;

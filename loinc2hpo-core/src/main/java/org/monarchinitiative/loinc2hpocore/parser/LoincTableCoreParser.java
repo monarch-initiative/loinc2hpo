@@ -1,8 +1,8 @@
-package org.monarchinitiative.loinc2hpocore.io;
+package org.monarchinitiative.loinc2hpocore.parser;
 
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Parse LoincTableCore.csv file to obtain {@link org.monarchinitiative.loinc2hpocore.loinc.LoincEntry} objects
+ * Parse LoincTableCore.csv file to obtain {@link LoincEntry} objects
  */
 public class LoincTableCoreParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoincTableCoreParser.class);

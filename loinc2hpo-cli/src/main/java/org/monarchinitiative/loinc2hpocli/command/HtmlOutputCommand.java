@@ -4,12 +4,12 @@ import org.monarchinitiative.loinc2hpocli.analysis.LoincCoreTableParser;
 import org.monarchinitiative.loinc2hpocli.html.AnnotVisualizable;
 import org.monarchinitiative.loinc2hpocli.html.Loinc2HpoTemplate;
 import org.monarchinitiative.loinc2hpocli.html.LoincVisualizable;
-import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.parser.Loinc2HpoAnnotationParser;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;
@@ -91,8 +91,7 @@ public class HtmlOutputCommand implements Runnable {
             AnnotVisualizable avis = new AnnotVisualizable(outcome, tid, termlabel, scale, biocuration);
             annots.add(avis);
         }
-        LoincVisualizable lvis = new LoincVisualizable(id, component, longName, annots);
-        return lvis;
+        return new LoincVisualizable(id, component, longName, annots);
 
 
     }

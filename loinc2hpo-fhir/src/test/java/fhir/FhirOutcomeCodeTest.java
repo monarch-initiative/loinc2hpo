@@ -1,7 +1,7 @@
 package fhir;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.FhirOutcomeCode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

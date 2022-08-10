@@ -1,4 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.exception;
+package org.monarchinitiative.loinc2hpocore.model;
 
 public class Loinc2HpoException  extends Exception {
 

@@ -3,9 +3,9 @@ package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.CodeableConcept;
 import org.hl7.fhir.r5.model.Coding;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,15 +40,14 @@ public class ObservationR5 implements Uberobservation {
         if (code.equals(ShortCode.NOM)) {
             throw new UnsupportedOperationException("TODO");
         }
-        switch (code) {
-            case H: return Outcome.HIGH();
-            case L: return Outcome.LOW();
-            case N: return Outcome.NORMAL();
-            case NEG: return Outcome.NEGATIVE();
-            case POS: return Outcome.POSITIVE();
-            default:
-                throw new UnsupportedOperationException("TODO");
-        }
+        return switch (code) {
+            case H -> Outcome.HIGH();
+            case L -> Outcome.LOW();
+            case N -> Outcome.NORMAL();
+            case NEG -> Outcome.NEGATIVE();
+            case POS -> Outcome.POSITIVE();
+            default -> throw new UnsupportedOperationException("TODO");
+        };
     }
 
 
@@ -59,8 +58,7 @@ public class ObservationR5 implements Uberobservation {
                     .distinct()
                     .map(CodeableConcept::getCoding)
                     .flatMap(Collection::stream)
-                    .map(org.hl7.fhir.r5.model.Coding::getCode)
-                    .collect(Collectors.toList());
+                    .map(Coding::getCode).toList();
             if (codes.size() > 1) {
                 LOGGER.error("Multiple interpretation codes returned");
                 return Optional.empty();

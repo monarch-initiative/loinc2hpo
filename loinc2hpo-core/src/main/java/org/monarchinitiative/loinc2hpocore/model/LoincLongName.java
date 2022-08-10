@@ -1,6 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
-
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+package org.monarchinitiative.loinc2hpocore.model;
 
 import java.util.LinkedList;
 import java.util.Queue;

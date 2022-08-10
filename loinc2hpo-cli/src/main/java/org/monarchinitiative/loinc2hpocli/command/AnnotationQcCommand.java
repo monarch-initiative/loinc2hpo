@@ -1,13 +1,13 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
-import org.monarchinitiative.loinc2hpocore.annotation.Loinc2HpoAnnotation;
-import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.parser.Loinc2HpoAnnotationParser;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.monarchinitiative.phenol.io.OntologyLoader;
 import org.monarchinitiative.phenol.ontology.data.Ontology;
 import org.monarchinitiative.phenol.ontology.data.TermId;

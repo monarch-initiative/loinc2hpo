@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpocli.html;
 
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import java.util.List;
 

@@ -1,9 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
-
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.monarchinitiative.loinc2hpocore.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LoincEntry {
-    private static final Logger logger = LoggerFactory.getLogger(LoincEntry.class);
-
     private final LoincId loincId;
 
     private final String component;
@@ -93,8 +86,7 @@ public class LoincEntry {
 
     @Override
     public boolean equals(Object obj){
-        if (this.loincId != null && obj instanceof LoincEntry) {
-            LoincEntry other = (LoincEntry) obj;
+        if (this.loincId != null && obj instanceof LoincEntry other) {
             return this.loincId.equals(other.getLoincId());
         }
         return false;

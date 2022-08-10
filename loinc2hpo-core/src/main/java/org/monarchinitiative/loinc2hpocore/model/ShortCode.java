@@ -1,6 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.codesystems;
-
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+package org.monarchinitiative.loinc2hpocore.model;
 
 /**
  * These are the code used for the results of lab tests. Other codes, e.g., FHIR, should be
@@ -57,16 +55,14 @@ public enum ShortCode {
     }
 
     public String shortForm() {
-        switch (this) {
-            case L: return "L";
-            case H: return "H";
-            case N: return "N";
-            case NOM: return "NOM";
-            case POS: return "POS";
-            case NEG: return "NEG";
-            case U: return "U";
-        }
-        // needed by compiler, will never happen unless a new constant is added
-        throw new Loinc2HpoRuntimeException("Could not find short form");
+        return switch (this) {
+            case L -> "L";
+            case H -> "H";
+            case N -> "N";
+            case NOM -> "NOM";
+            case POS -> "POS";
+            case NEG -> "NEG";
+            case U -> "U";
+        };
     }
 }

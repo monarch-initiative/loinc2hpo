@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpocli.html;
 
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class AnnotVisualizable {

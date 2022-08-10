@@ -3,14 +3,12 @@ package org.monarchinitiative.loinc2hpocli;
 import org.monarchinitiative.loinc2hpocli.command.AnnotationQcCommand;
 import org.monarchinitiative.loinc2hpocli.command.HtmlOutputCommand;
 import org.monarchinitiative.loinc2hpocli.command.LoincTableCoreStatsCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import picocli.CommandLine;
 
 
 @CommandLine.Command(name = "loinc2hpo-cli builder", version = "0.0.1", mixinStandardHelpOptions = true)
 public class Main implements Runnable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         if (args.length == 0) {

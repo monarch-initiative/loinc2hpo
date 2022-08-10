@@ -1,7 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
-
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+package org.monarchinitiative.loinc2hpocore.model;
 
 import java.util.List;
 import java.util.Optional;

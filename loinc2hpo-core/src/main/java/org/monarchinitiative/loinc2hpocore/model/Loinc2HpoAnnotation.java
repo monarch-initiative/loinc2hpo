@@ -1,9 +1,8 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
+package org.monarchinitiative.loinc2hpocore.model;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.impl.NominalLoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.impl.OrdinalHpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.impl.QuantitativeLoincAnnotation;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 import java.util.List;
@@ -153,7 +152,7 @@ public class Loinc2HpoAnnotation implements Comparable<Loinc2HpoAnnotation> {
     private static LoincScale getScale(List<Loinc2HpoAnnotation> outcomes) {
         List<LoincScale> scales = outcomes.stream()
                 .map(Loinc2HpoAnnotation::getLoincScale)
-                .distinct().collect(Collectors.toList());
+                .distinct().toList();
         if (scales.size() == 0) {
             // should never happen
             throw new Loinc2HpoRuntimeException("Could not extract LoincScale");

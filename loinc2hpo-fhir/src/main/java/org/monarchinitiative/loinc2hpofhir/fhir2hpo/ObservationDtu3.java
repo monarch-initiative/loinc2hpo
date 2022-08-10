@@ -4,9 +4,9 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 
 import org.hl7.fhir.dstu3.model.Observation;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,15 +38,14 @@ public class ObservationDtu3 implements Uberobservation {
         if (code.equals(ShortCode.NOM)) {
             throw new UnsupportedOperationException("TODO");
         }
-        switch (code) {
-            case H: return Outcome.HIGH();
-            case L: return Outcome.LOW();
-            case N: return Outcome.NORMAL();
-            case NEG: return Outcome.NEGATIVE();
-            case POS: return Outcome.POSITIVE();
-            default:
-                throw new UnsupportedOperationException("TODO");
-        }
+        return switch (code) {
+            case H -> Outcome.HIGH();
+            case L -> Outcome.LOW();
+            case N -> Outcome.NORMAL();
+            case NEG -> Outcome.NEGATIVE();
+            case POS -> Outcome.POSITIVE();
+            default -> throw new UnsupportedOperationException("TODO");
+        };
     }
 
 
@@ -54,8 +53,7 @@ public class ObservationDtu3 implements Uberobservation {
     public Optional<Outcome> getOutcome() {
         if (observation.hasInterpretation()){
             List<String> codes = this.observation.getInterpretation().getCoding().
-                    stream().map(Coding::getCode).distinct().
-                    collect(Collectors.toList());
+                    stream().map(Coding::getCode).distinct().toList();
             if (codes.size() > 1) {
                 LOGGER.error("Multiple interpretation codes returned");
                 return Optional.empty();

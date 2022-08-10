@@ -1,8 +1,6 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
+package org.monarchinitiative.loinc2hpocore.impl;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,14 +23,11 @@ public class OrdinalHpoAnnotation implements LoincAnnotation {
 
     @Override
     public Optional<Hpo2Outcome> getOutcome(Outcome outcome) {
-        switch (outcome.getCode()) {
-            case NEG:
-                return Optional.of(new Hpo2Outcome(negative.getHpoTermId(), Outcome.NEGATIVE()));
-            case POS:
-                return Optional.of(new Hpo2Outcome(positive.getHpoTermId(), Outcome.POSITIVE()));
-            default:
-                return Optional.empty();
-        }
+        return switch (outcome.getCode()) {
+            case NEG -> Optional.of(new Hpo2Outcome(negative.getHpoTermId(), Outcome.NEGATIVE()));
+            case POS -> Optional.of(new Hpo2Outcome(positive.getHpoTermId(), Outcome.POSITIVE()));
+            default -> Optional.empty();
+        };
     }
 
     @Override

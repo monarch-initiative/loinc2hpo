@@ -1,8 +1,6 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
+package org.monarchinitiative.loinc2hpocore.impl;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.*;
 
 import java.util.ArrayList;
 import java.util.List;

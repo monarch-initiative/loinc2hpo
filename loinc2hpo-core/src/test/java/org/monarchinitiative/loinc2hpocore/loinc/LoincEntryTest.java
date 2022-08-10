@@ -1,7 +1,10 @@
 package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincLongName;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import java.util.Arrays;
 import java.util.List;

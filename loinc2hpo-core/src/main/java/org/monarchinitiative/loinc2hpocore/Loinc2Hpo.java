@@ -1,11 +1,11 @@
 package org.monarchinitiative.loinc2hpocore;
 
 
-import org.monarchinitiative.loinc2hpocore.annotation.LoincAnnotation;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.io.Loinc2HpoAnnotationParser;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.parser.Loinc2HpoAnnotationParser;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import java.util.Map;
 import java.util.Optional;

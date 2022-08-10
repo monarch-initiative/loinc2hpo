@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import java.util.Optional;
 

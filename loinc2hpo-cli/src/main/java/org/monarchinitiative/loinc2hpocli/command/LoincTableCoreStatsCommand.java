@@ -1,9 +1,9 @@
 package org.monarchinitiative.loinc2hpocli.command;
 
 
-import org.monarchinitiative.loinc2hpocore.annotation.LoincScale;
-import org.monarchinitiative.loinc2hpocore.io.LoincTableCoreParser;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
+import org.monarchinitiative.loinc2hpocore.parser.LoincTableCoreParser;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
 import picocli.CommandLine;
 
 import java.util.List;

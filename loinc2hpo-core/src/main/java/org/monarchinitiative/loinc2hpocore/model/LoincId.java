@@ -1,15 +1,8 @@
-package org.monarchinitiative.loinc2hpocore.loinc;
-
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package org.monarchinitiative.loinc2hpocore.model;
 
 import java.util.Objects;
 
 public class LoincId implements Comparable<LoincId> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoincId.class);
     /** The part of the Loinc code prior to the dash */
     private final int num;
     /** The part of the Loinc code following the dash */
@@ -40,10 +33,9 @@ public class LoincId implements Comparable<LoincId> {
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
-        if (!(o instanceof LoincId)) {
+        if (!(o instanceof LoincId other)) {
             return false;
         }
-        LoincId other = (LoincId) o;
         return (this.num==other.num && this.suffix==other.suffix);
     }
 
@@ -54,7 +46,6 @@ public class LoincId implements Comparable<LoincId> {
     }
 
     @Override
-    @JsonValue
     public String toString() { return String.format("%d-%d",num,suffix); }
 
 

@@ -1,6 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
-
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+package org.monarchinitiative.loinc2hpocore.model;
 
 /**
  * Scales of measurement used by LOINC codes. For this library, we only use Qn, Ord, and Nom.
@@ -34,21 +32,20 @@ public enum LoincScale {
     public String shortName() { return this.name; }
 
     public static LoincScale fromString(String scale) {
-        switch (scale) {
-            case "Qn": return QUANTITATIVE;
-            case "Ord": return ORDINAL;
-            case "Nom": return NOMINAL;
-            case "OrdQn": return OrdQn;
-            case "Nar": return Nar;
-            case "Multi": return Multi;
-            case "Doc": return Doc;
-            case "Set": return Set;
-            case "-": return Dash;
-            case "*": return Asterisk;
-            case "Unknown": return Unknown;
-            default:
-                throw new Loinc2HpoRuntimeException("MalformedScale: \"" + scale + "\".");
-        }
+        return switch (scale) {
+            case "Qn" -> QUANTITATIVE;
+            case "Ord" -> ORDINAL;
+            case "Nom" -> NOMINAL;
+            case "OrdQn" -> OrdQn;
+            case "Nar" -> Nar;
+            case "Multi" -> Multi;
+            case "Doc" -> Doc;
+            case "Set" -> Set;
+            case "-" -> Dash;
+            case "*" -> Asterisk;
+            case "Unknown" -> Unknown;
+            default -> throw new Loinc2HpoRuntimeException("MalformedScale: \"" + scale + "\".");
+        };
     }
 
     /**

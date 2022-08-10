@@ -3,7 +3,8 @@ package org.monarchinitiative.loinc2hpocore.loinc;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

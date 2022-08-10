@@ -22,7 +22,7 @@
       }
 
       table.l2h {
-          width: auto;
+          width:  90%;
           min-width: 50%;
           margin-left: auto;
           margin-right: auto;

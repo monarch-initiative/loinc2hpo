@@ -1,6 +1,4 @@
-package org.monarchinitiative.loinc2hpocore.exception;
-
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+package org.monarchinitiative.loinc2hpocore.model;
 
 public class Loinc2HpoRuntimeException extends RuntimeException {
 

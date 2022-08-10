@@ -1,9 +1,10 @@
-package org.monarchinitiative.loinc2hpocore.io;
+package org.monarchinitiative.loinc2hpocore.parser;
 
 
-import org.monarchinitiative.loinc2hpocore.annotation.*;
-import org.monarchinitiative.loinc2hpocore.exception.Loinc2HpoRuntimeException;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoAnnotation;
+import org.monarchinitiative.loinc2hpocore.model.Loinc2HpoRuntimeException;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.LoincAnnotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

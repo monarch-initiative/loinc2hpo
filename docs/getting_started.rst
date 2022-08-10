@@ -58,11 +58,11 @@ To run the code, ingest the annotation file and then pass
 
 .. code-block:: java
 
-  import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+  import org.monarchinitiative.loinc2hpocore.model.ShortCode;
   import org.monarchinitiative.phenol.ontology.data.TermId;
   import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-  import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
-  import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
+  import org.monarchinitiative.loinc2hpocore.model.LoincId;
+  import org.monarchinitiative.loinc2hpocore.model.Outcome;
 
   String annot_file = "loinc2hpo-annotations.tsv";
   Loinc2Hpo loinc2Hpo = new Loinc2Hpo(annot_file);
@@ -86,8 +86,8 @@ It can be used with the FHIR specifications DSTU3, R4, or R5.
 
     import org.monarchinitiative.loinc2hpofhir.Loinc2HpoFhir;
     import org.hl7.fhir.r5.model.*;
-    import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-    import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+    import org.monarchinitiative.loinc2hpocore.model.Outcome;
+    import org.monarchinitiative.loinc2hpocore.model.LoincId;
 
     String annot_file = "loinc2hpo-annotations.tsv";
     Loinc2HpoFhir loinc2hpoFHIR = new Loinc2HpoFhir(String path);

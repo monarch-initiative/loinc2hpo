@@ -1,7 +1,5 @@
-package org.monarchinitiative.loinc2hpocore.annotation;
+package org.monarchinitiative.loinc2hpocore.model;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
 import org.monarchinitiative.phenol.ontology.data.TermId;
 
 public class Hpo2Outcome {

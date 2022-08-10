@@ -1,7 +1,7 @@
 package org.monarchinitiative.loinc2hpocli.analysis;
 
-import org.monarchinitiative.loinc2hpocore.loinc.LoincEntry;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.LoincEntry;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.monarchinitiative.phenol.base.PhenolRuntimeException;
 
 import java.io.BufferedReader;

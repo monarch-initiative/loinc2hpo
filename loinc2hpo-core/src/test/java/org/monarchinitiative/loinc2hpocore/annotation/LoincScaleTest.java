@@ -1,6 +1,7 @@
 package org.monarchinitiative.loinc2hpocore.annotation;
 
 import org.junit.jupiter.api.Test;
+import org.monarchinitiative.loinc2hpocore.model.LoincScale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

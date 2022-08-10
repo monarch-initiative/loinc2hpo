@@ -1,6 +1,6 @@
 package org.monarchinitiative.loinc2hpofhir.fhir2hpo;
 
-import org.monarchinitiative.loinc2hpocore.codesystems.ShortCode;
+import org.monarchinitiative.loinc2hpocore.model.ShortCode;
 
 import java.util.HashMap;
 import java.util.Map;

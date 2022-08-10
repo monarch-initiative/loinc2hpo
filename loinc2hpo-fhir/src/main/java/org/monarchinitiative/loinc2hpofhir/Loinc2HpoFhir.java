@@ -2,9 +2,9 @@ package org.monarchinitiative.loinc2hpofhir;
 
 
 import org.monarchinitiative.loinc2hpocore.Loinc2Hpo;
-import org.monarchinitiative.loinc2hpocore.annotation.Hpo2Outcome;
-import org.monarchinitiative.loinc2hpocore.codesystems.Outcome;
-import org.monarchinitiative.loinc2hpocore.loinc.LoincId;
+import org.monarchinitiative.loinc2hpocore.model.Hpo2Outcome;
+import org.monarchinitiative.loinc2hpocore.model.Outcome;
+import org.monarchinitiative.loinc2hpocore.model.LoincId;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationDtu3;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationR4;
 import org.monarchinitiative.loinc2hpofhir.fhir2hpo.ObservationR5;
