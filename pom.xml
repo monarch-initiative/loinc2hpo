@@ -19,6 +19,18 @@
         <jena.version>4.2.0</jena.version>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh-mi</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh-mi</id>
+            <name>Central Repository OSSRH</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>loinc2hpo-core</module>
         <module>loinc2hpo-fhir</module>
